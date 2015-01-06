@@ -21,6 +21,21 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		84003BDB1A5C926400F709A3 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BC91A5C926400F709A3 /* png.c */; };
+		84003BDC1A5C926400F709A3 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BCC1A5C926400F709A3 /* pngerror.c */; };
+		84003BDD1A5C926400F709A3 /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BCD1A5C926400F709A3 /* pngget.c */; };
+		84003BDE1A5C926400F709A3 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BCE1A5C926400F709A3 /* pngmem.c */; };
+		84003BDF1A5C926400F709A3 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BCF1A5C926400F709A3 /* pngpread.c */; };
+		84003BE01A5C926400F709A3 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD11A5C926400F709A3 /* pngread.c */; };
+		84003BE11A5C926400F709A3 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD21A5C926400F709A3 /* pngrio.c */; };
+		84003BE21A5C926400F709A3 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD31A5C926400F709A3 /* pngrtran.c */; };
+		84003BE31A5C926400F709A3 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD41A5C926400F709A3 /* pngrutil.c */; };
+		84003BE41A5C926400F709A3 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD51A5C926400F709A3 /* pngset.c */; };
+		84003BE51A5C926400F709A3 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD61A5C926400F709A3 /* pngtrans.c */; };
+		84003BE61A5C926400F709A3 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD71A5C926400F709A3 /* pngwio.c */; };
+		84003BE71A5C926400F709A3 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD81A5C926400F709A3 /* pngwrite.c */; };
+		84003BE81A5C926400F709A3 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BD91A5C926400F709A3 /* pngwtran.c */; };
+		84003BE91A5C926400F709A3 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 84003BDA1A5C926400F709A3 /* pngwutil.c */; };
 		84B5B98E1A5B43ED00E4724E /* lunagraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B6F31A5B43EC00E4724E /* lunagraphics.cpp */; };
 		84B5B98F1A5B43ED00E4724E /* lunaimage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B6F51A5B43EC00E4724E /* lunaimage.cpp */; };
 		84B5B9901A5B43ED00E4724E /* lunamesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B6F81A5B43EC00E4724E /* lunamesh.cpp */; };
@@ -113,21 +128,6 @@
 		84B5B9F41A5B43ED00E4724E /* b2WheelJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B7EA1A5B43EC00E4724E /* b2WheelJoint.cpp */; };
 		84B5B9F51A5B43ED00E4724E /* b2Rope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B7ED1A5B43EC00E4724E /* b2Rope.cpp */; };
 		84B5B9F81A5B43ED00E4724E /* json11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8E61A5B43ED00E4724E /* json11.cpp */; };
-		84B5B9F91A5B43ED00E4724E /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8EC1A5B43ED00E4724E /* png.c */; };
-		84B5B9FA1A5B43ED00E4724E /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8EF1A5B43ED00E4724E /* pngerror.c */; };
-		84B5B9FB1A5B43ED00E4724E /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F01A5B43ED00E4724E /* pngget.c */; };
-		84B5B9FC1A5B43ED00E4724E /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F11A5B43ED00E4724E /* pngmem.c */; };
-		84B5B9FD1A5B43ED00E4724E /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F21A5B43ED00E4724E /* pngpread.c */; };
-		84B5B9FE1A5B43ED00E4724E /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F41A5B43ED00E4724E /* pngread.c */; };
-		84B5B9FF1A5B43ED00E4724E /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F51A5B43ED00E4724E /* pngrio.c */; };
-		84B5BA001A5B43ED00E4724E /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F61A5B43ED00E4724E /* pngrtran.c */; };
-		84B5BA011A5B43ED00E4724E /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F71A5B43ED00E4724E /* pngrutil.c */; };
-		84B5BA021A5B43ED00E4724E /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F81A5B43ED00E4724E /* pngset.c */; };
-		84B5BA031A5B43ED00E4724E /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8F91A5B43ED00E4724E /* pngtrans.c */; };
-		84B5BA041A5B43ED00E4724E /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8FA1A5B43ED00E4724E /* pngwio.c */; };
-		84B5BA051A5B43ED00E4724E /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8FB1A5B43ED00E4724E /* pngwrite.c */; };
-		84B5BA061A5B43ED00E4724E /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8FC1A5B43ED00E4724E /* pngwtran.c */; };
-		84B5BA071A5B43ED00E4724E /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B8FD1A5B43ED00E4724E /* pngwutil.c */; };
 		84B5BA3E1A5B43ED00E4724E /* lapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B93F1A5B43ED00E4724E /* lapi.c */; };
 		84B5BA3F1A5B43ED00E4724E /* lauxlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B9411A5B43ED00E4724E /* lauxlib.c */; };
 		84B5BA401A5B43ED00E4724E /* lbaselib.c in Sources */ = {isa = PBXBuildFile; fileRef = 84B5B9431A5B43ED00E4724E /* lbaselib.c */; };
@@ -183,6 +183,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84003BC81A5C926400F709A3 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		84003BC91A5C926400F709A3 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
+		84003BCA1A5C926400F709A3 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
+		84003BCB1A5C926400F709A3 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
+		84003BCC1A5C926400F709A3 /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
+		84003BCD1A5C926400F709A3 /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
+		84003BCE1A5C926400F709A3 /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
+		84003BCF1A5C926400F709A3 /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
+		84003BD01A5C926400F709A3 /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
+		84003BD11A5C926400F709A3 /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
+		84003BD21A5C926400F709A3 /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
+		84003BD31A5C926400F709A3 /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
+		84003BD41A5C926400F709A3 /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
+		84003BD51A5C926400F709A3 /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
+		84003BD61A5C926400F709A3 /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
+		84003BD71A5C926400F709A3 /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
+		84003BD81A5C926400F709A3 /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
+		84003BD91A5C926400F709A3 /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
+		84003BDA1A5C926400F709A3 /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
 		8400CFD11A5B2E24003EDDA0 /* libluna2d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libluna2d.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B5B6F31A5B43EC00E4724E /* lunagraphics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = lunagraphics.cpp; sourceTree = "<group>"; };
 		84B5B6F41A5B43EC00E4724E /* lunagraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lunagraphics.h; sourceTree = "<group>"; };
@@ -388,25 +407,6 @@
 		84B5B7EE1A5B43EC00E4724E /* b2Rope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2Rope.h; sourceTree = "<group>"; };
 		84B5B8E61A5B43ED00E4724E /* json11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json11.cpp; sourceTree = "<group>"; };
 		84B5B8E71A5B43ED00E4724E /* json11.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json11.hpp; sourceTree = "<group>"; };
-		84B5B8EB1A5B43ED00E4724E /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
-		84B5B8EC1A5B43ED00E4724E /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
-		84B5B8ED1A5B43ED00E4724E /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
-		84B5B8EE1A5B43ED00E4724E /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngconf.h; sourceTree = "<group>"; };
-		84B5B8EF1A5B43ED00E4724E /* pngerror.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngerror.c; sourceTree = "<group>"; };
-		84B5B8F01A5B43ED00E4724E /* pngget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngget.c; sourceTree = "<group>"; };
-		84B5B8F11A5B43ED00E4724E /* pngmem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngmem.c; sourceTree = "<group>"; };
-		84B5B8F21A5B43ED00E4724E /* pngpread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngpread.c; sourceTree = "<group>"; };
-		84B5B8F31A5B43ED00E4724E /* pngpriv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pngpriv.h; sourceTree = "<group>"; };
-		84B5B8F41A5B43ED00E4724E /* pngread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngread.c; sourceTree = "<group>"; };
-		84B5B8F51A5B43ED00E4724E /* pngrio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrio.c; sourceTree = "<group>"; };
-		84B5B8F61A5B43ED00E4724E /* pngrtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrtran.c; sourceTree = "<group>"; };
-		84B5B8F71A5B43ED00E4724E /* pngrutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngrutil.c; sourceTree = "<group>"; };
-		84B5B8F81A5B43ED00E4724E /* pngset.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngset.c; sourceTree = "<group>"; };
-		84B5B8F91A5B43ED00E4724E /* pngtrans.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngtrans.c; sourceTree = "<group>"; };
-		84B5B8FA1A5B43ED00E4724E /* pngwio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwio.c; sourceTree = "<group>"; };
-		84B5B8FB1A5B43ED00E4724E /* pngwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwrite.c; sourceTree = "<group>"; };
-		84B5B8FC1A5B43ED00E4724E /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwtran.c; sourceTree = "<group>"; };
-		84B5B8FD1A5B43ED00E4724E /* pngwutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pngwutil.c; sourceTree = "<group>"; };
 		84B5B93F1A5B43ED00E4724E /* lapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lapi.c; sourceTree = "<group>"; };
 		84B5B9401A5B43ED00E4724E /* lapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lapi.h; sourceTree = "<group>"; };
 		84B5B9411A5B43ED00E4724E /* lauxlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lauxlib.c; sourceTree = "<group>"; };
@@ -497,6 +497,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		84003BC61A5C926400F709A3 /* libpng */ = {
+			isa = PBXGroup;
+			children = (
+				84003BC81A5C926400F709A3 /* config.h */,
+				84003BC91A5C926400F709A3 /* png.c */,
+				84003BCA1A5C926400F709A3 /* png.h */,
+				84003BCB1A5C926400F709A3 /* pngconf.h */,
+				84003BCC1A5C926400F709A3 /* pngerror.c */,
+				84003BCD1A5C926400F709A3 /* pngget.c */,
+				84003BCE1A5C926400F709A3 /* pngmem.c */,
+				84003BCF1A5C926400F709A3 /* pngpread.c */,
+				84003BD01A5C926400F709A3 /* pngpriv.h */,
+				84003BD11A5C926400F709A3 /* pngread.c */,
+				84003BD21A5C926400F709A3 /* pngrio.c */,
+				84003BD31A5C926400F709A3 /* pngrtran.c */,
+				84003BD41A5C926400F709A3 /* pngrutil.c */,
+				84003BD51A5C926400F709A3 /* pngset.c */,
+				84003BD61A5C926400F709A3 /* pngtrans.c */,
+				84003BD71A5C926400F709A3 /* pngwio.c */,
+				84003BD81A5C926400F709A3 /* pngwrite.c */,
+				84003BD91A5C926400F709A3 /* pngwtran.c */,
+				84003BDA1A5C926400F709A3 /* pngwutil.c */,
+			);
+			path = libpng;
+			sourceTree = "<group>";
+		};
 		8400CFC81A5B2E24003EDDA0 = {
 			isa = PBXGroup;
 			children = (
@@ -717,9 +743,9 @@
 		84B5B7881A5B43EC00E4724E /* thirdparty */ = {
 			isa = PBXGroup;
 			children = (
+				84003BC61A5C926400F709A3 /* libpng */,
 				84B5B7891A5B43EC00E4724E /* Box2D */,
 				84B5B8E51A5B43ED00E4724E /* json11 */,
-				84B5B8E81A5B43ED00E4724E /* libpng */,
 				84B5B93D1A5B43ED00E4724E /* lua */,
 			);
 			path = thirdparty;
@@ -888,40 +914,6 @@
 				84B5B8E71A5B43ED00E4724E /* json11.hpp */,
 			);
 			path = json11;
-			sourceTree = "<group>";
-		};
-		84B5B8E81A5B43ED00E4724E /* libpng */ = {
-			isa = PBXGroup;
-			children = (
-				84B5B8E91A5B43ED00E4724E /* android */,
-			);
-			path = libpng;
-			sourceTree = "<group>";
-		};
-		84B5B8E91A5B43ED00E4724E /* android */ = {
-			isa = PBXGroup;
-			children = (
-				84B5B8EB1A5B43ED00E4724E /* config.h */,
-				84B5B8EC1A5B43ED00E4724E /* png.c */,
-				84B5B8ED1A5B43ED00E4724E /* png.h */,
-				84B5B8EE1A5B43ED00E4724E /* pngconf.h */,
-				84B5B8EF1A5B43ED00E4724E /* pngerror.c */,
-				84B5B8F01A5B43ED00E4724E /* pngget.c */,
-				84B5B8F11A5B43ED00E4724E /* pngmem.c */,
-				84B5B8F21A5B43ED00E4724E /* pngpread.c */,
-				84B5B8F31A5B43ED00E4724E /* pngpriv.h */,
-				84B5B8F41A5B43ED00E4724E /* pngread.c */,
-				84B5B8F51A5B43ED00E4724E /* pngrio.c */,
-				84B5B8F61A5B43ED00E4724E /* pngrtran.c */,
-				84B5B8F71A5B43ED00E4724E /* pngrutil.c */,
-				84B5B8F81A5B43ED00E4724E /* pngset.c */,
-				84B5B8F91A5B43ED00E4724E /* pngtrans.c */,
-				84B5B8FA1A5B43ED00E4724E /* pngwio.c */,
-				84B5B8FB1A5B43ED00E4724E /* pngwrite.c */,
-				84B5B8FC1A5B43ED00E4724E /* pngwtran.c */,
-				84B5B8FD1A5B43ED00E4724E /* pngwutil.c */,
-			);
-			path = android;
 			sourceTree = "<group>";
 		};
 		84B5B93D1A5B43ED00E4724E /* lua */ = {
@@ -1099,8 +1091,6 @@
 				84B5B9A11A5B43ED00E4724E /* lunascenes.cpp in Sources */,
 				84B5B9D11A5B43ED00E4724E /* b2CircleShape.cpp in Sources */,
 				84B5B9D81A5B43ED00E4724E /* b2StackAllocator.cpp in Sources */,
-				84B5BA051A5B43ED00E4724E /* pngwrite.c in Sources */,
-				84B5B9FC1A5B43ED00E4724E /* pngmem.c in Sources */,
 				84B5B9B31A5B43ED00E4724E /* lunaphysicsrectshape.cpp in Sources */,
 				84B5BA4A1A5B43ED00E4724E /* lgc.c in Sources */,
 				84B5BA4C1A5B43ED00E4724E /* liolib.c in Sources */,
@@ -1110,33 +1100,34 @@
 				84B5B9F81A5B43ED00E4724E /* json11.cpp in Sources */,
 				84B5B9EF1A5B43ED00E4724E /* b2PrismaticJoint.cpp in Sources */,
 				84B5B9E61A5B43ED00E4724E /* b2EdgeAndPolygonContact.cpp in Sources */,
+				84003BDD1A5C926400F709A3 /* pngget.c in Sources */,
 				84B5BA701A5B48E700E4724E /* lunaappdelegate.m in Sources */,
 				84B5BA3E1A5B43ED00E4724E /* lapi.c in Sources */,
 				84B5B99E1A5B43ED00E4724E /* lunaassets.cpp in Sources */,
 				84B5B9BF1A5B43ED00E4724E /* lunaiosutils.mm in Sources */,
 				84B5B9BC1A5B43ED00E4724E /* lunaiosfiles.mm in Sources */,
-				84B5BA071A5B43ED00E4724E /* pngwutil.c in Sources */,
 				84B5B9C81A5B43ED00E4724E /* b2BroadPhase.cpp in Sources */,
 				84B5B9EB1A5B43ED00E4724E /* b2GearJoint.cpp in Sources */,
 				84B5B9A61A5B43ED00E4724E /* lunamathmodule.cpp in Sources */,
+				84003BE01A5C926400F709A3 /* pngread.c in Sources */,
 				84B5BA4F1A5B43ED00E4724E /* lmem.c in Sources */,
 				84B5B9AE1A5B43ED00E4724E /* lunaphysicsmodule.cpp in Sources */,
-				84B5BA021A5B43ED00E4724E /* pngset.c in Sources */,
-				84B5BA011A5B43ED00E4724E /* pngrutil.c in Sources */,
 				84B5B9CE1A5B43ED00E4724E /* b2DynamicTree.cpp in Sources */,
 				84B5B9D31A5B43ED00E4724E /* b2PolygonShape.cpp in Sources */,
 				84B5B9B21A5B43ED00E4724E /* lunaphysicsedgeshape.cpp in Sources */,
+				84003BE71A5C926400F709A3 /* pngwrite.c in Sources */,
 				84B5BA5E1A5B43ED00E4724E /* lvm.c in Sources */,
+				84003BE51A5C926400F709A3 /* pngtrans.c in Sources */,
 				84B5B9F01A5B43ED00E4724E /* b2PulleyJoint.cpp in Sources */,
 				84B5B9A91A5B43ED00E4724E /* lunaphysicsdistancejoint.cpp in Sources */,
 				84B5B9E51A5B43ED00E4724E /* b2EdgeAndCircleContact.cpp in Sources */,
 				84B5B9EC1A5B43ED00E4724E /* b2Joint.cpp in Sources */,
+				84003BE11A5C926400F709A3 /* pngrio.c in Sources */,
 				84B5B9BE1A5B43ED00E4724E /* lunaioslog.mm in Sources */,
 				84B5BA661A5B43ED00E4724E /* lunawatcher.cpp in Sources */,
 				84B5BA551A5B43ED00E4724E /* lstate.c in Sources */,
 				84B5BA531A5B43ED00E4724E /* loslib.c in Sources */,
 				84B5B9DC1A5B43ED00E4724E /* b2Fixture.cpp in Sources */,
-				84B5B9FF1A5B43ED00E4724E /* pngrio.c in Sources */,
 				84B5B9A51A5B43ED00E4724E /* lunalogmodule.cpp in Sources */,
 				84B5BA591A5B43ED00E4724E /* ltablib.c in Sources */,
 				84B5B9A41A5B43ED00E4724E /* lunaintersect.cpp in Sources */,
@@ -1149,7 +1140,6 @@
 				84B5BA491A5B43ED00E4724E /* lfunc.c in Sources */,
 				84B5BA3F1A5B43ED00E4724E /* lauxlib.c in Sources */,
 				84B5BA4B1A5B43ED00E4724E /* linit.c in Sources */,
-				84B5B9F91A5B43ED00E4724E /* png.c in Sources */,
 				84B5B9F51A5B43ED00E4724E /* b2Rope.cpp in Sources */,
 				84B5BA581A5B43ED00E4724E /* ltable.c in Sources */,
 				84B5BA431A5B43ED00E4724E /* lcorolib.c in Sources */,
@@ -1164,18 +1154,20 @@
 				84B5B9ED1A5B43ED00E4724E /* b2MotorJoint.cpp in Sources */,
 				84B5B9A01A5B43ED00E4724E /* lunaengine.cpp in Sources */,
 				84B5B9E41A5B43ED00E4724E /* b2ContactSolver.cpp in Sources */,
-				84B5BA041A5B43ED00E4724E /* pngwio.c in Sources */,
 				84B5BA461A5B43ED00E4724E /* ldebug.c in Sources */,
+				84003BDE1A5C926400F709A3 /* pngmem.c in Sources */,
 				84B5B9951A5B43ED00E4724E /* lunatexture.cpp in Sources */,
 				84B5B9CC1A5B43ED00E4724E /* b2Collision.cpp in Sources */,
 				84B5BA471A5B43ED00E4724E /* ldo.c in Sources */,
 				84B5B9C01A5B43ED00E4724E /* lunafiles.cpp in Sources */,
 				84B5BA421A5B43ED00E4724E /* lcode.c in Sources */,
+				84003BE81A5C926400F709A3 /* pngwtran.c in Sources */,
 				84B5B9921A5B43ED00E4724E /* lunarenderer.cpp in Sources */,
 				84B5B9A21A5B43ED00E4724E /* lunasizes.cpp in Sources */,
 				84B5BA621A5B43ED00E4724E /* lunacolor.cpp in Sources */,
 				84B5B99A1A5B43ED00E4724E /* luaobject.cpp in Sources */,
 				84B5B9981A5B43ED00E4724E /* luadynamictype.cpp in Sources */,
+				84003BE91A5C926400F709A3 /* pngwutil.c in Sources */,
 				84B5BA561A5B43ED00E4724E /* lstring.c in Sources */,
 				84B5BA511A5B43ED00E4724E /* lobject.c in Sources */,
 				84B5B9A81A5B43ED00E4724E /* lunasplinesmodule.cpp in Sources */,
@@ -1183,29 +1175,31 @@
 				84B5B9F11A5B43ED00E4724E /* b2RevoluteJoint.cpp in Sources */,
 				84B5B9C21A5B43ED00E4724E /* lunaplatformutils.cpp in Sources */,
 				84B5BA5D1A5B43ED00E4724E /* lundump.c in Sources */,
-				84B5BA001A5B43ED00E4724E /* pngrtran.c in Sources */,
 				84B5B99D1A5B43ED00E4724E /* luatable.cpp in Sources */,
 				84B5B9DA1A5B43ED00E4724E /* b2Body.cpp in Sources */,
 				84B5BA401A5B43ED00E4724E /* lbaselib.c in Sources */,
+				84003BDF1A5C926400F709A3 /* pngpread.c in Sources */,
 				84B5B9911A5B43ED00E4724E /* lunapngformat.cpp in Sources */,
+				84003BE31A5C926400F709A3 /* pngrutil.c in Sources */,
 				84B5B9AB1A5B43ED00E4724E /* lunaphysicsbody.cpp in Sources */,
 				84B5B9C91A5B43ED00E4724E /* b2CollideCircle.cpp in Sources */,
 				84B5B9CB1A5B43ED00E4724E /* b2CollidePolygon.cpp in Sources */,
-				84B5B9FA1A5B43ED00E4724E /* pngerror.c in Sources */,
 				84B5B9AF1A5B43ED00E4724E /* lunaphysicsutils.cpp in Sources */,
 				84B5BA631A5B43ED00E4724E /* lunaglhelpers.cpp in Sources */,
 				84B5B99C1A5B43ED00E4724E /* luascript.cpp in Sources */,
+				84003BE61A5C926400F709A3 /* pngwio.c in Sources */,
 				84B5B9D91A5B43ED00E4724E /* b2Timer.cpp in Sources */,
 				84B5BA411A5B43ED00E4724E /* lbitlib.c in Sources */,
 				84B5B9971A5B43ED00E4724E /* lunatextureregion.cpp in Sources */,
 				84B5B9CA1A5B43ED00E4724E /* b2CollideEdge.cpp in Sources */,
+				84003BE21A5C926400F709A3 /* pngrtran.c in Sources */,
 				84B5BA4E1A5B43ED00E4724E /* lmathlib.c in Sources */,
-				84B5B9FE1A5B43ED00E4724E /* pngread.c in Sources */,
 				84B5B9931A5B43ED00E4724E /* lunashader.cpp in Sources */,
 				84B5B9DF1A5B43ED00E4724E /* b2WorldCallbacks.cpp in Sources */,
 				84B5B9D71A5B43ED00E4724E /* b2Settings.cpp in Sources */,
 				84B5B9B01A5B43ED00E4724E /* lunaphysicsworld.cpp in Sources */,
 				84B5B9B41A5B43ED00E4724E /* lunaphysicsshape.cpp in Sources */,
+				84003BDB1A5C926400F709A3 /* png.c in Sources */,
 				84B5BA481A5B43ED00E4724E /* ldump.c in Sources */,
 				84B5B9D21A5B43ED00E4724E /* b2EdgeShape.cpp in Sources */,
 				84B5B9E71A5B43ED00E4724E /* b2PolygonAndCircleContact.cpp in Sources */,
@@ -1215,7 +1209,6 @@
 				84B5B9A71A5B43ED00E4724E /* lunaplatformmodule.cpp in Sources */,
 				84B5B99B1A5B43ED00E4724E /* luaref.cpp in Sources */,
 				84B5B9DE1A5B43ED00E4724E /* b2World.cpp in Sources */,
-				84B5B9FB1A5B43ED00E4724E /* pngget.c in Sources */,
 				84B5B9F21A5B43ED00E4724E /* b2RopeJoint.cpp in Sources */,
 				84B5B9901A5B43ED00E4724E /* lunamesh.cpp in Sources */,
 				84B5B9C11A5B43ED00E4724E /* lunalog.cpp in Sources */,
@@ -1226,18 +1219,17 @@
 				84B5B99F1A5B43ED00E4724E /* lunaconfig.cpp in Sources */,
 				84B5B9B11A5B43ED00E4724E /* lunaphysicscircleshape.cpp in Sources */,
 				84B5B98E1A5B43ED00E4724E /* lunagraphics.cpp in Sources */,
-				84B5BA061A5B43ED00E4724E /* pngwtran.c in Sources */,
 				84B5B9D41A5B43ED00E4724E /* b2BlockAllocator.cpp in Sources */,
-				84B5BA031A5B43ED00E4724E /* pngtrans.c in Sources */,
 				84B5B9F31A5B43ED00E4724E /* b2WeldJoint.cpp in Sources */,
+				84003BE41A5C926400F709A3 /* pngset.c in Sources */,
 				84B5B9D51A5B43ED00E4724E /* b2Draw.cpp in Sources */,
 				84B5B9DD1A5B43ED00E4724E /* b2Island.cpp in Sources */,
-				84B5B9FD1A5B43ED00E4724E /* pngpread.c in Sources */,
 				84B5BA571A5B43ED00E4724E /* lstrlib.c in Sources */,
 				84B5BA501A5B43ED00E4724E /* loadlib.c in Sources */,
 				84B5B9CD1A5B43ED00E4724E /* b2Distance.cpp in Sources */,
 				84B5B9DB1A5B43ED00E4724E /* b2ContactManager.cpp in Sources */,
 				84B5BA441A5B43ED00E4724E /* lctype.c in Sources */,
+				84003BDC1A5C926400F709A3 /* pngerror.c in Sources */,
 				84B5BA541A5B43ED00E4724E /* lparser.c in Sources */,
 				84B5BA711A5B48E700E4724E /* lunaviewcontroller.mm in Sources */,
 				84B5BA651A5B43ED00E4724E /* lunavector2.cpp in Sources */,
