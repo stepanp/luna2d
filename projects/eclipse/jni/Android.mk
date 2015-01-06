@@ -31,7 +31,7 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/lua/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/libzip/ \
-	$(LOCAL_PATH)/../../../luna2d/thirdparty/libpng/android/ \
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/libpng/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/json11/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/Box2D/
 	
@@ -43,5 +43,5 @@ include $(BUILD_SHARED_LIBRARY)
 SAVED_LOCAL_PATH := $(LOCAL_PATH)
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/lua/Android.mk
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/libzip/Android.mk
-include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/libpng/android/Android.mk
+include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/libpng/Android.mk
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/Box2D/Android.mk

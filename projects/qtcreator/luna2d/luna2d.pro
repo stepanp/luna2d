@@ -33,7 +33,7 @@ INCLUDEPATH += ../../../luna2d \
 	../../../luna2d/platform/qt/ \
 	../../../luna2d/thirdparty/ \
 	../../../luna2d/thirdparty/lua/ \
-	../../../luna2d/thirdparty/libpng/android/ \
+	../../../luna2d/thirdparty/libpng/ \
 	../../../luna2d/thirdparty/json11/ \
 	../../../luna2d/thirdparty/Box2D/ \
 	../../../luna2d/utils/
@@ -55,21 +55,21 @@ SOURCES += \
     ../../../luna2d/lunaassets.cpp \
     ../../../luna2d/lunaengine.cpp \
     ../../../luna2d/lunascenes.cpp \
-    ../../../luna2d/thirdparty/libpng/android/png.c \
-    ../../../luna2d/thirdparty/libpng/android/pngerror.c \
-    ../../../luna2d/thirdparty/libpng/android/pngget.c \
-    ../../../luna2d/thirdparty/libpng/android/pngmem.c \
-    ../../../luna2d/thirdparty/libpng/android/pngpread.c \
-    ../../../luna2d/thirdparty/libpng/android/pngread.c \
-    ../../../luna2d/thirdparty/libpng/android/pngrio.c \
-    ../../../luna2d/thirdparty/libpng/android/pngrtran.c \
-    ../../../luna2d/thirdparty/libpng/android/pngrutil.c \
-    ../../../luna2d/thirdparty/libpng/android/pngset.c \
-    ../../../luna2d/thirdparty/libpng/android/pngtrans.c \
-    ../../../luna2d/thirdparty/libpng/android/pngwio.c \
-    ../../../luna2d/thirdparty/libpng/android/pngwrite.c \
-    ../../../luna2d/thirdparty/libpng/android/pngwtran.c \
-    ../../../luna2d/thirdparty/libpng/android/pngwutil.c \
+	../../../luna2d/thirdparty/libpng/png.c \
+	../../../luna2d/thirdparty/libpng/pngerror.c \
+	../../../luna2d/thirdparty/libpng/pngget.c \
+	../../../luna2d/thirdparty/libpng/pngmem.c \
+	../../../luna2d/thirdparty/libpng/pngpread.c \
+	../../../luna2d/thirdparty/libpng/pngread.c \
+	../../../luna2d/thirdparty/libpng/pngrio.c \
+	../../../luna2d/thirdparty/libpng/pngrtran.c \
+	../../../luna2d/thirdparty/libpng/pngrutil.c \
+	../../../luna2d/thirdparty/libpng/pngset.c \
+	../../../luna2d/thirdparty/libpng/pngtrans.c \
+	../../../luna2d/thirdparty/libpng/pngwio.c \
+	../../../luna2d/thirdparty/libpng/pngwrite.c \
+	../../../luna2d/thirdparty/libpng/pngwtran.c \
+	../../../luna2d/thirdparty/libpng/pngwutil.c \
     ../../../luna2d/thirdparty/lua/lapi.c \
     ../../../luna2d/thirdparty/lua/lauxlib.c \
     ../../../luna2d/thirdparty/lua/lbaselib.c \
@@ -217,10 +217,10 @@ HEADERS += \
     ../../../luna2d/platform/lunalog.h \
     ../../../luna2d/platform/lunaplatform.h \
     ../../../luna2d/platform/lunaplatformutils.h \
-    ../../../luna2d/thirdparty/libpng/android/config.h \
-    ../../../luna2d/thirdparty/libpng/android/png.h \
-    ../../../luna2d/thirdparty/libpng/android/pngconf.h \
-    ../../../luna2d/thirdparty/libpng/android/pngpriv.h \
+	../../../luna2d/thirdparty/libpng/config.h \
+	../../../luna2d/thirdparty/libpng/png.h \
+	../../../luna2d/thirdparty/libpng/pngconf.h \
+	../../../luna2d/thirdparty/libpng/pngpriv.h \
     ../../../luna2d/thirdparty/lua/lapi.h \
     ../../../luna2d/thirdparty/lua/lauxlib.h \
     ../../../luna2d/thirdparty/lua/lcode.h \
