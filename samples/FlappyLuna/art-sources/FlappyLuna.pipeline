@@ -1,0 +1,31 @@
+{
+    "tasks": [
+        {
+            "atlas": true,
+            "atlasParams": {
+                "duplicatePadding": true,
+                "maxHeight": 2048,
+                "maxWidth": 2048,
+                "name": "items",
+                "padding": 1
+            },
+            "name": "Task1",
+            "nodes": [
+                {
+                    "path": "",
+                    "type": "folder"
+                }
+            ],
+            "outputDir": "../assets/art",
+            "outputRes": [
+                "WVGA",
+                "HVGA",
+                "HD"
+            ],
+            "potSize": false,
+            "resize": true,
+            "sourceRes": "HD"
+        }
+    ],
+    "useRelativePath": true
+}

@@ -1,0 +1,277 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84003BB91A5C63EC00F709A3 /* libluna2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84003BB71A5C63EC00F709A3 /* libluna2d.a */; };
+		84003BBA1A5C63EC00F709A3 /* luna2d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84003BB81A5C63EC00F709A3 /* luna2d.mm */; };
+		84003BBE1A5C642300F709A3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 84003BBD1A5C642300F709A3 /* assets */; };
+		84003BC31A5C645D00F709A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84003BC21A5C645D00F709A3 /* Info.plist */; };
+		84003BC51A5C648E00F709A3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84003BC41A5C648E00F709A3 /* libz.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		84003B8A1A5C623000F709A3 /* FlappyLuna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyLuna.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84003BB71A5C63EC00F709A3 /* libluna2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluna2d.a; path = ../../../lib/ios/libluna2d.a; sourceTree = "<group>"; };
+		84003BB81A5C63EC00F709A3 /* luna2d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = luna2d.mm; path = ../../../lib/ios/luna2d.mm; sourceTree = "<group>"; };
+		84003BBD1A5C642300F709A3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
+		84003BC21A5C645D00F709A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84003BC41A5C648E00F709A3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		84003B871A5C623000F709A3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84003BC51A5C648E00F709A3 /* libz.dylib in Frameworks */,
+				84003BB91A5C63EC00F709A3 /* libluna2d.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		84003B811A5C623000F709A3 = {
+			isa = PBXGroup;
+			children = (
+				84003BC41A5C648E00F709A3 /* libz.dylib */,
+				84003BC11A5C645D00F709A3 /* FlappyLuna */,
+				84003BBD1A5C642300F709A3 /* assets */,
+				84003BB71A5C63EC00F709A3 /* libluna2d.a */,
+				84003BB81A5C63EC00F709A3 /* luna2d.mm */,
+				84003B8B1A5C623000F709A3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		84003B8B1A5C623000F709A3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84003B8A1A5C623000F709A3 /* FlappyLuna.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		84003BC11A5C645D00F709A3 /* FlappyLuna */ = {
+			isa = PBXGroup;
+			children = (
+				84003BC21A5C645D00F709A3 /* Info.plist */,
+			);
+			path = FlappyLuna;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		84003B891A5C623000F709A3 /* FlappyLuna */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84003BB11A5C623000F709A3 /* Build configuration list for PBXNativeTarget "FlappyLuna" */;
+			buildPhases = (
+				84003B861A5C623000F709A3 /* Sources */,
+				84003B871A5C623000F709A3 /* Frameworks */,
+				84003B881A5C623000F709A3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlappyLuna;
+			productName = FlappyLuna;
+			productReference = 84003B8A1A5C623000F709A3 /* FlappyLuna.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		84003B821A5C623000F709A3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = stepanp;
+				TargetAttributes = {
+					84003B891A5C623000F709A3 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 84003B851A5C623000F709A3 /* Build configuration list for PBXProject "FlappyLuna" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 84003B811A5C623000F709A3;
+			productRefGroup = 84003B8B1A5C623000F709A3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				84003B891A5C623000F709A3 /* FlappyLuna */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		84003B881A5C623000F709A3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84003BC31A5C645D00F709A3 /* Info.plist in Resources */,
+				84003BBE1A5C642300F709A3 /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84003B861A5C623000F709A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84003BBA1A5C63EC00F709A3 /* luna2d.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		84003BAF1A5C623000F709A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		84003BB01A5C623000F709A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		84003BB21A5C623000F709A3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FlappyLuna/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/admin/Projects/luna2d/lib/ios,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		84003BB31A5C623000F709A3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = FlappyLuna/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/admin/Projects/luna2d/lib/ios,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		84003B851A5C623000F709A3 /* Build configuration list for PBXProject "FlappyLuna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84003BAF1A5C623000F709A3 /* Debug */,
+				84003BB01A5C623000F709A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84003BB11A5C623000F709A3 /* Build configuration list for PBXNativeTarget "FlappyLuna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84003BB21A5C623000F709A3 /* Debug */,
+				84003BB31A5C623000F709A3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 84003B821A5C623000F709A3 /* Project object */;
+}
