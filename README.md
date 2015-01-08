@@ -21,4 +21,4 @@ Emulator for useful testing games on desktop. Can run games in different screen 
 
 #### Pipeline
 Tool for automatic preparing graphical assets. Includes image resizer and texture packer. 
-Supports PSD using **[libqpsd](https://github.com/Code-ReaQtor/libqpsd)**. libqpsd binaries for Windows can be found in **[thirdparty](luna2d/thirdparty/libqpsd)** folder.
+Supports PSD using **[libqpsd](https://github.com/Code-ReaQtor/libqpsd)**.
