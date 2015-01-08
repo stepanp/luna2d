@@ -260,6 +260,8 @@ void LUNAAssets::LoadFolder(const std::string& folder, bool recursive)
 // Load specifed asset file
 void LUNAAssets::LoadFile(const std::string& filename)
 {
+	if(filename == CONFIG_FILENAME) return; // Ignore config file
+
 	LuaScript *lua = LUNAEngine::SharedLua();
 	LUNAFiles *files = LUNAEngine::SharedFiles();
 	LUNASizes *sizes = LUNAEngine::SharedSizes();

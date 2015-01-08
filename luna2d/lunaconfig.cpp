@@ -22,57 +22,68 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaconfig.h"
+#include "lunaengine.h"
+#include "lunalog.h"
+#include "lunafiles.h"
 #include "lunasizes.h"
 #include <functional>
 #include <algorithm>
+#include <json11.hpp>
 
 using namespace luna2d;
+using namespace json11;
 
-// Init with default values
-LUNAConfig::LUNAConfig() :
-	orientation(LUNAOrientation::LANDSCAPE),
-	scaleMode(LUNAScaleMode::FIT_TO_HEIGHT_LEFT),
-	baseWidth(480), baseHeight(BASE_SIZE)
+void LUNAConfig::Read()
 {
-}
-
-// Init with config from "config.lua" file
-LUNAConfig::LUNAConfig(LuaTable tblConfig) : LUNAConfig()
-{
-	Read(tblConfig);
-}
-
-void LUNAConfig::Read(LuaTable tblConfig)
-{
-	if(tblConfig.HasField("orientation"))
+	if(!LUNAEngine::SharedFiles()->IsExists(CONFIG_FILENAME))
 	{
-		std::string str = tblConfig.GetString("orientation");
+		LUNA_LOGW("\"%s\" not found. Use default config", CONFIG_FILENAME.c_str());
+		return;
+	}
+
+	std::string configData = LUNAEngine::SharedFiles()->ReadFileToString(CONFIG_FILENAME, LUNAFileLocation::ASSETS);
+	std::string err;
+	Json jsonConfig = Json::parse(configData, err);
+	if(jsonConfig == nullptr)
+	{
+		LUNA_LOGE("Error with parsing config: \"%s\"", err.c_str());
+		return;
+	}
+
+	if(jsonConfig["orientation"] != nullptr)
+	{
+		std::string str = jsonConfig["orientation"].string_value();
 		if(str == "portrait") orientation = LUNAOrientation::PORTRAIT;
 		else if(str == "landscape") orientation = LUNAOrientation::LANDSCAPE;
 		else LUNA_LOGE("Incorrect orientation \"%s\"", str.c_str());
 	}
 
-	if(tblConfig.HasField("resolutions"))
+	if(jsonConfig["resolutions"] != nullptr)
 	{
-		resolutions = tblConfig.GetField<std::vector<std::string>>("resolutions");
+		auto jsonResolutions = jsonConfig["resolutions"].array_items();
+		std::vector<std::string> parsedResolutions;
 
-		// Filter unsupported resolutions
-		auto predicate = [](const std::string& res)
+		// Parse resolutions from config
+		for(auto item : jsonResolutions)
 		{
+			std::string res = item.string_value();
+
 			if(RESOLUTIONS_TABLE.count(res) == 0)
 			{
 				LUNA_LOGE("Unsupported resolution \"%s\"", res.c_str());
-				return true;
+				continue;
 			}
 
-			return false;
-		};
-		resolutions.erase(std::remove_if(resolutions.begin(), resolutions.end(), predicate), resolutions.end());
+			parsedResolutions.push_back(res);
+		}
+
+		// Replace default resolutions list with resolutions from config
+		if(!parsedResolutions.empty()) resolutions.swap(parsedResolutions);
 	}
 
-	if(tblConfig.HasField("scaleMode"))
+	if(jsonConfig["scaleMode"] != nullptr)
 	{
-		std::string scaleModeStr = tblConfig.GetString("scaleMode");
+		std::string scaleModeStr = jsonConfig["scaleMode"].string_value();
 		if(scaleModeStr == "fitToHeightLeft") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
 		else if(scaleModeStr == "fitToHeightRight") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_RIGHT;
 		else if(scaleModeStr == "fitToHeightCenter") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_CENTER;
@@ -82,6 +93,15 @@ void LUNAConfig::Read(LuaTable tblConfig)
 		else LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
 	}
 
-	if(tblConfig.HasField("baseHeight")) baseHeight = tblConfig.GetFloat("baseHeight");
-	if(tblConfig.HasField("baseWidth")) baseWidth = tblConfig.GetFloat("baseWidth");
+	if(jsonConfig["baseWidth"] != nullptr)
+	{
+		if(jsonConfig["baseWidth"].is_number()) baseWidth = jsonConfig["baseWidth"].int_value();
+		else LUNA_LOGE("Base width must be number");
+	}
+
+	if(jsonConfig["baseHeight"] != nullptr)
+	{
+		if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
+		else LUNA_LOGE("Base height must be number");
+	}
 }

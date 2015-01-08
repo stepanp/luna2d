@@ -23,9 +23,7 @@
 
 #pragma once
 
-#include "lunalua.h"
-#include <string>
-#include <vector>
+#include "lunaengine.h"
 
 namespace luna2d{
 
@@ -48,17 +46,14 @@ enum class LUNAScaleMode
 class LUNAConfig
 {
 public:
-	LUNAConfig(); // Init with default values
-	LUNAConfig(LuaTable tblConfig); // Init with config from "config.lua" file
+	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
+	LUNAScaleMode scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
+	std::vector<std::string> resolutions = { DEFAULT_RESOLUTION };
+	int baseWidth = 480;
+	int baseHeight = BASE_SIZE;
 
 public:
-	LUNAOrientation orientation;
-	LUNAScaleMode scaleMode;
-	std::vector<std::string> resolutions;
-	int baseWidth, baseHeight;
-
-private:
-	void Read(LuaTable tblConfig);
+	void Read();
 };
 
 }

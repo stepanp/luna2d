@@ -25,13 +25,8 @@
 
 #include "lunaconfig.h"
 #include "lunaglm.h"
-#include <string>
-#include <vector>
-#include <unordered_map>
 
 namespace luna2d{
-
-const int BASE_SIZE = 320;
 
 // List of all available screen resolutions
 // For calculatring virtual resolution needs only height, so table not store resolutions width

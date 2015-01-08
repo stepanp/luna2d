@@ -69,7 +69,9 @@ void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *pla
 
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 {
-	ReadConfig();
+	// Read config file
+	config = std::unique_ptr<LUNAConfig>(new LUNAConfig());
+	config->Read();
 
 	lua = new LuaScript();
 
@@ -82,7 +84,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	RunEmbeddedScripts();
 	LoadModules();
 
-	sizes = new LUNASizes(screenWidth, screenHeight, config);
+	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
 	assets = new LUNAAssets();
 	graphics = new LUNAGraphics();
 	scenes = new LUNAScenes();
@@ -105,7 +107,6 @@ void LUNAEngine::Deinitialize()
 {
 	UnloadModules();
 
-	delete config;
 	delete files;
 	delete log;
 	delete platformUtils;
@@ -130,7 +131,7 @@ void LUNAEngine::Deinitialize()
 
 LUNAConfig* LUNAEngine::GetConfig()
 {
-	return config;
+	return config.get();
 }
 
 void LUNAEngine::LoadModules()
@@ -148,32 +149,6 @@ void LUNAEngine::RunEmbeddedScripts()
 {
 	lua->DoString(LUNA_LUA_OOP_SUPPORT);
 	lua->DoString(LUNA_LUA_USERDATA_PAIRS);
-}
-
-void LUNAEngine::ReadConfig()
-{
-	if(!files->IsExists("scripts/config.lua"))
-	{
-		LUNA_LOGW("\"config.lua\" not found. Use default config");
-
-		config = new LUNAConfig();
-		return;
-	}
-
-	// Open separate lua state for config
-	// to code from config file cannot make changes in game code
-	LuaScript lua;
-
-	// Make "luna" table in global table
-	LuaTable tblGlobal = lua.GetGlobalTable();
-	LuaTable tblLuna(&lua);
-	tblGlobal.SetField("luna", tblLuna);
-
-	lua.DoFile("scripts/config.lua");
-
-	// Read config values
-	LuaTable tblConfig = tblLuna.GetTable("config");
-	config = new LUNAConfig(tblConfig);
 }
 
 bool LUNAEngine::IsInitialized()

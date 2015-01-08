@@ -24,8 +24,11 @@
 #pragma once
 
 #include "lunaplatform.h"
-#include <unordered_map>
+#include "lunaconstants.h"
 #include <string>
+#include <vector>
+#include <unordered_map>
+#include <memory>
 
 namespace luna2d{
 
@@ -60,7 +63,7 @@ private:
 
 	std::unordered_map<std::string, LUNAModule*> modules;
 
-	LUNAConfig *config;
+	std::unique_ptr<LUNAConfig> config;
 	bool initialized;
 
 public:
@@ -72,7 +75,6 @@ public:
 	void LoadModules();
 	void UnloadModules();
 	void RunEmbeddedScripts();
-	void ReadConfig();
 	bool IsInitialized();
 	void ReloadAssets();
 
