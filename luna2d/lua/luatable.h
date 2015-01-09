@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // luna2d engine
-// Copyright 2014 Stepan Prokofjev
+// Copyright 2014-2015 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -141,9 +141,9 @@ public:
 	// without having to specify template of return type
 	inline LuaFunction GetFunction(const std::string& name) const { return GetField<LuaFunction>(name); }
 	inline LuaTable GetTable(const std::string& name) const { return GetField<LuaTable>(name); }
-	inline int GetBool(const std::string& name) const { return GetField<bool>(name); }
+	inline bool GetBool(const std::string& name) const { return GetField<bool>(name); }
 	inline int GetInt(const std::string& name) const { return GetField<int>(name); }
-	inline int GetFloat(const std::string& name) const { return GetField<float>(name); }
+	inline float GetFloat(const std::string& name) const { return GetField<float>(name); }
 	inline std::string GetString(const std::string& name) const { return GetField<std::string>(name); }
 };
 
