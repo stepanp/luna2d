@@ -1,7 +1,7 @@
 //---------------------------------
 // luna2d engine
 // lunalogmodule.cpp - Log module
-// Copyright 2014 Stepan Prokofjev
+// Copyright 2014-2014 Stepan Prokofjev
 //---------------------------------
 
 #include "lunalogmodule.h"

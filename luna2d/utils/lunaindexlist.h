@@ -3,7 +3,7 @@
 // lunaindexlist.h
 // Implementation of "indices trick"
 // Using to get index of unpacked element of variadic template
-// Copyright 2014 Stepan Prokofjev
+// Copyright 2014-2014 Stepan Prokofjev
 //------------------------------------------------------------
 
 #pragma once

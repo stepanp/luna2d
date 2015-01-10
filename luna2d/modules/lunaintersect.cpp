@@ -1,7 +1,7 @@
 //-----------------------------------------------------
 // luna2d engine
 // lunaintersect.cpp - Functions for check intersectons
-// Copyright 2014 Stepan Prokofjev
+// Copyright 2014-2014 Stepan Prokofjev
 //-----------------------------------------------------
 
 #include "lunaintersect.h"

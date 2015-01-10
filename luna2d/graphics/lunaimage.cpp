@@ -1,7 +1,7 @@
 //-------------------------------------------
 // luna2d engine
 // lunaimage.cpp - Class for work with images
-// Copyright 2014 Stepan Prokofjev
+// Copyright 2014-2014 Stepan Prokofjev
 //-------------------------------------------
 
 #include "lunaimage.h"
