@@ -24,7 +24,7 @@
 #pragma once
 
 #include <vector>
-#include <math.h>
+#include <cmath>
 
 // On some compilers, M_PI constant isn't defined
 #ifndef M_PI

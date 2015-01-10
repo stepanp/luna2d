@@ -132,7 +132,7 @@ public:
 		lua_pushcfunction(luaVm, &LuaScript::ErrorHandler); // Set error handler
 		lua_rawgeti(luaVm, LUA_REGISTRYINDEX, ref->GetRef());
 		PushArgs(luaVm, args...);
-		lua_pcall(luaVm, sizeof ... (Args), 1, -(sizeof ... (Args) + 2));
+		lua_pcall(luaVm, sizeof ... (Args), 1, -(int)(sizeof ... (Args) + 2));
 
 		Ret&& ret = LuaStack<Ret>::Pop(luaVm);
 		lua_pop(luaVm, 2); // Pop error handler and return value from stack
@@ -149,7 +149,7 @@ public:
 		lua_pushcfunction(luaVm, &LuaScript::ErrorHandler); // Set error handler
 		lua_rawgeti(luaVm, LUA_REGISTRYINDEX, ref->GetRef());
 		PushArgs(luaVm, args...);
-		lua_pcall(luaVm, sizeof ... (Args), 0, -(sizeof ... (Args) + 2));
+		lua_pcall(luaVm, sizeof ... (Args), 0, -(int)(sizeof ... (Args) + 2));
 		lua_pop(luaVm, 1); // Pop error handler from stack
 	}
 

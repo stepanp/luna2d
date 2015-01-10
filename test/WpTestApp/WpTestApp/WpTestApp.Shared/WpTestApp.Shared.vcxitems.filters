@@ -1,14 +1,908 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)HelloTriangleRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLES.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaassets.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaconfig.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaconstants.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaengine.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunascenes.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunasizes.h">
+      <Filter>luna2d</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunagraphics.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunaimage.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunaimageformat.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunamesh.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunapngformat.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunarenderer.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunashader.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunasprite.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatexture.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatextureatlas.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatextureregion.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaclass.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luadynamictype.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luafunction.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luanil.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaobject.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaproxy.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaref.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luascript.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luastack.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luatable.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\lunalua.h">
+      <Filter>luna2d\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunadebug.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunaintersect.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunalogmodule.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunamathmodule.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunamodule.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunamoduleslist.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunaplatformmodule.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunasplinesmodule.h">
+      <Filter>luna2d\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsbody.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsdebugrenderer.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsfixture.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsmodule.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsutils.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsworld.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\joints\lunaphysicsdistancejoint.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\joints\lunaphysicsjoint.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicscircleshape.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsedgeshape.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsrectshape.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsshape.h">
+      <Filter>luna2d\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunacolor.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunaglhelpers.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunaglm.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunaindexlist.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunamacro.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunamakeweak.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunamathutils.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunavector2.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunawatcher.h">
+      <Filter>luna2d\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\config.h">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\png.h">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngconf.h">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngpriv.h">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lapi.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lauxlib.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcode.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lctype.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldebug.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldo.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lfunc.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lgc.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\llex.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\llimits.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmem.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lobject.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lopcodes.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lparser.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstate.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstring.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltable.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltm.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lua.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lua.hpp">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\luaconf.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lualib.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lundump.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lvm.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lzio.h">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\json11\json11.hpp">
+      <Filter>luna2d\thirdparty\json11</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\crc32.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\deflate.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzguts.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inffast.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inffixed.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inflate.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inftrees.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\trees.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zconf.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zlib.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zutil.h">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Box2D.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Collision.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Distance.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2DynamicTree.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2TimeOfImpact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2ChainShape.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2CircleShape.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2EdgeShape.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2PolygonShape.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2Shape.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2BlockAllocator.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Draw.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2GrowableStack.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Math.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Settings.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2StackAllocator.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Timer.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Body.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2ContactManager.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Fixture.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Island.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2TimeStep.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2World.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2WorldCallbacks.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2CircleContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2Contact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ContactSolver.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2PolygonContact.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2DistanceJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2FrictionJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2GearJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2Joint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2MotorJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2MouseJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2PrismaticJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2PulleyJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2RevoluteJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2RopeJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2WeldJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2WheelJoint.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Rope\b2Rope.h">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)HelloTriangleRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)OpenGLES.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaassets.cpp">
+      <Filter>luna2d</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaconfig.cpp">
+      <Filter>luna2d</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunaengine.cpp">
+      <Filter>luna2d</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunascenes.cpp">
+      <Filter>luna2d</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lunasizes.cpp">
+      <Filter>luna2d</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunagraphics.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunaimage.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunamesh.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunapngformat.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunarenderer.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunashader.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunasprite.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatexture.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatextureatlas.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunatextureregion.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luadynamictype.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luafunction.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaobject.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luaref.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luascript.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\lua\luatable.cpp">
+      <Filter>luna2d\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunadebug.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunaintersect.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunalogmodule.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunamathmodule.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunaplatformmodule.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\modules\lunasplinesmodule.cpp">
+      <Filter>luna2d\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsbody.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsdebugrenderer.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsfixture.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsmodule.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsutils.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\lunaphysicsworld.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\joints\lunaphysicsdistancejoint.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\joints\lunaphysicsjoint.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicscircleshape.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsedgeshape.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsrectshape.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsshape.cpp">
+      <Filter>luna2d\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunacolor.cpp">
+      <Filter>luna2d\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunaglhelpers.cpp">
+      <Filter>luna2d\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunamathutils.cpp">
+      <Filter>luna2d\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunavector2.cpp">
+      <Filter>luna2d\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunawatcher.cpp">
+      <Filter>luna2d\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\png.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngerror.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngget.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngmem.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngpread.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngread.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrio.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrtran.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrutil.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngset.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngtrans.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwio.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwrite.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwtran.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwutil.c">
+      <Filter>luna2d\thirdparty\libpng</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lapi.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lauxlib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbaselib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbitlib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcode.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcorolib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lctype.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldblib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldebug.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldo.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldump.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lfunc.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lgc.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\linit.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\liolib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\llex.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmathlib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmem.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loadlib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lobject.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lopcodes.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loslib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lparser.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstate.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstring.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstrlib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltable.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltablib.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltm.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lundump.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lvm.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lzio.c">
+      <Filter>luna2d\thirdparty\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\json11\json11.cpp">
+      <Filter>luna2d\thirdparty\json11</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\adler32.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\compress.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\crc32.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\deflate.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzclose.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzlib.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzread.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzwrite.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\infback.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inffast.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inflate.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inftrees.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\trees.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\uncompr.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zutil.c">
+      <Filter>luna2d\thirdparty\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideCircle.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideEdge.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollidePolygon.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Collision.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Distance.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2DynamicTree.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2TimeOfImpact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2ChainShape.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2CircleShape.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2EdgeShape.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\Shapes\b2PolygonShape.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2BlockAllocator.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Draw.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Math.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Settings.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2StackAllocator.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Common\b2Timer.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Body.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2ContactManager.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Fixture.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2Island.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2World.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\b2WorldCallbacks.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2CircleContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2Contact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2ContactSolver.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Contacts\b2PolygonContact.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2DistanceJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2FrictionJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2GearJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2Joint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2MotorJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2MouseJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2PulleyJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2RopeJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2WeldJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2WheelJoint.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Rope\b2Rope.cpp">
+      <Filter>luna2d\thirdparty\Box2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
@@ -18,5 +912,43 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)App.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="luna2d">
+      <UniqueIdentifier>{fa5610ce-c33b-49ac-a930-4caafcdf85d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\graphics">
+      <UniqueIdentifier>{f8d02f89-9953-4c02-8811-b2bf82d73735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\lua">
+      <UniqueIdentifier>{1c3b308b-8df5-404b-83a1-a8a36b972183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\utils">
+      <UniqueIdentifier>{698418f9-790e-45bd-88cc-5f34063e6aff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\modules">
+      <UniqueIdentifier>{8765b3d5-698b-4e94-b856-df9b384aee88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\physics">
+      <UniqueIdentifier>{928f78a7-750b-4dfe-9fe7-70de0ee22972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty">
+      <UniqueIdentifier>{70db371f-49f0-429a-b4b6-41fffce9bc67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty\Box2D">
+      <UniqueIdentifier>{bbff4be5-70a9-42b7-b87f-d0210fafbba5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty\libpng">
+      <UniqueIdentifier>{e9314914-ee40-49ad-a462-1e9c5f766ce5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty\lua">
+      <UniqueIdentifier>{07e842e4-7ca4-44a7-97e3-cb8f847aef90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty\zlib">
+      <UniqueIdentifier>{4611224d-1eac-4a68-a4c2-c5afef252005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\thirdparty\json11">
+      <UniqueIdentifier>{4371677f-f399-46bc-a490-d64e90b0b5ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

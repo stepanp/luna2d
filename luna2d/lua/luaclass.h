@@ -26,6 +26,20 @@
 #include "luatable.h"
 #include <type_traits>
 
+// VS2013 not supports constexpr 
+#if LUNA_PLATFORM == LUNA_PLATFORM_WP
+#define LUNA_CHECK_BASE_OF
+#define LUNA_CHECK_BASE_OF_DERRIVED
+#else
+#define LUNA_CHECK_BASE_OF constexpr static bool _CheckIsBaseOf() { return true; }
+#define LUNA_CHECK_BASE_OF_DERRIVED \
+	constexpr static bool _CheckIsBaseOf() \
+	{ \
+		static_assert(std::is_base_of<basecls,cls>::value, "\"" #basecls "\" is not base class of \"" #cls "\""); \
+		return true; \
+	}
+#endif
+
 #define LUNA_USERDATA(cls) \
 	static_assert(std::is_class<cls>::value, "Type \"" #cls "\" is must be a class"); \
 	protected: \
@@ -35,7 +49,7 @@
 		std::shared_ptr<LuaWeakRef> _GetLuaRef() { return _ref; } \
 		static const char* _GetUserdataType() { return #cls; } \
 		static const char* _GetBaseClassType() { return nullptr; } \
-		constexpr static bool _CheckIsBaseOf() { return true; } \
+		LUNA_CHECK_BASE_OF \
 	private: \
 
 #define LUNA_USERDATA_DERIVED(basecls, cls) \
@@ -44,11 +58,7 @@
 	public:  \
 		static const char* _GetUserdataType() { return #cls; } \
 		static const char* _GetBaseClassType() { return #basecls; } \
-		constexpr static bool _CheckIsBaseOf() \
-		{ \
-			static_assert(std::is_base_of<basecls,cls>::value, "\"" #basecls "\" is not base class of \"" #cls "\""); \
-			return true; \
-		} \
+		LUNA_CHECK_BASE_OF_DERRIVED \
 	private:
 
 
@@ -141,7 +151,9 @@ struct LuaUserdata
 template<typename Class>
 class LuaClass : public LuaTable
 {
+#if LUNA_PLATFORM != LUNA_PLATFORM_WP
 	static_assert(Class::_CheckIsBaseOf(), "");
+#endif
 
 	typedef LuaDynamicType (Class::*IndexHandler)(const LuaDynamicType&);
 
