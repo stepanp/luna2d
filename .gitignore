@@ -24,3 +24,16 @@ samples/FlappyLuna/project-android/gen/*
 samples/FlappyLuna/project-android/obj/*
 samples/FlappyLuna/project-ios/FlappyLuna.xcodeproj/project.xcworkspace/*
 samples/FlappyLuna/project-ios/FlappyLuna.xcodeproj/xcuserdata/*
+
+test/WpTestApp/WpTestApp.sdf
+test/WpTestApp/WpTestApp.v12.suo
+test/WpTestApp/WpTestApp.opensdf
+test/WpTestApp/ipch/*
+test/WpTestApp/Debug/*
+test/WpTestApp/Release/*
+test/WpTestApp/WpTestApp/WpTestApp.Windows/Debug/*
+test/WpTestApp/WpTestApp/WpTestApp.Windows/Release/*
+test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Debug/*
+test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Release/*
+test/WpTestApp/WpTestApp/WpTestApp.Windows/Generated Files/*
+test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Generated Files/*

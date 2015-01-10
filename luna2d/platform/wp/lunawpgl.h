@@ -21,46 +21,20 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+//-------------------
+// OpenGL ES includes
+//-------------------
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 
-// Supported platforms
-#define LUNA_PLATFORM_UNKNOWN 0
-#define LUNA_PLATFORM_QT 1
-#define LUNA_PLATFORM_ANDROID 2
-#define LUNA_PLATFORM_IOS 3
-#define LUNA_PLATFORM_WP 4
+//-------------
+// EGL includes
+//-------------
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <EGL/eglplatform.h>
 
-// Desktop emulator based on Qt
-#if defined(QT_CORE_LIB)
-	#define LUNA_PLATFORM LUNA_PLATFORM_QT
-
-// Android
-#elif defined(__ANDROID__)
-	#define LUNA_PLATFORM LUNA_PLATFORM_ANDROID
-
-	#include <string>
-	#include <cstdlib>
-
-	// Android's GCC don't support std::stoi
-	namespace std
-	{
-		inline int stoi(const string& str)
-		{
-			return atoi(str.c_str());
-		}
-	}
-
-
-// iOS
-#elif defined(__APPLE__)
-	#define LUNA_PLATFORM LUNA_PLATFORM_IOS
-
-// Windows Phone / RT
-#elif (WINAPI_FAMILY == WINAPI_FAMILY_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-	#define LUNA_PLATFORM LUNA_PLATFORM_WP
-
-// Check for unsupported platforms
-#else
-	#define LUNA_PLATFORM LUNA_PLATFORM_UNKNOWN
-	#error "Unsupported platform"
-#endif
+//---------------
+// Angle includes
+//---------------
+#include <angle_windowsstore.h>
