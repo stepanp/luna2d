@@ -74,7 +74,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(AngleIncPath);$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../../../../luna2d/platform/wp/;$(ProjectDir)/../../../../luna2d/platform/;$(ProjectDir)/../../../../luna2d/physics/;$(ProjectDir)/../../../../luna2d/thirdparty/zlib/;$(ProjectDir)/../../../../luna2d/thirdparty/libpng/;$(ProjectDir)/../../../../luna2d/thirdparty/lua/;$(ProjectDir)/../../../../luna2d/thirdparty/glm/;$(ProjectDir)/../../../../luna2d/thirdparty/Box2D/;$(ProjectDir)/../../../../luna2d/thirdparty/;$(ProjectDir)/../../../../luna2d/lua/;$(ProjectDir)/../../../../luna2d/modules/;$(ProjectDir)/../../../../luna2d/utils/;$(ProjectDir)/../../../../luna2d/graphics/;$(ProjectDir)/../../../../luna2d/;$(AngleIncPath);$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">NotUsing</PrecompiledHeader>
@@ -90,7 +90,7 @@
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(AngleIncPath);$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)/../../../../luna2d/platform/wp/;$(ProjectDir)/../../../../luna2d/platform/;$(ProjectDir)/../../../../luna2d/physics/;$(ProjectDir)/../../../../luna2d/thirdparty/zlib/;$(ProjectDir)/../../../../luna2d/thirdparty/libpng/;$(ProjectDir)/../../../../luna2d/thirdparty/lua/;$(ProjectDir)/../../../../luna2d/thirdparty/glm/;$(ProjectDir)/../../../../luna2d/thirdparty/Box2D/;$(ProjectDir)/../../../../luna2d/thirdparty/;$(ProjectDir)/../../../../luna2d/lua/;$(ProjectDir)/../../../../luna2d/modules/;$(ProjectDir)/../../../../luna2d/utils/;$(ProjectDir)/../../../../luna2d/graphics/;$(ProjectDir)/../../../../luna2d/;$(AngleIncPath);$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
