@@ -460,6 +460,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawplog.h">
       <Filter>luna2d\platform\wp</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawputils.h">
+      <Filter>luna2d\platform\wp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpfiles.h">
+      <Filter>luna2d\platform\wp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
@@ -934,6 +940,12 @@
       <Filter>luna2d\platform</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawplog.cpp">
+      <Filter>luna2d\platform\wp</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawputils.cpp">
+      <Filter>luna2d\platform\wp</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpfiles.cpp">
       <Filter>luna2d\platform\wp</Filter>
     </ClCompile>
   </ItemGroup>

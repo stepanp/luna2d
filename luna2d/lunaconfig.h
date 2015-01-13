@@ -46,9 +46,12 @@ enum class LUNAScaleMode
 class LUNAConfig
 {
 public:
+	LUNAConfig();
+
+public:
 	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
 	LUNAScaleMode scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
-	std::vector<std::string> resolutions;// = { DEFAULT_RESOLUTION };
+	std::vector<std::string> resolutions;
 	int baseWidth = 480;
 	int baseHeight = BASE_SIZE;
 

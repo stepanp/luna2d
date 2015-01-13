@@ -33,6 +33,11 @@
 using namespace luna2d;
 using namespace json11;
 
+LUNAConfig::LUNAConfig()
+{
+	resolutions = { DEFAULT_RESOLUTION };
+}
+
 void LUNAConfig::Read()
 {
 	if(!LUNAEngine::SharedFiles()->IsExists(CONFIG_FILENAME))

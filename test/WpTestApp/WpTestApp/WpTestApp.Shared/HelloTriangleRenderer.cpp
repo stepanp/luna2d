@@ -14,6 +14,7 @@
 #include "pch.h"
 #include "HelloTriangleRenderer.h"
 #include "lunaengine.h"
+#include "lunawpfiles.h"
 #include "lunawplog.h"
 #include "lunawputils.h"
 
@@ -38,7 +39,7 @@ void HelloTriangleRenderer::Draw(GLsizei width, GLsizei height)
 
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
-		LUNAEngine::Shared()->Assemble(nullptr, new LUNAWpLog(), new LUNAWpUtils());
+		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils());
 		LUNAEngine::Shared()->Initialize(width, height);
 	}
 
