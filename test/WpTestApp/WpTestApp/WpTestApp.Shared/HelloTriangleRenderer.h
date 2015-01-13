@@ -10,8 +10,5 @@ namespace WpTestApp
         HelloTriangleRenderer();
         ~HelloTriangleRenderer();
         void Draw(GLsizei width, GLsizei height);
-
-    private:
-        GLuint mProgram;
     };
 }
