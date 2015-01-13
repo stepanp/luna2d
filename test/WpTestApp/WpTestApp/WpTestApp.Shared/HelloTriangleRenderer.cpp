@@ -15,6 +15,7 @@
 #include "HelloTriangleRenderer.h"
 #include "lunaengine.h"
 #include "lunawplog.h"
+#include "lunawputils.h"
 
 using namespace Platform;
 using namespace WpTestApp;
@@ -37,7 +38,7 @@ void HelloTriangleRenderer::Draw(GLsizei width, GLsizei height)
 
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
-		LUNAEngine::Shared()->Assemble(nullptr, new LUNAWpLog(), nullptr);
+		LUNAEngine::Shared()->Assemble(nullptr, new LUNAWpLog(), new LUNAWpUtils());
 		LUNAEngine::Shared()->Initialize(width, height);
 	}
 
