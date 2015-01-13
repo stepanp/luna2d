@@ -1,7 +1,7 @@
 //-----------------------------------
 // luna2d engine
 // lunapngformat.h - Png image format
-// Copyright 2014-2014 Stepan Prokofjev
+// Copyright 2014-2015 Stepan Prokofjev
 //-----------------------------------
 
 #pragma once
