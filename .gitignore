@@ -31,9 +31,14 @@ test/WpTestApp/WpTestApp.opensdf
 test/WpTestApp/ipch/*
 test/WpTestApp/Debug/*
 test/WpTestApp/Release/*
+test/WpTestApp/ARM/*
 test/WpTestApp/WpTestApp/WpTestApp.Windows/Debug/*
 test/WpTestApp/WpTestApp/WpTestApp.Windows/Release/*
+test/WpTestApp/WpTestApp/WpTestApp.Windows/ARM/*
 test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Debug/*
 test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Release/*
+test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/ARM/*
 test/WpTestApp/WpTestApp/WpTestApp.Windows/Generated Files/*
 test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/Generated Files/*
+test/WpTestApp/WpTestApp/WpTestApp.Windows/WpTestApp.Windows.vcxproj.user
+test/WpTestApp/WpTestApp/WpTestApp.WindowsPhone/WpTestApp.WindowsPhone.vcxproj.user
