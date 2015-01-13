@@ -58,7 +58,7 @@
 #define lua_popen(L,c,m)	((void)L, fflush(NULL), popen(c,m))
 #define lua_pclose(L,file)	((void)L, pclose(file))
 
-#elif defined(LUA_WIN)		/* }{ */
+#elif defined(LUA_WIN) && !defined(LUA_WIN_RT)		/* }{ */
 
 #define lua_popen(L,c,m)		((void)L, _popen(c,m))
 #define lua_pclose(L,file)		((void)L, _pclose(file))

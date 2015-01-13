@@ -76,7 +76,7 @@
 #endif
 
 
-
+#ifndef LUA_WIN_RT
 static int os_execute (lua_State *L) {
   const char *cmd = luaL_optstring(L, 1, NULL);
   int stat = system(cmd);
@@ -87,6 +87,7 @@ static int os_execute (lua_State *L) {
     return 1;
   }
 }
+#endif
 
 
 static int os_remove (lua_State *L) {
@@ -112,11 +113,12 @@ static int os_tmpname (lua_State *L) {
   return 1;
 }
 
-
+#ifndef LUA_WIN_RT
 static int os_getenv (lua_State *L) {
   lua_pushstring(L, getenv(luaL_checkstring(L, 1)));  /* if NULL push nil */
   return 1;
 }
+#endif
 
 
 static int os_clock (lua_State *L) {
@@ -301,9 +303,11 @@ static const luaL_Reg syslib[] = {
   {"clock",     os_clock},
   {"date",      os_date},
   {"difftime",  os_difftime},
-  {"execute",   os_execute},
-  {"exit",      os_exit},
+#ifndef LUA_WIN_RT
+  {"execute",   os_execute},  
   {"getenv",    os_getenv},
+#endif
+  {"exit",      os_exit},
   {"remove",    os_remove},
   {"rename",    os_rename},
   {"setlocale", os_setlocale},

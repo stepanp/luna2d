@@ -633,7 +633,7 @@ static int noenv (lua_State *L) {
   return b;
 }
 
-
+#ifndef LUA_WIN_RT
 static void setpath (lua_State *L, const char *fieldname, const char *envname1,
                                    const char *envname2, const char *def) {
   const char *path = getenv(envname1);
@@ -651,6 +651,7 @@ static void setpath (lua_State *L, const char *fieldname, const char *envname1,
   setprogdir(L);
   lua_setfield(L, -2, fieldname);
 }
+#endif
 
 
 static const luaL_Reg pk_funcs[] = {
@@ -702,10 +703,15 @@ LUAMOD_API int luaopen_package (lua_State *L) {
   lua_setfield(L, -3, "loaders");  /* put it in field `loaders' */
 #endif
   lua_setfield(L, -2, "searchers");  /* put it in field 'searchers' */
+
+  // Changing envieroment paths not supported on WinRT
+#ifndef LUA_WIN_RT
   /* set field 'path' */
   setpath(L, "path", LUA_PATHVERSION, LUA_PATH, LUA_PATH_DEFAULT);
   /* set field 'cpath' */
   setpath(L, "cpath", LUA_CPATHVERSION, LUA_CPATH, LUA_CPATH_DEFAULT);
+#endif
+
   /* store config information */
   lua_pushliteral(L, LUA_DIRSEP "\n" LUA_PATH_SEP "\n" LUA_PATH_MARK "\n"
                      LUA_EXEC_DIR "\n" LUA_IGMARK "\n");

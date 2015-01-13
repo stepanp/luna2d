@@ -439,6 +439,24 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Rope\b2Rope.h">
       <Filter>luna2d\thirdparty\Box2D</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunafiles.h">
+      <Filter>luna2d\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunagl.h">
+      <Filter>luna2d\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunalog.h">
+      <Filter>luna2d\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatform.h">
+      <Filter>luna2d\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatformutils.h">
+      <Filter>luna2d\platform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpgl.h">
+      <Filter>luna2d\platform\wp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
@@ -903,6 +921,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Rope\b2Rope.cpp">
       <Filter>luna2d\thirdparty\Box2D</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunafiles.cpp">
+      <Filter>luna2d\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunalog.cpp">
+      <Filter>luna2d\platform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatformutils.cpp">
+      <Filter>luna2d\platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
@@ -949,6 +976,12 @@
     </Filter>
     <Filter Include="luna2d\thirdparty\json11">
       <UniqueIdentifier>{4371677f-f399-46bc-a490-d64e90b0b5ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\platform">
+      <UniqueIdentifier>{2b40fbe8-3324-4ebf-863e-df3701c1bbb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luna2d\platform\wp">
+      <UniqueIdentifier>{ce6d6c4e-5a7c-4c61-867b-212eddad1b17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

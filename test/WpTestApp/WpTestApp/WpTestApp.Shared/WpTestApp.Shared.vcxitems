@@ -53,6 +53,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsedgeshape.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsrectshape.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsshape.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunafiles.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunalog.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatformutils.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideCircle.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideEdge.cpp" />
@@ -100,68 +103,192 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Rope\b2Rope.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\json11\json11.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\png.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngerror.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngget.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngmem.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngpread.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngread.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrio.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrtran.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrutil.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngset.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngtrans.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwio.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwrite.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwtran.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwutil.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lapi.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lauxlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbaselib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbitlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcode.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcorolib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lctype.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldblib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldebug.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldo.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldump.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lfunc.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lgc.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\linit.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\liolib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\llex.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmathlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmem.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loadlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lobject.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lopcodes.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loslib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lparser.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstate.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstring.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstrlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltable.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltablib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltm.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lundump.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lvm.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lzio.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\adler32.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\compress.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\crc32.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\deflate.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzclose.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzlib.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzread.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzwrite.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\infback.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inffast.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inflate.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inftrees.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\trees.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\uncompr.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zutil.c" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\png.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngerror.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngget.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngmem.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngpread.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngread.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrio.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrtran.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngrutil.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngset.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngtrans.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwio.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwrite.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwtran.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\libpng\pngwutil.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lapi.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lauxlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbaselib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lbitlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcode.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lcorolib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lctype.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldblib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldebug.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldo.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ldump.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lfunc.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lgc.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\linit.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\liolib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\llex.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmathlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lmem.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loadlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lobject.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lopcodes.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\loslib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lparser.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstate.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstring.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lstrlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltable.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltablib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\ltm.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lundump.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lvm.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\lua\lzio.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\adler32.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\compress.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\crc32.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\deflate.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzclose.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzlib.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzread.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\gzwrite.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\infback.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inffast.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inflate.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\inftrees.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\trees.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\uncompr.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\zlib\zutil.c">
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunacolor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunaglhelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunamathutils.cpp" />
@@ -216,6 +343,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsedgeshape.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsrectshape.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\physics\shapes\lunaphysicsshape.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunafiles.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunagl.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunalog.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\lunaplatformutils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpgl.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Box2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Collision.h" />
