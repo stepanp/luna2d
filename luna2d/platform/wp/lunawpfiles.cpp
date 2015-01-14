@@ -23,15 +23,45 @@
 
 #include "lunawpfiles.h"
 #include "platform/lunalog.h"
+#include <Windows.h>
 
 using namespace luna2d;
+
+std::string LUNAWpFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
+{
+	// Convert std::string to std::wstring
+	std::string winPath = GetRootFolder(location) + path;
+	
+	// Replace unix slashes to windows slashes
+	size_t startPos = 0;
+	while((startPos = winPath.find("/", startPos)) != std::string::npos)
+	{
+		winPath.replace(startPos, 1, "\\");
+		startPos += 1;
+	}
+
+	return winPath;
+}
 
 // Check for given path is file
 bool LUNAWpFiles::IsFile(const std::string& path, LUNAFileLocation location)
 {
 	if(location == LUNAFileLocation::ASSETS)
 	{
-		//return filesCache.count(path) == 1;
+		return true;// IsExists(path, location);
+		//stat statBuf;
+		/*struct stat statbuf;
+		stat(GetPathInLocation(path, location).c_str());
+
+
+		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+		if(file)
+		{
+			fclose(file);
+			return true;
+		}
+		struct stat statbuf;
+		stat()*/
 	}
 
 	return false;
@@ -42,7 +72,7 @@ bool LUNAWpFiles::IsDirectory(const std::string& path, LUNAFileLocation location
 {
 	if(location == LUNAFileLocation::ASSETS)
 	{
-		//return directoryCache.count(path) == 1;
+		return true;
 	}
 
 	return false;
@@ -51,6 +81,13 @@ bool LUNAWpFiles::IsDirectory(const std::string& path, LUNAFileLocation location
 // Check for path is exists
 bool LUNAWpFiles::IsExists(const std::string& path, LUNAFileLocation location)
 {
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(file)
+	{
+		fclose(file);
+		return true;
+	}
+
 	return false;
 }
 
@@ -60,8 +97,18 @@ std::string LUNAWpFiles::GetRootFolder(LUNAFileLocation location)
 	switch(location)
 	{
 	case LUNAFileLocation::ASSETS:
-		return "assets/";
+		// Get path to assets directory
+		std::wstring wPath = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
+		wPath += L"\\Assets\\assets\\";
+
+		// Convert path from std::wstring to std::string
+		std::string ret(wPath.length(), '\n');
+		WideCharToMultiByte(CP_ACP, 0, wPath.c_str(), wPath.length(), &ret[0], ret.length(), "", FALSE);
+
+		return std::move(ret);
 	}
+
+	return "";
 }
 
 // Get list of files and subdirectories in given directory
@@ -109,110 +156,53 @@ std::vector<std::string> LUNAWpFiles::GetFileList(const std::string& path, LUNAF
 // Get size of file
 ssize_t LUNAWpFiles::GetFileSize(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
-	{
-		/*zip* apk = OpenApk();
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(!file) return -1;
 
-		if(!IsFile(path))
-		{
-			zip_close(apk);
-			return -1;
-		}
+	fseek(file, 0, SEEK_END);
+	ssize_t size = ftell(file);
+	fclose(file);
 
-		// Read size of file
-		struct zip_stat fileInfo;
-		zip_stat_init(&fileInfo);
-		zip_stat_index(apk, filesCache[path], 0, &fileInfo);
-		zip_close(apk);
-
-		return fileInfo.size;*/
-	}
-
-	return -1;
+	return size;
 }
 
 // Read all file data
 std::vector<unsigned char> LUNAWpFiles::ReadFile(const std::string& path, LUNAFileLocation location)
 {
-	// Read file from assets
-	/*if(location == LUNAFileLocation::ASSETS)
-	{
-		zip* apk = OpenApk();
+	std::vector<unsigned char> ret;
 
-		if(!IsFile(path, LUNAFileLocation::ASSETS))
-		{
-			zip_close(apk);
-			return std::move(std::vector<unsigned char>());
-		}
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(!file) return std::move(ret);
 
-		// Open file
-		int fileIndex = filesCache[path];
-		zip_file* file = zip_fopen_index(apk, fileIndex, 0);
-		if(!file)
-		{
-			zip_close(apk);
-			return std::move(std::vector<unsigned char>());
-		}
+	// Get file size
+	fseek(file, 0, SEEK_END);
+	ssize_t size = ftell(file);
+	fseek(file, 0, SEEK_SET);
 
-		// Read size of file
-		struct zip_stat fileInfo;
-		zip_stat_init(&fileInfo);
-		zip_stat_index(apk,fileIndex, 0, &fileInfo);
+	// Read file
+	ret.resize(size);
+	fread(&ret[0], sizeof(unsigned char), size, file);
+	fclose(file);
 
-		// Read file
-		std::vector<unsigned char> ret;
-		ret.resize(fileInfo.size);
-		int result = zip_fread(file, reinterpret_cast<char*>(&ret[0]), fileInfo.size);
-
-		zip_fclose(file);
-		zip_close(apk);
-
-		if(result == -1) return std::move(std::vector<unsigned char>());
-		else return std::move(ret);
-	}*/
-
-	return std::move(std::vector<unsigned char>());
+	return std::move(ret);
 }
 
 // Read all file data as string
 std::string LUNAWpFiles::ReadFileToString(const std::string& path, LUNAFileLocation location)
 {
-	// Read file from assets
-	/*if(location == LUNAFileLocation::ASSETS)
-	{
-		zip* apk = OpenApk();
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(!file) return "";
 
-		if(!IsFile(path, LUNAFileLocation::ASSETS))
-		{
-			zip_close(apk);
-			return "";
-		}
+	// Get file size
+	fseek(file, 0, SEEK_END);
+	ssize_t size = ftell(file);
+	fseek(file, 0, SEEK_SET);
 
-		// Open file
-		int fileIndex = filesCache[path];
-		zip_file* file = zip_fopen_index(apk, fileIndex, 0);
-		if(!file)
-		{
-			zip_close(apk);
-			return "";
-		}
+	// Read file as string
+	std::string ret;
+	ret.resize(size);
+	fread(&ret[0], sizeof(char), size, file);
+	fclose(file);
 
-		// Read size of file
-		struct zip_stat fileInfo;
-		zip_stat_init(&fileInfo);
-		zip_stat_index(apk,fileIndex, 0, &fileInfo);
-
-		// Read file
-		std::string ret;
-		ret.resize(fileInfo.size);
-		int result = zip_fread(file, &ret[0], fileInfo.size);
-
-		zip_fclose(file);
-		zip_close(apk);
-
-		if(result == -1) return "";
-		else return std::move(ret);
-	}*/
-
-	return "";
+	return std::move(ret);
 }

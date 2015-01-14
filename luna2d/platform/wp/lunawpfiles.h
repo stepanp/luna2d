@@ -32,6 +32,9 @@ namespace luna2d{
 //-------------------------------------------------
 class LUNAWpFiles : public LUNAFiles
 {
+private:
+	std::string GetPathInLocation(const std::string& path, LUNAFileLocation location);
+
 public:
 	// Get root folder for file location
 	virtual std::string GetRootFolder(LUNAFileLocation location = LUNAFileLocation::ASSETS);
