@@ -27,17 +27,17 @@
 using namespace luna2d;
 
 // Print log message with given log level
-void LUNAWpLog::PrintLog(const char* level, const char* message, va_list va)
+void LUNAWpLog::PrintLog(const std::string& level, const char* message, va_list va)
 {
-	char buf[MAX_PATH];
-	vsprintf_s(&buf[0], MAX_PATH, message, va);
+	int size = _vscprintf(message, va) + 1; // Get required buffer size for "vsprintf_s" 
+	std::string buf;
+	buf.resize(size);
+	vsprintf_s(&buf[0], size, message, va);
 
-	std::string msg = level;
-	msg += ": ";
-	msg += buf;
-	msg += '\n';
+	if(!level.empty()) buf.insert(0, level + ":");
+	buf += '\n';
 
-	OutputDebugStringA(msg.c_str());
+	OutputDebugStringA(buf.c_str());
 }
 
 // Log info

@@ -33,7 +33,7 @@ namespace luna2d{
 class LUNAWpLog : public LUNALog
 {
 private:
-	void PrintLog(const char* level, const char* message, va_list va); // Print log message with given log level
+	void PrintLog(const std::string& level, const char* message, va_list va); // Print log message with given log level
 
 public:
 	virtual void Info(const char* message, ...); // Log info
