@@ -34,8 +34,8 @@ void LUNAWpLog::PrintLog(const std::string& level, const char* message, va_list 
 	buf.resize(size);
 	vsprintf_s(&buf[0], size, message, va);
 
+	buf[size - 1] = '\n'; // Replace extra '\0' char with new line char
 	if(!level.empty()) buf.insert(0, level + ":");
-	buf += '\n';
 
 	OutputDebugStringA(buf.c_str());
 }
