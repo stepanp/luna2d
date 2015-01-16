@@ -7,7 +7,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-  <SwapChainPanel x:Name="swapChainPanel">
-    <TextBlock Text="OpenGL ES and XAML" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" />
-  </SwapChainPanel>
+  <SwapChainPanel x:Name="swapChainPanel"/>
 </Page>
