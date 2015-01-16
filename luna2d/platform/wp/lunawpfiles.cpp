@@ -27,6 +27,41 @@
 
 using namespace luna2d;
 
+// Convert std::string to std::wstring
+std::wstring LUNAWpFiles::ToWString(const std::string& str)
+{
+	// Convert path from std::wstring to std::string
+	std::wstring ret(str.length(), L'\n');
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.length(), &ret[0], ret.length());
+
+	return std::move(ret);
+}
+
+// Convert std::wstring to std::string
+std::string LUNAWpFiles::FromWString(const std::wstring& str)
+{
+	// Convert path from std::wstring to std::string
+	std::string ret(str.length(), '\n');
+	WideCharToMultiByte(CP_ACP, 0, str.c_str(), str.length(), &ret[0], ret.length(), "", FALSE);
+
+	return std::move(ret);
+}
+
+// Wide-char variant of "GetRootFolder"
+std::wstring LUNAWpFiles::GetRootFolderW(LUNAFileLocation location)
+{
+	switch (location)
+	{
+	case LUNAFileLocation::ASSETS:
+		std::wstring path = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
+		path += L"\\Assets\\assets\\";
+
+		return std::move(path);
+	}
+
+	return L"";
+}
+
 std::string LUNAWpFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
 {
 	// Convert std::string to std::wstring
@@ -40,28 +75,36 @@ std::string LUNAWpFiles::GetPathInLocation(const std::string& path, LUNAFileLoca
 		startPos += 1;
 	}
 
-	return winPath;
+	return std::move(winPath);
 }
+
+// Wide-char variant of "GetPathInLocation"
+std::wstring LUNAWpFiles::GetPathInLocationW(const std::string& path, LUNAFileLocation location)
+{
+	// Convert std::string to std::wstring
+	std::wstring winPath = GetRootFolderW(location) + ToWString(path);
+
+	// Replace unix slashes to windows slashes
+	size_t startPos = 0;
+	while ((startPos = winPath.find(L"/", startPos)) != std::wstring::npos)
+	{
+		winPath.replace(startPos, 1, L"\\");
+		startPos += 1;
+	}
+
+	return std::move(winPath);
+}
+
 
 // Check for given path is file
 bool LUNAWpFiles::IsFile(const std::string& path, LUNAFileLocation location)
 {
 	if(location == LUNAFileLocation::ASSETS)
 	{
-		return true;// IsExists(path, location);
-		//stat statBuf;
-		/*struct stat statbuf;
-		stat(GetPathInLocation(path, location).c_str());
-
-
-		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
-		if(file)
-		{
-			fclose(file);
-			return true;
-		}
-		struct stat statbuf;
-		stat()*/
+		WIN32_FILE_ATTRIBUTE_DATA attr;
+		if(!GetFileAttributesEx(GetPathInLocationW(path, location).c_str(), GetFileExInfoStandard, &attr)) return false;
+		if(attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) return false;
+		return true;
 	}
 
 	return false;
@@ -70,9 +113,12 @@ bool LUNAWpFiles::IsFile(const std::string& path, LUNAFileLocation location)
 // Check for given path is directory
 bool LUNAWpFiles::IsDirectory(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
+	if (location == LUNAFileLocation::ASSETS)
 	{
-		return true;
+		WIN32_FILE_ATTRIBUTE_DATA attr;
+		if (!GetFileAttributesEx(GetPathInLocationW(path, location).c_str(), GetFileExInfoStandard, &attr)) return false;
+		if(attr.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) return true;
+		return false;
 	}
 
 	return false;
@@ -81,10 +127,10 @@ bool LUNAWpFiles::IsDirectory(const std::string& path, LUNAFileLocation location
 // Check for path is exists
 bool LUNAWpFiles::IsExists(const std::string& path, LUNAFileLocation location)
 {
-	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
-	if(file)
+	if(location == LUNAFileLocation::ASSETS)
 	{
-		fclose(file);
+		WIN32_FILE_ATTRIBUTE_DATA attr;
+		if(!GetFileAttributesEx(GetPathInLocationW(path, location).c_str(), GetFileExInfoStandard, &attr)) return false;
 		return true;
 	}
 
@@ -94,21 +140,7 @@ bool LUNAWpFiles::IsExists(const std::string& path, LUNAFileLocation location)
 // Get root folder for file location
 std::string LUNAWpFiles::GetRootFolder(LUNAFileLocation location)
 {
-	switch(location)
-	{
-	case LUNAFileLocation::ASSETS:
-		// Get path to assets directory
-		std::wstring wPath = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
-		wPath += L"\\Assets\\assets\\";
-
-		// Convert path from std::wstring to std::string
-		std::string ret(wPath.length(), '\n');
-		WideCharToMultiByte(CP_ACP, 0, wPath.c_str(), wPath.length(), &ret[0], ret.length(), "", FALSE);
-
-		return std::move(ret);
-	}
-
-	return "";
+	return FromWString(GetRootFolderW(location));
 }
 
 // Get list of files and subdirectories in given directory
@@ -118,34 +150,29 @@ std::vector<std::string> LUNAWpFiles::GetFileList(const std::string& path, LUNAF
 
 	if(location == LUNAFileLocation::ASSETS)
 	{
-		/*zip* apk = OpenApk();
+		HANDLE hFind = INVALID_HANDLE_VALUE;
+		WIN32_FIND_DATA findData;
+		ZeroMemory(&findData, sizeof(findData));
 
-		if(IsDirectory(path))
+		std::wstring mask = GetPathInLocationW(path, location) + L"*";
+		hFind = FindFirstFileExW(mask.c_str(), FindExInfoBasic, &findData,
+			FindExSearchNameMatch, nullptr, 0);
+
+		if(hFind != INVALID_HANDLE_VALUE)
 		{
-			int startPos = GetRootFolder().length() + (path == "/" ? 0 : path.length());
-			auto dirIndexes = directoryCache[path];
-
-			for(int i = dirIndexes.first;i <= dirIndexes.second;i++)
+			do
 			{
-				std::string filename = zip_get_name(apk, i, 0);
-
-				// Is file
-				int slashPos = filename.find('/', startPos);
-				if(slashPos == std::string::npos)
+				std::string filename = FromWString(findData.cFileName);
+				if(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 				{
-					ret.push_back(filename.substr(startPos));
+					if(filename != "." && filename != "..") ret.push_back(filename + "/");
 				}
-
-				// Is directory
-				else
-				{
-					std::string dirname = filename.substr(startPos, slashPos - startPos + 1);
-					if(std::find(ret.begin(), ret.end(), dirname) == ret.end()) ret.push_back(std::move(dirname));
-				}
+				else ret.push_back(filename);
 			}
-		}
+			while(FindNextFile(hFind, &findData) != 0);
 
-		zip_close(apk);*/
+			FindClose(hFind);
+		}
 
 		return std::move(ret);
 	}
@@ -156,7 +183,7 @@ std::vector<std::string> LUNAWpFiles::GetFileList(const std::string& path, LUNAF
 // Get size of file
 ssize_t LUNAWpFiles::GetFileSize(const std::string& path, LUNAFileLocation location)
 {
-	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "rb");
 	if(!file) return -1;
 
 	fseek(file, 0, SEEK_END);
@@ -171,7 +198,7 @@ std::vector<unsigned char> LUNAWpFiles::ReadFile(const std::string& path, LUNAFi
 {
 	std::vector<unsigned char> ret;
 
-	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "rb");
 	if(!file) return std::move(ret);
 
 	// Get file size
@@ -190,7 +217,7 @@ std::vector<unsigned char> LUNAWpFiles::ReadFile(const std::string& path, LUNAFi
 // Read all file data as string
 std::string LUNAWpFiles::ReadFileToString(const std::string& path, LUNAFileLocation location)
 {
-	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "rb");
 	if(!file) return "";
 
 	// Get file size

@@ -33,7 +33,11 @@ namespace luna2d{
 class LUNAWpFiles : public LUNAFiles
 {
 private:
+	std::wstring ToWString(const std::string& str); // Convert std::string to std::wstring
+	std::string FromWString(const std::wstring& str); // Convert std::wstring to std::string
+	std::wstring GetRootFolderW(LUNAFileLocation location = LUNAFileLocation::ASSETS); // Wide-char variant of "GetRootFolder"
 	std::string GetPathInLocation(const std::string& path, LUNAFileLocation location);
+	std::wstring GetPathInLocationW(const std::string& path, LUNAFileLocation location); // Wide-char variant of "GetPathInLocation"
 
 public:
 	// Get root folder for file location
