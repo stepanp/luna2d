@@ -1,5 +1,4 @@
-luna2d
-======
+![luna2d](resources/luna2d-logo.png)
 
 Cross-platform game engine for mobile platforms. Engine is aimed to write all game logic in Lua. But general features written in native code. Uses OpenGL ES 2.0 \ OpenGL 2.1 on mobile\desktop platofrms.
 
