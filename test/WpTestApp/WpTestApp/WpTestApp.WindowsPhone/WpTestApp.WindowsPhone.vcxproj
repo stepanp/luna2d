@@ -85,6 +85,15 @@
   </ItemDefinitionGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <Image Include="Assets\assets\art\items%40HD.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\assets\art\items%40HVGA.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="Assets\assets\art\items%40WVGA.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="Assets\Logo.scale-240.png" />
     <Image Include="Assets\SmallLogo.scale-240.png" />
     <Image Include="Assets\SplashScreen.scale-240.png" />
@@ -102,6 +111,36 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <None Include="$(AngleBinPath)libGLESv2.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\art\items%40HD.atlas">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\art\items%40HVGA.atlas">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\art\items%40WVGA.atlas">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\config.json">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\background.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\bird.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\gamescene.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\main.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\settings.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="Assets\assets\scripts\tube.lua">
       <DeploymentContent>true</DeploymentContent>
     </None>
   </ItemGroup>
