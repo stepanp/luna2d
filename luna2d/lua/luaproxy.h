@@ -51,7 +51,7 @@ Class* SafeGetRawPointer(lua_State* luaVm)
 	// Check for weak pointer
 	int LUA_USERVALUE_WEAK = 1; // TODO: Make LuaUserdata::* functions useful in "luaproxy.h"
 	lua_rawgeti(luaVm, -1, LUA_USERVALUE_WEAK);
-	bool isWeak = lua_toboolean(luaVm, -1);
+	bool isWeak = !!lua_toboolean(luaVm, -1);
 	lua_pop(luaVm, 2);
 
 	if(isWeak)

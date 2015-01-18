@@ -121,7 +121,7 @@ struct LuaUserdata
 		lua_getuservalue(luaVm, index);
 
 		lua_rawgeti(luaVm, -1, LUA_USERVALUE_WEAK);
-		bool ret = lua_toboolean(luaVm, -1);
+		bool ret = !!lua_toboolean(luaVm, -1);
 		lua_pop(luaVm, 2);
 
 		return ret;
