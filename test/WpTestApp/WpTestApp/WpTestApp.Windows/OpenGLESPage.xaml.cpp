@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "OpenGLESPage.xaml.h"
 #include "lunaengine.h"
+#include "lunasizes.h"
 
 using namespace WpTestApp;
 using namespace Platform;
@@ -220,7 +221,7 @@ void OpenGLESPage::ProcessPointers()
 	while(pointers.try_pop(touch))
 	{
 		float x = touch->x;
-		float y = touch->y;
+		float y = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight() - touch->y;
 
 		switch(touch->type)
 		{

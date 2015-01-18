@@ -35,8 +35,6 @@ HelloTriangleRenderer::~HelloTriangleRenderer()
 // Draws a basic triangle
 void HelloTriangleRenderer::Draw(GLsizei width, GLsizei height)
 {
-	glViewport(0, 0, width, height);
-
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
 		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils());

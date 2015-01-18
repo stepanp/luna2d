@@ -18,8 +18,8 @@ namespace WpTestApp
 		TouchEvent(TouchType type, Windows::UI::Core::PointerEventArgs^ args)
 		{
 			this->type = type;
-			float x = args->CurrentPoint->Position.X;
-			float y = args->CurrentPoint->Position.Y;
+			this->x = args->CurrentPoint->Position.X;
+			this->y = args->CurrentPoint->Position.Y;
 		}
 
 		TouchType type;
