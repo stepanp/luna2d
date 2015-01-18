@@ -19,9 +19,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="OpenGLESPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="OpenGLESPage.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>

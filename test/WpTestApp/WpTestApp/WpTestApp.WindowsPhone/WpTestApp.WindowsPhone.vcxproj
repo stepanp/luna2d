@@ -144,19 +144,6 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="OpenGLESPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="OpenGLESPage.xaml.cpp">
-      <DependentUpon>OpenGLESPage.xaml</DependentUpon>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="OpenGLESPage.xaml.h">
-      <DependentUpon>OpenGLESPage.xaml</DependentUpon>
-    </ClInclude>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VSINSTALLDIR)\Common7\IDE\Extensions\Microsoft\VsGraphics\ImageContentTask.targets" />

@@ -1002,4 +1002,7 @@
       <UniqueIdentifier>{ce6d6c4e-5a7c-4c61-867b-212eddad1b17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml" />
+  </ItemGroup>
 </Project>

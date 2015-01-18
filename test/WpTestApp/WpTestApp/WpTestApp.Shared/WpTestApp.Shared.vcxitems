@@ -298,6 +298,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunavector2.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunawatcher.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)OpenGLES.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.cpp">
+      <DependentUpon>$(MSBuildThisFileDirectory)OpenGLESPage.xaml</DependentUpon>
+    </ClCompile>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunagraphics.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunaimage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunaimageformat.h" />
@@ -453,6 +456,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunavector2.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\utils\lunawatcher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLES.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.h">
+      <DependentUpon>$(MSBuildThisFileDirectory)OpenGLESPage.xaml</DependentUpon>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -477,5 +483,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml" />
   </ItemGroup>
 </Project>
