@@ -1,10 +1,14 @@
 ﻿#include "pch.h"
 #include "OpenGLESPage.xaml.h"
+#include "lunaengine.h"
 
 using namespace WpTestApp;
 using namespace Platform;
 using namespace Concurrency;
 using namespace Windows::Foundation;
+using namespace Windows::UI::Core;
+using namespace Windows::System::Threading;
+using namespace luna2d;
 
 OpenGLESPage::OpenGLESPage() :
     OpenGLESPage(nullptr)
@@ -39,8 +43,27 @@ OpenGLESPage::OpenGLESPage(OpenGLES* openGLES) :
     pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
 #endif
 
-    mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };
-}
+	// Register our SwapChainPanel to get independent input pointer events
+	auto workItemHandler = ref new WorkItemHandler([this](IAsyncAction ^)
+	{
+		// The CoreIndependentInputSource will raise pointer events for the specified device types on whichever thread it's created on.
+		m_coreInput = swapChainPanel->CreateCoreIndependentInputSource(
+			Windows::UI::Core::CoreInputDeviceTypes::Mouse |
+			Windows::UI::Core::CoreInputDeviceTypes::Touch |
+			Windows::UI::Core::CoreInputDeviceTypes::Pen
+			);
+		// Register for pointer events, which will be raised on the background thread.
+		m_coreInput->PointerPressed += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &OpenGLESPage::OnPointerPressed);
+		m_coreInput->PointerMoved += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &OpenGLESPage::OnPointerMoved);
+		m_coreInput->PointerReleased += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &OpenGLESPage::OnPointerReleased);
+		// Begin processing input messages as they're delivered.
+		m_coreInput->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessUntilQuit);
+	});
+	// Run task on a dedicated high priority background thread.
+
+	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
+
+    mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };}
 
 OpenGLESPage::~OpenGLESPage()
 {
@@ -153,6 +176,8 @@ void OpenGLESPage::StartRenderLoop()
 
         while (action->Status == Windows::Foundation::AsyncStatus::Started)
         {
+			ProcessPointers();
+
             GLsizei panelWidth = 0;
             GLsizei panelHeight = 0;
 
@@ -185,4 +210,44 @@ void OpenGLESPage::StopRenderLoop()
         mRenderLoopWorker->Cancel();
         mRenderLoopWorker = nullptr;
     }
+}
+
+void OpenGLESPage::ProcessPointers()
+{
+	if(!LUNAEngine::Shared()->IsInitialized()) return;
+
+	std::shared_ptr<TouchEvent> touch;
+	while(pointers.try_pop(touch))
+	{
+		float x = touch->x;
+		float y = touch->y;
+
+		switch(touch->type)
+		{
+		case TouchType::TOUCH_DOWN:
+			LUNAEngine::Shared()->OnTouchDown(x, y);
+			break;
+		case TouchType::TOUCH_MOVED:
+			LUNAEngine::Shared()->OnTouchMoved(x, y);
+			break;
+		case TouchType::TOUCH_UP:
+			LUNAEngine::Shared()->OnTouchUp(x, y);
+			break;
+		}
+	}
+}
+
+void OpenGLESPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
+{
+	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_DOWN, e));
+}
+
+void OpenGLESPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
+{
+	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_MOVED, e));
+}
+
+void OpenGLESPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
+{
+	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_UP, e));
 }
