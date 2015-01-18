@@ -466,6 +466,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpfiles.h">
       <Filter>luna2d\platform\wp</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
@@ -948,6 +949,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpfiles.cpp">
       <Filter>luna2d\platform\wp</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
