@@ -5,9 +5,6 @@
       <UniqueIdentifier>09d0f14a-c673-4f45-b6e1-51b6f009260a</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
-    <Filter Include="Binaries">
-      <Extensions>dll;</Extensions>
-    </Filter>
     <Image Include="Assets\Logo.png">
       <Filter>Assets</Filter>
     </Image>
@@ -29,24 +26,15 @@
     <Filter Include="Assets\assets\scripts">
       <UniqueIdentifier>{4acd8361-9f53-4e33-8deb-334265d86dbd}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="OpenGLESPage.xaml.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="OpenGLESPage.xaml.h" />
+    <Filter Include="Binaries">
+      <UniqueIdentifier>{56f8d48a-aeb8-42ba-b64c-9b9cefd1ebd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="WpTestApp.Windows_TemporaryKey.pfx" />
-    <None Include="$(AngleBinPath)libEGL.dll">
-      <Filter>Binaries</Filter>
-    </None>
-    <None Include="$(AngleBinPath)libGLESv2.dll">
-      <Filter>Binaries</Filter>
-    </None>
     <None Include="Assets\assets\art\items%40HD.atlas">
       <Filter>Assets\assets\art</Filter>
     </None>
@@ -76,6 +64,18 @@
     </None>
     <None Include="Assets\assets\config.json">
       <Filter>Assets\assets</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\win32\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\win32\libGLESv2.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\arm\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\arm\libGLESv2.dll">
+      <Filter>Binaries</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

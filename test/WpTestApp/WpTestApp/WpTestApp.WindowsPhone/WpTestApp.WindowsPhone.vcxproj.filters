@@ -19,12 +19,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OpenGLESPage.xaml.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="OpenGLESPage.xaml.h" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Assets\Logo.scale-240.png">
       <Filter>Assets</Filter>
     </Image>
@@ -57,12 +51,6 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(AngleBinPath)libEGL.dll">
-      <Filter>Binaries</Filter>
-    </None>
-    <None Include="$(AngleBinPath)libGLESv2.dll">
-      <Filter>Binaries</Filter>
-    </None>
     <None Include="Assets\assets\art\items%40HD.atlas">
       <Filter>Assets\assets\art</Filter>
     </None>
@@ -92,6 +80,18 @@
     </None>
     <None Include="Assets\assets\config.json">
       <Filter>Assets\assets</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\win32\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\win32\libGLESv2.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\arm\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\arm\libGLESv2.dll">
+      <Filter>Binaries</Filter>
     </None>
   </ItemGroup>
 </Project>
