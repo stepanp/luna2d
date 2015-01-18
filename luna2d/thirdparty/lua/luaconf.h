@@ -33,7 +33,7 @@
 #define LUA_WIN		/* enable goodies for regular Windows platforms */
 #endif
 
-#if (defined(WINAPI_FAMILY) || WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
+#if defined(WINAPI_FAMILY) && WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP
 #define LUA_WIN_RT
 #endif
 

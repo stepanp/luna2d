@@ -28,11 +28,11 @@
 
 // VS2013 not supports constexpr 
 #if LUNA_PLATFORM == LUNA_PLATFORM_WP
-#define LUNA_CHECK_BASE_OF
-#define LUNA_CHECK_BASE_OF_DERRIVED
+#define LUNA_CHECK_BASE_OF(cls)
+#define LUNA_CHECK_BASE_OF_DERRIVED(basecls, cls)
 #else
-#define LUNA_CHECK_BASE_OF constexpr static bool _CheckIsBaseOf() { return true; }
-#define LUNA_CHECK_BASE_OF_DERRIVED \
+#define LUNA_CHECK_BASE_OF(cls) constexpr static bool _CheckIsBaseOf() { return true; }
+#define LUNA_CHECK_BASE_OF_DERRIVED(basecls, cls) \
 	constexpr static bool _CheckIsBaseOf() \
 	{ \
 		static_assert(std::is_base_of<basecls,cls>::value, "\"" #basecls "\" is not base class of \"" #cls "\""); \
@@ -49,7 +49,7 @@
 		std::shared_ptr<LuaWeakRef> _GetLuaRef() { return _ref; } \
 		static const char* _GetUserdataType() { return #cls; } \
 		static const char* _GetBaseClassType() { return nullptr; } \
-		LUNA_CHECK_BASE_OF \
+		LUNA_CHECK_BASE_OF(cls) \
 	private: \
 
 #define LUNA_USERDATA_DERIVED(basecls, cls) \
@@ -58,7 +58,7 @@
 	public:  \
 		static const char* _GetUserdataType() { return #cls; } \
 		static const char* _GetBaseClassType() { return #basecls; } \
-		LUNA_CHECK_BASE_OF_DERRIVED \
+		LUNA_CHECK_BASE_OF_DERRIVED(basecls, cls) \
 	private:
 
 
