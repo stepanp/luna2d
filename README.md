@@ -1,16 +1,18 @@
 ![luna2d](resources/luna2d-logo.png)
 
-Cross-platform game engine for mobile platforms. Engine is aimed to write all game logic in Lua. But general features written in native code. Uses OpenGL ES 2.0 \ OpenGL 2.1 on mobile\desktop platofrms.
+Cross-platform game engine for mobile platforms. Engine is aimed to write all game logic in Lua. But general features written in native code. Uses OpenGL ES 2.0\OpenGL 2.1 on mobile\desktop platofrms.
 
 ## Supported platforms
+* Desktop Qt platforms
 * Android 2.3+
 * iOS 6.0+
-* Desktop Qt platforms (But tested only on Windows)
+* Windows Phone\RT 8.1 (In progress, see **[wp-porting](https://github.com/stepanp/luna2d/tree/wp-porting)** branch)
 
 ## Build requirements
-* Windows: Qt 5.4+, compiler with support C++11 (e.g. MinGW 4.8)
-* Android: NDK r9+
+* Destkop Windows: Qt 5.4+, compiler with support C++11 (e.g. MinGW 4.8)
+* Android: Eclipse, Android SDK, NDK r9+
 * iOS: XCode, iOS SDK 8.1+
+* Windows Phone\RT: VS2013 Update 4+
 
 ## Tools
 All tools written in C++\Qt and supports same desktop platforms as engine.
