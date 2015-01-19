@@ -128,6 +128,12 @@ void OpenGLESPage::CreateRenderSurface()
         //mCustomRenderSurfaceSize = Size(800, 600);
         //mUseCustomRenderSurfaceSize = true;
 
+		// Create custom render surface with screen size
+		// To avoid incorrect swap chain panel size in Windows Phone
+		auto bounds = Windows::UI::Xaml::Window::Current->Bounds;
+		mCustomRenderSurfaceSize = Size(bounds.Width, bounds.Height);
+		mUseCustomRenderSurfaceSize = true;
+
         mRenderSurface = mOpenGLES->CreateSurface(swapChainPanel, mUseCustomRenderSurfaceSize ? &mCustomRenderSurfaceSize : nullptr);
     }
 }
