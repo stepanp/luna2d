@@ -28,6 +28,7 @@
 // Default values of settings
 QStringList Settings::recentGames = QStringList();
 bool Settings::openLastGame = true;
+bool Settings::gameWasOpened = false;
 QVector<Resolution> Settings::resolutions = QVector<Resolution>();
 int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
@@ -37,6 +38,7 @@ void Settings::Load()
 	QSettings settings(ORGANIZATION_NAME, APP_NAME);
 
 	openLastGame = settings.value("openLastGame", openLastGame).toBool();
+	gameWasOpened = settings.value("gameWasOpened", gameWasOpened).toBool();
 	curResolution = settings.value("curResolution", curResolution).toInt();
 
 	// Load recent games
@@ -76,6 +78,7 @@ void Settings::Save()
 	QSettings settings(ORGANIZATION_NAME, APP_NAME);
 
 	settings.setValue("openLastGame", openLastGame);
+	settings.setValue("gameWasOpened", gameWasOpened);
 	settings.setValue("curResolution", curResolution);
 
 	// Save recent games

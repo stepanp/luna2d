@@ -133,6 +133,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	// Update recent games list
 	Settings::AddRecentGame(gamePath);
+	Settings::gameWasOpened = true;
 	SetupRecentGames();
 
 	curGamePath = gamePath;
@@ -191,7 +192,7 @@ void MainWindow::OnGlSurfaceInitialized()
 	}
 
 	// Launch last recent game on startup
-	if(Settings::openLastGame && !Settings::recentGames.empty())
+	if(Settings::openLastGame && Settings::gameWasOpened && !Settings::recentGames.empty())
 	{
 		OpenGame(Settings::recentGames.first());
 	}
@@ -227,6 +228,7 @@ void MainWindow::OnActionClose()
 	curGamePath = QString::null;
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
+	Settings::gameWasOpened = false;
 }
 
 void MainWindow::OnRecentGame()
