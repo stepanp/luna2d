@@ -55,13 +55,13 @@ private:
 	void PushArgs(lua_State*) const {}
 
 	template<typename T>
-	void PushArgs(lua_State *luaVm, const T t) const
+	void PushArgs(lua_State* luaVm, const T& t) const
 	{
 		LuaStack<T>::Push(luaVm, t);
 	}
 
 	template<typename T, typename ... Args>
-	void PushArgs(lua_State *luaVm, T t, Args ... args) const
+	void PushArgs(lua_State* luaVm, const T& t, const Args& ... args) const
 	{
 		LuaStack<T>::Push(luaVm, t);
 		PushArgs(luaVm, args...);

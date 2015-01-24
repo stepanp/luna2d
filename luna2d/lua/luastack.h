@@ -36,7 +36,7 @@ namespace luna2d{
 template<typename T>
 struct LuaStack
 {
-	static void Push(lua_State* luaVm, T arg) = delete; // Push argument to lua vm
+	static void Push(lua_State* luaVm, const T& arg) = delete; // Push argument to lua vm
 	static T Pop(lua_State* luaVm) = delete; // Pop argument from lua vm
 };
 
