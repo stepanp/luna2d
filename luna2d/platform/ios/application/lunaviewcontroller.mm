@@ -82,7 +82,7 @@ using namespace luna2d;
 	[EAGLContext setCurrentContext:self.context];
 	
 	// Get screen size and scale
-	if([[[UIDevice currentDevice] systemVersion] floatValue] <= 8.0)
+	if([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)
 	{
 		screenScale = [[UIScreen mainScreen] scale];
 		CGSize size = [[UIScreen mainScreen] bounds].size;
