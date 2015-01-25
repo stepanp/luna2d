@@ -123,7 +123,7 @@ void WatcherDialog::OnTableRemoved(const std::string& name)
 
 }
 
-void WatcherDialog::OnFieldChanged(const std::string &tableName, const std::string& fieldName, const LuaDynamicType& value)
+void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::string& fieldName, const LuaDynamicType& value)
 {
 	int type = value.GetType();
 
@@ -171,6 +171,10 @@ void WatcherDialog::OnFieldChanged(const std::string &tableName, const std::stri
 
 		ui->tableFields->setCellWidget(row, 1, checkBox);
 	}
+
+	// Sort items in table widget by name,
+	// Because order of itens in lua hash tables is not defined
+	ui->tableFields->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void WatcherDialog::OnWatcherStopped()
