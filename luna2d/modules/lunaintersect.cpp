@@ -1,9 +1,25 @@
-//-----------------------------------------------------
+//-----------------------------------------------------------------------------
 // luna2d engine
-// lunaintersect.cpp - Functions for check intersectons
 // Copyright 2014-2015 Stepan Prokofjev
-//-----------------------------------------------------
-
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
 #include "lunaintersect.h"
 
 using namespace luna2d;
@@ -14,6 +30,8 @@ void LUNAIntersect::Load(LuaScript *lua)
 	LuaTable tblIntersect(lua);
 
 	tblIntersect.SetField("pointInRectangle", LuaFunction(lua, this, &LUNAIntersect::PointInRectangle));
+	tblIntersect.SetField("pointInCircle", LuaFunction(lua, this, &LUNAIntersect::PointInCircle));
+	tblIntersect.SetField("pointInPolygon", LuaFunction(lua, this, &LUNAIntersect::PointInPolygon));
 	tblIntersect.SetField("rectangles", LuaFunction(lua, this, &LUNAIntersect::Rectangles));
 	tblIntersect.SetField("lines", LuaFunction(lua, this, &LUNAIntersect::Lines));
 	tblIntersect.SetField("lineCircle", LuaFunction(lua, this, &LUNAIntersect::LineCircle));
@@ -34,6 +52,28 @@ bool LUNAIntersect::PointInRectangle(const LuaTable& point, const LuaTable& rect
 	float rheight = rect.GetFloat("height");
 
 	return px > rx && py > ry && px < rx + rwidth && py < ry + rheight;
+}
+
+// Check for point insinde in cirle
+bool LUNAIntersect::PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r)
+{
+	return glm::distance(point, circleCenter) <= r;
+}
+
+// Check for point inside polygon
+bool LUNAIntersect::PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon)
+{
+	bool ret = false;
+	int count = polygon.size();
+	for(int i = 0, j = count - 1; i < count; j = i++)
+	{
+		if((polygon[i].y >= point.y) != (polygon[j].y >= point.y) &&
+			(point.x <= (polygon[j].x - polygon[i].x) * (point.y - polygon[i].y) /
+			(polygon[j].y - polygon[i].y) + polygon[i].x))
+		ret = !ret;
+	}
+
+	return ret;
 }
 
 // Check intersection between two rectangles
