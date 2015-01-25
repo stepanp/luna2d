@@ -64,6 +64,7 @@ LUNAGraphics::LUNAGraphics()
 	clsSprite.SetMethod("getY", &LUNASprite::GetY);
 	clsSprite.SetMethod("setX", &LUNASprite::SetX);
 	clsSprite.SetMethod("setY", &LUNASprite::SetY);
+	clsSprite.SetMethod("getPos", &LUNASprite::GetPos);
 	clsSprite.SetMethod("setPos", &LUNASprite::SetPos);
 	clsSprite.SetMethod("getWidth", &LUNASprite::GetWidth);
 	clsSprite.SetMethod("getHeight", &LUNASprite::GetHeight);

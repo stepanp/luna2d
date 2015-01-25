@@ -26,6 +26,7 @@
 #include "lunatexture.h"
 #include "lunacolor.h"
 #include "lunalua.h"
+#include "lunavector2.h"
 
 namespace luna2d{
 
@@ -51,7 +52,7 @@ public:
 	float GetY();
 	void SetX(float x);
 	void SetY(float y);
-	LuaTable GetPos();
+	glm::vec2 GetPos();
 	void SetPos(float x, float y);
 	float GetWidth();
 	float GetHeight();

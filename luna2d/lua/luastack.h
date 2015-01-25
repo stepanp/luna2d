@@ -37,7 +37,7 @@ template<typename T>
 struct LuaStack
 {
 	static void Push(lua_State* luaVm, const T& arg) = delete; // Push argument to lua vm
-	static T Pop(lua_State* luaVm) = delete; // Pop argument from lua vm
+	static T Pop(lua_State* luaVm, int index = -1) = delete; // Pop argument from lua vm
 };
 
 // By default, for const references use same implementation

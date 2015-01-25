@@ -109,13 +109,9 @@ void LUNASprite::SetY(float y)
 	this->y = y;
 }
 
-LuaTable LUNASprite::GetPos()
+glm::vec2 LUNASprite::GetPos()
 {
-	LuaTable tblPos(LUNAEngine::SharedLua());
-	tblPos.SetField("x", x);
-	tblPos.SetField("y", y);
-
-	return std::move(tblPos);
+	return glm::vec2(x, y);
 }
 
 void LUNASprite::SetPos(float x, float y)
