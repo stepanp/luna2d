@@ -54,6 +54,7 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("getAtlasTexture", LuaFunction(lua, this, &LUNAGraphics::GetAtlasTexture));
 	tblGraphics.SetField("getTextureRegionInfo", LuaFunction(lua, this, &LUNAGraphics::GetTextureRegionInfo));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
+	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
 
 	// Register sprite
 	LuaClass<LUNASprite> clsSprite(lua);
