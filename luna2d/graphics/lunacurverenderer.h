@@ -29,6 +29,8 @@
 
 namespace luna2d{
 
+const float CURVE_SMOOTH_FACTOR = 0.2f;
+
 //-------------------------------------
 // Helper for rendering textured curves
 //-------------------------------------
