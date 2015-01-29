@@ -53,11 +53,14 @@ private:
 	float u1,v1,u2,v2; // Texture coordinates for curve
 	float width; // Curve width
 
-private:
-	void BuildMesh(); // Build mesh from curve knots
-
 public:
-	void SetKnots(const std::vector<glm::vec2>& knots); // Set curve knots (points)
+	void ClearKnots();
+	int GetKnotsCount();
+	void AddKnot(float x, float y);
+	void RemoveKnot(int index);
+	void SetKnot(int index, float x, float y);
+	void SetKnots(const std::vector<glm::vec2>& knots);
+	void Build(); // Build curve mesh by knots
 	void Render();
 };
 

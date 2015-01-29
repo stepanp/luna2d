@@ -39,8 +39,52 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	splines = LUNAEngine::SharedModule<LUNASplinesModule>("splines");
 }
 
-// Build mesh from curve knots
-void LUNACurveRenderer::BuildMesh()
+void LUNACurveRenderer::ClearKnots()
+{
+	knots.clear();
+}
+
+int LUNACurveRenderer::GetKnotsCount()
+{
+	return knots.size();
+}
+
+void LUNACurveRenderer::AddKnot(float x, float y)
+{
+	knots.push_back(glm::vec2(x, y));
+}
+
+void LUNACurveRenderer::RemoveKnot(int index)
+{
+	if(index < 0 || index >= knots.size())
+	{
+		LUNA_LOGE("Knot index \"%d\" is out of range", index);
+		return;
+	}
+
+	knots.erase(knots.begin() + index);
+}
+
+void LUNACurveRenderer::SetKnot(int index, float x, float y)
+{
+	if(index < 0 || index >= knots.size())
+	{
+		LUNA_LOGE("Knot index \"%d\" is out of range", index);
+		return;
+	}
+
+	knots[index].x = x;
+	knots[index].y = y;
+}
+
+void LUNACurveRenderer::SetKnots(const std::vector<glm::vec2>& knots)
+{
+	this->knots.clear();
+	this->knots.insert(this->knots.begin(), knots.begin(), knots.end());
+}
+
+// Build curve mesh by knots
+void LUNACurveRenderer::Build()
 {
 	if(knots.size() < 3)
 	{
@@ -135,14 +179,6 @@ void LUNACurveRenderer::BuildMesh()
 		prevA = c;
 		prevB = d;
 	}
-}
-
-// Set curve knots (points)
-void LUNACurveRenderer::SetKnots(const std::vector<glm::vec2>& knots)
-{
-	this->knots.clear();
-	this->knots.insert(this->knots.begin(), knots.begin(), knots.end());
-	BuildMesh();
 }
 
 void LUNACurveRenderer::Render()
