@@ -180,7 +180,7 @@ struct LuaStack<std::vector<T>>
 		int count = vector.size();
 		lua_createtable(luaVm, count, 0);
 
-		for(int i = 0;i < count;i++)
+		for(int i = 0; i < count; i++)
 		{
 			LuaStack<T>::Push(luaVm, vector[i]);
 			lua_rawseti(luaVm, -2, i + 1/* Indexes in lua starts with 1 instead of 0 */);
@@ -193,9 +193,9 @@ struct LuaStack<std::vector<T>>
 
 		int count = lua_rawlen(luaVm, index);
 		std::vector<T> vector;
-		vector.reserve(3);
+		vector.reserve(count);
 
-		for(int i = 0;i < count;i++)
+		for(int i = 0; i < count; i++)
 		{
 			lua_rawgeti(luaVm, index, i + 1/* Indexes in lua starts with 1 instead of 0 */);
 			vector.push_back(LuaStack<T>::Pop(luaVm, -1));
