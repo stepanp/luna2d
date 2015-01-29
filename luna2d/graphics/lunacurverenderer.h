@@ -24,7 +24,7 @@
 #pragma once
 
 #include "lunamesh.h"
-#include "lunaglm.h"
+#include "lunavector2.h"
 #include "lunasplinesmodule.h"
 
 namespace luna2d{
@@ -50,7 +50,6 @@ private:
 	int textureId; // Texture id
 	float u1,v1,u2,v2; // Texture coordinates for curve
 	float width; // Curve width
-
 
 private:
 	void BuildMesh(); // Build mesh from curve knots

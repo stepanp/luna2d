@@ -40,29 +40,19 @@ void LUNASplinesModule::Load(LuaScript *lua)
 // "p1" - i point
 // "p2" - i+1 point
 // "t" - time from 0.0 to 1.0
-LuaTable LUNASplinesModule::QuadraticBSpline(const LuaTable& p0, const LuaTable& p1, const LuaTable& p2, float t)
+glm::vec2 LUNASplinesModule::QuadraticBSpline(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, float t)
 {
-	float p0x = p0.GetFloat("x");
-	float p0y = p0.GetFloat("y");
-	float p1x = p1.GetFloat("x");
-	float p1y = p1.GetFloat("y");
-	float p2x = p2.GetFloat("x");
-	float p2y = p2.GetFloat("y");
+	float x0 = (p0.x - 2.0f * p1.x + p2.x) / 2.0f;
+	float x1 = (-2.0f * p0.x + 2.0f * p1.x) / 2.0f;
+	float x2 = (p0.x + p1.x) / 2.0f;
 
-	float x0 = (p0x - 2 * p1x + p2x) / 2.0f;
-	float x1 = (-2 * p0x + 2 * p1x) / 2.0f;
-	float x2 = (p0x + p1x) / 2.0f;
-
-	float y0 = (p0y - 2 * p1y + p2y) / 2.0f;
-	float y1 = (-2 * p0y + 2 * p1y) / 2.0f;
-	float y2 = (p0y + p1y) / 2.0f;
+	float y0 = (p0.y - 2.0f * p1.y + p2.y) / 2.0f;
+	float y1 = (-2.0f * p0.y + 2.0f * p1.y) / 2.0f;
+	float y2 = (p0.y + p1.y) / 2.0f;
 
 	float x = t * t * x0 + t * x1 + x2;
 	float y = t * t * y0 + t * y1 + y2;
 
-	LuaTable tblRet(LUNAEngine::SharedLua());
-	tblRet.SetField("x", x);
-	tblRet.SetField("y", y);
-	return tblRet;
+	return glm::vec2(x, y);
 }
 

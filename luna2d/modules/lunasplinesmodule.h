@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunamodule.h"
+#include "lunavector2.h"
 
 namespace luna2d{
 
@@ -40,7 +41,7 @@ public:
 	// "p1" - i point
 	// "p2" - i+1 point
 	// "t" - time from 0.0 to 1.0
-	LuaTable QuadraticBSpline(const LuaTable& p0, const LuaTable& p1, const LuaTable& p2, float t);
+	glm::vec2 QuadraticBSpline(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, float t);
 };
 
 }
