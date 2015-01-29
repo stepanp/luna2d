@@ -184,7 +184,8 @@ SOURCES += \
     ../../../luna2d/platform/qt/lunaqtlog.cpp \
     ../../../luna2d/platform/qt/lunaqtgl.cpp \
     ../../../luna2d/platform/lunaplatformutils.cpp \
-    ../../../luna2d/platform/qt/lunaqtutils.cpp
+    ../../../luna2d/platform/qt/lunaqtutils.cpp \
+    ../../../luna2d/graphics/lunacurverenderer.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -337,6 +338,7 @@ HEADERS += \
     ../../../luna2d/platform/qt/lunaqtfiles.h \
     ../../../luna2d/platform/qt/lunaqtlog.h \
     ../../../luna2d/platform/qt/lunaqtgl.h \
-    ../../../luna2d/platform/qt/lunaqtutils.h
+    ../../../luna2d/platform/qt/lunaqtutils.h \
+    ../../../luna2d/graphics/lunacurverenderer.h
 
 QMAKE_MAC_SDK = macosx10.9

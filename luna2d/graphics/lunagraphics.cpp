@@ -29,6 +29,7 @@
 #include "lunatextureatlas.h"
 #include "lunasprite.h"
 #include "lunamesh.h"
+#include "lunacurverenderer.h"
 
 using namespace luna2d;
 
@@ -98,6 +99,13 @@ LUNAGraphics::LUNAGraphics()
 	clsMesh.SetMethod("addVertex", &LUNAMesh::AddVertex);
 	clsMesh.SetMethod("render", &LUNAMesh::Render);
 	tblGraphics.SetField("Mesh", clsMesh);
+
+	// Register curve renderer
+	LuaClass<LUNACurveRenderer> clsCurveRenderer(lua);
+	clsCurveRenderer.SetConstructor<const LuaTable&>();
+	clsCurveRenderer.SetMethod("setKnots", &LUNACurveRenderer::SetKnots);
+	clsCurveRenderer.SetMethod("render", &LUNACurveRenderer::Render);
+	tblGraphics.SetField("CurveRenderer", clsCurveRenderer);
 
 	tblGraphics.MakeReadOnly();
 	tblLuna.SetField("graphics", tblGraphics);
