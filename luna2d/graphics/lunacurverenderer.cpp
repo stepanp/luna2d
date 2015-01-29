@@ -59,8 +59,9 @@ void LUNACurveRenderer::BuildMesh()
 		glm::vec2 knot0 = knots[i - 1];
 		glm::vec2 knot1 = knots[i];
 		glm::vec2 knot2 = knots[i + 1];
+		float startT = (i == 1 ? 0.0f : CURVE_SMOOTH_FACTOR);
 
-		for(float t = 0.0f; t < 1.0f; t += CURVE_SMOOTH_FACTOR)
+		for(float t = startT; t <= 1.0f; t += CURVE_SMOOTH_FACTOR)
 		{
 			points.push_back(splines->QuadraticBSpline(knot0, knot1, knot2, t));
 		}
@@ -70,31 +71,59 @@ void LUNACurveRenderer::BuildMesh()
 	//---------------------
 	// Build mesh by spline
 	//---------------------
+	float halfWidth = width / 2.0f;
 	glm::vec2 prevA, prevB;
 
 	mesh->Clear();
 	for(size_t i = 1; i < points.size(); i++)
 	{
-		glm::vec2 point1 = points[i - 1];
-		glm::vec2 point2 = points[i];
-
-		glm::vec2 perp = (point2 - point1);
-		perp = glm::normalize(glm::vec2(-perp.y, perp.x));
-		perp *= (width / 2.0f);
-
 		glm::vec2 a,b,c,d;
+
+		// First segment
 		if(i == 1)
 		{
-			a = point1 - perp;
-			b = point1 + perp;
+			glm::vec2 point1 = points[i - 1];
+			glm::vec2 point2 = points[i];
+			glm::vec2 perp = (point2 - point1);
+			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
+			perp *= halfWidth;
+
+			a = point1 + perp;
+			b = point1 - perp;
+			c = point2 + perp;
+			d = point2 - perp;
 		}
-		else
+
+		// Last segment
+		else if(i == points.size() - 1)
 		{
+			glm::vec2 point2 = points[i - 1];
+			glm::vec2 point3 = points[i];
+			glm::vec2 perp = (point3 - point2);
+			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
+			perp *= halfWidth;
+
 			a = prevA;
 			b = prevB;
+			c = point3 + perp;
+			d = point3 - perp;
 		}
-		c = point2 - perp;
-		d = point2 + perp;
+
+		// Common segments
+		else
+		{
+			glm::vec2 point1 = points[i - 1];
+			glm::vec2 point2 = points[i];
+			glm::vec2 point3 = points[i + 1];
+			glm::vec2 perp = (point3 - point1);
+			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
+			perp *= halfWidth;
+
+			a = prevA;
+			b = prevB;
+			c = point2 + perp;
+			d = point2 - perp;
+		}
 
 		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, 0, 0);
 		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, 0, 0);
