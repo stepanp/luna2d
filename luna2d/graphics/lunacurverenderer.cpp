@@ -175,6 +175,8 @@ void LUNACurveRenderer::Build()
 			c = point3 + perp;
 			d = point3 - perp;
 
+			ltX = rtX;
+			lbX = rbX;
 			rtX = u2;
 			rbX = u2;
 		}
@@ -195,6 +197,8 @@ void LUNACurveRenderer::Build()
 			d = point2 - perp;
 
 			float step = regionLen * (lenghts[i - 1] / lenSumm);
+			ltX = rtX;
+			lbX = rbX;
 			rtX += step;
 			rbX += step;
 		}
