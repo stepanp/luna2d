@@ -56,7 +56,7 @@ void LUNACurveRenderer::AddKnot(float x, float y)
 
 void LUNACurveRenderer::RemoveKnot(int index)
 {
-	if(index < 0 || index >= knots.size())
+	if(index < 0 || index >= (int)knots.size())
 	{
 		LUNA_LOGE("Knot index \"%d\" is out of range", index);
 		return;
@@ -67,7 +67,7 @@ void LUNACurveRenderer::RemoveKnot(int index)
 
 void LUNACurveRenderer::SetKnot(int index, float x, float y)
 {
-	if(index < 0 || index >= knots.size())
+	if(index < 0 || index >= (int)knots.size())
 	{
 		LUNA_LOGE("Knot index \"%d\" is out of range", index);
 		return;
@@ -115,6 +115,14 @@ void LUNACurveRenderer::Build()
 	//---------------------
 	// Build mesh by spline
 	//---------------------
+	float ltX = u1;
+	float ltY = v1;
+	float rtX = u2;
+	float rtY = v1;
+	float lbX = u1;
+	float lbY = v2;
+	float rbX = u2;
+	float rbY = v2;
 	float halfWidth = width / 2.0f;
 	glm::vec2 prevA, prevB;
 
@@ -169,12 +177,12 @@ void LUNACurveRenderer::Build()
 			d = point2 - perp;
 		}
 
-		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, 0, 0);
-		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, 0, 0);
-		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, 0, 0);
-		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, 0, 0);
-		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, 0, 0);
-		mesh->AddVertex(d.x, d.y, 1, 1, 1, 1, 0, 0);
+		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, ltX, ltY);
+		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, lbX, lbY);
+		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, rtX, rtY);
+		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, lbX, lbY);
+		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, rtX, rtY);
+		mesh->AddVertex(d.x, d.y, 1, 1, 1, 1, rbX, rbY);
 
 		prevA = c;
 		prevB = d;
