@@ -96,6 +96,8 @@ void LUNACurveRenderer::Build()
 	// Build spline by knots
 	//----------------------
 	std::vector<glm::vec2> points;
+	std::vector<float> lenghts;
+	float lenSumm = 0;
 
 	points.push_back(knots[0]);
 	for(size_t i = 1; i < knots.size() - 1; i++)
@@ -108,21 +110,30 @@ void LUNACurveRenderer::Build()
 		for(float t = startT; t <= 1.0f; t += CURVE_SMOOTH_FACTOR)
 		{
 			points.push_back(splines->QuadraticBSpline(knot0, knot1, knot2, t));
+
+			// Calculate lenght for each segment and segments lenghts summ for texture mapping
+			float sementLen = glm::distance2(points[points.size() - 1], points[points.size() - 2]);
+			lenghts.push_back(sementLen);
+			lenSumm += sementLen;
 		}
 	}
 	points.push_back(knots[knots.size() - 1]);
+	float sementLen = glm::distance2(points[points.size() - 1], points[points.size() - 2]);
+	lenghts.push_back(sementLen);
+	lenSumm += sementLen;
 
 	//---------------------
 	// Build mesh by spline
 	//---------------------
 	float ltX = u1;
 	float ltY = v1;
-	float rtX = u2;
-	float rtY = v1;
 	float lbX = u1;
 	float lbY = v2;
-	float rbX = u2;
+	float rtX = ltX;
+	float rtY = v1;
+	float rbX = lbX;
 	float rbY = v2;
+	float regionLen = u2 - u1;
 	float halfWidth = width / 2.0f;
 	glm::vec2 prevA, prevB;
 
@@ -144,6 +155,10 @@ void LUNACurveRenderer::Build()
 			b = point1 - perp;
 			c = point2 + perp;
 			d = point2 - perp;
+
+			float step = regionLen * (lenghts[i - 1] / lenSumm);
+			rtX += step;
+			rbX += step;
 		}
 
 		// Last segment
@@ -159,6 +174,9 @@ void LUNACurveRenderer::Build()
 			b = prevB;
 			c = point3 + perp;
 			d = point3 - perp;
+
+			rtX = u2;
+			rbX = u2;
 		}
 
 		// Common segments
@@ -175,6 +193,10 @@ void LUNACurveRenderer::Build()
 			b = prevB;
 			c = point2 + perp;
 			d = point2 - perp;
+
+			float step = regionLen * (lenghts[i - 1] / lenSumm);
+			rtX += step;
+			rbX += step;
 		}
 
 		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, ltX, ltY);
