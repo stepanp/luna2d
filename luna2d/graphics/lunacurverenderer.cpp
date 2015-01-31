@@ -33,6 +33,7 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	v1 = params.GetFloat("v1");
 	u2 = params.GetFloat("u2");
 	v2 = params.GetFloat("v2");
+	verticalTexture = params.GetBool("verticalTexture");
 	width = params.GetFloat("width");
 
 	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(textureId));
@@ -125,22 +126,40 @@ void LUNACurveRenderer::Build()
 	//---------------------
 	// Build mesh by spline
 	//---------------------
-	float ltX = u1;
-	float ltY = v1;
-	float lbX = u1;
-	float lbY = v2;
-	float rtX = ltX;
-	float rtY = v1;
-	float rbX = lbX;
-	float rbY = v2;
-	float regionLen = u2 - u1;
+	float ltX, ltY, lbX, lbY, rtX, rtY, rbX, rbY;
+	float regionLen;
 	float halfWidth = width / 2.0f;
 	glm::vec2 prevA, prevB;
+
+	if(verticalTexture)
+	{
+		ltX = u2;
+		ltY = v1;
+		lbX = u1;
+		lbY = v1;
+		rtX = u2;
+		rtY = ltY;
+		rbX = u1;
+		rbY = lbY;
+		regionLen = v2 - v1;
+	}
+	else
+	{
+		ltX = u1;
+		ltY = v1;
+		lbX = u1;
+		lbY = v2;
+		rtX = ltX;
+		rtY = v1;
+		rbX = lbX;
+		rbY = v2;
+		regionLen = u2 - u1;
+	}
 
 	mesh->Clear();
 	for(size_t i = 1; i < points.size(); i++)
 	{
-		glm::vec2 a,b,c,d;
+		glm::vec2 a, b, c, d;
 
 		// First segment
 		if(i == 1)
@@ -157,8 +176,16 @@ void LUNACurveRenderer::Build()
 			d = point2 - perp;
 
 			float step = regionLen * (lenghts[i - 1] / lenSumm);
-			rtX += step;
-			rbX += step;
+			if(verticalTexture)
+			{
+				rtY += step;
+				rbY += step;
+			}
+			else
+			{
+				rtX += step;
+				rbX += step;
+			}
 		}
 
 		// Last segment
@@ -175,10 +202,20 @@ void LUNACurveRenderer::Build()
 			c = point3 + perp;
 			d = point3 - perp;
 
-			ltX = rtX;
-			lbX = rbX;
-			rtX = u2;
-			rbX = u2;
+			if(verticalTexture)
+			{
+				ltY = rtY;
+				lbY = rbY;
+				rtY = v2;
+				rbY = v2;
+			}
+			else
+			{
+				ltX = rtX;
+				lbX = rbX;
+				rtX = u2;
+				rbX = u2;
+			}
 		}
 
 		// Common segments
@@ -197,10 +234,20 @@ void LUNACurveRenderer::Build()
 			d = point2 - perp;
 
 			float step = regionLen * (lenghts[i - 1] / lenSumm);
-			ltX = rtX;
-			lbX = rbX;
-			rtX += step;
-			rbX += step;
+			if(verticalTexture)
+			{
+				ltY = rtY;
+				lbY = rbY;
+				rtY += step;
+				rbY += step;
+			}
+			else
+			{
+				ltX = rtX;
+				lbX = rbX;
+				rtX += step;
+				rbX += step;
+			}
 		}
 
 		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, ltX, ltY);
@@ -219,4 +266,3 @@ void LUNACurveRenderer::Render()
 {
 	mesh->Render();
 }
-

@@ -51,6 +51,7 @@ private:
 	//--------------
 	int textureId; // Texture id
 	float u1,v1,u2,v2; // Texture coordinates for curve
+	bool verticalTexture; // Rotate texture on 90 degree
 	float width; // Curve width
 
 public:
