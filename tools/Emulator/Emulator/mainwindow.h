@@ -33,7 +33,8 @@ namespace Ui{
 class MainWindow;
 }
 
-const QString WINDOW_TITLE = "luna2d Emulator (FPS: %1)";
+const QString WINDOW_TITLE = "luna2d Emulator";
+const QString WINDOW_TITLE_FPS = WINDOW_TITLE + " (FPS: %1)";
 
 class MainWindow : public QMainWindow
 {

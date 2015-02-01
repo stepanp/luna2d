@@ -201,7 +201,7 @@ void MainWindow::OnGlSurfaceInitialized()
 
 void MainWindow::OnGameLoopIteration()
 {
-	setWindowTitle(WINDOW_TITLE.arg(ui->centralWidget->GetFps()));
+	setWindowTitle(WINDOW_TITLE_FPS.arg(ui->centralWidget->GetFps()));
 }
 
 void MainWindow::OnActionOpen()
@@ -230,6 +230,8 @@ void MainWindow::OnActionClose()
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
 	Settings::gameWasOpened = false;
+
+	setWindowTitle(WINDOW_TITLE);
 }
 
 void MainWindow::OnRecentGame()
