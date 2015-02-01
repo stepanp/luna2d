@@ -34,6 +34,7 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
+	logStorage(new LogStorage()),
 	curGamePath(QString::null)
 {
 	ui->setupUi(this);
@@ -50,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::glSurfaceInitialized, this, &MainWindow::OnGlSurfaceInitialized);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::gameLoopIteration, this, &MainWindow::OnGameLoopIteration);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logStorage, &LogStorage::OnLogInfo);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logStorage, &LogStorage::OnLogWarning);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logStorage, &LogStorage::OnLogError);
 	connect(ui->actionOpen_game, &QAction::triggered, this, &MainWindow::OnActionOpen);
 	connect(ui->actionRestart_game, &QAction::triggered, this, &MainWindow::OnActionRestart);
 	connect(ui->actionClose_game, &QAction::triggered, this, &MainWindow::OnActionClose);
@@ -62,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
 	delete ui;
+	delete logStorage;
 }
 
 // Setup recent games menu
@@ -244,13 +249,13 @@ void MainWindow::OnActionLog()
 {
 	if(ui->actionLog->isChecked())
 	{
-		logDlg = new LogDialog(this);
+		logDlg = new LogDialog(logStorage, this);
 		logDlg->show();
 		connect(logDlg, &QDialog::rejected, this, &MainWindow::OnLogClosed);
 
-		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logInfo, logDlg, &LogDialog::OnLogInfo);
-		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logWarning, logDlg, &LogDialog::OnLogWarning);
-		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logError, logDlg, &LogDialog::OnLogError);
+		connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logDlg, &LogDialog::OnLogInfo);
+		connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logDlg, &LogDialog::OnLogWarning);
+		connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logDlg, &LogDialog::OnLogError);
 	}
 	else
 	{

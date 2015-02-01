@@ -22,60 +22,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "settings.h"
-#include "watcherdialog.h"
-#include "logdialog.h"
 #include "logstorage.h"
-#include <QMainWindow>
 
-namespace Ui{
-class MainWindow;
+void LogStorage::OnLogInfo(const QString& message)
+{
+	logMessages.push_back(LogMessage(LogType::LOG_INFO, message));
 }
 
-const QString WINDOW_TITLE = "luna2d Emulator";
-const QString WINDOW_TITLE_FPS = WINDOW_TITLE + " (FPS: %1)";
-
-class MainWindow : public QMainWindow
+void LogStorage::OnLogWarning(const QString& message)
 {
-	Q_OBJECT
+	logMessages.push_back(LogMessage(LogType::LOG_WARNING, message));
+}
 
-	static const int SCREEN_MARGIN = 80;
+void LogStorage::OnLogError(const QString& message)
+{
+	logMessages.push_back(LogMessage(LogType::LOG_ERROR, message));
+}
 
-public:
-	explicit MainWindow(QWidget *parent = 0);
-	~MainWindow();
+void LogStorage::Clear()
+{
+	logMessages.clear();
+}
 
-private:
-	Ui::MainWindow* ui;
-	LogStorage* logStorage;
-	LogDialog* logDlg;
-	WatcherDialog* watcherDlg;
-	QString curGamePath; // Path to current open game
+const QList<LogMessage>& LogStorage::GetLogMessages()
+{
+	return logMessages;
+}
 
-private:
-	void SetupRecentGames(); // Setup recent games menu
-	void SetupResolutionMenu(); // Setup resolution menu
-	QString CheckGameDirectory(const QString& path); // Check given directory for it's valid game directory
-	void OpenGame(const QString& gamePath); // Launch game from given path
-	void SetResolution(int resolutionIndex);
-
-public slots:
-	void OnGlSurfaceInitialized();
-	void OnGameLoopIteration();
-	void OnActionOpen();
-	void OnActionRestart();
-	void OnActionClose();
-	void OnRecentGame();
-	void OnActionLog();
-	void OnActionWatcher();
-	void OnResolutionChanged();
-	void OnActionSettings();
-	void OnAbout();
-	void OnLogClosed();
-	void OnWatcherClosed();
-
-public:
-	void closeEvent(QCloseEvent*);
-};

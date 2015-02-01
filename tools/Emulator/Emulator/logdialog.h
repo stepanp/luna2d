@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include "logstorage.h"
 #include <QDialog>
 
 namespace Ui{
@@ -35,11 +36,15 @@ class LogDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit LogDialog(QWidget *parent = 0);
+	explicit LogDialog(LogStorage* logStorage, QWidget *parent = 0);
 	~LogDialog();
 
 private:
-	Ui::LogDialog *ui;
+	Ui::LogDialog* ui;
+	LogStorage* logStorage;
+
+private:
+	void ShowLogMessage(LogType type, const QString& message);
 
 public slots:
 	void OnLogInfo(const QString& message);

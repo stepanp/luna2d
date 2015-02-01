@@ -43,13 +43,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     settings.cpp \
     watcherdialog.cpp \
-	logdialog.cpp
+	logdialog.cpp \
+    logstorage.cpp
 
 HEADERS  += mainwindow.h \
     settings.h \
     resolution.h \
     watcherdialog.h \
-	logdialog.h
+	logdialog.h \
+    logstorage.h
 
 FORMS    += mainwindow.ui \
     settings.ui \

@@ -24,58 +24,35 @@
 
 #pragma once
 
-#include "settings.h"
-#include "watcherdialog.h"
-#include "logdialog.h"
-#include "logstorage.h"
-#include <QMainWindow>
+#include <QObject>
+#include <QList>
+#include <QPair>
 
-namespace Ui{
-class MainWindow;
-}
+enum class LogType
+{
+	LOG_INFO,
+	LOG_WARNING,
+	LOG_ERROR
+};
 
-const QString WINDOW_TITLE = "luna2d Emulator";
-const QString WINDOW_TITLE_FPS = WINDOW_TITLE + " (FPS: %1)";
+typedef QPair<LogType,QString> LogMessage;
 
-class MainWindow : public QMainWindow
+//--------------------------------------------------------
+// Class for store log messages while log window is closed
+//--------------------------------------------------------
+class LogStorage : public QObject
 {
 	Q_OBJECT
 
-	static const int SCREEN_MARGIN = 80;
-
-public:
-	explicit MainWindow(QWidget *parent = 0);
-	~MainWindow();
-
 private:
-	Ui::MainWindow* ui;
-	LogStorage* logStorage;
-	LogDialog* logDlg;
-	WatcherDialog* watcherDlg;
-	QString curGamePath; // Path to current open game
-
-private:
-	void SetupRecentGames(); // Setup recent games menu
-	void SetupResolutionMenu(); // Setup resolution menu
-	QString CheckGameDirectory(const QString& path); // Check given directory for it's valid game directory
-	void OpenGame(const QString& gamePath); // Launch game from given path
-	void SetResolution(int resolutionIndex);
+	QList<LogMessage> logMessages;
 
 public slots:
-	void OnGlSurfaceInitialized();
-	void OnGameLoopIteration();
-	void OnActionOpen();
-	void OnActionRestart();
-	void OnActionClose();
-	void OnRecentGame();
-	void OnActionLog();
-	void OnActionWatcher();
-	void OnResolutionChanged();
-	void OnActionSettings();
-	void OnAbout();
-	void OnLogClosed();
-	void OnWatcherClosed();
+	void OnLogInfo(const QString& message);
+	void OnLogWarning(const QString& message);
+	void OnLogError(const QString& message);
+	void Clear();
 
 public:
-	void closeEvent(QCloseEvent*);
+	const QList<LogMessage>& GetLogMessages();
 };
