@@ -60,6 +60,7 @@ private:
 	QString CheckGameDirectory(const QString& path); // Check given directory for it's valid game directory
 	void OpenGame(const QString& gamePath); // Launch game from given path
 	void SetResolution(int resolutionIndex);
+	void OpenLogDialog();
 
 public slots:
 	void OnGlSurfaceInitialized();
@@ -75,6 +76,7 @@ public slots:
 	void OnAbout();
 	void OnLogClosed();
 	void OnWatcherClosed();
+	void OnLogError();
 
 public:
 	void closeEvent(QCloseEvent*);

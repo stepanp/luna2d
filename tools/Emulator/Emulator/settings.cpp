@@ -32,6 +32,7 @@ bool Settings::gameWasOpened = false;
 QVector<Resolution> Settings::resolutions = QVector<Resolution>();
 int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
+bool Settings::openLogWhenError = false;
 
 void Settings::Load()
 {
@@ -40,6 +41,7 @@ void Settings::Load()
 	openLastGame = settings.value("openLastGame", openLastGame).toBool();
 	gameWasOpened = settings.value("gameWasOpened", gameWasOpened).toBool();
 	curResolution = settings.value("curResolution", curResolution).toInt();
+	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
 
 	// Load recent games
 	int recentGamesCount = settings.beginReadArray("recentGames");
@@ -80,6 +82,7 @@ void Settings::Save()
 	settings.setValue("openLastGame", openLastGame);
 	settings.setValue("gameWasOpened", gameWasOpened);
 	settings.setValue("curResolution", curResolution);
+	settings.setValue("openLogWhenError", openLogWhenError);
 
 	// Save recent games
 	settings.beginWriteArray("recentGames");
