@@ -1,5 +1,6 @@
 //-----------------------------------------------------------------------------
-// luna2d engine
+// luna2d Emulator
+// This is part of luna2d engine
 // Copyright 2014-2015 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,55 +22,41 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "logdialog.h"
+#include "ui_logdialog.h"
 
-#include "lunaengine.h"
-#include "lunaqtlog.h"
-#include <QOpenGlWidget>
-#include <QOpenGLPaintDevice>
-
-namespace luna2d{
-
-const float MAX_FPS = 60.0f;
-
-class LUNAQtWidget : public QOpenGLWidget
+LogDialog::LogDialog(QWidget *parent) :
+	QDialog(parent),
+	ui(new Ui::LogDialog)
 {
-	Q_OBJECT
+	ui->setupUi(this);
 
-public:
-	explicit LUNAQtWidget(QWidget* parent = 0);
-	virtual ~LUNAQtWidget();
+	// Fill filter combo box
+	ui->comboFilter->addItems({"Info", "Warning", "Error"});
 
-private:
-	LUNAQtLog* log;
-	QOpenGLPaintDevice* paintDevice;
-	QImage placeholderImage;
-	bool mouseDown;
+	connect(ui->btnClear, &QPushButton::pressed, ui->listLog, &QListWidget::clear);
+}
 
-private:
-	float TranslateMouseX(int x);
-	float TranslateMouseY(int y);
+LogDialog::~LogDialog()
+{
+	delete ui;
+}
 
-protected:
-	virtual void initializeGL();
-	virtual void paintGL();
-	virtual void mousePressEvent(QMouseEvent* event);
-	virtual void mouseReleaseEvent(QMouseEvent* event);
+void LogDialog::OnInfo(const QString& message)
+{
+	ui->listLog->addItem(message);
+}
 
-signals:
-	void engineInitialized(); // Emits when engine was initialized
-	void glSurfaceInitialized(); // Emits after GL surface complete initialized
-	void gameLoopIteration(); // Emits every game loop iteration
+void LogDialog::OnWarning(const QString& message)
+{
+	QListWidgetItem* item = new QListWidgetItem(message);
+	item->setForeground(Qt::yellow);
+	ui->listLog->addItem(item);
+}
 
-public:
-	bool IsEngineInitialized();
-	void InitializeEngine(const QString& assetsPath, int width, int height);
-	void InitializeEngine(const QString& assetsPath);
-	void DeinitializeEngine();
-	LUNAEngine* GetEngine();
-	void SetLogListener(LUNAQtLogListener* listener);
-	void SetPlaceholderImage(const QImage& image);
-	int GetFps();
-};
-
+void LogDialog::OnError(const QString& message)
+{
+	QListWidgetItem* item = new QListWidgetItem(message);
+	item->setForeground(Qt::red);
+	ui->listLog->addItem(item);
 }

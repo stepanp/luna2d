@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionOpen_game, &QAction::triggered, this, &MainWindow::OnActionOpen);
 	connect(ui->actionRestart_game, &QAction::triggered, this, &MainWindow::OnActionRestart);
 	connect(ui->actionClose_game, &QAction::triggered, this, &MainWindow::OnActionClose);
+	connect(ui->actionLog, &QAction::triggered, this, &MainWindow::OnActionLog);
 	connect(ui->actionWatcher, &QAction::triggered, this, &MainWindow::OnActionWatcher);
 	connect(ui->actionSettings, &QAction::triggered, this, &MainWindow::OnActionSettings);
 	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::OnAbout);
@@ -237,6 +238,25 @@ void MainWindow::OnRecentGame()
 	OpenGame(gamePath);
 }
 
+void MainWindow::OnActionLog()
+{
+	if(ui->actionLog->isChecked())
+	{
+		logDlg = new LogDialog(this);
+		logDlg->show();
+		connect(logDlg, &QDialog::rejected, this, &MainWindow::OnLogClosed);
+
+		ui->centralWidget->SetLogListener(logDlg);
+	}
+	else
+	{
+		delete logDlg;
+		logDlg = nullptr;
+
+		ui->centralWidget->SetLogListener(nullptr);
+	}
+}
+
 void MainWindow::OnActionWatcher()
 {
 	if(ui->actionWatcher->isChecked())
@@ -280,6 +300,13 @@ void MainWindow::OnActionSettings()
 void MainWindow::OnAbout()
 {
 	QMessageBox::about(this, "About", "luna2d Emulator\nThis is part of luna2d engine\nCopyright 2014-2015 Stepan Prokofjev");
+}
+
+void MainWindow::OnLogClosed()
+{
+	logDlg = nullptr;
+	ui->actionLog->setChecked(false);
+	ui->centralWidget->SetLogListener(nullptr);
 }
 
 void MainWindow::OnWatcherClosed()

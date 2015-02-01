@@ -26,6 +26,7 @@
 
 #include "settings.h"
 #include "watcherdialog.h"
+#include "logdialog.h"
 #include <QMainWindow>
 
 namespace Ui{
@@ -46,6 +47,7 @@ public:
 
 private:
 	Ui::MainWindow* ui;
+	LogDialog* logDlg;
 	WatcherDialog* watcherDlg;
 	QString curGamePath; // Path to current open game
 
@@ -63,10 +65,12 @@ public slots:
 	void OnActionRestart();
 	void OnActionClose();
 	void OnRecentGame();
+	void OnActionLog();
 	void OnActionWatcher();
 	void OnResolutionChanged();
 	void OnActionSettings();
 	void OnAbout();
+	void OnLogClosed();
 	void OnWatcherClosed();
 
 public:

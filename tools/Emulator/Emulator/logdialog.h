@@ -1,5 +1,6 @@
 //-----------------------------------------------------------------------------
-// luna2d engine
+// luna2d Emulator
+// This is part of luna2d engine
 // Copyright 2014-2015 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,53 +24,26 @@
 
 #pragma once
 
-#include "lunaengine.h"
 #include "lunaqtlog.h"
-#include <QOpenGlWidget>
-#include <QOpenGLPaintDevice>
+#include <QDialog>
 
-namespace luna2d{
+namespace Ui{
+class LogDialog;
+}
 
-const float MAX_FPS = 60.0f;
-
-class LUNAQtWidget : public QOpenGLWidget
+class LogDialog : public QDialog, public luna2d::LUNAQtLogListener
 {
 	Q_OBJECT
 
 public:
-	explicit LUNAQtWidget(QWidget* parent = 0);
-	virtual ~LUNAQtWidget();
+	explicit LogDialog(QWidget *parent = 0);
+	~LogDialog();
 
 private:
-	LUNAQtLog* log;
-	QOpenGLPaintDevice* paintDevice;
-	QImage placeholderImage;
-	bool mouseDown;
-
-private:
-	float TranslateMouseX(int x);
-	float TranslateMouseY(int y);
-
-protected:
-	virtual void initializeGL();
-	virtual void paintGL();
-	virtual void mousePressEvent(QMouseEvent* event);
-	virtual void mouseReleaseEvent(QMouseEvent* event);
-
-signals:
-	void engineInitialized(); // Emits when engine was initialized
-	void glSurfaceInitialized(); // Emits after GL surface complete initialized
-	void gameLoopIteration(); // Emits every game loop iteration
+	Ui::LogDialog *ui;
 
 public:
-	bool IsEngineInitialized();
-	void InitializeEngine(const QString& assetsPath, int width, int height);
-	void InitializeEngine(const QString& assetsPath);
-	void DeinitializeEngine();
-	LUNAEngine* GetEngine();
-	void SetLogListener(LUNAQtLogListener* listener);
-	void SetPlaceholderImage(const QImage& image);
-	int GetFps();
+	virtual void OnInfo(const QString &message);
+	virtual void OnWarning(const QString &message);
+	virtual void OnError(const QString &message);
 };
-
-}

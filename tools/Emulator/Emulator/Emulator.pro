@@ -42,16 +42,19 @@ LIBS += -lz
 SOURCES += main.cpp\
         mainwindow.cpp \
     settings.cpp \
-    watcherdialog.cpp
+    watcherdialog.cpp \
+	logdialog.cpp
 
 HEADERS  += mainwindow.h \
     settings.h \
     resolution.h \
-    watcherdialog.h
+    watcherdialog.h \
+	logdialog.h
 
 FORMS    += mainwindow.ui \
     settings.ui \
-    watcherdialog.ui
+    watcherdialog.ui \
+	logdialog.ui
 
 RESOURCES += \
     resources.qrc
