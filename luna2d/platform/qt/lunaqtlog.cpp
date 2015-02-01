@@ -26,12 +26,6 @@
 
 using namespace luna2d;
 
-// Set custom log listener
-void LUNAQtLog::SetListener(LUNAQtLogListener* listener)
-{
-	this->listener = listener;
-}
-
 // Log info
 void LUNAQtLog::Info(const char* message, ...)
 {
@@ -43,7 +37,7 @@ void LUNAQtLog::Info(const char* message, ...)
 	va_end(va);
 
 	qDebug() << qmsg; // Print log to system console
-	if(listener) listener->OnInfo(qmsg); // Print log to custom listener(e.g to log window in Emulator)
+	emit logInfo(qmsg);
 }
 
 // Log warning
@@ -57,7 +51,7 @@ void LUNAQtLog::Warning(const char* message, ...)
 	va_end(va);
 
 	qWarning() << qmsg; // Print log to system console
-	if(listener) listener->OnWarning(qmsg); // Print log to custom listener(e.g to log window in Emulator)
+	emit logWarning(qmsg);
 }
 
 // Log error
@@ -71,5 +65,5 @@ void LUNAQtLog::Error(const char* message, ...)
 	va_end(va);
 
 	qCritical() << qmsg; // Print log to system console
-	if(listener) listener->OnError(qmsg); // Print log to custom listener(e.g to log window in Emulator)
+	emit logError(qmsg);
 }

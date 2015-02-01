@@ -248,14 +248,14 @@ void MainWindow::OnActionLog()
 		logDlg->show();
 		connect(logDlg, &QDialog::rejected, this, &MainWindow::OnLogClosed);
 
-		ui->centralWidget->SetLogListener(logDlg);
+		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logInfo, logDlg, &LogDialog::OnLogInfo);
+		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logWarning, logDlg, &LogDialog::OnLogWarning);
+		connect(ui->centralWidget->GetLog(), &luna2d::LUNAQtLog::logError, logDlg, &LogDialog::OnLogError);
 	}
 	else
 	{
 		delete logDlg;
 		logDlg = nullptr;
-
-		ui->centralWidget->SetLogListener(nullptr);
 	}
 }
 
@@ -308,7 +308,6 @@ void MainWindow::OnLogClosed()
 {
 	logDlg = nullptr;
 	ui->actionLog->setChecked(false);
-	ui->centralWidget->SetLogListener(nullptr);
 }
 
 void MainWindow::OnWatcherClosed()

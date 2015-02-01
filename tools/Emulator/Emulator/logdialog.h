@@ -24,14 +24,13 @@
 
 #pragma once
 
-#include "lunaqtlog.h"
 #include <QDialog>
 
 namespace Ui{
 class LogDialog;
 }
 
-class LogDialog : public QDialog, public luna2d::LUNAQtLogListener
+class LogDialog : public QDialog
 {
 	Q_OBJECT
 
@@ -42,8 +41,8 @@ public:
 private:
 	Ui::LogDialog *ui;
 
-public:
-	virtual void OnInfo(const QString &message);
-	virtual void OnWarning(const QString &message);
-	virtual void OnError(const QString &message);
+public slots:
+	void OnLogInfo(const QString& message);
+	void OnLogWarning(const QString& message);
+	void OnLogError(const QString& message);
 };

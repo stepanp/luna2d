@@ -42,19 +42,19 @@ LogDialog::~LogDialog()
 	delete ui;
 }
 
-void LogDialog::OnInfo(const QString& message)
+void LogDialog::OnLogInfo(const QString& message)
 {
 	ui->listLog->addItem(message);
 }
 
-void LogDialog::OnWarning(const QString& message)
+void LogDialog::OnLogWarning(const QString& message)
 {
 	QListWidgetItem* item = new QListWidgetItem(message);
 	item->setForeground(Qt::yellow);
 	ui->listLog->addItem(item);
 }
 
-void LogDialog::OnError(const QString& message)
+void LogDialog::OnLogError(const QString& message)
 {
 	QListWidgetItem* item = new QListWidgetItem(message);
 	item->setForeground(Qt::red);

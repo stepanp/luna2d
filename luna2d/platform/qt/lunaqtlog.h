@@ -25,33 +25,23 @@
 
 #include "platform/lunalog.h"
 #include <QString>
+#include <QObject>
 
 namespace luna2d{
-
-//---------------------------
-// Interface for log listener
-//---------------------------
-class LUNAQtLogListener
-{
-public:
-	virtual ~LUNAQtLogListener() {}
-
-public:
-	virtual void OnInfo(const QString& message) = 0;
-	virtual void OnWarning(const QString& message) = 0;
-	virtual void OnError(const QString& message) = 0;
-};
 
 //--------------------------
 // Log implementation for Qt
 //--------------------------
-class LUNAQtLog : public LUNALog
+class LUNAQtLog : public QObject, public LUNALog
 {
-private:
-	LUNAQtLogListener* listener;
+	Q_OBJECT
+
+signals:
+	void logInfo(const QString& message);
+	void logWarning(const QString& message);
+	void logError(const QString& message);
 
 public:
-	void SetListener(LUNAQtLogListener* listener); // Set custom log listener
 	virtual void Info(const char* message, ...); // Log info
 	virtual void Warning(const char* message, ...) ; // Log warning
 	virtual void Error(const char* message, ...); // Log error

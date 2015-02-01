@@ -41,7 +41,6 @@ public:
 	virtual ~LUNAQtWidget();
 
 private:
-	LUNAQtLog* log;
 	QOpenGLPaintDevice* paintDevice;
 	QImage placeholderImage;
 	bool mouseDown;
@@ -67,7 +66,7 @@ public:
 	void InitializeEngine(const QString& assetsPath);
 	void DeinitializeEngine();
 	LUNAEngine* GetEngine();
-	void SetLogListener(LUNAQtLogListener* listener);
+	LUNAQtLog* GetLog();
 	void SetPlaceholderImage(const QImage& image);
 	int GetFps();
 };
