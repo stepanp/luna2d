@@ -153,7 +153,12 @@ bool LUNAQtWidget::IsEngineInitialized()
 
 void LUNAQtWidget::InitializeEngine(const QString& assetsPath, int width, int height)
 {
-	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(assetsPath), new LUNAQtLog(), new LUNAQtUtils());
+	LUNAQtLog* log = new LUNAQtLog();
+	connect(log, &LUNAQtLog::logInfo, this, &LUNAQtWidget::logInfo);
+	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
+	connect(log, &LUNAQtLog::logError, this, &LUNAQtWidget::logError);
+
+	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(assetsPath), log, new LUNAQtUtils());
 	LUNAEngine::Shared()->Initialize(width, height);
 
 	emit engineInitialized();
@@ -173,12 +178,6 @@ void LUNAQtWidget::DeinitializeEngine()
 LUNAEngine* LUNAQtWidget::GetEngine()
 {
 	return LUNAEngine::Shared();
-}
-
-LUNAQtLog* LUNAQtWidget::GetLog()
-{
-	if(!LUNAEngine::Shared()->IsInitialized()) return nullptr;
-	return static_cast<LUNAQtLog*>(LUNAEngine::SharedLog());
 }
 
 void LUNAQtWidget::SetPlaceholderImage(const QImage &image)

@@ -60,13 +60,17 @@ signals:
 	void glSurfaceInitialized(); // Emits after GL surface complete initialized
 	void gameLoopIteration(); // Emits every game loop iteration
 
+	// Emits when occurs any log message
+	void logInfo(const QString& message);
+	void logWarning(const QString& message);
+	void logError(const QString& message);
+
 public:
 	bool IsEngineInitialized();
 	void InitializeEngine(const QString& assetsPath, int width, int height);
 	void InitializeEngine(const QString& assetsPath);
 	void DeinitializeEngine();
 	LUNAEngine* GetEngine();
-	LUNAQtLog* GetLog();
 	void SetPlaceholderImage(const QImage& image);
 	int GetFps();
 };
