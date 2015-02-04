@@ -38,7 +38,7 @@ class LUNAImage
 public:
 	LUNAImage(); // Construct empty image
 	LUNAImage(const std::string& filename, const LUNAImageFormat& format,
-			  LUNAFileLocation location = LUNAFileLocation::ASSETS); // Constructor with loading
+		LUNAFileLocation location = LUNAFileLocation::ASSETS); // Constructor with loading
 
 private:
 	std::vector<unsigned char> data;
