@@ -48,7 +48,8 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	LUNAColorType GetColorType() const;
-	bool Load(const std::string& filename, LUNAImageFormat *format, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+	bool Load(const std::string& filename, const LUNAImageFormat& format,
+		LUNAFileLocation location = LUNAFileLocation::ASSETS);
 };
 
 }

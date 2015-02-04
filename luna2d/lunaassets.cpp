@@ -99,8 +99,7 @@ void LUNAAssets::LoadAssetData(const std::string& filename, const std::string& c
 	if(type == "png")
 	{
 		LUNAImage image;
-		LUNAPngFormat format;
-		if(image.Load(filename, &format, LUNAFileLocation::ASSETS))
+		if(image.Load(filename, LUNAPngFormat(), LUNAFileLocation::ASSETS))
 		{
 			std::shared_ptr<LUNATexture> texture = std::make_shared<LUNATexture>(image);
 			texture->SetReloadPath(filename); // Set reload path for texture
@@ -120,8 +119,7 @@ void LUNAAssets::LoadAssetData(const std::string& filename, const std::string& c
 		std::string imageName = filename.substr(0, filename.rfind(".") + 1) + "png";
 
 		LUNAImage image;
-		LUNAPngFormat format;
-		if(image.Load(imageName, &format, LUNAFileLocation::ASSETS))
+		if(image.Load(imageName, LUNAPngFormat(), LUNAFileLocation::ASSETS))
 		{
 			std::shared_ptr<LUNATexture> texture = std::make_shared<LUNATexture>(image);
 			LUNATextureAtlas atlas(texture, filename);

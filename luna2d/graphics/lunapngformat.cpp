@@ -45,7 +45,7 @@ static void ReadPngFromBuffer(png_structp pngPtr, png_bytep data, png_size_t siz
 
 // SEE: "LUNAImageFormat::Decode"
 bool LUNAPngFormat::Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-	int& outWidth, int& outHeight, LUNAColorType& outColorType)
+	int& outWidth, int& outHeight, LUNAColorType& outColorType) const
 {
 	png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 	if(!pngPtr) return false;

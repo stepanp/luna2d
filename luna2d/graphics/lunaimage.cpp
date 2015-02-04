@@ -56,13 +56,11 @@ LUNAColorType LUNAImage::GetColorType() const
 	return colorType;
 }
 
-bool LUNAImage::Load(const std::string& filename, LUNAImageFormat *format, LUNAFileLocation location)
+bool LUNAImage::Load(const std::string& filename, const LUNAImageFormat& format, LUNAFileLocation location)
 {
-	if(!format) return false;
-
 	// Read data form file
 	std::vector<unsigned char> fileData = LUNAEngine::SharedFiles()->ReadFile(filename, location);
 	if(fileData.empty()) return false;
 
-	return format->Decode(fileData, data, width, height, colorType);
+	return format.Decode(fileData, data, width, height, colorType);
 }

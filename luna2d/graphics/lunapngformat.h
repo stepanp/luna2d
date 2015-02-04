@@ -33,7 +33,7 @@ class LUNAPngFormat : public LUNAImageFormat
 public:
 	// SEE: "LUNAImageFormat::Decode"
 	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int& outWidth, int& outHeight, LUNAColorType& outColorType);
+		int& outWidth, int& outHeight, LUNAColorType& outColorType) const;
 };
 
 }

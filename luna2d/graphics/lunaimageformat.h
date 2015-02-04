@@ -54,7 +54,7 @@ public:
 	// "outHeight" - Output height of image
 	// "outColorType" - Output color type of image
 	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int& outWidth, int& outHeight, LUNAColorType& outColorType) = 0;
+		int& outWidth, int& outHeight, LUNAColorType& outColorType) const = 0;
 };
 
 }

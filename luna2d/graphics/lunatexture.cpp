@@ -98,8 +98,7 @@ void LUNATexture::Reload()
 	if(reloadPath.empty()) return;
 
 	LUNAImage image;
-	LUNAPngFormat format;
-	if(image.Load(reloadPath, &format, LUNAFileLocation::ASSETS))
+	if(image.Load(reloadPath, LUNAPngFormat(), LUNAFileLocation::ASSETS))
 	{
 		width = image.GetWidth();
 		height = image.GetHeight();
