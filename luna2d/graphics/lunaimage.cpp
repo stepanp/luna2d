@@ -29,11 +29,23 @@
 
 using namespace luna2d;
 
+// Construct empty image
 LUNAImage::LUNAImage() :
 	width(0),
 	height(0),
 	colorType(LUNAColorType::RGBA)
 {
+}
+
+// Constructor with loading
+LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format, LUNAFileLocation location) : LUNAImage()
+{
+	Load(filename, format, location);
+}
+
+bool LUNAImage::IsEmpty()
+{
+	return data.empty();
 }
 
 const std::vector<unsigned char>& LUNAImage::GetData() const

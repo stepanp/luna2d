@@ -36,7 +36,9 @@ class LUNATexture;
 class LUNAImage
 {
 public:
-	LUNAImage();
+	LUNAImage(); // Construct empty image
+	LUNAImage(const std::string& filename, const LUNAImageFormat& format,
+			  LUNAFileLocation location = LUNAFileLocation::ASSETS); // Constructor with loading
 
 private:
 	std::vector<unsigned char> data;
@@ -44,6 +46,7 @@ private:
 	LUNAColorType colorType;
 
 public:
+	bool IsEmpty();
 	const std::vector<unsigned char>& GetData() const;
 	int GetWidth() const;
 	int GetHeight() const;
