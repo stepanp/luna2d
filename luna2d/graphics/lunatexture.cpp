@@ -40,7 +40,7 @@ LUNATexture::~LUNATexture()
 	glDeleteTextures(1, &id);
 }
 
-void LUNATexture::CreateGlTexture(unsigned char* data)
+void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
 {
 	GLuint textureId;
 	glGenTextures(1, &textureId);
@@ -54,7 +54,7 @@ void LUNATexture::CreateGlTexture(unsigned char* data)
 	else if(colorType == LUNAColorType::RGBA) glColorType = GL_RGBA;
 
 	glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0,
-		glColorType, GL_UNSIGNED_BYTE, data);
+		glColorType, GL_UNSIGNED_BYTE, &data[0]);
 
 	id = textureId;
 

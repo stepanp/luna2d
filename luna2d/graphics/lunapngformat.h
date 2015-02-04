@@ -28,22 +28,12 @@
 
 namespace luna2d{
 
-//-----------------------------------------------------
-// Helper to pass data to "ReadPngFromBuffer" function
-//-----------------------------------------------------
-struct LUNAPngData
-{
-	unsigned char *data;
-	size_t size;
-	size_t offset;
-};
-
 class LUNAPngFormat : public LUNAImageFormat
 {
 public:
 	// SEE: "LUNAImageFormat::Decode"
-	virtual bool Decode(unsigned char *inData, size_t inSize,
-			unsigned char **outData, size_t *outSize, int *outWidth, int *outHeight, LUNAColorType *outColorType);
+	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
+		int& outWidth, int& outHeight, LUNAColorType& outColorType);
 };
 
 }

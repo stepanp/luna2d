@@ -43,7 +43,7 @@ private:
 	GLuint id;
 
 private:
-	void CreateGlTexture(unsigned char* data);
+	void CreateGlTexture(const std::vector<unsigned char>& data);
 
 public:
 	int GetWidth();

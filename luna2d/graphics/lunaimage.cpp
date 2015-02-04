@@ -29,21 +29,14 @@
 
 using namespace luna2d;
 
-LUNAImage::LUNAImage()
+LUNAImage::LUNAImage() :
+	width(0),
+	height(0),
+	colorType(LUNAColorType::RGBA)
 {
-	data = nullptr;
-	width = 0;
-	height = 0;
-	dataSize = 0;
-	colorType = LUNAColorType::RGBA;
 }
 
-LUNAImage::~LUNAImage()
-{
-	delete[] data;
-}
-
-unsigned char* LUNAImage::GetData() const
+const std::vector<unsigned char>& LUNAImage::GetData() const
 {
 	return data;
 }
@@ -71,5 +64,5 @@ bool LUNAImage::Load(const std::string& filename, LUNAImageFormat *format, LUNAF
 	std::vector<unsigned char> fileData = LUNAEngine::SharedFiles()->ReadFile(filename, location);
 	if(fileData.empty()) return false;
 
-	return format->Decode(fileData.data(), fileData.size(), &data, &dataSize, &width, &height, &colorType);
+	return format->Decode(fileData, data, width, height, colorType);
 }

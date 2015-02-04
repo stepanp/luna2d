@@ -25,7 +25,6 @@
 
 #include "platform/lunafiles.h"
 #include "lunapngformat.h"
-#include <string>
 
 namespace luna2d{
 
@@ -38,16 +37,14 @@ class LUNAImage
 {
 public:
 	LUNAImage();
-	virtual ~LUNAImage();
 
 private:
-	unsigned char *data;
-	size_t dataSize;
+	std::vector<unsigned char> data;
 	int width, height;
 	LUNAColorType colorType;
 
 public:
-	unsigned char* GetData() const;
+	const std::vector<unsigned char>& GetData() const;
 	int GetWidth() const;
 	int GetHeight() const;
 	LUNAColorType GetColorType() const;

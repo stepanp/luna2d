@@ -24,6 +24,7 @@
 #pragma once
 
 #include <stddef.h> // For size_t
+#include <vector>
 
 namespace luna2d{
 
@@ -48,14 +49,12 @@ public:
 	// Decode raw image data to uncompressed bitmap data
 	// Params:
 	// "inData" - Input image data buffer
-	// "inSize" - Size of input buffer
 	// "outData" - Output decoded data buffer
-	// "outSize" - Size of output buffer
 	// "outWidth" - Output width of image
 	// "outHeight" - Output height of image
 	// "outColorType" - Output color type of image
-	virtual bool Decode(unsigned char *inData, size_t inSize,
-		unsigned char **outData, size_t *outSize, int *outWidth, int *outHeight, LUNAColorType *outColorType) = 0;
+	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
+		int& outWidth, int& outHeight, LUNAColorType& outColorType) = 0;
 };
 
 }
