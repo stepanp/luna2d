@@ -107,24 +107,24 @@ void LUNAEngine::Deinitialize()
 {
 	UnloadModules();
 
-	delete files;
-	delete log;
-	delete platformUtils;
+	config.reset();
 	delete assets;
 	delete graphics;
 	delete scenes;
 	delete sizes;
 	delete lua;
+	delete files;
+	delete platformUtils;
+	delete log;
 
-	config = nullptr;
-	files = nullptr;
-	log = nullptr;
-	platformUtils = nullptr;
 	assets = nullptr;
 	graphics = nullptr;
 	scenes = nullptr;
 	sizes = nullptr;
 	lua = nullptr;
+	files = nullptr;
+	platformUtils = nullptr;
+	log = nullptr;
 
 	initialized = false;
 }
