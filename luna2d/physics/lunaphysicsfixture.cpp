@@ -25,7 +25,7 @@
 
 using namespace luna2d;
 
-LUNAPhysicsFixture::LUNAPhysicsFixture(LUNAPhysicsBody* body, LUNAPhysicsShape* shape)
+LUNAPhysicsFixture::LUNAPhysicsFixture(std::shared_ptr<LUNAPhysicsBody> body, std::shared_ptr<LUNAPhysicsShape> shape)
 {
 	b2FixtureDef def;
 	def.shape = shape->GetB2Shape();

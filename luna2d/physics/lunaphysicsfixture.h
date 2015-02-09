@@ -34,7 +34,7 @@ class LUNAPhysicsFixture
 	LUNA_USERDATA(LUNAPhysicsFixture)
 
 public:
-	LUNAPhysicsFixture(LUNAPhysicsBody* body, LUNAPhysicsShape* shape);
+	LUNAPhysicsFixture(std::shared_ptr<LUNAPhysicsBody> body, std::shared_ptr<LUNAPhysicsShape> shape);
 
 private:
 	b2Fixture* fixture;

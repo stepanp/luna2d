@@ -34,7 +34,7 @@ class LUNAPhysicsBody
 	LUNA_USERDATA(LUNAPhysicsBody)
 
 public:
-	LUNAPhysicsBody(LUNAPhysicsWorld* world, int type);
+	LUNAPhysicsBody(std::shared_ptr<LUNAPhysicsWorld> world, int type);
 	~LUNAPhysicsBody();
 
 private:
@@ -61,7 +61,7 @@ public:
 	void ApplyLinearImpulse(float impulseX, float impulseY, float pointX, float pointY);
 	void ApplyAngularImpulse(float impulse);
 
-	LuaTable GetPoints(LUNAPhysicsShape* shape);
+	LuaTable GetPoints(std::shared_ptr<LUNAPhysicsShape> shape);
 };
 
 }

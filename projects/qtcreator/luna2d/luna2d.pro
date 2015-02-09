@@ -339,6 +339,7 @@ HEADERS += \
     ../../../luna2d/platform/qt/lunaqtlog.h \
     ../../../luna2d/platform/qt/lunaqtgl.h \
     ../../../luna2d/platform/qt/lunaqtutils.h \
-    ../../../luna2d/graphics/lunacurverenderer.h
+    ../../../luna2d/graphics/lunacurverenderer.h \
+    ../../../luna2d/lua/luaptr.h
 
 QMAKE_MAC_SDK = macosx10.9

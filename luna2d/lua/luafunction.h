@@ -174,7 +174,7 @@ struct LuaStack<LuaFunction>
 		lua_pushvalue(luaVm, index);
 
 		int ref = luaL_ref(luaVm, LUA_REGISTRYINDEX);
-		return std::move(LuaFunction(luaVm, ref));
+		return LuaFunction(luaVm, ref);
 	}
 };
 

@@ -33,8 +33,8 @@ class LUNAPhysicsDistanceJoint : public LUNAPhysicsJoint
 	LUNA_USERDATA_DERIVED(LUNAPhysicsJoint, LUNAPhysicsDistanceJoint)
 
 public:
-	LUNAPhysicsDistanceJoint(LUNAPhysicsBody* body1, LUNAPhysicsBody* body2, float distance,
-		float anchor1X, float anchor1Y, float anchor2X, float anchor2Y, bool collideConnected);
+	LUNAPhysicsDistanceJoint(std::shared_ptr<LUNAPhysicsBody> body1, std::shared_ptr<LUNAPhysicsBody> body2,
+		float distance, float anchor1X, float anchor1Y, float anchor2X, float anchor2Y, bool collideConnected);
 };
 
 }

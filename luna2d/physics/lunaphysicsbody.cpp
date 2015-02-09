@@ -27,8 +27,8 @@
 
 using namespace luna2d;
 
-LUNAPhysicsBody::LUNAPhysicsBody(LUNAPhysicsWorld* world, int type) :
-	world(world),
+LUNAPhysicsBody::LUNAPhysicsBody(std::shared_ptr<LUNAPhysicsWorld> world, int type) :
+	world(world.get()),
 	body(nullptr)
 {
 	b2BodyDef def;
@@ -141,7 +141,7 @@ void LUNAPhysicsBody::ApplyAngularImpulse(float impulse)
 	body->ApplyAngularImpulse(impulse, true);
 }
 
-LuaTable LUNAPhysicsBody::GetPoints(LUNAPhysicsShape* shape)
+LuaTable LUNAPhysicsBody::GetPoints(std::shared_ptr<LUNAPhysicsShape> shape)
 {
 	if(!shape || !shape->GetB2Shape()) return nil;
 

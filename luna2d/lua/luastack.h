@@ -24,8 +24,6 @@
 #pragma once
 
 #include "luascript.h"
-#include <string>
-#include <vector>
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_QT
 	#include <QString>
@@ -43,7 +41,7 @@ struct LuaStack
 // By default, for const references use same implementation
 // as for non-reference type
 template<typename T>
-struct LuaStack<const T&> : LuaStack<T> {};
+struct LuaStack<const T&> : public LuaStack<T> {};
 
 template<>
 struct LuaStack<int>

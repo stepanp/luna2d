@@ -55,7 +55,7 @@ void LUNAPhysicsModule::Load(luna2d::LuaScript* lua)
 
 	// Register body
 	LuaClass<LUNAPhysicsBody> clsBody(lua);
-	clsBody.SetConstructor<LUNAPhysicsWorld*, int>();
+	clsBody.SetConstructor<std::shared_ptr<LUNAPhysicsWorld>, int>();
 	clsBody.SetMethod("destroy", &LUNAPhysicsBody::Destroy);
 	clsBody.SetMethod("getX", &LUNAPhysicsBody::GetX);
 	clsBody.SetMethod("getY", &LUNAPhysicsBody::GetY);
@@ -93,7 +93,7 @@ void LUNAPhysicsModule::Load(luna2d::LuaScript* lua)
 
 	// Register fixture
 	LuaClass<LUNAPhysicsFixture> clsFixture(lua);
-	clsFixture.SetConstructor<LUNAPhysicsBody*,LUNAPhysicsShape*>();
+	clsFixture.SetConstructor<std::shared_ptr<LUNAPhysicsBody>,std::shared_ptr<LUNAPhysicsShape>>();
 	clsFixture.SetMethod("setFilterGroup", &LUNAPhysicsFixture::SetFilterGroup);
 	tblPhysics.SetField("Fixture", clsFixture);
 
@@ -105,7 +105,8 @@ void LUNAPhysicsModule::Load(luna2d::LuaScript* lua)
 
 	// Register distance joint
 	LuaClass<LUNAPhysicsDistanceJoint> clsDistanceJoint(lua);
-	clsDistanceJoint.SetConstructor<LUNAPhysicsBody*,LUNAPhysicsBody*,float,float,float,float,float,bool>();
+	clsDistanceJoint.SetConstructor<std::shared_ptr<LUNAPhysicsBody>,std::shared_ptr<LUNAPhysicsBody>,
+			float,float,float,float,float,bool>();
 	tblPhysics.SetField("DistanceJoint", clsDistanceJoint);
 
 	// Register constants

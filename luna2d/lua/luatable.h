@@ -165,7 +165,7 @@ struct LuaStack<LuaTable>
 		lua_pushvalue(luaVm, index);
 
 		int ref = luaL_ref(luaVm, LUA_REGISTRYINDEX);
-		return std::move(LuaTable(luaVm, ref));
+		return LuaTable(luaVm, ref);
 	}
 };
 
