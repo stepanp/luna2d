@@ -24,6 +24,7 @@
 #pragma once
 
 #include "luaptr.h"
+#include <functional>
 #include "utils/lunaindexlist.h"
 
 namespace luna2d{
@@ -52,10 +53,10 @@ template<typename Ret, typename ... Args>
 class LuaFunctionProxy : public LuaProxy
 {
 	typedef LuaFunctionProxy<Ret, Args...> Proxy;
-	typedef Ret (*Func)(Args ...);
+	typedef std::function<Ret(Args...)> Func;
 
 public:
-	LuaFunctionProxy(Func func)
+	LuaFunctionProxy(const Func& func)
 	{
 		this->func = func;
 	}
@@ -91,10 +92,10 @@ template<typename ... Args>
 class LuaFunctionProxy<void, Args...> : public LuaProxy
 {
 	typedef LuaFunctionProxy<void, Args...> Proxy;
-	typedef void (*Func)(Args ...);
+	typedef std::function<void(Args...)> Func;
 
 public:
-	LuaFunctionProxy(Func func)
+	LuaFunctionProxy(const Func& func)
 	{
 		this->func = func;
 	}

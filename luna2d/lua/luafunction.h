@@ -40,6 +40,12 @@ public:
 
 	// Binding constructors
 	template<typename Ret, typename ... Args>
+	LuaFunction(LuaScript *lua, const std::function<Ret(Args...)>& func) : LuaFunction(lua)
+	{
+		Bind<Ret, Args...>(func);
+	}
+
+	template<typename Ret, typename ... Args>
 	LuaFunction(LuaScript *lua, Ret (*func)(Args ...)) : LuaFunction(lua)
 	{
 		Bind<Ret, Args...>(func);
@@ -86,7 +92,7 @@ private:
 public:
 	// Bind function to lua
 	template<typename Ret, typename ... Args>
-	void Bind(Ret (*func)(Args ...))
+	void Bind(const std::function<Ret(Args ...)>& func)
 	{
 		lua_State *luaVm = ref->GetLuaVm();
 
@@ -94,6 +100,14 @@ public:
 		lua_pushcclosure(luaVm, LuaFunctionProxy<Ret, Args...>::Callback, 1);
 
 		ref->Hold(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
+	}
+
+	// Helper for automatic detecting argument types of binding function
+	template<typename Ret, typename ... Args>
+	void Bind(Ret (*ptr)(Args ...))
+	{
+		std::function<Ret(Args...)> func = ptr;
+		Bind(func);
 	}
 
 	// Bind method to lua

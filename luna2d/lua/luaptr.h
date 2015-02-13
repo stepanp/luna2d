@@ -46,7 +46,6 @@ struct LuaStack<std::shared_ptr<T>>
 		{
 			LuaStack<LuaWeakRef*>::Push(luaVm, ref.get());
 		}
-
 		else
 		{
 			// Make copy of shared_ptr on heap
