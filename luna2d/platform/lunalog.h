@@ -40,9 +40,9 @@ public:
 	virtual void Warning(const char* message, ...) = 0; // Log warning
 	virtual void Error(const char* message, ...) = 0; // Log error
 
-	void InfoNoVa(const char* message);
-	void WarningNoVa(const char* message);
-	void ErrorNoVa(const char* message);
+	void InfoString(const std::string& message);
+	void WarningString(const std::string& message);
+	void ErrorString(const std::string& message);
 };
 
 }

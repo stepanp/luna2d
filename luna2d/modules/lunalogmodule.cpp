@@ -29,9 +29,9 @@ using namespace luna2d;
 // Proxy for "__call" metametod
 // First param of "__call" metamethod is table
 // Because, we need use this proxy to filter this param
-void LUNALogModule::CallProxy(LuaTable, const char* message)
+void CallProxy(LuaTable, const std::string& message)
 {
-	LUNA_LOG(message);
+	LUNAEngine::SharedLog()->InfoString(message);
 }
 
 void LUNALogModule::Load(LuaScript *lua)
@@ -40,14 +40,14 @@ void LUNALogModule::Load(LuaScript *lua)
 	LuaTable tblLog(lua);
 
 	// Register "info", "warning", "error" functions in "luna.log" table
-	tblLog.SetField("info", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::InfoNoVa));
-	tblLog.SetField("warning", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::WarningNoVa));
-	tblLog.SetField("error", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::ErrorNoVa));
+	tblLog.SetField("info", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::InfoString));
+	tblLog.SetField("warning", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::WarningString));
+	tblLog.SetField("error", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::ErrorString));
 
 	// Use "__call" metamethod of "luna.log" table as alias for "info" function
 	// i.e. luna.log("message") = luna.log.info("message")
 	LuaTable metaLog(lua);
-	metaLog.SetField("__call", LuaFunction(lua, this, &LUNALogModule::CallProxy));
+	metaLog.SetField("__call", LuaFunction(lua, &CallProxy));
 	tblLog.SetMetatable(metaLog);
 
 	tblLuna.SetField("log", tblLog);

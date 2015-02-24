@@ -25,17 +25,17 @@
 
 using namespace luna2d;
 
-void LUNALog::InfoNoVa(const char* message)
+void LUNALog::InfoString(const std::string& message)
 {
-	Info(message);
+	Info(message.c_str());
 }
 
-void LUNALog::WarningNoVa(const char* message)
+void LUNALog::WarningString(const std::string& message)
 {
-	Warning(message);
+	Warning(message.c_str());
 }
 
-void LUNALog::ErrorNoVa(const char* message)
+void LUNALog::ErrorString(const std::string& message)
 {
-	Error(message);
+	Error(message.c_str());
 }

@@ -125,12 +125,6 @@ struct LuaStack<const char*>
 	{
 		lua_pushstring(luaVm, arg);
 	}
-
-	static const char* Pop(lua_State* luaVm, int index = -1)
-	{
-		if(!lua_isstring(luaVm, index)) return "";
-		return lua_tostring(luaVm, index);
-	}
 };
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_QT
