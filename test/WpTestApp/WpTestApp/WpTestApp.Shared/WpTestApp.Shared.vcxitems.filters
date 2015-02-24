@@ -467,6 +467,9 @@
       <Filter>luna2d\platform\wp</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunacurverenderer.h">
+      <Filter>luna2d\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
@@ -950,6 +953,9 @@
       <Filter>luna2d\platform\wp</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)OpenGLESPage.xaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\graphics\lunacurverenderer.cpp">
+      <Filter>luna2d\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="$(MSBuildThisFileDirectory)App.xaml" />
