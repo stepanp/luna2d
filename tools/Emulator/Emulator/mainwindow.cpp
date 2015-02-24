@@ -226,7 +226,7 @@ void MainWindow::OnActionOpen()
 	QFileDialog dialog;
 	dialog.setFileMode(QFileDialog::DirectoryOnly);
 	dialog.setOption(QFileDialog::ShowDirsOnly);
-	dialog.setWindowTitle("Select \"assets\" directory of game");
+	dialog.setWindowTitle("Select game directory");
 
 	if(dialog.exec())
 	{

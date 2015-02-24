@@ -68,8 +68,8 @@ signals:
 
 public:
 	bool IsEngineInitialized();
-	void InitializeEngine(const QString& assetsPath, int width, int height);
-	void InitializeEngine(const QString& assetsPath);
+	void InitializeEngine(const QString& gamePath, int width, int height);
+	void InitializeEngine(const QString& gamePath);
 	void DeinitializeEngine();
 	LUNAEngine* GetEngine();
 	void SetPlaceholderColor(const QColor& color);

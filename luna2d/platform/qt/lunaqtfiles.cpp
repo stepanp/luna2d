@@ -27,11 +27,11 @@
 
 using namespace luna2d;
 
-LUNAQtFiles::LUNAQtFiles(const QString& assetsPath) :
-	assetsPath(assetsPath.toStdString())
+LUNAQtFiles::LUNAQtFiles(const QString& gamePath) :
+	gamePath(gamePath.toStdString())
 {
 	// Append slash to end of path if it not exists in given path
-	if(!assetsPath.endsWith('/')) this->assetsPath.append("/");
+	if(!gamePath.endsWith('/')) this->gamePath.append("/");
 }
 
 // Convert given path in a path relative to root directory of given location
@@ -46,7 +46,7 @@ std::string LUNAQtFiles::GetRootFolder(LUNAFileLocation location)
 	switch(location)
 	{
 	case LUNAFileLocation::ASSETS:
-		return assetsPath;
+		return gamePath;
 	}
 
 	return "";

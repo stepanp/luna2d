@@ -34,10 +34,10 @@ namespace luna2d{
 class LUNAQtFiles : public LUNAFiles
 {
 public:
-	LUNAQtFiles(const QString& assetsPath);
+	LUNAQtFiles(const QString& gamePath);
 
 private:
-	std::string assetsPath;
+	std::string gamePath;
 
 private:
 	// Convert given path in a path relative to root directory of given location

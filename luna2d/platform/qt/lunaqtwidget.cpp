@@ -152,23 +152,23 @@ bool LUNAQtWidget::IsEngineInitialized()
 	return LUNAEngine::Shared()->IsInitialized();
 }
 
-void LUNAQtWidget::InitializeEngine(const QString& assetsPath, int width, int height)
+void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int height)
 {
 	LUNAQtLog* log = new LUNAQtLog();
 	connect(log, &LUNAQtLog::logInfo, this, &LUNAQtWidget::logInfo);
 	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
 	connect(log, &LUNAQtLog::logError, this, &LUNAQtWidget::logError);
 
-	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(assetsPath), log, new LUNAQtUtils());
+	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils());
 	LUNAEngine::Shared()->Initialize(width, height);
 
 	emit engineInitialized();
 }
 
-void LUNAQtWidget::InitializeEngine(const QString& assetsPath)
+void LUNAQtWidget::InitializeEngine(const QString& gamePath)
 {
 	QSize wndSize = size();
-	InitializeEngine(assetsPath, wndSize.width(), wndSize.height());
+	InitializeEngine(gamePath, wndSize.width(), wndSize.height());
 }
 
 void LUNAQtWidget::DeinitializeEngine()
