@@ -42,6 +42,7 @@ public:
 
 private:
 	QOpenGLPaintDevice* paintDevice;
+	QColor placeholderColor;
 	QImage placeholderImage;
 	bool mouseDown;
 
@@ -71,6 +72,7 @@ public:
 	void InitializeEngine(const QString& assetsPath);
 	void DeinitializeEngine();
 	LUNAEngine* GetEngine();
+	void SetPlaceholderColor(const QColor& color);
 	void SetPlaceholderImage(const QImage& image);
 	int GetFps();
 };

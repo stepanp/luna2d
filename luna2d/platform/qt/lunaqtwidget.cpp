@@ -33,6 +33,7 @@ using namespace luna2d;
 LUNAQtWidget::LUNAQtWidget(QWidget* parent) :
 	QOpenGLWidget(parent),
 	paintDevice(nullptr),
+	placeholderColor(Qt::white),
 	placeholderImage(nullptr),
 	mouseDown(false)
 {
@@ -108,7 +109,7 @@ void LUNAQtWidget::paintGL()
 	// Until engine isn't initialized, render placeholder image
 	else
 	{
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(placeholderColor.redF(), placeholderColor.greenF(), placeholderColor.blueF(), 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 		// Render image on center of window if image is specifed
@@ -178,6 +179,11 @@ void LUNAQtWidget::DeinitializeEngine()
 LUNAEngine* LUNAQtWidget::GetEngine()
 {
 	return LUNAEngine::Shared();
+}
+
+void LUNAQtWidget::SetPlaceholderColor(const QColor& color)
+{
+	placeholderColor = color;
 }
 
 void LUNAQtWidget::SetPlaceholderImage(const QImage &image)
