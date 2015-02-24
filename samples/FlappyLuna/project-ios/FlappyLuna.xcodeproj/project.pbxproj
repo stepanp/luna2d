@@ -9,18 +9,18 @@
 /* Begin PBXBuildFile section */
 		84003BB91A5C63EC00F709A3 /* libluna2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84003BB71A5C63EC00F709A3 /* libluna2d.a */; };
 		84003BBA1A5C63EC00F709A3 /* luna2d.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84003BB81A5C63EC00F709A3 /* luna2d.mm */; };
-		84003BBE1A5C642300F709A3 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 84003BBD1A5C642300F709A3 /* assets */; };
 		84003BC31A5C645D00F709A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84003BC21A5C645D00F709A3 /* Info.plist */; };
 		84003BC51A5C648E00F709A3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84003BC41A5C648E00F709A3 /* libz.dylib */; };
+		8427D8911A9CFC1900FDBBE5 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 8427D8901A9CFC1800FDBBE5 /* game */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		84003B8A1A5C623000F709A3 /* FlappyLuna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyLuna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84003BB71A5C63EC00F709A3 /* libluna2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluna2d.a; path = ../../../lib/ios/libluna2d.a; sourceTree = "<group>"; };
 		84003BB81A5C63EC00F709A3 /* luna2d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = luna2d.mm; path = ../../../lib/ios/luna2d.mm; sourceTree = "<group>"; };
-		84003BBD1A5C642300F709A3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; name = assets; path = ../assets; sourceTree = "<group>"; };
 		84003BC21A5C645D00F709A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84003BC41A5C648E00F709A3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		8427D8901A9CFC1800FDBBE5 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../game; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,9 +39,9 @@
 		84003B811A5C623000F709A3 = {
 			isa = PBXGroup;
 			children = (
+				8427D8901A9CFC1800FDBBE5 /* game */,
 				84003BC41A5C648E00F709A3 /* libz.dylib */,
 				84003BC11A5C645D00F709A3 /* FlappyLuna */,
-				84003BBD1A5C642300F709A3 /* assets */,
 				84003BB71A5C63EC00F709A3 /* libluna2d.a */,
 				84003BB81A5C63EC00F709A3 /* luna2d.mm */,
 				84003B8B1A5C623000F709A3 /* Products */,
@@ -121,8 +121,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8427D8911A9CFC1900FDBBE5 /* game in Resources */,
 				84003BC31A5C645D00F709A3 /* Info.plist in Resources */,
-				84003BBE1A5C642300F709A3 /* assets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
