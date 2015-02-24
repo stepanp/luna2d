@@ -29,7 +29,6 @@ namespace luna2d{
 
 const std::string DEFAULT_RESOLUTION = "HVGA";
 const int BASE_SIZE = 320;
-const std::string GAME_ROOT_PATH = "game/"; // Root game directory
 const std::string SCRIPTS_PATH = "scrtipts/"; // Path to scripts in root directory
 const std::string CONFIG_FILENAME = "config.luna2d"; // Name of config file
 

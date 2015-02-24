@@ -50,7 +50,7 @@ std::string LUNAIosFiles::GetRootFolder(LUNAFileLocation location)
 	switch(location)
 	{
 	case LUNAFileLocation::ASSETS:
-		return "assets/";
+		return "game/";
 	}
 	
 	return "";

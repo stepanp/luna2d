@@ -54,7 +54,7 @@ std::wstring LUNAWpFiles::GetRootFolderW(LUNAFileLocation location)
 	{
 	case LUNAFileLocation::ASSETS:
 		std::wstring path = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
-		path += L"\\Assets\\assets\\";
+		path += L"\\Assets\\game\\";
 
 		return std::move(path);
 	}

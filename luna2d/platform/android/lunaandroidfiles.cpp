@@ -113,7 +113,7 @@ std::string LUNAAndroidFiles::GetRootFolder(LUNAFileLocation location)
 	switch(location)
 	{
 	case LUNAFileLocation::ASSETS:
-		return std::string("assets/") + GAME_ROOT_PATH;
+		return "assets/game/";
 	}
 }
 
