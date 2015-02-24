@@ -8,14 +8,14 @@
     <Filter Include="Binaries">
       <Extensions>dll;</Extensions>
     </Filter>
-    <Filter Include="Assets\assets">
-      <UniqueIdentifier>{5da18a6b-ee00-4989-905c-b8ea193cb9a9}</UniqueIdentifier>
+    <Filter Include="Assets\game">
+      <UniqueIdentifier>{1465e332-50dd-4606-aa37-fa3b72f27f56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\assets\art">
-      <UniqueIdentifier>{7945a419-cb47-4601-b0c6-60e51f6cf837}</UniqueIdentifier>
+    <Filter Include="Assets\game\art">
+      <UniqueIdentifier>{9ee46011-7342-43f9-a0fc-cf6291da1a8e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\assets\scripts">
-      <UniqueIdentifier>{de0f91c0-e8d7-4a3d-b3b7-7b184e8c38c9}</UniqueIdentifier>
+    <Filter Include="Assets\game\scripts">
+      <UniqueIdentifier>{8f3770ed-32a0-483c-b5d9-3f787113c1b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,50 +37,20 @@
     <Image Include="Assets\WideLogo.scale-240.png">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="Assets\assets\art\items%40HD.png">
-      <Filter>Assets\assets\art</Filter>
+    <Image Include="Assets\game\art\items%40HD.png">
+      <Filter>Assets\game\art</Filter>
     </Image>
-    <Image Include="Assets\assets\art\items%40HVGA.png">
-      <Filter>Assets\assets\art</Filter>
+    <Image Include="Assets\game\art\items%40HVGA.png">
+      <Filter>Assets\game\art</Filter>
     </Image>
-    <Image Include="Assets\assets\art\items%40WVGA.png">
-      <Filter>Assets\assets\art</Filter>
+    <Image Include="Assets\game\art\items%40WVGA.png">
+      <Filter>Assets\game\art</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\assets\art\items%40HD.atlas">
-      <Filter>Assets\assets\art</Filter>
-    </None>
-    <None Include="Assets\assets\art\items%40HVGA.atlas">
-      <Filter>Assets\assets\art</Filter>
-    </None>
-    <None Include="Assets\assets\art\items%40WVGA.atlas">
-      <Filter>Assets\assets\art</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\background.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\bird.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\gamescene.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\main.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\settings.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\scripts\tube.lua">
-      <Filter>Assets\assets\scripts</Filter>
-    </None>
-    <None Include="Assets\assets\config.json">
-      <Filter>Assets\assets</Filter>
-    </None>
     <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\win32\libEGL.dll">
       <Filter>Binaries</Filter>
     </None>
@@ -92,6 +62,36 @@
     </None>
     <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\wp\arm\libGLESv2.dll">
       <Filter>Binaries</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40HD.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40HVGA.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40WVGA.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\scripts\background.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\bird.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\gamescene.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\main.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\settings.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\tube.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\config.luna2d">
+      <Filter>Assets\game</Filter>
     </None>
   </ItemGroup>
 </Project>
