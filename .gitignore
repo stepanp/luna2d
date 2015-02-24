@@ -1,17 +1,17 @@
 lib/*
 
-projects/eclipse/bin/*
-projects/eclipse/gen/*
-projects/eclipse/obj/*
-projects/eclipse/libs/*
-projects/eclipse/.settings/*
+projects/android-eclipse/bin/*
+projects/android-eclipse/gen/*
+projects/android-eclipse/obj/*
+projects/android-eclipse/libs/*
+projects/android-eclipse/.settings/*
 
-projects/qtcreator/build*
-projects/qtcreator/luna2d/luna2d.pro.user
+projects/qt-qtcreator/build*
+projects/qt-qtcreator/luna2d/luna2d.pro.user
 
-projects/xcode/luna2d.xcodeproj/project.xcworkspace/*
-projects/xcode/luna2d.xcodeproj/xcuserdata/*
-projects/xcode/build/*
+projects/ios-xcode/luna2d.xcodeproj/project.xcworkspace/*
+projects/ios-xcode/luna2d.xcodeproj/xcuserdata/*
+projects/ios-xcode/build/*
 
 tools/Emulator/build*
 tools/Emulator/Emulator/Emulator.pro.user
