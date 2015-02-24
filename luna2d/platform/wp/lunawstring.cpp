@@ -29,7 +29,6 @@ using namespace luna2d;
 // Convert std::string to std::wstring
 std::wstring luna2d::ToWString(const std::string& str)
 {
-	// Convert path from std::wstring to std::string
 	std::wstring ret(str.length(), L'\n');
 	MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.length(), &ret[0], ret.length());
 
@@ -39,7 +38,6 @@ std::wstring luna2d::ToWString(const std::string& str)
 // Convert std::wstring to std::string
 std::string luna2d::FromWString(const std::wstring& str)
 {
-	// Convert path from std::wstring to std::string
 	std::string ret(str.length(), '\n');
 	WideCharToMultiByte(CP_ACP, 0, str.c_str(), str.length(), &ret[0], ret.length(), "", FALSE);
 
