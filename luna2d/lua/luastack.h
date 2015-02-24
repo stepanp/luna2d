@@ -187,7 +187,7 @@ struct LuaStack<std::vector<T>>
 
 	static std::vector<T> Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_istable(luaVm, index)) return std::move(std::vector<T>()); // Return empty vector
+		if(!lua_istable(luaVm, index)) return std::vector<T>(); // Return empty vector
 
 		int count = lua_rawlen(luaVm, index);
 		std::vector<T> vector;

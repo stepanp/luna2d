@@ -36,7 +36,6 @@ public:
 	LuaFunction(lua_State* luaVm);
 	LuaFunction(lua_State* luaVm, int ref);
 	LuaFunction(const LuaFunction& fn);
-	LuaFunction(LuaFunction&& fn);
 
 	// Binding constructors
 	template<typename Ret, typename ... Args>
@@ -181,7 +180,7 @@ struct LuaStack<LuaFunction>
 
 	static LuaFunction Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_isfunction(luaVm, index)) return std::move(LuaFunction(luaVm)); // Return non-binded lua function
+		if(!lua_isfunction(luaVm, index)) return LuaFunction(luaVm); // Return non-binded lua function
 
 		// Push function from index to top of stack
 		// because "luaL_ref" can get ref only from top of stack

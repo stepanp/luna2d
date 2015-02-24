@@ -31,7 +31,6 @@ LuaDynamicType::LuaDynamicType(LuaScript* lua) : LuaObject(lua) {}
 LuaDynamicType::LuaDynamicType(lua_State* luaVm) : LuaObject(luaVm) {}
 LuaDynamicType::LuaDynamicType(lua_State *luaVm, int ref) : LuaObject(luaVm, ref) {}
 LuaDynamicType::LuaDynamicType(const LuaDynamicType& type) : LuaObject(type) {}
-LuaDynamicType::LuaDynamicType(LuaDynamicType&& type) : LuaObject(type) {}
 
 int LuaDynamicType::GetType() const
 {

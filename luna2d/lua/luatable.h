@@ -60,7 +60,6 @@ public:
 	LuaTable(lua_State* luaVm);
 	LuaTable(lua_State* luaVm, int ref);
 	LuaTable(const LuaTable& table);
-	LuaTable(LuaTable&& table);
 
 public:
 	LuaTable GetMetatable() const; // Get metatable of this table. If table hasn't metatable return nil table
@@ -158,7 +157,7 @@ struct LuaStack<LuaTable>
 
 	static LuaTable Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_istable(luaVm, index)) return std::move(LuaTable(luaVm, LUA_NOREF)); // Return nil table
+		if(!lua_istable(luaVm, index)) return LuaTable(luaVm, LUA_NOREF); // Return nil table
 
 		// Push table from index to top of stack
 		// because "luaL_ref" can get ref only from top of stack

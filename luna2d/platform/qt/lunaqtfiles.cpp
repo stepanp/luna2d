@@ -37,7 +37,7 @@ LUNAQtFiles::LUNAQtFiles(const QString& assetsPath) :
 // Convert given path in a path relative to root directory of given location
 QString LUNAQtFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
 {
-	return std::move(QString::fromStdString(GetRootFolder(location) + path));
+	return QString::fromStdString(GetRootFolder(location) + path);
 }
 
 // Get root folder for file location

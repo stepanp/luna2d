@@ -112,7 +112,6 @@ LuaTable::LuaTable(lua_State* luaVm) : LuaObject(luaVm)
 
 LuaTable::LuaTable(lua_State* luaVm, int ref) : LuaObject(luaVm, ref) {}
 LuaTable::LuaTable(const LuaTable& table) : LuaObject(table) {}
-LuaTable::LuaTable(LuaTable&& table) : LuaObject(table) {}
 
 // Get metatable of this table. If table hasn't metatable return nil table
 LuaTable LuaTable::GetMetatable() const

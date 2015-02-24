@@ -36,7 +36,6 @@ public:
 	LuaObject(lua_State* luaVm);
 	LuaObject(lua_State* luaVm, int ref);
 	LuaObject(const LuaObject& obj);
-	LuaObject(LuaObject&& obj);
 
 protected:
 	std::shared_ptr<LuaRef> ref;

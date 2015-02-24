@@ -30,7 +30,6 @@ LuaFunction::LuaFunction(LuaScript* lua) : LuaObject(lua) {}
 LuaFunction::LuaFunction(lua_State* luaVm) : LuaObject(luaVm) {}
 LuaFunction::LuaFunction(lua_State* luaVm, int ref) : LuaObject(luaVm, ref) {}
 LuaFunction::LuaFunction(const LuaFunction& fn) : LuaObject(fn) {}
-LuaFunction::LuaFunction(LuaFunction&& fn) : LuaObject(fn) {}
 
 LuaFunction& LuaFunction::operator=(const LuaFunction& fn)
 {

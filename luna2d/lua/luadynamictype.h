@@ -38,7 +38,6 @@ public:
 	LuaDynamicType(lua_State* luaVm);
 	LuaDynamicType(lua_State* luaVm, int ref);
 	LuaDynamicType(const LuaDynamicType& type);
-	LuaDynamicType(LuaDynamicType&& type);
 
 	template<typename T>
 	LuaDynamicType(LuaScript* lua, const T& t) : LuaDynamicType(lua)
@@ -99,7 +98,7 @@ struct LuaStack<LuaDynamicType>
 		lua_pushvalue(luaVm, index);
 
 		int ref = luaL_ref(luaVm, LUA_REGISTRYINDEX);
-		return std::move(LuaDynamicType(luaVm, ref));
+		return LuaDynamicType(luaVm, ref);
 	}
 };
 

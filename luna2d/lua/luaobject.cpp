@@ -50,11 +50,6 @@ LuaObject::LuaObject(const LuaObject& obj) :
 {
 }
 
-LuaObject::LuaObject(LuaObject&& obj) :
-	ref(std::move(obj.ref))
-{
-}
-
 std::shared_ptr<LuaRef> LuaObject::GetRef() const
 {
 	return ref;
