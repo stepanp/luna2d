@@ -41,17 +41,14 @@ void LUNAIntersect::Load(LuaScript *lua)
 }
 
 // Check for point insinde in rectangle
-bool LUNAIntersect::PointInRectangle(const LuaTable& point, const LuaTable& rect)
+bool LUNAIntersect::PointInRectangle(const glm::vec2& point, const LuaTable& rect)
 {
-	float px = point.GetFloat("x");
-	float py = point.GetFloat("y");
-
 	float rx = rect.GetFloat("x");
 	float ry = rect.GetFloat("y");
 	float rwidth = rect.GetFloat("width");
 	float rheight = rect.GetFloat("height");
 
-	return px > rx && py > ry && px < rx + rwidth && py < ry + rheight;
+	return point.x > rx && point.y > ry && point.x < rx + rwidth && point.y < ry + rheight;
 }
 
 // Check for point insinde in cirle
@@ -120,14 +117,14 @@ bool LUNAIntersect::Lines(const LuaTable& line1, const LuaTable& line2)
 }
 
 // Check intersection between line and circle
-bool LUNAIntersect::LineCircle(const LuaTable& line, const LuaTable& point, float r)
+bool LUNAIntersect::LineCircle(const LuaTable& line, const glm::vec2& point, float r)
 {
 	float x1 = line.GetFloat("x1");
 	float y1 = line.GetFloat("y1");
 	float x2 = line.GetFloat("x2");
 	float y2 = line.GetFloat("y2");
-	float cx = point.GetFloat("x");
-	float cy = point.GetFloat("y");
+	float cx = point.x;
+	float cy = point.y;
 
 	x1 -= cx;
 	y1 -= cy;

@@ -33,12 +33,12 @@ class LUNAIntersect : public LUNAModule
 public:
 	virtual void Load(LuaScript *lua);
 
-	bool PointInRectangle(const LuaTable& point, const LuaTable& rect); // Check for point insinde in rectangle
+	bool PointInRectangle(const glm::vec2& point, const LuaTable& rect); // Check for point insinde in rectangle
 	bool PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r); // Check for point insinde in cirle
 	bool PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon); // Check for point inside polygon
 	bool Rectangles(const LuaTable& rect1, const LuaTable& rect2); // Check intersection between two rectangles
 	bool Lines(const LuaTable& line1, const LuaTable& line2); // Check intersection between two lines
-	bool LineCircle(const LuaTable& line, const LuaTable& point, float r); // Check intersection between line and circle
+	bool LineCircle(const LuaTable& line, const glm::vec2& point, float r); // Check intersection between line and circle
 	LuaTable PointBetweenLines(const LuaTable& line1, const LuaTable& line2); // Get intersection point between two lines
 };
 
