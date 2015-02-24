@@ -50,7 +50,7 @@ std::string LUNAFiles::GetParentPath(const std::string& path)
 {
 	size_t slashPos = path.rfind('/'); // Last slash pos
 
-	if(slashPos == std::string::npos) return std::move("/");
+	if(slashPos == std::string::npos) return "/";
 	return path.substr(0, path.rfind('/'));
 }
 

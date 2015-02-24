@@ -79,7 +79,7 @@ GLuint LUNATexture::GetId()
 // Check for texture is valid. Can be invalid after lost GL context
 bool LUNATexture::IsValid()
 {
-	return glIsTexture(id);
+	return glIsTexture(id) == GL_TRUE;
 }
 
 void LUNATexture::Bind()

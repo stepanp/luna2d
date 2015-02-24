@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>09d0f14a-c673-4f45-b6e1-51b6f009260a</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Image Include="Assets\Logo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="Assets\assets">
+      <UniqueIdentifier>{9a04e0cf-28d5-43fa-bef4-aee94d142b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\assets\art">
+      <UniqueIdentifier>{1266d321-fc02-43a1-962d-c0f681f9874f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\assets\scripts">
+      <UniqueIdentifier>{4acd8361-9f53-4e33-8deb-334265d86dbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Binaries">
+      <UniqueIdentifier>{56f8d48a-aeb8-42ba-b64c-9b9cefd1ebd7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WpTestApp.Windows_TemporaryKey.pfx" />
+    <None Include="Assets\assets\art\items%40HD.atlas">
+      <Filter>Assets\assets\art</Filter>
+    </None>
+    <None Include="Assets\assets\art\items%40HVGA.atlas">
+      <Filter>Assets\assets\art</Filter>
+    </None>
+    <None Include="Assets\assets\art\items%40WVGA.atlas">
+      <Filter>Assets\assets\art</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\background.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\bird.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\gamescene.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\main.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\settings.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\scripts\tube.lua">
+      <Filter>Assets\assets\scripts</Filter>
+    </None>
+    <None Include="Assets\assets\config.json">
+      <Filter>Assets\assets</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\win32\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\win32\libGLESv2.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\arm\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\..\luna2d\thirdparty\angle\prebuilt\winrt\arm\libGLESv2.dll">
+      <Filter>Binaries</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\assets\art\items%40HD.png">
+      <Filter>Assets\assets\art</Filter>
+    </Image>
+    <Image Include="Assets\assets\art\items%40HVGA.png">
+      <Filter>Assets\assets\art</Filter>
+    </Image>
+    <Image Include="Assets\assets\art\items%40WVGA.png">
+      <Filter>Assets\assets\art</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

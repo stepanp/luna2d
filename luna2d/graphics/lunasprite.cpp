@@ -27,7 +27,7 @@
 #include "lunasizes.h"
 #include "lunaassets.h"
 #include "lunalog.h"
-#include <cmath>
+#include "lunamathutils.h"
 
 using namespace luna2d;
 

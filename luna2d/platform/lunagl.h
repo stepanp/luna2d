@@ -38,3 +38,7 @@
 #if LUNA_PLATFORM == LUNA_PLATFORM_IOS
 	#include "ios/lunaiosgl.h"
 #endif
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_WP
+	#include "wp/lunawpgl.h"
+#endif

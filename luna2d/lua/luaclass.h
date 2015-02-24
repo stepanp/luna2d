@@ -26,6 +26,11 @@
 #include "luatable.h"
 #include <type_traits>
 
+// VS2013 not supports constexpr 
+#if LUNA_PLATFORM == LUNA_PLATFORM_WP
+	#define constexpr	
+#endif
+
 #define LUNA_USERDATA(cls) \
 	static_assert(std::is_class<cls>::value, "Type \"" #cls "\" is must be a class"); \
 	protected: \
@@ -60,7 +65,9 @@ namespace luna2d{
 template<typename Class>
 class LuaClass : public LuaTable
 {
+#if LUNA_PLATFORM != LUNA_PLATFORM_WP
 	static_assert(Class::_CheckIsBaseOf(), "");
+#endif
 
 	typedef LuaDynamicType (Class::*IndexHandler)(const LuaDynamicType&);
 

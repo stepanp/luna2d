@@ -48,7 +48,7 @@ struct LuaStack<int>
 {
 	static void Push(lua_State* luaVm, int arg)
 	{
-		lua_pushnumber(luaVm, arg);
+		lua_pushinteger(luaVm, arg);
 	}
 
 	static int Pop(lua_State* luaVm, int index = -1)
@@ -63,7 +63,7 @@ struct LuaStack<unsigned int>
 {
 	static void Push(lua_State* luaVm, unsigned int arg)
 	{
-		lua_pushnumber(luaVm, arg);
+		lua_pushinteger(luaVm, arg);
 	}
 
 	static unsigned int Pop(lua_State* luaVm, int index = -1)
@@ -99,7 +99,7 @@ struct LuaStack<bool>
 	static bool Pop(lua_State* luaVm, int index = -1)
 	{
 		if(!lua_isboolean(luaVm, index)) return false;
-		return lua_toboolean(luaVm, index);
+		return !!lua_toboolean(luaVm, index);
 	}
 };
 

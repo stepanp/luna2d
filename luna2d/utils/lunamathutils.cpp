@@ -29,7 +29,7 @@ using namespace luna2d;
 
 void LUNAMathUtils::InitializeRandom()
 {
-	srand(time(0));
+	srand((unsigned int)time(0));
 }
 
 // Generate random float number in range [a,b]

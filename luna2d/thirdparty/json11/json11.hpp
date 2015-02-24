@@ -56,6 +56,12 @@
 #include <memory>
 #include <initializer_list>
 
+// Fixes for VS2013
+#if defined(_MSC_VER)
+	#define noexcept
+	#define snprintf _snprintf
+#endif
+
 namespace json11 {
 
 class JsonValue;
