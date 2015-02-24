@@ -22,22 +22,29 @@
 //-----------------------------------------------------------------------------
 
 #include "lunawplog.h"
+#include "lunawstring.h"
 #include <Windows.h>
 
 using namespace luna2d;
 
 // Print log message with given log level
-void LUNAWpLog::PrintLog(const std::string& level, const char* message, va_list va)
+void PrintLog(const std::wstring& level, const char* message, va_list va)
 {
 	int size = _vscprintf(message, va) + 1; // Get required buffer size for "vsprintf_s" 
 	std::string buf;
 	buf.resize(size);
 	vsprintf_s(&buf[0], size, message, va);
 
-	buf[size - 1] = '\n'; // Replace extra '\0' char with new line char
-	if(!level.empty()) buf.insert(0, level + ":");
+	// Prtint log level
+	if(!level.empty())
+	{
+		OutputDebugString(level.c_str());
+		OutputDebugString(L":");
+	}
 
-	OutputDebugStringA(buf.c_str());
+	// Print log message
+	OutputDebugString(ToWString(buf).c_str());
+	OutputDebugString(L"\n");
 }
 
 // Log info
@@ -46,7 +53,7 @@ void LUNAWpLog::Info(const char* message, ...)
 	va_list va;
 	va_start(va, message);
 
-	PrintLog("", message, va);
+	PrintLog(L"", message, va);
 
 	va_end(va);
 }
@@ -57,7 +64,7 @@ void LUNAWpLog::Warning(const char* message, ...)
 	va_list va;
 	va_start(va, message);
 
-	PrintLog("Warning", message, va);
+	PrintLog(L"Warning", message, va);
 
 	va_end(va);
 }
@@ -68,7 +75,7 @@ void LUNAWpLog::Error(const char* message, ...)
 	va_list va;
 	va_start(va, message);
 	
-	PrintLog("Error", message, va);
+	PrintLog(L"Error", message, va);
 
 	va_end(va);
 }

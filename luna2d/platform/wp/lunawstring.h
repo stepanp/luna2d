@@ -21,21 +21,16 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#include <string>
+
 #pragma once
 
-#include "platform/lunalog.h"
-
+//-----------------------------------------------------------
+// Functions for casting between std::string and std::wstring
+//-----------------------------------------------------------
 namespace luna2d{
 
-//------------------------------------------
-// Log implementation for Windows Phone / RT
-//------------------------------------------
-class LUNAWpLog : public LUNALog
-{
-public:
-	virtual void Info(const char* message, ...); // Log info
-	virtual void Warning(const char* message, ...) ; // Log warning
-	virtual void Error(const char* message, ...); // Log error
-};
+std::wstring ToWString(const std::string& str); // Convert std::string to std::wstring
+std::string FromWString(const std::wstring& str); // Convert std::wstring to std::string
 
 }

@@ -60,6 +60,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpfiles.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawplog.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawputils.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawstring.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideCircle.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2CollideEdge.cpp" />
@@ -360,6 +361,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawpgl.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawplog.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawputils.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\platform\wp\lunawstring.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Box2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2BroadPhase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\..\luna2d\thirdparty\Box2D\Collision\b2Collision.h" />
