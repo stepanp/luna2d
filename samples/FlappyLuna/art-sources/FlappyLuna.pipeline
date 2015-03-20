@@ -16,7 +16,7 @@
                     "type": "folder"
                 }
             ],
-            "outputDir": "../assets/art",
+            "outputDir": "../game/art",
             "outputRes": [
                 "WVGA",
                 "HVGA",
