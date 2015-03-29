@@ -12,6 +12,9 @@
 		84003BC31A5C645D00F709A3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84003BC21A5C645D00F709A3 /* Info.plist */; };
 		84003BC51A5C648E00F709A3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84003BC41A5C648E00F709A3 /* libz.dylib */; };
 		8427D8911A9CFC1900FDBBE5 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 8427D8901A9CFC1800FDBBE5 /* game */; };
+		8427D8981AC88B9B00FDBBE5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8427D8971AC88B9B00FDBBE5 /* Icon@2x.png */; };
+		8427D89B1AC88C9600FDBBE5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8427D8991AC88C9600FDBBE5 /* Icon.png */; };
+		8427D89C1AC88C9600FDBBE5 /* Icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8427D89A1AC88C9600FDBBE5 /* Icon@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +24,9 @@
 		84003BC21A5C645D00F709A3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84003BC41A5C648E00F709A3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		8427D8901A9CFC1800FDBBE5 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../game; sourceTree = "<group>"; };
+		8427D8971AC88B9B00FDBBE5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		8427D8991AC88C9600FDBBE5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		8427D89A1AC88C9600FDBBE5 /* Icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +45,9 @@
 		84003B811A5C623000F709A3 = {
 			isa = PBXGroup;
 			children = (
+				8427D8991AC88C9600FDBBE5 /* Icon.png */,
+				8427D89A1AC88C9600FDBBE5 /* Icon@3x.png */,
+				8427D8971AC88B9B00FDBBE5 /* Icon@2x.png */,
 				8427D8901A9CFC1800FDBBE5 /* game */,
 				84003BC41A5C648E00F709A3 /* libz.dylib */,
 				84003BC11A5C645D00F709A3 /* FlappyLuna */,
@@ -121,7 +130,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8427D89B1AC88C9600FDBBE5 /* Icon.png in Resources */,
 				8427D8911A9CFC1900FDBBE5 /* game in Resources */,
+				8427D89C1AC88C9600FDBBE5 /* Icon@3x.png in Resources */,
+				8427D8981AC88B9B00FDBBE5 /* Icon@2x.png in Resources */,
 				84003BC31A5C645D00F709A3 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
