@@ -41,15 +41,22 @@ LuaScript::~LuaScript()
 // Custom module loader for load modules from assets
 int LuaScript::ModuleLoader(lua_State *luaVm)
 {
-	LuaScript *lua = static_cast<LuaScript*>(lua_touserdata(luaVm, lua_upvalueindex(1)));
+	LuaScript* lua = LuaScript::FromLuaVm(luaVm);
+	std::string moduleName = LuaStack<std::string>::Pop(luaVm, 1) + ".lua";
 
-	// Get filename for module
-	std::string moduleName = LuaStack<std::string>::Pop(luaVm, 1);
-	std::string fileName = "scripts/" + moduleName + ".lua";
+	// Get path to script file where was called "require" function
+	lua_Debug info;
+	lua_getstack(luaVm, 2, &info);
+	lua_getinfo(luaVm, "S", &info);
+	std::string sourcePath = LUNAEngine::SharedFiles()->GetParentPath(info.source) + "/";
 
-	// Load file
-	if(!lua->LoadFile(fileName.c_str())) return 0;
-	return 1;
+	// Try load module by relative path
+	if(lua->LoadFile(sourcePath + moduleName)) return 1;
+
+	// Try load module by global path
+	if(lua->LoadFile("scripts/" + moduleName)) return 1;
+
+	return 0;
 }
 
 // Wrap some default lua functions
@@ -59,8 +66,7 @@ void LuaScript::WrapDefault()
 	LuaTable searchers = GetGlobalTable().GetTable("package").GetTable("searchers");
 
 	lua_rawgeti(luaVm, LUA_REGISTRYINDEX, searchers.GetRef()->GetRef());
-	lua_pushlightuserdata(luaVm, this);
-	lua_pushcclosure(luaVm, &LuaScript::ModuleLoader, 1);
+	LuaStack<lua_CFunction>::Push(luaVm, &LuaScript::ModuleLoader);
 	lua_rawseti(luaVm, -2, 2);
 	lua_pop(luaVm, 1);
 }
