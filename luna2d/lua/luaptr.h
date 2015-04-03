@@ -40,7 +40,7 @@ struct LuaStack<std::shared_ptr<T>>
 
 		std::shared_ptr<LuaWeakRef> ref = ptr->_GetLuaRef();
 
-		// If given object already was pushed to lua
+		// If given object already was pushed to Lua
 		// Just push ref to userdata on stack
 		if(ref && *ref.get() != nil)
 		{

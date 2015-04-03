@@ -89,6 +89,8 @@ public:
 	void UnloadFolder(const std::string& path); // Unload all assets in given folder
 	void UnloadAll(); // Unload all assets
 
+	LuaTable GetRootTable(); // Get root table of asset tree
+
 	// Get asset by path like "folder/folder/asset"
 	// If asset not fount or isn't instance of given "AssetType" class, return nullptr
 	template<typename AssetType>

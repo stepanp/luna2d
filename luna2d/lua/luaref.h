@@ -54,6 +54,7 @@ public:
 	lua_State* GetLuaVm() const;
 	bool operator==(const LuaNil&) const;
 	bool operator!=(const LuaNil&) const;
+	operator bool();
 };
 
 
@@ -79,6 +80,7 @@ public:
 	lua_State* GetLuaVm() const;
 	bool operator==(const LuaNil&) const;
 	bool operator!=(const LuaNil&) const;
+	operator bool();
 };
 
 

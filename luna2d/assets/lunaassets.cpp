@@ -46,6 +46,9 @@ LUNAAssets::LUNAAssets() :
 	tblAssetsMgr.SetField("unloadFolder", LuaFunction(lua, this, &LUNAAssets::UnloadFolder));
 	tblAssetsMgr.SetField("unloadAll", LuaFunction(lua, this, &LUNAAssets::UnloadAll));
 	tblLuna.SetField("assetsmgr", tblAssetsMgr);
+
+	// Bind base asset type
+	LuaClass<LUNAAsset> clsAsset(lua);
 }
 
 LUNAAssets::~LUNAAssets()
@@ -178,6 +181,12 @@ void LUNAAssets::UnloadFolder(const std::string& path)
 void LUNAAssets::UnloadAll()
 {
 	UnloadFolder("");
+}
+
+// Get root table of asset tree
+LuaTable LUNAAssets::GetRootTable()
+{
+	return tblAssets;
 }
 
 /*// Add "assets" flag to metatable of given table

@@ -87,6 +87,11 @@ bool LuaRef::operator!=(const LuaNil&) const
 	return ref != LUA_NOREF;
 }
 
+LuaRef::operator bool()
+{
+	return ref != LUA_NOREF;
+}
+
 
 LuaWeakRef::LuaWeakRef(const LuaNil&) :
 	luaVm(nullptr),
@@ -156,3 +161,9 @@ bool LuaWeakRef::operator!=(const LuaNil&) const
 {
 	return ref != LUA_NOREF;
 }
+
+LuaWeakRef::operator bool()
+{
+	return ref != LUA_NOREF;
+}
+

@@ -38,6 +38,21 @@
 	public: \
 		void _SetLuaRef(const std::shared_ptr<LuaWeakRef>& ref) { _ref = ref; } \
 		std::shared_ptr<LuaWeakRef> _GetLuaRef() { return _ref; } \
+		/* Forced release shared_ptr passed to Lua */ \
+		/* i.e. userdata object in lua will still exists, but references nothing */ \
+		/* and it will can be safety deleted by GC */ \
+		void _KillLuaRef() \
+		{ \
+			if(!_ref || *_ref == nil) return; \
+			\
+			lua_State* luaVm = _ref->GetLuaVm(); \
+			LuaStack<LuaWeakRef*>::Push(luaVm, _ref.get()); \
+			std::shared_ptr<cls>* ptr = *static_cast<std::shared_ptr<cls>**>(lua_touserdata(luaVm, -1)); \
+			lua_pop(luaVm, 1); \
+			\
+			ptr->reset(); \
+			_ref->Release(); \
+		} \
 		static const char* _GetUserdataType() { return #cls; } \
 		static const char* _GetBaseClassType() { return nullptr; } \
 		constexpr static bool _CheckIsBaseOf() { return true; } \
@@ -200,8 +215,11 @@ private:
 		std::shared_ptr<Class>* ptr = *static_cast<std::shared_ptr<Class>**>(lua_touserdata(luaVm, 1));
 
 		// Release ref to lua userdata in C++ object
-		auto ref = ptr->get()->_GetLuaRef();
-		if(ref) ref->Release();
+		if(ptr->use_count() > 0)
+		{
+			auto ref = ptr->get()->_GetLuaRef();
+			if(ref) ref->Release();
+		}
 
 		delete ptr;
 
