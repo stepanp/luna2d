@@ -25,6 +25,7 @@
 #include "lunafiles.h"
 #include "lunatextureatlas.h"
 #include "lunalog.h"
+#include "lunamakeweak.h"
 #include <json11.hpp>
 
 using namespace luna2d;

@@ -33,7 +33,7 @@ class LUNAMesh
 	LUNA_USERDATA(LUNAMesh)
 
 public:
-	LUNAMesh(int assetId);
+	LUNAMesh(const std::weak_ptr<LUNATexture>& texture);
 
 private:
 	std::weak_ptr<LUNATexture> texture;
@@ -41,7 +41,7 @@ private:
 
 public:
 	void Clear();
-	void SetTexture(int assetId);
+	void SetTexture(const std::weak_ptr<LUNATexture>& texture);
 	void AddVertex(float x, float y, float r, float g, float b, float alpha, float u, float v);
 	void Render();
 };

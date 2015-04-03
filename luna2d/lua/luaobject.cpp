@@ -65,6 +65,11 @@ bool LuaObject::operator!=(const LuaNil&) const
 	return *ref.get() != nil;
 }
 
+LuaObject::operator bool()
+{
+	return *ref.get() != nil;
+}
+
 LuaObject LuaObject::operator=(const LuaObject& obj)
 {
 	ref = obj.ref;

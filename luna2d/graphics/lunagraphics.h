@@ -46,12 +46,6 @@ public:
 	int GetFps();
 	float GetDeltaTime();
 	void SetBackgroundColor(float r, float g, float b);
-
-	// Access to texture and texture region parameters
-	LuaTable GetTextureInfo(int assetId);
-	int GetAtlasTexture(const LuaTable& atlasTable);
-	LuaTable GetTextureRegionInfo(int assetId);
-
 	void OnUpdate();
 };
 

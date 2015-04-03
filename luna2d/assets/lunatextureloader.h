@@ -24,32 +24,18 @@
 #pragma once
 
 #include "lunatexture.h"
-#include <memory>
 
 namespace luna2d{
 
-class LUNATextureRegion : public LUNAAsset
+class LUNATextureLoader : public LUNAAssetLoader
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATextureRegion)
-
-public:
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2);
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, int x, int y, int width, int height);
-
 private:
-	std::weak_ptr<LUNATexture> texture;
-	float u1, v1, u2, v2;
+	std::shared_ptr<LUNATexture> texture;
 
 public:
-	// "GetTexture" returns std::shared_ptr instead of std::weak_ptr
-	// to be able to bind this method to Lua
 	std::shared_ptr<LUNATexture> GetTexture();
-	float GetU1();
-	float GetV1();
-	float GetU2();
-	float GetV2();
-	float GetWidth();
-	float GetHeight();
+	virtual bool Load(const std::string& filename);
+	virtual void PushToLua(const std::string& name, LuaTable& parentTable);
 };
 
 }

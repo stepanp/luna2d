@@ -192,3 +192,8 @@ LuaScript* LuaScript::FromLuaVm(lua_State* luaVm)
 
 	return lua;
 }
+
+LuaScript::operator lua_State*()
+{
+	return GetLuaVm();
+}

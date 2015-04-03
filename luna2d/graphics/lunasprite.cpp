@@ -31,7 +31,7 @@
 
 using namespace luna2d;
 
-LUNASprite::LUNASprite(int assetId) :
+LUNASprite::LUNASprite(const LuaDynamicType& asset) :
 	x(0),
 	y(0),
 	originX(0),
@@ -47,14 +47,10 @@ LUNASprite::LUNASprite(int assetId) :
 	v2(0),
 	color(LUNAColor::WHITE)
 {
-	LUNAAssets* assets = LUNAEngine::SharedAssets();
-
 	// Create sprite from texture
-	if(assets->IsAssetA(assetId, LUNAAssetType::TEXTURE))
+	texture = asset.To<std::weak_ptr<LUNATexture>>();
+	if(!texture.expired())
 	{
-		texture = assets->GetAsset<LUNATexture>(assetId, LUNAAssetType::TEXTURE);
-		if(texture.expired()) return;
-
 		u1 = 0;
 		v1 = 0;
 		u2 = 1;
@@ -68,25 +64,26 @@ LUNASprite::LUNASprite(int assetId) :
 	}
 
 	// Create sprite from texture region
-	if(assets->IsAssetA(assetId, LUNAAssetType::TEXTURE_REGION))
+	auto region = asset.To<std::weak_ptr<LUNATextureRegion>>();
+	if(!region.expired())
 	{
-		auto weakRegion = assets->GetAsset<LUNATextureRegion>(assetId, LUNAAssetType::TEXTURE_REGION);
-		if(weakRegion.expired()) return;
+		auto sharedRegion = region.lock();
 
-		auto region = weakRegion.lock();
-		texture = region->GetTexture();
-		u1 = region->GetU1();
-		v1 = region->GetV1();
-		u2 = region->GetU2();
-		v2 = region->GetV2();
+		texture = sharedRegion->GetTexture();
+		if(texture.expired()) return;
+
+		u1 = sharedRegion->GetU1();
+		v1 = sharedRegion->GetV1();
+		u2 = sharedRegion->GetU2();
+		v2 = sharedRegion->GetV2();
 
 		// Convert sizes to virtual resolution
-		width = std::floor(region->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
-		height = std::floor(region->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+		width = std::floor(sharedRegion->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
+		height = std::floor(sharedRegion->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
 		return;
 	}
 
-	LUNA_LOGE("Asset with id \"%d\" is not texture or texture region", assetId);
+	LUNA_LOGE("Attempt to create sprite from invalid asset");
 }
 
 float LUNASprite::GetX()

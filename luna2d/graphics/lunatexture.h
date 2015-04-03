@@ -26,16 +26,17 @@
 #include "lunagl.h"
 #include "lunaglhelpers.h"
 #include "lunaimage.h"
-#include "lunalua.h"
 #include "lunaassets.h"
 
 namespace luna2d{
 
 class LUNATexture : public LUNAAsset
 {
+	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATexture)
+
 public:
 	LUNATexture(const LUNAImage& image);
-	~LUNATexture();
+	virtual ~LUNATexture();
 
 private:
 	int width, height;
@@ -52,7 +53,49 @@ public:
 	bool IsValid(); // Check for texture is valid. Can be invalid after loss GL context
 	void Bind();
 	void Unbind();
-	virtual void Reload(); // Reload texture if OpenGL context was lost
+
+// Reload texture when application lost OpenGL context
+// SEE: "lunaassets.h"
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+private:
+	std::string reloadPath; // Path to reload texture data
+
+public:
+	inline void SetReloadPath(const std::string& path)
+	{
+		reloadPath = path;
+		LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
+	}
+
+	virtual void Reload()
+	{
+		if(reloadPath.empty()) return;
+
+		std::string ext = LUNAEngine::SharedFiles()->GetExtension(reloadPath);
+		std::unique_ptr<LUNAImageFormat> format;
+
+		// Select image format to decode
+		if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
+
+		// Reload texture from path
+		if(format)
+		{
+			LUNAImage image(filename, *format, LUNAFileLocation::ASSETS);
+			if(!image.IsEmpty())
+			{
+				width = image.GetWidth();
+				height = image.GetHeight();
+				colorType = image.GetColorType();
+				CreateGlTexture(image.GetData());
+
+				return;
+			}
+		}
+
+		LUNA_LOGE("Cannot reload texture from path \"%s\"", reloadPath.c_str());
+	}
+#endif
+
 };
 
 }

@@ -76,7 +76,6 @@ public:
 	void UnloadModules();
 	void RunEmbeddedScripts();
 	bool IsInitialized();
-	void ReloadAssets();
 
 	void MainLoop();
 	void OnTouchDown(float x, float y);

@@ -21,35 +21,41 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunatextureatlasloader.h"
 
-#include "lunatexture.h"
-#include <memory>
+using namespace luna2d;
 
-namespace luna2d{
-
-class LUNATextureRegion : public LUNAAsset
+bool LUNATextureAtlasLoader::Load(const std::string& filename)
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATextureRegion)
+	// Description file for atlas has same name as image, just with different extension
+	std::string atlasPath = filename.substr(0, filename.rfind(".") + 1) + "atlas";
 
-public:
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2);
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, int x, int y, int width, int height);
+	// Load texture
+	LUNATextureLoader textureLoader;
+	if(!textureLoader.Load(filename)) return false;
+	texture = textureLoader.GetTexture();
 
-private:
-	std::weak_ptr<LUNATexture> texture;
-	float u1, v1, u2, v2;
+	// Load texture atlas
+	atlas = std::make_shared<LUNATextureAtlas>(texture, atlasPath);
+	if(!atlas->IsLoaded()) return false;
 
-public:
-	// "GetTexture" returns std::shared_ptr instead of std::weak_ptr
-	// to be able to bind this method to Lua
-	std::shared_ptr<LUNATexture> GetTexture();
-	float GetU1();
-	float GetV1();
-	float GetU2();
-	float GetV2();
-	float GetWidth();
-	float GetHeight();
-};
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Set reload path for texture
+	texture->SetReloadPath(filename);
+#endif
 
+	return true;
+}
+
+void LUNATextureAtlasLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+{
+	// Make atlas table
+	LuaTable atlasTable(LUNAEngine::SharedLua());
+	parentTable.SetField(name, atlasTable);
+
+	// Add regions to asset table
+	for(auto entry : atlas->GetRegions()) atlasTable.SetField(entry.first, entry.second);
+
+	// Save texture in custom data of atlas table
+	LUNAEngine::SharedAssets()->SetCustomDataToTable(atlasTable, texture);
 }

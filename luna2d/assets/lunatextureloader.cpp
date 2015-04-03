@@ -21,35 +21,40 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunatextureloader.h"
 
-#include "lunatexture.h"
-#include <memory>
+using namespace luna2d;
 
-namespace luna2d{
-
-class LUNATextureRegion : public LUNAAsset
+std::shared_ptr<LUNATexture> LUNATextureLoader::GetTexture()
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATextureRegion)
+	return texture;
+}
 
-public:
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2);
-	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, int x, int y, int width, int height);
+bool LUNATextureLoader::Load(const std::string& filename)
+{
+	std::string ext = LUNAEngine::SharedFiles()->GetExtension(filename);
+	std::unique_ptr<LUNAImageFormat> format;
 
-private:
-	std::weak_ptr<LUNATexture> texture;
-	float u1, v1, u2, v2;
+	// Select image format to decode
+	if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
+	if(!format) return false;
 
-public:
-	// "GetTexture" returns std::shared_ptr instead of std::weak_ptr
-	// to be able to bind this method to Lua
-	std::shared_ptr<LUNATexture> GetTexture();
-	float GetU1();
-	float GetV1();
-	float GetU2();
-	float GetV2();
-	float GetWidth();
-	float GetHeight();
-};
+	// Load image data
+	LUNAImage image(filename, *format, LUNAFileLocation::ASSETS);
+	if(image.IsEmpty()) return false;
 
+	// Make texture from image
+	texture = std::make_shared<LUNATexture>(image);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Set reload path for texture
+	texture->SetReloadPath(filename);
+#endif
+
+	return true;
+}
+
+void LUNATextureLoader::PushToLua(const std::string& name, LuaTable& parentTable)
+{
+	parentTable.SetField(name, texture);
 }

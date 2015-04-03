@@ -35,8 +35,8 @@
 #include "shaders/primitives.vert.h"
 #include "shaders/primitives.frag.h"
 
-#define LUNA_MAX_POLYGONS 1000 // Max polygons count in batcher
-#define LUNA_ELEMENT_PER_VERTEX 8 // Count of array elements for each vertex
+const int LUNA_RESERVE_POLYGONS = 1000; // Count of polygons for which allocated memory when renderer initializing
+const int LUNA_ELEMENT_PER_VERTEX = 8; // Count of array elements for each vertex
 
 namespace luna2d{
 
@@ -65,7 +65,6 @@ private:
 
 public:
 	bool IsInProgress();
-	void ReloadDefaultShader();
 	int GetRenderCalls();
 
 	void SetBackgroundColor(const LUNAColor& backColor);
@@ -87,6 +86,21 @@ public:
 	void Render();
 	void Begin();
 	void End();
+
+// Reload default shaders when application lost OpenGL context
+// SEE: "lunaassets.h"
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+public:
+	inline void ReloadDefaultShader()
+	{
+		// Delete old shaders
+		delete shader;
+		delete primitivesShader;
+
+		shader = new LUNAShader(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
+		primitivesShader = new LUNAShader(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+	}
+#endif
 };
 
 }

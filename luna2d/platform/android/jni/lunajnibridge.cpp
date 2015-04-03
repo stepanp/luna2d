@@ -57,7 +57,8 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint jscree
 	// In that case, we need reload some assets: textures, shaders, etc.
 	else
 	{
-		LUNAEngine::Shared()->ReloadAssets();
+		LUNAEngine::SharedGraphics()->GetRenderer()->ReloadDefaultShader();
+		LUNAEngine::SharedAssets()->ReloadAssets();
 	}
 }
 

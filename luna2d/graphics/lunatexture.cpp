@@ -27,7 +27,6 @@
 using namespace luna2d;
 
 LUNATexture::LUNATexture(const LUNAImage& image) :
-	LUNAAsset(LUNAAssetType::TEXTURE),
 	width(image.GetWidth()),
 	height(image.GetHeight()),
 	colorType(image.GetColorType())
@@ -38,6 +37,11 @@ LUNATexture::LUNATexture(const LUNAImage& image) :
 LUNATexture::~LUNATexture()
 {
 	glDeleteTextures(1, &id);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Remove texture from reloadable assets list
+	if(!reloadPath.empty()) LUNAEngine::SharedAssets()->SetAssetReloadable(this, false);
+#endif
 }
 
 void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
@@ -90,23 +94,4 @@ void LUNATexture::Bind()
 void LUNATexture::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-// Reload texture if OpenGL context was lost
-void LUNATexture::Reload()
-{
-	if(reloadPath.empty()) return;
-
-	LUNAImage image(reloadPath, LUNAPngFormat(), LUNAFileLocation::ASSETS);
-	if(!image.IsEmpty())
-	{
-		width = image.GetWidth();
-		height = image.GetHeight();
-		colorType = image.GetColorType();
-		CreateGlTexture(image.GetData());
-	}
-	else
-	{
-		LUNA_LOGE("Cannot load file \"%s\"", reloadPath.c_str());
-	}
 }

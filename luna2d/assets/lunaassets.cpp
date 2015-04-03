@@ -22,16 +22,165 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaassets.h"
-#include "lunaengine.h"
 #include "lunagraphics.h"
 #include "lunasizes.h"
-#include "lunafiles.h"
-#include "lunatexture.h"
-#include "lunatextureatlas.h"
+#include "lunatextureatlasloader.h"
 
 using namespace luna2d;
 
-// Add "assets" flag to metatable of given table
+LUNAAssets::LUNAAssets() :
+	tblAssets(LUNAEngine::SharedLua())
+{
+	LuaScript* lua = LUNAEngine::SharedLua();
+	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+
+	// Bind assets table to lua
+	tblLuna.SetField("assets", tblAssets);
+
+	// Bind assets manager to lua
+	LuaTable tblAssetsMgr(lua);
+	tblAssetsMgr.SetField("loadAll", LuaFunction(lua, this, &LUNAAssets::LoadAll));
+	tblAssetsMgr.SetField("loadFolder", LuaFunction(lua, this, &LUNAAssets::LoadFolder));
+	tblAssetsMgr.SetField("load", LuaFunction(lua, this, &LUNAAssets::Load));
+	tblAssetsMgr.SetField("unload", LuaFunction(lua, this, &LUNAAssets::Unload));
+	tblAssetsMgr.SetField("unloadFolder", LuaFunction(lua, this, &LUNAAssets::UnloadFolder));
+	tblAssetsMgr.SetField("unloadAll", LuaFunction(lua, this, &LUNAAssets::UnloadAll));
+	tblLuna.SetField("assetsmgr", tblAssetsMgr);
+}
+
+LUNAAssets::~LUNAAssets()
+{
+	UnloadAll();
+}
+
+// Get parent table for given asset path
+// Returns nil if path not found
+// if "autoMake" is true, automatically creates non-existent tables
+LuaTable LUNAAssets::GetParentTableForPath(const std::string& path, bool autoMake)
+{
+	if(path.empty()) return tblAssets;
+
+	LuaTable ret = tblAssets;
+	size_t prevPos = 0;
+	size_t lastPos = path.rfind('/');
+
+	// Parse given path and move by the tables tree
+	while(prevPos < lastPos && ret)
+	{
+		size_t pos = path.find('/', prevPos);
+		std::string name = path.substr(prevPos, pos - prevPos);
+		LuaTable nextTable = ret.GetTable(name);
+
+		// Make table if it isn't exists
+		if(autoMake && !nextTable)
+		{
+			nextTable = LuaTable(LUNAEngine::SharedLua());
+			ret.SetField(name, nextTable);
+		}
+
+		ret = nextTable;
+		prevPos = pos + 1;
+	}
+
+	return ret;
+}
+
+// Get asset/folder name for path
+std::string LUNAAssets::GetNameForPath(const std::string& path)
+{
+	return LUNAEngine::SharedFiles()->GetBasename(path);
+}
+
+// Check for given file is description
+bool LUNAAssets::IsDescription(const std::string& path)
+{
+	std::string ext = LUNAEngine::SharedFiles()->GetExtension(path);
+
+	if(ext == "atlas") return true;
+	return false;
+}
+
+// Get loader for given file
+std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
+{
+	std::string ext = LUNAEngine::SharedFiles()->GetExtension(path);
+
+	if(ext == "png")
+	{
+		// Load texture atlas if atlas desctiption file is exists
+		std::string atlasPath = path.substr(0, path.rfind(".") + 1) + "atlas";
+		if(LUNAEngine::SharedFiles()->IsFile(atlasPath)) return std::make_shared<LUNATextureAtlasLoader>();
+
+		// Load just texture
+		else return std::make_shared<LUNATextureLoader>();
+	}
+
+	return nullptr;
+}
+
+ // Load all assets
+void LUNAAssets::LoadAll()
+{
+	LoadFolder("", true);
+}
+
+// Load all assets in given folder
+void LUNAAssets::LoadFolder(const std::string& path, bool recursive)
+{
+
+}
+
+// Load specifed asset file
+void LUNAAssets::Load(const std::string& path)
+{
+	if(IsDescription(path)) return; // Skip description files
+
+	auto loader = GetLoader(path);
+	if(!loader)
+	{
+		LUNA_LOGE("Unknown asset type \"%s\"", LUNAEngine::SharedFiles()->GetExtension(path).c_str());
+		return;
+	}
+
+	LuaTable parentTable = GetParentTableForPath(path, true);
+	std::string name = LUNAEngine::SharedFiles()->GetBasename(path);
+
+	// Don't load asset if it already exists
+	if(parentTable.HasField(name))
+	{
+		LUNA_LOGE("Asset from file \"%s\" already loaded", path.c_str());
+		return;
+	}
+
+	if(!loader->Load(path))
+	{
+		LUNA_LOGE("Cannot load asset from file \"%s\"", path.c_str());
+		return;
+	}
+
+	std::string cleanName = LUNAEngine::SharedFiles()->SplitResolutionSuffix(name).first; // Remove resolution suffix
+	loader->PushToLua(cleanName, parentTable);
+}
+
+// Unload specifed asset
+void LUNAAssets::Unload(const std::string& path)
+{
+
+}
+
+// Unload all assets in given folder
+void LUNAAssets::UnloadFolder(const std::string& path)
+{
+
+}
+
+// Unload all assets
+void LUNAAssets::UnloadAll()
+{
+	UnloadFolder("");
+}
+
+/*// Add "assets" flag to metatable of given table
 // For check when unload for unloaded table is table with assets
 void AddAssetFlag(LuaTable& table)
 {
@@ -364,4 +513,4 @@ void LUNAAssets::ReloadAssets()
 bool LUNAAssets::IsAssetA(int assetId, LUNAAssetType type)
 {
 	return loadedAssets.count(assetId) > 0 && loadedAssets[assetId]->GetType() == type;
-}
+}*/

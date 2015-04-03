@@ -28,7 +28,7 @@ using namespace luna2d;
 
 LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 {
-	textureId = params.GetInt("texture");
+	texture = params.GetField<std::weak_ptr<LUNATexture>>("texture");
 	u1 = params.GetFloat("u1");
 	v1 = params.GetFloat("v1");
 	u2 = params.GetFloat("u2");
@@ -36,7 +36,7 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	verticalTexture = params.GetBool("verticalTexture");
 	width = params.GetFloat("width");
 
-	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(textureId));
+	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(texture));
 	splines = LUNAEngine::SharedModule<LUNASplinesModule>("splines");
 }
 

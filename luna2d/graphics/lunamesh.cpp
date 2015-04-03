@@ -28,9 +28,9 @@
 
 using namespace luna2d;
 
-LUNAMesh::LUNAMesh(int assetId)
+LUNAMesh::LUNAMesh(const std::weak_ptr<LUNATexture>& texture)
 {
-	SetTexture(assetId);
+	SetTexture(texture);
 }
 
 void LUNAMesh::Clear()
@@ -38,15 +38,15 @@ void LUNAMesh::Clear()
 	vertexes.clear();
 }
 
-void LUNAMesh::SetTexture(int assetId)
+void LUNAMesh::SetTexture(const std::weak_ptr<LUNATexture>& texture)
 {
-	if(!LUNAEngine::SharedAssets()->IsAssetA(assetId, LUNAAssetType::TEXTURE))
+	if(texture.expired())
 	{
-		LUNA_LOGE("Asset with id \"%d\" is not texture", assetId);
+		LUNA_LOGE("Attemp to set invalid texture to mesh");
 		return;
 	}
 
-	texture = LUNAEngine::SharedAssets()->GetAsset<LUNATexture>(assetId, LUNAAssetType::TEXTURE);
+	this->texture = texture;
 }
 
 void LUNAMesh::AddVertex(float x, float y, float r, float g, float b, float alpha, float u, float v)

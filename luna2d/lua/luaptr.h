@@ -119,7 +119,7 @@ struct LuaStack<std::shared_ptr<T>>
 
 			if(!checkBaseClass)
 			{
-				LUNA_LOGE("Cannot cast \"%s\" to \"%s\"", userdataType, classType);
+				//LUNA_LOGE("Cannot cast \"%s\" to \"%s\"", userdataType, classType);
 				return nullptr;
 			}
 		}
@@ -130,6 +130,7 @@ struct LuaStack<std::shared_ptr<T>>
 	}
 };
 
+// Helper to implicit casting from std::shared_ptr to std::weak_ptr when working with lua stack
 template<typename T>
 struct LuaStack<std::weak_ptr<T>>
 {

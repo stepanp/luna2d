@@ -36,7 +36,8 @@ INCLUDEPATH += ../../../luna2d \
 	../../../luna2d/thirdparty/libpng/ \
 	../../../luna2d/thirdparty/json11/ \
 	../../../luna2d/thirdparty/Box2D/ \
-	../../../luna2d/utils/
+	../../../luna2d/utils/ \
+	../../../luna2d/assets/
 
 SOURCES += \
     ../../../luna2d/graphics/lunagraphics.cpp \
@@ -52,7 +53,7 @@ SOURCES += \
     ../../../luna2d/modules/lunalogmodule.cpp \
     ../../../luna2d/platform/qt/lunaqtwidget.cpp \
     ../../../luna2d/utils/lunacolor.cpp \
-    ../../../luna2d/lunaassets.cpp \
+	../../../luna2d/assets/lunaassets.cpp \
     ../../../luna2d/lunaengine.cpp \
     ../../../luna2d/lunascenes.cpp \
 	../../../luna2d/thirdparty/libpng/png.c \
@@ -185,7 +186,9 @@ SOURCES += \
     ../../../luna2d/platform/qt/lunaqtgl.cpp \
     ../../../luna2d/platform/lunaplatformutils.cpp \
     ../../../luna2d/platform/qt/lunaqtutils.cpp \
-    ../../../luna2d/graphics/lunacurverenderer.cpp
+    ../../../luna2d/graphics/lunacurverenderer.cpp \
+    ../../../luna2d/assets/lunatextureloader.cpp \
+    ../../../luna2d/assets/lunatextureatlasloader.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -249,7 +252,7 @@ HEADERS += \
     ../../../luna2d/thirdparty/lua/lzio.h \
     ../../../luna2d/utils/lunacolor.h \
     ../../../luna2d/utils/lunaindexlist.h \
-    ../../../luna2d/lunaassets.h \
+	../../../luna2d/assets/lunaassets.h \
     ../../../luna2d/lunaengine.h \
     ../../../luna2d/lunascenes.h \
     ../../../luna2d/lunaconstants.h \
@@ -340,6 +343,8 @@ HEADERS += \
     ../../../luna2d/platform/qt/lunaqtgl.h \
     ../../../luna2d/platform/qt/lunaqtutils.h \
     ../../../luna2d/graphics/lunacurverenderer.h \
-    ../../../luna2d/lua/luaptr.h
+    ../../../luna2d/lua/luaptr.h \
+    ../../../luna2d/assets/lunatextureloader.h \
+    ../../../luna2d/assets/lunatextureatlasloader.h
 
 QMAKE_MAC_SDK = macosx10.9

@@ -51,15 +51,12 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("getFps", LuaFunction(lua, this, &LUNAGraphics::GetFps));
 	tblGraphics.SetField("getDeltaTime", LuaFunction(lua, this, &LUNAGraphics::GetDeltaTime));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
-	tblGraphics.SetField("getTextureInfo", LuaFunction(lua, this, &LUNAGraphics::GetTextureInfo));
-	tblGraphics.SetField("getAtlasTexture", LuaFunction(lua, this, &LUNAGraphics::GetAtlasTexture));
-	tblGraphics.SetField("getTextureRegionInfo", LuaFunction(lua, this, &LUNAGraphics::GetTextureRegionInfo));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
 
 	// Register sprite
 	LuaClass<LUNASprite> clsSprite(lua);
-	clsSprite.SetConstructor<int>();
+	clsSprite.SetConstructor<const LuaDynamicType&>();
 	clsSprite.SetMethod("render", &LUNASprite::Render);
 	clsSprite.SetMethod("getX", &LUNASprite::GetX);
 	clsSprite.SetMethod("getY", &LUNASprite::GetY);
@@ -93,7 +90,7 @@ LUNAGraphics::LUNAGraphics()
 
 	// Register mesh
 	LuaClass<LUNAMesh> clsMesh(lua);
-	clsMesh.SetConstructor<int>();
+	clsMesh.SetConstructor<const std::weak_ptr<LUNATexture>&>();
 	clsMesh.SetMethod("clear", &LUNAMesh::Clear);
 	clsMesh.SetMethod("setTexture", &LUNAMesh::SetTexture);
 	clsMesh.SetMethod("addVertex", &LUNAMesh::AddVertex);
@@ -115,6 +112,20 @@ LUNAGraphics::LUNAGraphics()
 
 	tblGraphics.MakeReadOnly();
 	tblLuna.SetField("graphics", tblGraphics);
+
+	// Register graphics asset types
+	LuaClass<LUNATexture> clsTexture(lua);
+	clsTexture.SetMethod("getWidth", &LUNATexture::GetWidth);
+	clsTexture.SetMethod("getHeight", &LUNATexture::GetHeight);
+
+	LuaClass<LUNATextureRegion> clsTextureRegion(lua);
+	clsTextureRegion.SetMethod("getTexture", &LUNATextureRegion::GetTexture);
+	clsTextureRegion.SetMethod("getWidth", &LUNATextureRegion::GetWidth);
+	clsTextureRegion.SetMethod("getHeight", &LUNATextureRegion::GetHeight);
+	clsTextureRegion.SetMethod("getU1", &LUNATextureRegion::GetU1);
+	clsTextureRegion.SetMethod("getV1", &LUNATextureRegion::GetV1);
+	clsTextureRegion.SetMethod("getU2", &LUNATextureRegion::GetU2);
+	clsTextureRegion.SetMethod("getV2", &LUNATextureRegion::GetV2);
 }
 
 LUNAGraphics::~LUNAGraphics()
@@ -140,42 +151,6 @@ float LUNAGraphics::GetDeltaTime()
 void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 {
 	renderer->SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
-}
-
-LuaTable LUNAGraphics::GetTextureInfo(int assetId)
-{
-	auto weakTexture = LUNAEngine::SharedAssets()->GetAsset<LUNATexture>(assetId, LUNAAssetType::TEXTURE);
-	if(weakTexture.expired()) return nil;
-
-	auto texture = weakTexture.lock();
-	LuaTable tblRet(LUNAEngine::SharedLua());
-	tblRet.SetField("width", texture->GetWidth());
-	tblRet.SetField("hegiht", texture->GetHeight());
-
-	return tblRet;
-}
-
-int LUNAGraphics::GetAtlasTexture(const LuaTable& atlasTable)
-{
-	LuaTable meta = atlasTable.GetMetatable();
-
-	if(!meta.HasField("assets")) return 0;
-	return meta.GetInt("textureId");
-}
-
-LuaTable LUNAGraphics::GetTextureRegionInfo(int assetId)
-{
-	auto weakRegion = LUNAEngine::SharedAssets()->GetAsset<LUNATextureRegion>(assetId, LUNAAssetType::TEXTURE_REGION);
-	if(weakRegion.expired()) return nil;
-
-	auto region = weakRegion.lock();
-	LuaTable tblRet(LUNAEngine::SharedLua());
-	tblRet.SetField("u1", region->GetU1());
-	tblRet.SetField("v1", region->GetV1());
-	tblRet.SetField("u2", region->GetU2());
-	tblRet.SetField("v2", region->GetV2());
-
-	return tblRet;
 }
 
 void LUNAGraphics::OnUpdate()

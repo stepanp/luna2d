@@ -156,12 +156,6 @@ bool LUNAEngine::IsInitialized()
 	return initialized;
 }
 
-void LUNAEngine::ReloadAssets()
-{
-	assets->ReloadAssets();
-	graphics->GetRenderer()->ReloadDefaultShader();
-}
-
 void LUNAEngine::MainLoop()
 {
 	graphics->OnUpdate();

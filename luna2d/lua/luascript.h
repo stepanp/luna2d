@@ -77,6 +77,8 @@ public:
 
 	static int ErrorHandler(lua_State *luaVm); // Lua error handler
 	static LuaScript* FromLuaVm(lua_State* luaVm); // Get pointer to LuaScript instance from lua_State
+
+	operator lua_State*();
 };
 
 }

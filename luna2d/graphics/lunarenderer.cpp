@@ -34,15 +34,14 @@ LUNARenderer::LUNARenderer() :
 	debugRender(false)
 {
 	// Initialize vertex array
-	vertexBatch.reserve(LUNA_MAX_POLYGONS * LUNA_ELEMENT_PER_VERTEX);
+	vertexBatch.reserve(LUNA_RESERVE_POLYGONS * LUNA_ELEMENT_PER_VERTEX);
 
 	backColor = LUNAColor::WHITE;
 	curTexture = nullptr;
 	renderCalls = 0;
 
-	shader = nullptr;
-	primitivesShader = nullptr;
-	ReloadDefaultShader();
+	shader = new LUNAShader(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
+	primitivesShader = new LUNAShader(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
 
 	// Initialize gl
 	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
@@ -52,13 +51,7 @@ LUNARenderer::LUNARenderer() :
 LUNARenderer::~LUNARenderer()
 {
 	delete shader;
-}
-
-void LUNARenderer::ReloadDefaultShader()
-{
-	delete shader; // Delete old shader if exists
-	shader = new LUNAShader(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-	primitivesShader = new LUNAShader(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+	delete primitivesShader;
 }
 
 int LUNARenderer::GetRenderCalls()
