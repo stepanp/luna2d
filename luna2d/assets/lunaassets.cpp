@@ -36,6 +36,7 @@ LUNAAssets::LUNAAssets() :
 
 	// Bind assets table to lua
 	tblLuna.SetField("assets", tblAssets);
+	tblAssets.MakeReadOnly();
 
 	// Bind assets manager to lua
 	LuaTable tblAssetsMgr(lua);
@@ -78,7 +79,8 @@ LuaTable LUNAAssets::GetParentTableForPath(const std::string& path, bool autoMak
 		if(autoMake && !nextTable)
 		{
 			nextTable = LuaTable(LUNAEngine::SharedLua());
-			ret.SetField(name, nextTable);
+			nextTable.MakeReadOnly();
+			ret.SetField(name, nextTable, true);
 		}
 
 		ret = nextTable;
@@ -168,7 +170,15 @@ void LUNAAssets::Load(const std::string& path)
 // Unload specifed asset
 void LUNAAssets::Unload(const std::string& path)
 {
+	LuaTable parentTable = GetParentTableForPath(path);
+	std::string name = GetNameForPath(path);
 
+	if(parentTable && parentTable.HasField(name))
+	{
+		auto asset = parentTable.GetField<std::shared_ptr<LUNAAsset>>(name);
+		asset->_KillLuaRef();
+		parentTable.RemoveField(name, true);
+	}
 }
 
 // Unload all assets in given folder

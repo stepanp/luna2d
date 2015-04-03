@@ -128,6 +128,9 @@ public:
 				SetField("_baseClass", baseMeta);
 			}
 		}
+
+		// Deny change class table from lua
+		MakeReadOnly();
 	}
 
 private:
@@ -245,7 +248,7 @@ public:
 	{
 		LuaFunction fn(ref->GetLuaVm());
 		fn.Bind<Ret, Class, Args...>(method);
-		SetField(name, fn);
+		SetField(name, fn, true);
 	}
 
 	void SetIndexHandler(IndexHandler indexHandler)

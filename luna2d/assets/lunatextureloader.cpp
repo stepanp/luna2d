@@ -56,5 +56,5 @@ bool LUNATextureLoader::Load(const std::string& filename)
 
 void LUNATextureLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
-	parentTable.SetField(name, texture);
+	parentTable.SetField(name, texture, true);
 }

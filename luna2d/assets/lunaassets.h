@@ -107,12 +107,6 @@ public:
 	void SetCustomDataToTable(LuaTable& table, DataType& data)
 	{
 		LuaTable meta = table.GetMetatable();
-		if(!meta)
-		{
-			meta = LuaTable(LUNAEngine::SharedLua());
-			table.SetMetatable(meta);
-		}
-
 		meta.SetField(ASSET_CUSTOM_DATA_NAME, data);
 	}
 

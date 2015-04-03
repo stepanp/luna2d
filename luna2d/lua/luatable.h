@@ -64,19 +64,21 @@ public:
 public:
 	LuaTable GetMetatable() const; // Get metatable of this table. If table hasn't metatable return nil table
 	void SetMetatable(const LuaTable& meta); // Set given table as metatable for this table
-	bool HasField(const std::string& name) const; // Check for field with given key is exists(not nil)
+	bool HasField(const std::string& name, bool rawMode = false) const; // Check for field with given key is exists(not nil)
 	void Clear(); // Remove all fields from table
 	bool IsEmpty(); // Check for table has at least on field
 	void MakeReadOnly(); // Deny modify table from lua
 
 	// Get field of table by string key
+	// "rawMode" - use raw access (i.e. without metamethods)
 	template<typename Ret>
-	Ret GetField(const std::string& name) const
+	Ret GetField(const std::string& name, bool rawMode = false) const
 	{
 		lua_State *luaVm = ref->GetLuaVm();
 
 		lua_rawgeti(luaVm, LUA_REGISTRYINDEX, ref->GetRef());
-		lua_getfield(luaVm, -1, name.c_str());
+		lua_pushstring(luaVm, name.c_str());
+		rawMode ? lua_rawget(luaVm, -2) : lua_gettable(luaVm, -2);
 
 		Ret&& ret = LuaStack<Ret>::Pop(luaVm, -1);
 		lua_pop(luaVm, 2); // Remove table and field from stack
@@ -100,14 +102,16 @@ public:
 	}
 
 	// Set field of table by string key
+	// "rawMode" - use raw access (i.e. without metamethods)
 	template<typename Arg>
-	void SetField(const std::string& name, Arg arg)
+	void SetField(const std::string& name, Arg arg, bool rawMode = false)
 	{
 		lua_State *luaVm = ref->GetLuaVm();
 
 		lua_rawgeti(luaVm, LUA_REGISTRYINDEX, ref->GetRef());
+		lua_pushstring(luaVm, name.c_str());
 		LuaStack<Arg>::Push(luaVm, arg);
-		lua_setfield(luaVm, -2, name.c_str());
+		rawMode ? lua_rawset(luaVm, -3) : lua_settable(luaVm, -3);
 
 		// Remove table from stack
 		lua_pop(luaVm, 1);
@@ -133,17 +137,17 @@ public:
 
 	LuaTable& operator=(const LuaTable& table);
 
-	inline void RemoveField(const std::string& name) { SetField(name, nil); }
+	inline void RemoveField(const std::string& name, bool rawMode = false) { SetField(name, nil, rawMode); }
 	inline void RemoveArrayField(int index) { SetArrayField(index, nil); }
 
 	// Helpers for getting fields with most frequently used types
 	// without having to specify template of return type
-	inline LuaFunction GetFunction(const std::string& name) const { return GetField<LuaFunction>(name); }
-	inline LuaTable GetTable(const std::string& name) const { return GetField<LuaTable>(name); }
-	inline bool GetBool(const std::string& name) const { return GetField<bool>(name); }
-	inline int GetInt(const std::string& name) const { return GetField<int>(name); }
-	inline float GetFloat(const std::string& name) const { return GetField<float>(name); }
-	inline std::string GetString(const std::string& name) const { return GetField<std::string>(name); }
+	inline LuaFunction GetFunction(const std::string& name, bool raw = false) const { return GetField<LuaFunction>(name, raw); }
+	inline LuaTable GetTable(const std::string& name, bool raw = false) const { return GetField<LuaTable>(name, raw); }
+	inline bool GetBool(const std::string& name, bool raw = false) const { return GetField<bool>(name, raw); }
+	inline int GetInt(const std::string& name, bool raw = false) const { return GetField<int>(name, raw); }
+	inline float GetFloat(const std::string& name, bool raw = false) const { return GetField<float>(name, raw); }
+	inline std::string GetString(const std::string& name, bool raw = false) const { return GetField<std::string>(name, raw); }
 };
 
 

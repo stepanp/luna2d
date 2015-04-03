@@ -28,8 +28,7 @@ using namespace luna2d;
 //----------------------------------
 // Helper for LuaTable::MakeReadOnly
 //----------------------------------
-void ReadOnlyFunc() {}
-
+int ReadOnlyFunc(lua_State*) { return 0; }
 
 LuaTableIterator::LuaTableIterator() :
 	tableRef(nullptr),
@@ -143,12 +142,13 @@ void LuaTable::SetMetatable(const LuaTable& meta)
 }
 
 // Check for field with given key is exists(not nil)
-bool LuaTable::HasField(const std::string& name) const
+bool LuaTable::HasField(const std::string& name, bool rawMode) const
 {
 	lua_State *luaVm = ref->GetLuaVm();
 
 	LuaStack<LuaTable>::Push(luaVm, *this); // Push this table to stack
-	lua_getfield(luaVm, -1, name.c_str());
+	lua_pushstring(luaVm, name.c_str());
+	rawMode ? lua_rawget(luaVm, -2) : lua_gettable(luaVm, -2);
 	bool ret = lua_isnil(luaVm, -1) == 0;
 
 	lua_pop(luaVm, 2); // Remove this table and field from stack
@@ -200,9 +200,7 @@ void LuaTable::MakeReadOnly()
 	LuaTable meta = GetMetatable();
 	if(meta == nil) meta = LuaTable(ref->GetLuaVm());
 
-	LuaFunction fnNewIndex(ref->GetLuaVm());
-	fnNewIndex.Bind(&ReadOnlyFunc);
-	meta.SetField("__newindex", fnNewIndex);
+	meta.SetField("__newindex", &ReadOnlyFunc);
 
 	SetMetatable(meta);
 }

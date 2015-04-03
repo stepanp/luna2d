@@ -51,10 +51,11 @@ void LUNATextureAtlasLoader::PushToLua(const std::string& name, luna2d::LuaTable
 {
 	// Make atlas table
 	LuaTable atlasTable(LUNAEngine::SharedLua());
-	parentTable.SetField(name, atlasTable);
+	atlasTable.MakeReadOnly();
+	parentTable.SetField(name, atlasTable, true);
 
 	// Add regions to asset table
-	for(auto entry : atlas->GetRegions()) atlasTable.SetField(entry.first, entry.second);
+	for(auto entry : atlas->GetRegions()) atlasTable.SetField(entry.first, entry.second, true);
 
 	// Save texture in custom data of atlas table
 	LUNAEngine::SharedAssets()->SetCustomDataToTable(atlasTable, texture);
