@@ -80,7 +80,7 @@ public:
 		// Reload texture from path
 		if(format)
 		{
-			LUNAImage image(filename, *format, LUNAFileLocation::ASSETS);
+			LUNAImage image(reloadPath, *format, LUNAFileLocation::ASSETS);
 			if(!image.IsEmpty())
 			{
 				width = image.GetWidth();

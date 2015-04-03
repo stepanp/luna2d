@@ -22,6 +22,8 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaengine.h"
+#include "lunaassets.h"
+#include "lunagraphics.h"
 #include "lunaandroidfiles.h"
 #include "lunaandroidlog.h"
 #include "lunaandroidutils.h"

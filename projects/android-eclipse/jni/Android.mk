@@ -8,6 +8,7 @@ LOCAL_SRC_FILES := \
 	$(LOCAL_PATH)/../../../../luna2d/platform/android/jni/lunajnibridge.cpp \
 	$(subst $(LOCAL_PATH)/,, \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/*.cpp) \
+	$(wildcard $(LOCAL_PATH)/../../../luna2d/assets/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/modules/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/graphics/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/physics/*.cpp) \
@@ -21,6 +22,7 @@ LOCAL_SRC_FILES := \
 	
 LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/../../../luna2d/ \
+	$(LOCAL_PATH)/../../../luna2d/assets/ \
 	$(LOCAL_PATH)/../../../luna2d/modules/ \
 	$(LOCAL_PATH)/../../../luna2d/graphics/ \
 	$(LOCAL_PATH)/../../../luna2d/physics/ \
