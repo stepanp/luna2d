@@ -140,9 +140,15 @@ void luaV_settable (lua_State *L, const TValue *t, TValue *key, StkId val) {
     if (ttistable(t)) {  /* `t' is a table? */
       Table *h = hvalue(t);
       TValue *oldval = cast(TValue *, luaH_get(h, key));
+
+#ifndef LUA_ALWAYS_NEWINDEX
       /* if previous value is not nil, there must be a previous entry
          in the table; moreover, a metamethod has no relevance */
       if (!ttisnil(oldval) ||
+#else
+      /* Disable cheking for previous value is nil */
+      if (
+#endif
          /* previous value is nil; must check the metamethod */
          ((tm = fasttm(L, h->metatable, TM_NEWINDEX)) == NULL &&
          /* no metamethod; is there a previous entry in the table? */
