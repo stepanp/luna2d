@@ -146,7 +146,7 @@ void luaV_settable (lua_State *L, const TValue *t, TValue *key, StkId val) {
          in the table; moreover, a metamethod has no relevance */
       if (!ttisnil(oldval) ||
 #else
-      /* Disable cheking for previous value is nil */
+      /* Disable checking for previous value is nil */
       if (
 #endif
          /* previous value is nil; must check the metamethod */
