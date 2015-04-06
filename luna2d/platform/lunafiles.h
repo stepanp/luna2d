@@ -80,6 +80,9 @@ public:
 	// Split basename to name and resolution suffix
 	// Return pair: name - suffix
 	std::pair<std::string,std::string> SplitResolutionSuffix(const std::string& basename);
+
+	// Append resolution suffix to filename
+	std::string AppendResolutionSuffix(const std::string& path, const std::string& suffix);
 };
 
 }

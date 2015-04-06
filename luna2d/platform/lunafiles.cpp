@@ -67,3 +67,16 @@ std::pair<std::string,std::string> LUNAFiles::SplitResolutionSuffix(const std::s
 		return std::make_pair(std::move(name), std::move(suffix));
 	}
 }
+
+// Append resolution suffix to filename
+std::string LUNAFiles::AppendResolutionSuffix(const std::string& path, const std::string& suffix)
+{
+	size_t pos = path.rfind('.');
+	if(pos == std::string::npos) pos = path.length();
+
+	std::string ret = path;
+	std::string fullSuffix = "@" + suffix;
+	ret.insert(pos, fullSuffix);
+
+	return ret;
+}

@@ -78,8 +78,11 @@ private:
 	// if "autoMake" is true, automatically creates non-existent tables
 	LuaTable GetParentTableForPath(const std::string& path, bool autoMake = false);
 	std::string GetNameForPath(const std::string& path); // Get asset/folder name for path
-	bool IsDescription(const std::string& path); // Check for given file is description
+	bool IsIgnored(const std::string& path); // Check for given file should be ignored when loading
 	std::shared_ptr<LUNAAssetLoader> GetLoader(const std::string& path); // Get loader for given file
+
+	void DoLoadFile(const std::string& path);
+	void DoUnloadFolder(LuaTable table);
 
 public:
 	void LoadAll(); // Load all assets
