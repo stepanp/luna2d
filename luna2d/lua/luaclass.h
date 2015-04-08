@@ -140,7 +140,7 @@ private:
 	// Wrapper for constructor
 	// This method is invoked when lua constructor("__call" metamethod") is called
 	template<typename ... Args>
-	static std::shared_ptr<Class> Construct(LuaTable, Args ... args)
+	static std::shared_ptr<Class> Construct(LuaNil, Args ... args)
 	{
 		return std::make_shared<Class>(args ...);
 	}
@@ -236,7 +236,7 @@ public:
 		lua_State *luaVm = ref->GetLuaVm();
 
 		LuaFunction fnConstruct(luaVm);
-		fnConstruct.Bind<std::shared_ptr<Class>, LuaTable, Args...>(&LuaClass<Class>::Construct);
+		fnConstruct.Bind<std::shared_ptr<Class>, LuaNil, Args...>(&LuaClass<Class>::Construct);
 
 		LuaTable meta(luaVm);
 		meta.SetField("__call", fnConstruct);
