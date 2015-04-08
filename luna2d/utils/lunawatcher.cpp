@@ -127,7 +127,7 @@ void LUNAWatcher::SetValue(const std::string& tableName, const std::string& fiel
 	if(hooks.count(tableName) > 0)
 	{
 		TableHook& hook = hooks[tableName];
-		hook.table.SetField(fieldName.c_str(), value);
+		hook.table.SetField(fieldName.c_str(), value, true);
 	}
 }
 
