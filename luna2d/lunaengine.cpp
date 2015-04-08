@@ -31,7 +31,7 @@
 #include "lunascenes.h"
 #include "lunasizes.h"
 #include "lunaconfig.h"
-#include "lunamathutils.h"
+#include "lunamath.h"
 #include "lunabindings.h"
 
 #include "modules/lunamoduleslist.h"
@@ -81,7 +81,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	LuaTable tblLuna(lua);
 	tblGlobal.SetField("luna", tblLuna);
 
-	LUNAMathUtils::InitializeRandom();
+	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
 	LoadModules();

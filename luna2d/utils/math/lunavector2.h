@@ -32,7 +32,7 @@ const std::string VECTOR2_METATABLE_NAME = "glm::vec2";
 
 //--------------------------------------------------
 // Binding glm::vec2 to lua
-// For maximizing perfomance LuaClass<T> is not used
+// For maximize perfomance LuaClass<T> is not used
 //--------------------------------------------------
 class LuaVector2
 {

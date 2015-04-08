@@ -26,7 +26,7 @@
 #include "lunaengine.h"
 #include "lunagraphics.h"
 #include "lunalog.h"
-#include "lunamathutils.h"
+#include "lunamath.h"
 
 using namespace luna2d;
 
@@ -92,8 +92,8 @@ void LUNAPhysicsDebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 rad
 
 	for(int angle = 0; angle < 360; angle += 10)
 	{
-		float angle1 = LUNAMathUtils::DegreesToRadians(angle);
-		float angle2 = LUNAMathUtils::DegreesToRadians(angle + 10);
+		float angle1 = math::DegreesToRadians(angle);
+		float angle2 = math::DegreesToRadians(angle + 10);
 		float x1 = LUNAPhysicsUtils::MetersToPixels(center.x + radius * std::cos(angle1));
 		float y1 = LUNAPhysicsUtils::MetersToPixels(center.y + radius * std::sin(angle1));
 		float x2 = LUNAPhysicsUtils::MetersToPixels(center.x + radius * std::cos(angle2));

@@ -21,26 +21,27 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunamathutils.h"
+#include "lunamath.h"
 #include <stdlib.h>
 #include <time.h>
 
 using namespace luna2d;
+using namespace luna2d::math;
 
-void LUNAMathUtils::InitializeRandom()
+void luna2d::math::InitializeRandom()
 {
 	srand((unsigned int)time(0));
 }
 
 // Generate random float number in range [a,b]
-float LUNAMathUtils::RandomFloat(float a, float b)
+float luna2d::math::RandomFloat(float a, float b)
 {
 	float percent = (float)(rand() % 100) / 100;
 	return a + (b - a) * percent;
 }
 
 // Calculate average value of given vector
-float LUNAMathUtils::Avg(const std::vector<float>& values)
+float luna2d::math::Avg(const std::vector<float>& values)
 {
 	float sum = 0;
 	for(float value : values) sum += value;
@@ -48,13 +49,13 @@ float LUNAMathUtils::Avg(const std::vector<float>& values)
 }
 
 // Convert degrees to radians
-float LUNAMathUtils::DegreesToRadians(float degrees)
+float luna2d::math::DegreesToRadians(float degrees)
 {
 	return degrees * DEGREES_TO_RADIANS;
 }
 
 // Convert radians to degrees
-float LUNAMathUtils::RadiansToDegrees(float radians)
+float luna2d::math::RadiansToDegrees(float radians)
 {
 	return radians * RADIANS_TO_DEGREES;
 }

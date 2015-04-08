@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <vector>
+#include "lunaengine.h"
 #include <cmath>
 
 // On some compilers, M_PI constant isn't defined
@@ -31,22 +31,18 @@
 	#define M_PI 3.14159265358979323846f
 #endif
 
-namespace luna2d{
+//-----------
+// Math utils
+//-----------
+namespace luna2d{ namespace math{
 
 const float DEGREES_TO_RADIANS = M_PI / 180.0f;
 const float RADIANS_TO_DEGREES = 180.0f / M_PI;
 
-class LUNAMathUtils
-{
-private:
-	LUNAMathUtils() = delete;
+void InitializeRandom();
+float RandomFloat(float a, float b);  // Generate random float number in range [a,b]
+float Avg(const std::vector<float>& values); // Calculate average value of given vector
+float DegreesToRadians(float degrees); // Conver degrees to radians
+float RadiansToDegrees(float radians); // Conver radians to degrees
 
-public:
-	static void InitializeRandom();
-	static float RandomFloat(float a, float b);  // Generate random float number in range [a,b]
-	static float Avg(const std::vector<float>& values); // Calculate average value of given vector
-	static float DegreesToRadians(float degrees); // Conver degrees to radians
-	static float RadiansToDegrees(float radians); // Conver radians to degrees
-};
-
-}
+}}

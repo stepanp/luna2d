@@ -24,7 +24,6 @@
 #pragma once
 
 #include "lunadebug.h"
-#include "lunamathmodule.h"
 #include "physics/lunaphysicsmodule.h"
 
 namespace luna2d{
@@ -32,7 +31,6 @@ namespace luna2d{
 std::unordered_map<std::string, LUNAModule*> modulesList =
 {
 	{"debug", new LUNADebug()},
-	{"math", new LUNAMathModule()},
 	{"physics", new LUNAPhysicsModule()},
 };
 

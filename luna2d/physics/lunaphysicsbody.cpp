@@ -23,7 +23,7 @@
 
 #include "lunaphysicsbody.h"
 #include "shapes/lunaphysicsshape.h"
-#include "lunamathutils.h"
+#include "lunamath.h"
 
 using namespace luna2d;
 
@@ -106,12 +106,12 @@ void LUNAPhysicsBody::SetPos(float x, float y)
 
 float LUNAPhysicsBody::GetAngle()
 {
-	return LUNAMathUtils::RadiansToDegrees(body->GetAngle());
+	return math::RadiansToDegrees(body->GetAngle());
 }
 
 void LUNAPhysicsBody::SetAngle(float angle)
 {
-	body->SetTransform(body->GetPosition(), LUNAMathUtils::DegreesToRadians(angle));
+	body->SetTransform(body->GetPosition(), math::DegreesToRadians(angle));
 }
 
 void LUNAPhysicsBody::ApplyForce(float forceX, float forceY, float pointX, float pointY)

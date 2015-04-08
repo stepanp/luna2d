@@ -27,7 +27,7 @@
 #include "lunasizes.h"
 #include "lunaassets.h"
 #include "lunalog.h"
-#include "lunamathutils.h"
+#include "lunamath.h"
 
 using namespace luna2d;
 
@@ -236,8 +236,8 @@ void LUNASprite::Render()
 	// Rotate
 	if(angle != 0)
 	{
-		float sin = std::sin(angle * M_PI / 180.0f);
-		float cos = std::cos(angle * M_PI / 180.0f);
+		float sin = std::sin(math::DegreesToRadians(angle));
+		float cos = std::cos(math::DegreesToRadians(angle));
 
 		float rx1 = x1 * cos - y1 * sin;
 		float ry1 = x1 * sin + y1 * cos;
