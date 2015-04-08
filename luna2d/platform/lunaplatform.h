@@ -33,10 +33,12 @@
 // Desktop emulator based on Qt
 #if defined(QT_CORE_LIB)
 	#define LUNA_PLATFORM LUNA_PLATFORM_QT
+	#define LUNA_PLATFORM_STRING "qt"
 
 // Android
 #elif defined(__ANDROID__)
 	#define LUNA_PLATFORM LUNA_PLATFORM_ANDROID
+	#define LUNA_PLATFORM_STRING "android"
 
 	#include <string>
 	#include <cstdlib>
@@ -54,13 +56,16 @@
 // iOS
 #elif defined(__APPLE__)
 	#define LUNA_PLATFORM LUNA_PLATFORM_IOS
+	#define LUNA_PLATFORM_STRING "ios"
 
 // Windows Phone / RT
 #elif (WINAPI_FAMILY == WINAPI_FAMILY_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 	#define LUNA_PLATFORM LUNA_PLATFORM_WP
+	#define LUNA_PLATFORM_STRING "wp"
 
 // Check for unsupported platforms
 #else
 	#define LUNA_PLATFORM LUNA_PLATFORM_UNKNOWN
+	#define LUNA_PLATFORM_STRING "unknown"
 	#error "Unsupported platform"
 #endif

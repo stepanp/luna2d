@@ -88,6 +88,12 @@ void BindSplines(LuaScript* lua, LuaTable& tblLuna)
 	tblSplines.SetField("quadraticBSpline", LuaFunction(lua, &splines::QuadraticBSpline));
 }
 
+// Bind "luna.platform" module
+void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
+{
+	tblLuna.SetField("platform", LUNA_PLATFORM_STRING);
+}
+
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
 // SEE: lunagraphics.cpp, lunassets.cpp
@@ -100,4 +106,5 @@ void luna2d::DoBindings()
 	BindUtils(lua, tblLuna);
 	BindIntersect(lua, tblLuna);
 	BindSplines(lua, tblLuna);
+	BindPlatform(lua, tblLuna);
 }

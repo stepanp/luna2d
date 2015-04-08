@@ -112,7 +112,6 @@ SOURCES += \
     ../../../luna2d/utils/lunawatcher.cpp \
     ../../../luna2d/lua/luadynamictype.cpp \
     ../../../luna2d/graphics/lunamesh.cpp \
-    ../../../luna2d/modules/lunaplatformmodule.cpp \
     ../../../luna2d/modules/lunamathmodule.cpp \
     ../../../luna2d/utils/lunamathutils.cpp \
     ../../../luna2d/lua/luaobject.cpp \
@@ -265,7 +264,6 @@ HEADERS += \
     ../../../luna2d/utils/lunawatcher.h \
     ../../../luna2d/lua/luadynamictype.h \
     ../../../luna2d/graphics/lunamesh.h \
-    ../../../luna2d/modules/lunaplatformmodule.h \
     ../../../luna2d/modules/lunamathmodule.h \
     ../../../luna2d/utils/lunamathutils.h \
     ../../../luna2d/thirdparty/Box2D/Collision/Shapes/b2ChainShape.h \
