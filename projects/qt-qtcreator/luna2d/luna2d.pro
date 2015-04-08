@@ -50,7 +50,6 @@ SOURCES += \
     ../../../luna2d/lua/luaref.cpp \
     ../../../luna2d/lua/luascript.cpp \
     ../../../luna2d/lua/luatable.cpp \
-    ../../../luna2d/modules/lunalogmodule.cpp \
     ../../../luna2d/platform/qt/lunaqtwidget.cpp \
     ../../../luna2d/utils/lunacolor.cpp \
 	../../../luna2d/assets/lunaassets.cpp \
@@ -188,7 +187,8 @@ SOURCES += \
     ../../../luna2d/platform/qt/lunaqtutils.cpp \
     ../../../luna2d/graphics/lunacurverenderer.cpp \
     ../../../luna2d/assets/lunatextureloader.cpp \
-    ../../../luna2d/assets/lunatextureatlasloader.cpp
+    ../../../luna2d/assets/lunatextureatlasloader.cpp \
+    ../../../luna2d/lunabindings.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -212,7 +212,6 @@ HEADERS += \
     ../../../luna2d/lua/luastack.h \
     ../../../luna2d/lua/luatable.h \
     ../../../luna2d/lua/lunalua.h \
-    ../../../luna2d/modules/lunalogmodule.h \
     ../../../luna2d/modules/lunamodule.h \
     ../../../luna2d/modules/lunamoduleslist.h \
     ../../../luna2d/platform/qt/lunaqtwidget.h \
@@ -346,6 +345,7 @@ HEADERS += \
     ../../../luna2d/lua/luaptr.h \
     ../../../luna2d/assets/lunatextureloader.h \
     ../../../luna2d/assets/lunatextureatlasloader.h \
-    ../../../luna2d/lua/scripts/chancetable.lua.h
+    ../../../luna2d/lua/scripts/chancetable.lua.h \
+    ../../../luna2d/lunabindings.h
 
 QMAKE_MAC_SDK = macosx10.9

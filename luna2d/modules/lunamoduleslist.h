@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "lunalogmodule.h"
 #include "lunaintersect.h"
 #include "lunasplinesmodule.h"
 #include "lunadebug.h"
@@ -35,7 +34,6 @@ namespace luna2d{
 
 std::unordered_map<std::string, LUNAModule*> modulesList =
 {
-	{"log", new LUNALogModule()},
 	{"intersect", new LUNAIntersect()},
 	{"splines", new LUNASplinesModule()},
 	{"debug", new LUNADebug()},

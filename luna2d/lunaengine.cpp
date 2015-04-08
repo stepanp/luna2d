@@ -32,6 +32,7 @@
 #include "lunasizes.h"
 #include "lunaconfig.h"
 #include "lunamathutils.h"
+#include "lunabindings.h"
 
 #include "modules/lunamoduleslist.h"
 
@@ -82,6 +83,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 
 	LUNAMathUtils::InitializeRandom();
 	RunEmbeddedScripts();
+	DoBindings();
 	LoadModules();
 
 	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
@@ -149,7 +151,6 @@ void LUNAEngine::RunEmbeddedScripts()
 {
 	lua->DoString(LUNA_LUA_OOP_SUPPORT);
 	lua->DoString(LUNA_LUA_USERDATA_PAIRS);
-	lua->DoString(LUNA_CHANCE_TABLE);
 }
 
 bool LUNAEngine::IsInitialized()

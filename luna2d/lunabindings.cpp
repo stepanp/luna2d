@@ -21,23 +21,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunalogmodule.h"
+#include "lunabindings.h"
+#include "lunaengine.h"
+#include "lunalua.h"
 #include "lunalog.h"
 
 using namespace luna2d;
 
-// Proxy for "__call" metametod
-// First param of "__call" metamethod is table
-// Because, we need use this proxy to filter this param
-void CallProxy(LuaTable, const std::string& message)
+// Bind common classes and functions to lua
+// Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
+// SEE: lunagraphics.cpp, lunassets.cpp
+void luna2d::DoBindings()
 {
-	LUNAEngine::SharedLog()->InfoString(message);
+	LuaScript* lua = LUNAEngine::SharedLua();
+	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+
+	BindLog(lua, tblLuna);
+	BindUtils(lua, tblLuna);
 }
 
-void LUNALogModule::Load(LuaScript *lua)
+// Bind "luna.log" module
+void luna2d::BindLog(LuaScript* lua, LuaTable& tblLuna)
 {
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
 	LuaTable tblLog(lua);
+	tblLuna.SetField("log", tblLog);
 
 	// Register "info", "warning", "error" functions in "luna.log" table
 	tblLog.SetField("info", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::InfoString));
@@ -47,13 +54,22 @@ void LUNALogModule::Load(LuaScript *lua)
 	// Use "__call" metamethod of "luna.log" table as alias for "info" function
 	// i.e. luna.log("message") = luna.log.info("message")
 	LuaTable metaLog(lua);
-	metaLog.SetField("__call", LuaFunction(lua, &CallProxy));
+	std::function<void(LuaNil, const std::string&)> proxy = [](LuaNil, const std::string& msg)
+	{
+		LUNAEngine::SharedLog()->InfoString(msg);
+	};
+	metaLog.SetField("__call", LuaFunction(lua, proxy));
 	tblLog.SetMetatable(metaLog);
-
-	tblLuna.SetField("log", tblLog);
 
 	// Register "table" function
 	// "table" function for simplicity implemented as embedded script
 	// SEE: "lua/scripts/logtable.lua.h"
 	lua->DoString(LUNA_LUA_LOG_TABLE);
+}
+
+// Bind "luna.utilss" module
+void luna2d::BindUtils(LuaScript* lua, LuaTable& tblLuna)
+{
+	// Register "ChanceTable" class
+	lua->DoString(LUNA_CHANCE_TABLE);
 }
