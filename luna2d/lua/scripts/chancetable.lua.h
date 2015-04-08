@@ -23,32 +23,40 @@
 
 #pragma once
 
-//---------------------------
-// Support OOP for lua tables
-//---------------------------
-const std::string LUNA_LUA_OOP_SUPPORT = \
-"class = function(baseClass) \
-	local newClass = {} \
-	newClass.base = baseClass \
+//------------------------------------------------------------------
+// Utility for calculating probabilities
+// Implemented as script for simplify work with different "id" types
+//------------------------------------------------------------------
+const std::string LUNA_CHANCE_TABLE = \
+"local ChanceTable = class() \
 \
-	if not newClass.baseInit then \
-		newClass.baseInit = function(obj, ...) \
-			obj.base.onInit(obj, ...) \
-		end \
-		newClass.baseFunc = function(obj, name, ...) \
-			obj.base[name](obj, ...) \
-		end \
+function ChanceTable:onInit(tbl) \
+	local chances = {} \
+\
+	for k,v in pairs(tbl) do \
+		table.insert(chances, { chance = v, id = k }) \
 	end \
 \
-	local construct = function(_, ...) \
-		local newObject = {} \
-		setmetatable(newObject, {__index = newClass}) \
-		if newObject.onInit then newObject:onInit(...) end \
+	table.sort(chances, function(v1, v2) return v1.chance < v2.chance end) \
 \
-		return newObject \
+	local sum = 0 \
+	for _,v in ipairs(chances) do \
+		v.chance = v.chance + sum \
+		sum = v.chance \
 	end \
 \
-	setmetatable(newClass, {__call = construct, __index = baseClass}) \
+	self.chances = chances \
+end \
 \
-	return newClass \
-end";
+function ChanceTable:getNext() \
+	local rand = math.random(0, 100) \
+\
+	for _,v in ipairs(self.chances) do \
+		if rand <= v.chance then \
+			return v.id \
+		end \
+	end \
+end \
+\
+luna.utils = luna.utils or {} \
+luna.utils.ChanceTable = ChanceTable";

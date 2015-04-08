@@ -149,6 +149,7 @@ void LUNAEngine::RunEmbeddedScripts()
 {
 	lua->DoString(LUNA_LUA_OOP_SUPPORT);
 	lua->DoString(LUNA_LUA_USERDATA_PAIRS);
+	lua->DoString(LUNA_CHANCE_TABLE);
 }
 
 bool LUNAEngine::IsInitialized()

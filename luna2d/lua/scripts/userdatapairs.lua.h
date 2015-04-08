@@ -26,7 +26,7 @@
 //------------------------------
 // "pairs" function for userdata
 //------------------------------
-#define LUNA_LUA_USERDATA_PAIRS \
+const std::string LUNA_LUA_USERDATA_PAIRS = \
 "local _pairs = pairs \
 local _ipairs = ipairs \
 \
@@ -44,4 +44,4 @@ ipairs = function(table) \
 	else \
 		return _ipairs(table) \
 	end \
-end"
+end";

@@ -34,3 +34,4 @@
 #include "scripts/oopsupport.lua.h"
 #include "scripts/userdatapairs.lua.h"
 #include "scripts/logtable.lua.h"
+#include "scripts/chancetable.lua.h"

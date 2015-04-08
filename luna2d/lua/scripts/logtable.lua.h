@@ -26,7 +26,7 @@
 //---------------------------------
 // Recursively log all table fields
 //---------------------------------
-#define LUNA_LUA_LOG_TABLE \
+const std::string LUNA_LUA_LOG_TABLE = \
 "luna.log.table = function(table, prefix) \
 	prefix = prefix or '' \
 \
@@ -43,4 +43,4 @@
 	if meta and meta.__index and meta.__index ~= table and type(meta.__index) == 'table' then \
 		luna.log.table(meta.__index) \
 	end \
-end"
+end";

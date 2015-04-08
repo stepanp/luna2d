@@ -345,6 +345,7 @@ HEADERS += \
     ../../../luna2d/graphics/lunacurverenderer.h \
     ../../../luna2d/lua/luaptr.h \
     ../../../luna2d/assets/lunatextureloader.h \
-    ../../../luna2d/assets/lunatextureatlasloader.h
+    ../../../luna2d/assets/lunatextureatlasloader.h \
+    ../../../luna2d/lua/scripts/chancetable.lua.h
 
 QMAKE_MAC_SDK = macosx10.9
