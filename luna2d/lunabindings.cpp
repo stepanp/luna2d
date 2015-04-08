@@ -25,23 +25,12 @@
 #include "lunaengine.h"
 #include "lunalua.h"
 #include "lunalog.h"
+#include "lunaintersect.h"
 
 using namespace luna2d;
 
-// Bind common classes and functions to lua
-// Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
-// SEE: lunagraphics.cpp, lunassets.cpp
-void luna2d::DoBindings()
-{
-	LuaScript* lua = LUNAEngine::SharedLua();
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-
-	BindLog(lua, tblLuna);
-	BindUtils(lua, tblLuna);
-}
-
 // Bind "luna.log" module
-void luna2d::BindLog(LuaScript* lua, LuaTable& tblLuna)
+void BindLog(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblLog(lua);
 	tblLuna.SetField("log", tblLog);
@@ -68,8 +57,35 @@ void luna2d::BindLog(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.utilss" module
-void luna2d::BindUtils(LuaScript* lua, LuaTable& tblLuna)
+void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 {
 	// Register "ChanceTable" class
 	lua->DoString(LUNA_CHANCE_TABLE);
+}
+
+// Bind "luna.intersect" module
+void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblIntersect(lua);
+	tblLuna.SetField("intersect", tblIntersect);
+
+	tblIntersect.SetField("pointInRectangle", LuaFunction(lua, &intersect::PointInRectangle));
+	tblIntersect.SetField("pointInCircle", LuaFunction(lua, &intersect::PointInCircle));
+	tblIntersect.SetField("pointInPolygon", LuaFunction(lua, &intersect::PointInPolygon));
+	tblIntersect.SetField("rectangles", LuaFunction(lua, &intersect::Rectangles));
+	tblIntersect.SetField("lines", LuaFunction(lua, &intersect::Lines));
+	tblIntersect.SetField("lineCircle", LuaFunction(lua, &intersect::LineCircle));
+	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, &intersect::PointBetweenLines));
+}
+
+// Bind common classes and functions to lua
+// Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
+// SEE: lunagraphics.cpp, lunassets.cpp
+void luna2d::DoBindings()
+{
+	LuaScript* lua = LUNAEngine::SharedLua();
+	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+
+	BindLog(lua, tblLuna);
+	BindUtils(lua, tblLuna);
 }

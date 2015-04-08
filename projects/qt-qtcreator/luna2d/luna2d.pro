@@ -107,7 +107,6 @@ SOURCES += \
     ../../../luna2d/graphics/lunatextureregion.cpp \
     ../../../luna2d/graphics/lunatextureatlas.cpp \
     ../../../luna2d/graphics/lunasprite.cpp \
-    ../../../luna2d/modules/lunaintersect.cpp \
     ../../../luna2d/thirdparty/json11/json11.cpp \
     ../../../luna2d/modules/lunadebug.cpp \
     ../../../luna2d/utils/lunawatcher.cpp \
@@ -188,7 +187,8 @@ SOURCES += \
     ../../../luna2d/graphics/lunacurverenderer.cpp \
     ../../../luna2d/assets/lunatextureloader.cpp \
     ../../../luna2d/assets/lunatextureatlasloader.cpp \
-    ../../../luna2d/lunabindings.cpp
+    ../../../luna2d/lunabindings.cpp \
+    ../../../luna2d/utils/lunaintersect.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -260,7 +260,6 @@ HEADERS += \
     ../../../luna2d/graphics/lunatextureregion.h \
     ../../../luna2d/graphics/lunatextureatlas.h \
     ../../../luna2d/graphics/lunasprite.h \
-    ../../../luna2d/modules/lunaintersect.h \
     ../../../luna2d/thirdparty/json11/json11.hpp \
     ../../../luna2d/modules/lunadebug.h \
     ../../../luna2d/utils/lunawatcher.h \
@@ -346,6 +345,7 @@ HEADERS += \
     ../../../luna2d/assets/lunatextureloader.h \
     ../../../luna2d/assets/lunatextureatlasloader.h \
     ../../../luna2d/lua/scripts/chancetable.lua.h \
-    ../../../luna2d/lunabindings.h
+    ../../../luna2d/lunabindings.h \
+    ../../../luna2d/utils/lunaintersect.h
 
 QMAKE_MAC_SDK = macosx10.9

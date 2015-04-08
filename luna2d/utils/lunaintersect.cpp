@@ -23,25 +23,10 @@
 #include "lunaintersect.h"
 
 using namespace luna2d;
-
-void LUNAIntersect::Load(LuaScript *lua)
-{
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-	LuaTable tblIntersect(lua);
-
-	tblIntersect.SetField("pointInRectangle", LuaFunction(lua, this, &LUNAIntersect::PointInRectangle));
-	tblIntersect.SetField("pointInCircle", LuaFunction(lua, this, &LUNAIntersect::PointInCircle));
-	tblIntersect.SetField("pointInPolygon", LuaFunction(lua, this, &LUNAIntersect::PointInPolygon));
-	tblIntersect.SetField("rectangles", LuaFunction(lua, this, &LUNAIntersect::Rectangles));
-	tblIntersect.SetField("lines", LuaFunction(lua, this, &LUNAIntersect::Lines));
-	tblIntersect.SetField("lineCircle", LuaFunction(lua, this, &LUNAIntersect::LineCircle));
-	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, this, &LUNAIntersect::PointBetweenLines));
-
-	tblLuna.SetField("intersect", tblIntersect);
-}
+using namespace luna2d::intersect;
 
 // Check for point insinde in rectangle
-bool LUNAIntersect::PointInRectangle(const glm::vec2& point, const LuaTable& rect)
+bool luna2d::intersect::PointInRectangle(const glm::vec2& point, const LuaTable& rect)
 {
 	float rx = rect.GetFloat("x");
 	float ry = rect.GetFloat("y");
@@ -52,13 +37,13 @@ bool LUNAIntersect::PointInRectangle(const glm::vec2& point, const LuaTable& rec
 }
 
 // Check for point insinde in cirle
-bool LUNAIntersect::PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r)
+bool luna2d::intersect::PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r)
 {
 	return glm::distance(point, circleCenter) <= r;
 }
 
 // Check for point inside polygon
-bool LUNAIntersect::PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon)
+bool luna2d::intersect::PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon)
 {
 	bool ret = false;
 	int count = polygon.size();
@@ -74,7 +59,7 @@ bool LUNAIntersect::PointInPolygon(const glm::vec2& point, const std::vector<glm
 }
 
 // Check intersection between two rectangles
-bool LUNAIntersect::Rectangles(const LuaTable& rect1, const LuaTable& rect2)
+bool luna2d::intersect::Rectangles(const LuaTable& rect1, const LuaTable& rect2)
 {
 	float x1 = rect1.GetFloat("x");
 	float y1 = rect1.GetFloat("y");
@@ -90,7 +75,7 @@ bool LUNAIntersect::Rectangles(const LuaTable& rect1, const LuaTable& rect2)
 }
 
 // Check intersection between two lines
-bool LUNAIntersect::Lines(const LuaTable& line1, const LuaTable& line2)
+bool luna2d::intersect::Lines(const LuaTable& line1, const LuaTable& line2)
 {
 	float x1 = line1.GetFloat("x1");
 	float y1 = line1.GetFloat("y1");
@@ -117,7 +102,7 @@ bool LUNAIntersect::Lines(const LuaTable& line1, const LuaTable& line2)
 }
 
 // Check intersection between line and circle
-bool LUNAIntersect::LineCircle(const LuaTable& line, const glm::vec2& point, float r)
+bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point, float r)
 {
 	float x1 = line.GetFloat("x1");
 	float y1 = line.GetFloat("y1");
@@ -145,7 +130,7 @@ bool LUNAIntersect::LineCircle(const LuaTable& line, const glm::vec2& point, flo
 }
 
 // Get intersection point between two lines
-LuaTable LUNAIntersect::PointBetweenLines(const LuaTable& line1, const LuaTable& line2)
+LuaTable luna2d::intersect::PointBetweenLines(const LuaTable& line1, const LuaTable& line2)
 {
 	float x1 = line1.GetFloat("x1");
 	float y1 = line1.GetFloat("y1");
