@@ -26,6 +26,7 @@
 #include "lunalua.h"
 #include "lunalog.h"
 #include "lunaintersect.h"
+#include "lunasplines.h"
 
 using namespace luna2d;
 
@@ -78,6 +79,15 @@ void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
 	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, &intersect::PointBetweenLines));
 }
 
+// Bind "luna.splines" module
+void BindSplines(LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblSplines(lua);
+	tblLuna.SetField("splines", tblSplines);
+
+	tblSplines.SetField("quadraticBSpline", LuaFunction(lua, &splines::QuadraticBSpline));
+}
+
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
 // SEE: lunagraphics.cpp, lunassets.cpp
@@ -88,4 +98,6 @@ void luna2d::DoBindings()
 
 	BindLog(lua, tblLuna);
 	BindUtils(lua, tblLuna);
+	BindIntersect(lua, tblLuna);
+	BindSplines(lua, tblLuna);
 }

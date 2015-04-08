@@ -175,7 +175,6 @@ SOURCES += \
     ../../../luna2d/physics/joints/lunaphysicsjoint.cpp \
     ../../../luna2d/physics/joints/lunaphysicsdistancejoint.cpp \
     ../../../luna2d/physics/lunaphysicsutils.cpp \
-    ../../../luna2d/modules/lunasplinesmodule.cpp \
     ../../../luna2d/utils/lunavector2.cpp \
     ../../../luna2d/platform/lunafiles.cpp \
     ../../../luna2d/platform/qt/lunaqtfiles.cpp \
@@ -188,7 +187,8 @@ SOURCES += \
     ../../../luna2d/assets/lunatextureloader.cpp \
     ../../../luna2d/assets/lunatextureatlasloader.cpp \
     ../../../luna2d/lunabindings.cpp \
-    ../../../luna2d/utils/lunaintersect.cpp
+    ../../../luna2d/utils/lunaintersect.cpp \
+    ../../../luna2d/utils/lunasplines.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -333,7 +333,6 @@ HEADERS += \
     ../../../luna2d/physics/joints/lunaphysicsjoint.h \
     ../../../luna2d/physics/joints/lunaphysicsdistancejoint.h \
     ../../../luna2d/physics/lunaphysicsutils.h \
-    ../../../luna2d/modules/lunasplinesmodule.h \
     ../../../luna2d/utils/lunavector2.h \
     ../../../luna2d/utils/lunaglm.h \
     ../../../luna2d/platform/qt/lunaqtfiles.h \
@@ -346,6 +345,7 @@ HEADERS += \
     ../../../luna2d/assets/lunatextureatlasloader.h \
     ../../../luna2d/lua/scripts/chancetable.lua.h \
     ../../../luna2d/lunabindings.h \
-    ../../../luna2d/utils/lunaintersect.h
+    ../../../luna2d/utils/lunaintersect.h \
+    ../../../luna2d/utils/lunasplines.h
 
 QMAKE_MAC_SDK = macosx10.9

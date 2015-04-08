@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunacurverenderer.h"
-#include "lunasplinesmodule.h"
+#include "lunasplines.h"
 
 using namespace luna2d;
 
@@ -37,7 +37,6 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	width = params.GetFloat("width");
 
 	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(texture));
-	splines = LUNAEngine::SharedModule<LUNASplinesModule>("splines");
 }
 
 void LUNACurveRenderer::ClearKnots()
@@ -110,7 +109,7 @@ void LUNACurveRenderer::Build()
 
 		for(float t = startT; t <= 1.0f; t += CURVE_SMOOTH_FACTOR)
 		{
-			points.push_back(splines->QuadraticBSpline(knot0, knot1, knot2, t));
+			points.push_back(splines::QuadraticBSpline(knot0, knot1, knot2, t));
 
 			// Calculate lenght for each segment and segments lenghts summ for texture mapping
 			float sementLen = glm::distance2(points[points.size() - 1], points[points.size() - 2]);

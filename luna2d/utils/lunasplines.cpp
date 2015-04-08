@@ -21,27 +21,29 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunasplines.h"
 
-#include "lunamodule.h"
-#include "lunavector2.h"
+using namespace luna2d;
+using namespace luna2d::splines;
 
-namespace luna2d{
-
-//-----------------------------
-// Module with spline functions
-//-----------------------------
-class LUNASplinesModule : public LUNAModule
+// Quadratic B-Spline
+// "p0" - i-1 point
+// "p1" - i point
+// "p2" - i+1 point
+// "t" - time from 0.0 to 1.0
+glm::vec2 luna2d::splines::QuadraticBSpline(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, float t)
 {
-public:
-	virtual void Load(LuaScript *lua);
+	float x0 = (p0.x - 2.0f * p1.x + p2.x) / 2.0f;
+	float x1 = (-2.0f * p0.x + 2.0f * p1.x) / 2.0f;
+	float x2 = (p0.x + p1.x) / 2.0f;
 
-	// Quadratic B-Spline
-	// "p0" - i-1 point
-	// "p1" - i point
-	// "p2" - i+1 point
-	// "t" - time from 0.0 to 1.0
-	glm::vec2 QuadraticBSpline(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, float t);
-};
+	float y0 = (p0.y - 2.0f * p1.y + p2.y) / 2.0f;
+	float y1 = (-2.0f * p0.y + 2.0f * p1.y) / 2.0f;
+	float y2 = (p0.y + p1.y) / 2.0f;
 
+	float x = t * t * x0 + t * x1 + x2;
+	float y = t * t * y0 + t * y1 + y2;
+
+	return glm::vec2(x, y);
 }
+

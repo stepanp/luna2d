@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "lunasplinesmodule.h"
 #include "lunadebug.h"
 #include "lunaplatformmodule.h"
 #include "lunamathmodule.h"
@@ -33,7 +32,6 @@ namespace luna2d{
 
 std::unordered_map<std::string, LUNAModule*> modulesList =
 {
-	{"splines", new LUNASplinesModule()},
 	{"debug", new LUNADebug()},
 	{"platform", new LUNAPlatformModule()},
 	{"math", new LUNAMathModule()},

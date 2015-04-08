@@ -25,7 +25,6 @@
 
 #include "lunamesh.h"
 #include "lunavector2.h"
-#include "lunasplinesmodule.h"
 
 namespace luna2d{
 
@@ -44,7 +43,6 @@ public:
 private:
 	std::unique_ptr<LUNAMesh> mesh;
 	std::vector<glm::vec2> knots;
-	LUNASplinesModule* splines;
 
 	//--------------
 	// Curve params:
