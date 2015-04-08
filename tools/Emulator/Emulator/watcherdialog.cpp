@@ -61,16 +61,9 @@ WatcherDialog::~WatcherDialog()
 
 void WatcherDialog::AttachWatcher()
 {
-	LUNADebug* debugModule = engineWidget->GetEngine()->GetModule<LUNADebug>("debug");
-	if(!debugModule)
-	{
-		LUNA_LOGE("Cannot attach watcher: luna.debug module isn't loaded");
-		return;
-	}
-
 	ui->tableFields->setEnabled(true);
 
-	watcher = debugModule->GetWatcher();
+	watcher = LUNAEngine::SharedDebug()->GetWatcher();
 	watcher->SetListener(this);
 	watcher->FetchAllTables();
 }

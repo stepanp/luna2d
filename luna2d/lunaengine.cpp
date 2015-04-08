@@ -30,6 +30,7 @@
 #include "lunagraphics.h"
 #include "lunascenes.h"
 #include "lunasizes.h"
+#include "lunadebug.h"
 #include "lunaconfig.h"
 #include "lunamath.h"
 #include "lunabindings.h"
@@ -51,6 +52,7 @@ LUNAEngine::LUNAEngine() : modules(modulesList)
 	graphics = nullptr;
 	scenes = nullptr;
 	sizes = nullptr;
+	debug = nullptr;
 
 	initialized = false;
 }
@@ -90,6 +92,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	assets = new LUNAAssets();
 	graphics = new LUNAGraphics();
 	scenes = new LUNAScenes();
+	debug = new LUNADebug();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))
@@ -114,6 +117,7 @@ void LUNAEngine::Deinitialize()
 	delete graphics;
 	delete scenes;
 	delete sizes;
+	delete debug;
 	delete lua;
 	delete files;
 	delete platformUtils;
@@ -123,6 +127,7 @@ void LUNAEngine::Deinitialize()
 	graphics = nullptr;
 	scenes = nullptr;
 	sizes = nullptr;
+	debug = nullptr;
 	lua = nullptr;
 	files = nullptr;
 	platformUtils = nullptr;

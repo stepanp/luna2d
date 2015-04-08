@@ -23,14 +23,12 @@
 
 #pragma once
 
-#include "lunadebug.h"
 #include "physics/lunaphysicsmodule.h"
 
 namespace luna2d{
 
 std::unordered_map<std::string, LUNAModule*> modulesList =
 {
-	{"debug", new LUNADebug()},
 	{"physics", new LUNAPhysicsModule()},
 };
 

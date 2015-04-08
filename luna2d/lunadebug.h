@@ -21,31 +21,24 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunadebug.h"
+#pragma once
 
-using namespace luna2d;
+#include "lunaengine.h"
+#include "lunawatcher.h"
 
-LUNAWatcher* LUNADebug::GetWatcher()
+namespace luna2d{
+
+class LUNADebug
 {
-	return watcher;
-}
+public:
+	LUNADebug();
+	~LUNADebug();
 
-void LUNADebug::Load(LuaScript *lua)
-{
-	// Initialize watcher
-	watcher = new LUNAWatcher();
+private:
+	LUNAWatcher* watcher = nullptr;
 
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-	LuaTable tblDebug(lua);
+public:
+	LUNAWatcher* GetWatcher();
+};
 
-	tblDebug.SetField("addToWatcher", LuaFunction(lua, watcher, &LUNAWatcher::AddTable));
-	tblDebug.SetField("removeFromWatcher", LuaFunction(lua, watcher, &LUNAWatcher::RemoveTable));
-
-	tblLuna.SetField("debug", tblDebug);
-}
-
-void LUNADebug::Unload()
-{
-	delete watcher;
-	watcher = nullptr;
 }

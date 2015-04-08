@@ -41,6 +41,7 @@ class LUNAAssets;
 class LUNAGraphics;
 class LUNAScenes;
 class LUNASizes;
+class LUNADebug;
 class LUNAConfig;
 
 class LUNAEngine
@@ -51,15 +52,16 @@ public:
 	~LUNAEngine();
 
 private:
-	LUNAFiles *files;
-	LUNALog *log;
-	LUNAPlatformUtils *platformUtils;
+	LUNAFiles* files;
+	LUNALog* log;
+	LUNAPlatformUtils* platformUtils;
 
-	LuaScript *lua;
-	LUNAAssets *assets;
-	LUNAGraphics *graphics;
-	LUNAScenes *scenes;
-	LUNASizes *sizes;
+	LuaScript* lua;
+	LUNAAssets* assets;
+	LUNAGraphics* graphics;
+	LUNAScenes* scenes;
+	LUNASizes* sizes;
+	LUNADebug* debug;
 
 	std::unordered_map<std::string, LUNAModule*> modules;
 
@@ -68,7 +70,7 @@ private:
 
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
-	void Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils);
+	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils);
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
 	LUNAConfig* GetConfig();
@@ -97,11 +99,12 @@ public:
 	inline static LUNAFiles* SharedFiles() { return Shared()->files; }
 	inline static LUNALog* SharedLog() { return Shared()->log; }
 	inline static LUNAPlatformUtils* SharedPlatformUtils() { return Shared()->platformUtils; }
+	inline static LuaScript* SharedLua() { return Shared()->lua; }
 	inline static LUNAAssets* SharedAssets() { return Shared()->assets; }
 	inline static LUNAGraphics* SharedGraphics() { return Shared()->graphics; }
 	inline static LUNAScenes* SharedScenes() { return Shared()->scenes; }
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
-	inline static LuaScript* SharedLua() { return Shared()->lua; }
+	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
 };
 
 }
