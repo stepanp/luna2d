@@ -15,6 +15,7 @@ LOCAL_SRC_FILES := \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/physics/shapes/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/physics/joints/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/utils/*.cpp) \
+	$(wildcard $(LOCAL_PATH)/../../../luna2d/utils/math/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/lua/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/platform/*.cpp) \
 	$(wildcard $(LOCAL_PATH)/../../../luna2d/platform/android/*.cpp) \
@@ -27,6 +28,7 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/../../../luna2d/graphics/ \
 	$(LOCAL_PATH)/../../../luna2d/physics/ \
 	$(LOCAL_PATH)/../../../luna2d/utils/ \
+	$(LOCAL_PATH)/../../../luna2d/utils/math/ \
 	$(LOCAL_PATH)/../../../luna2d/lua/ \
 	$(LOCAL_PATH)/../../../luna2d/platform/ \
 	$(LOCAL_PATH)/../../../luna2d/platform/android/ \
