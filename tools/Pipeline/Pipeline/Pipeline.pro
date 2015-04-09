@@ -21,6 +21,7 @@ TEMPLATE = app
 
 INCLUDEPATH += ../../../luna2d/ \
     ../../../luna2d/utils/ \
+	../../../luna2d/utils/math/ \
     ../../../luna2d/thirdparty/lua/ \
     ../../../luna2d/lua/ \
     ../../../luna2d/platform/ \
