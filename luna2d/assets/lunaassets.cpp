@@ -25,6 +25,7 @@
 #include "lunagraphics.h"
 #include "lunasizes.h"
 #include "lunatextureatlasloader.h"
+#include "lunafontloader.h"
 
 using namespace luna2d;
 
@@ -103,12 +104,13 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 
 	if(path == CONFIG_FILENAME) return true; // Ignore config file
 
+	// Ignore description files
 	std::string ext = files->GetExtension(path);
-	if(ext == "atlas") return true;
+	if(ext == "atlas" || ext == "font") return true;
 
 	// Ignore files with different from current resolution suffix
 	std::string suffix = files->SplitResolutionSuffix(files->GetBasename(path)).second;
-	if(suffix != LUNAEngine::SharedSizes()->GetResolutionSuffix()) return true;
+	if(!suffix.empty() && suffix != LUNAEngine::SharedSizes()->GetResolutionSuffix()) return true;
 
 	return false;
 }
@@ -127,6 +129,7 @@ std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
 		// Load just texture
 		else return std::make_shared<LUNATextureLoader>();
 	}
+	else if(ext == "ttf") return std::make_shared<LUNAFontLoader>();
 
 	return nullptr;
 }

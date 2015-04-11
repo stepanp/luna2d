@@ -25,13 +25,30 @@
 
 #include "lunafont.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+/*#include FT_GLYPH_H
+#include FT_TYPES_H
+#include FT_OUTLINE_H
+#include FT_RENDER_H*/
+
 namespace luna2d{
 
+//-----------------------------------------------
+// Util for generate bitmap fonts using free-type
+//-----------------------------------------------
 class LUNAFontGenerator
 {
 public:
-	LUNAFontGenerator();
 	~LUNAFontGenerator();
+
+private:
+	FT_Library library = nullptr;
+	FT_Face face = nullptr;
+
+public:
+	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load
+	std::shared_ptr<LUNAFont> CreateFont(int size); // Create bitmap font with given size
 };
 
 }

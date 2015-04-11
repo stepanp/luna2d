@@ -28,7 +28,11 @@ using namespace luna2d;
 
 bool LUNAFontLoader::Load(const std::string& filename)
 {
-	return false;
+	LUNAFontGenerator generator;
+	if(!generator.Load(filename)) return false;
+
+
+	return true;
 }
 
 void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)

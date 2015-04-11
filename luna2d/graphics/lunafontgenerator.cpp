@@ -25,13 +25,30 @@
 
 using namespace luna2d;
 
-LUNAFontGenerator::LUNAFontGenerator()
-{
-
-}
-
 LUNAFontGenerator::~LUNAFontGenerator()
 {
+	if(face) FT_Done_Face(face);
+	if(library) FT_Done_FreeType(library);
+}
 
+bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation location)
+{
+	FT_Error error = FT_Init_FreeType(&library);
+	if(error) return false;
+
+	auto buffer = LUNAEngine::SharedFiles()->ReadFile(filename, location);
+	error = FT_New_Memory_Face(library, &buffer[0], buffer.size(), 0, &face);
+	if(error) return false;
+
+
+
+
+
+	return true;
+}
+
+std::shared_ptr<LUNAFont> LUNAFontGenerator::CreateFont(int size)
+{
+	return nullptr;
 }
 
