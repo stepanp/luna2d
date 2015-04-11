@@ -43,7 +43,7 @@ INCLUDEPATH += ../../../luna2d \
 	../../../luna2d/thirdparty/freetype/devel/ \
 	../../../luna2d/thirdparty/freetype/src/bzlib \
 	../../../luna2d/thirdparty/freetype/include/ \
-
+	../../../luna2d/thirdparty/utf8cpp/
 
 SOURCES += \
     ../../../luna2d/graphics/lunagraphics.cpp \
@@ -808,6 +808,10 @@ HEADERS += \
     ../../../luna2d/thirdparty/freetype/src/type42/t42parse.h \
     ../../../luna2d/thirdparty/freetype/src/type42/t42types.h \
     ../../../luna2d/thirdparty/freetype/src/winfonts/fnterrs.h \
-    ../../../luna2d/thirdparty/freetype/src/winfonts/winfnt.h
+    ../../../luna2d/thirdparty/freetype/src/winfonts/winfnt.h \
+    ../../../luna2d/thirdparty/utf8cpp/utf8/checked.h \
+    ../../../luna2d/thirdparty/utf8cpp/utf8/core.h \
+    ../../../luna2d/thirdparty/utf8cpp/utf8/unchecked.h \
+    ../../../luna2d/thirdparty/utf8cpp/utf8.h
 
 QMAKE_MAC_SDK = macosx10.9
