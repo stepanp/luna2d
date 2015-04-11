@@ -187,7 +187,11 @@ SOURCES += \
     ../../../luna2d/utils/math/lunasplines.cpp \
     ../../../luna2d/utils/math/lunavector2.cpp \
     ../../../luna2d/utils/math/lunamath.cpp \
-    ../../../luna2d/lunadebug.cpp
+    ../../../luna2d/lunadebug.cpp \
+    ../../../luna2d/graphics/lunatext.cpp \
+    ../../../luna2d/graphics/lunafont.cpp \
+    ../../../luna2d/assets/lunafontloader.cpp \
+    ../../../luna2d/graphics/lunafontgenerator.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -343,6 +347,10 @@ HEADERS += \
     ../../../luna2d/utils/math/lunavector2.h \
     ../../../luna2d/utils/math/lunamath.h \
     ../../../luna2d/utils/math/lunaglm.h \
-    ../../../luna2d/lunadebug.h
+    ../../../luna2d/lunadebug.h \
+    ../../../luna2d/graphics/lunatext.h \
+    ../../../luna2d/graphics/lunafont.h \
+    ../../../luna2d/assets/lunafontloader.h \
+    ../../../luna2d/graphics/lunafontgenerator.h
 
 QMAKE_MAC_SDK = macosx10.9
