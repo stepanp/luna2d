@@ -30,7 +30,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
-#include <utf8.h>
 
 namespace luna2d{
 

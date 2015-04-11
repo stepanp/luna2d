@@ -23,13 +23,17 @@
 
 #pragma once
 
-#include "lunaassets.h"
+#include "lunatextureregion.h"
 
 namespace luna2d{
 
 class LUNAFont : public LUNAAsset
 {
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
+
+private:
+	std::shared_ptr<LUNATexture> texture;
+	std::unordered_map<int, std::shared_ptr<LUNATextureRegion>> gliphs;
 };
 
 }

@@ -59,3 +59,16 @@ float luna2d::math::RadiansToDegrees(float radians)
 {
 	return radians * RADIANS_TO_DEGREES;
 }
+
+// Get nearest power of two size to given value
+int luna2d::math::NearestPowerOfTwo(int value)
+{
+	return std::pow(2, std::ceil(std::log(value) / std::log(2)));
+}
+
+// Check value for power of two
+bool luna2d::math::IsPowerOfTwo(int value)
+{
+	return (value != 0) && ((value & (value - 1)) == 0);
+}
+

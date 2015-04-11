@@ -31,11 +31,12 @@ bool LUNAFontLoader::Load(const std::string& filename)
 	LUNAFontGenerator generator;
 	if(!generator.Load(filename)) return false;
 
+	texture = generator.texture;
 
 	return true;
 }
 
 void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
 {
-
+	parentTable.SetField(name, texture, true);
 }

@@ -25,6 +25,7 @@
 
 #include "platform/lunafiles.h"
 #include "lunapngformat.h"
+#include "lunacolor.h"
 
 namespace luna2d{
 
@@ -36,9 +37,18 @@ class LUNATexture;
 class LUNAImage
 {
 public:
-	LUNAImage(); // Construct empty image
+	// Construct empty image
+	LUNAImage();
+
+	// Constuct empty image with given sizes and color type
+	LUNAImage(int width, int height, LUNAColorType colorType);
+
+	// Constuct image from given data
+	LUNAImage(int width, int height, LUNAColorType colorType, std::vector<unsigned char> data);
+
+	// Constructor with loading
 	LUNAImage(const std::string& filename, const LUNAImageFormat& format,
-		LUNAFileLocation location = LUNAFileLocation::ASSETS); // Constructor with loading
+		LUNAFileLocation location = LUNAFileLocation::ASSETS);
 
 private:
 	std::vector<unsigned char> data;
@@ -46,13 +56,16 @@ private:
 	LUNAColorType colorType;
 
 public:
-	bool IsEmpty();
+	bool IsEmpty() const;
 	const std::vector<unsigned char>& GetData() const;
 	int GetWidth() const;
 	int GetHeight() const;
 	LUNAColorType GetColorType() const;
 	bool Load(const std::string& filename, const LUNAImageFormat& format,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
+	void SetPixel(int x, int y, const LUNAColor& color);
+	LUNAColor GetPixel(int x, int y) const;
+	void DrawImage(int x, int y, const LUNAImage& image); // Draw another image to this image
 };
 
 }

@@ -44,5 +44,7 @@ float RandomFloat(float a, float b);  // Generate random float number in range [
 float Avg(const std::vector<float>& values); // Calculate average value of given vector
 float DegreesToRadians(float degrees); // Conver degrees to radians
 float RadiansToDegrees(float radians); // Conver radians to degrees
+int NearestPowerOfTwo(int value); // Get nearest power of two size to given value
+bool IsPowerOfTwo(int value); // Check value for power of two
 
 }}

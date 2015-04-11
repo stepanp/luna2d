@@ -27,16 +27,16 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-/*#include FT_GLYPH_H
+#include FT_GLYPH_H
 #include FT_TYPES_H
 #include FT_OUTLINE_H
-#include FT_RENDER_H*/
+#include FT_RENDER_H
 
 namespace luna2d{
 
-//-----------------------------------------------
-// Util for generate bitmap fonts using free-type
-//-----------------------------------------------
+//----------------------------------------------
+// Util for generate bitmap fonts using FreeType
+//----------------------------------------------
 class LUNAFontGenerator
 {
 public:
@@ -49,6 +49,8 @@ private:
 public:
 	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load
 	std::shared_ptr<LUNAFont> CreateFont(int size); // Create bitmap font with given size
+
+	std::shared_ptr<LUNATexture> texture;
 };
 
 }
