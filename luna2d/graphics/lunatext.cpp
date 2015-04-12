@@ -140,6 +140,6 @@ void LUNAText::Render()
 		sprite->SetAlpha(color.a);
 		sprite->Render();
 
-		offset += sprite->GetWidth();
+		offset += std::roundf(sprite->GetWidth());
 	}
 }

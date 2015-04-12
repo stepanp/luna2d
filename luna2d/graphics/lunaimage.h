@@ -68,7 +68,9 @@ public:
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
 	void SetPixel(int x, int y, const LUNAColor& color);
 	LUNAColor GetPixel(int x, int y) const;
+	void Fill(const LUNAColor& color); // Fill image with given color
 	void DrawImage(int x, int y, const LUNAImage& image); // Draw another image to this image
+	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color); // Draw filled rectangle
 };
 
 }

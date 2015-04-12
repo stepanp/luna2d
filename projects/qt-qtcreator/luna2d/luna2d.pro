@@ -41,7 +41,6 @@ INCLUDEPATH += ../../../luna2d \
 	../../../luna2d/thirdparty/json11/ \
 	../../../luna2d/thirdparty/Box2D/ \
 	../../../luna2d/thirdparty/freetype/devel/ \
-	../../../luna2d/thirdparty/freetype/src/bzlib \
 	../../../luna2d/thirdparty/freetype/include/ \
 	../../../luna2d/thirdparty/utf8cpp/
 

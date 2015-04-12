@@ -65,5 +65,8 @@ void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parent
 	tblFont.MakeReadOnly();
 	parentTable.SetField(name, tblFont, true);
 
-	for(auto entry : fonts) tblFont.SetField(entry.first, entry.second, true);
+	for(auto entry : fonts)
+	{
+		tblFont.SetField(entry.first, entry.second, true);
+	}
 }

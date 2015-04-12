@@ -36,8 +36,9 @@ namespace luna2d{
 
 const std::u32string LATIN_CHARS = U"qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 const std::u32string CYRILLIC_CHARS = U"йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
-const std::u32string COMMON_CHARS = U"!@#$%^&*()-+=!№?<>{};,.\\/|`~'\"";
+const std::u32string COMMON_CHARS = U" !@#$%^&*()-+=!№?<>{};,.\\/|`~'\"";
 const std::u32string NUMBER_CHARS = U"1234567890";
+const int CHAR_PADDING = 2; // Size of padding between chars(in pixels)
 
 //----------------------------------------------
 // Util for generate bitmap fonts using FreeType
@@ -56,6 +57,11 @@ private:
 	bool enableCyrillic = true;
 	bool enableCommon = true;
 	bool enableNumbers = true;
+
+private:
+	// Conversions between pixels and internal FreeType units
+	int UnitsToPixels(int units);
+	int PixelsToUnits(int pixels);
 
 public:
 	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load

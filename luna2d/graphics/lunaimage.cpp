@@ -135,6 +135,12 @@ LUNAColor LUNAImage::GetPixel(int x, int y) const
 	else return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], data[pos + 3]);
 }
 
+// Fill image with given color
+void LUNAImage::Fill(const LUNAColor& color)
+{
+	FillRectangle(0, 0, width, height, color);
+}
+
 // Draw another image to this image
 void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
 {
@@ -146,6 +152,18 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
 		for(int i = 0; i < image.GetWidth(); i++)
 		{
 			SetPixel(x + i, y + j, image.GetPixel(i, j));
+		}
+	}
+}
+
+// Draw filled rectangle
+void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
+{
+	for(int j = 0; j < height; j++)
+	{
+		for(int i = 0; i < width; i++)
+		{
+			SetPixel(x + i, y + j, color);
 		}
 	}
 }
