@@ -30,6 +30,59 @@ LUNAText::LUNAText(const std::weak_ptr<LUNAFont>& font)
 	SetFont(font);
 }
 
+float LUNAText::GetX()
+{
+	return x;
+}
+
+float LUNAText::GetY()
+{
+	return y;
+}
+
+void LUNAText::SetX(float x)
+{
+	this->x = x;
+}
+
+void LUNAText::SetY(float y)
+{
+	this->y = y;
+}
+
+glm::vec2 LUNAText::GetPos()
+{
+	return glm::vec2(x, y);
+}
+
+void LUNAText::SetPos(float x, float y)
+{
+	this->x = x;
+	this->y = y;
+}
+
+void LUNAText::SetColor(float r, float g, float b)
+{
+	color.r = r;
+	color.g = g;
+	color.b = b;
+}
+
+LUNAColor LUNAText::GetColor()
+{
+	return color;
+}
+
+void LUNAText::SetAlpha(float alpha)
+{
+	color.a = alpha;
+}
+
+float LUNAText::GetAlpha()
+{
+	return color.a;
+}
+
 void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
 {
 	if(font.expired())
@@ -39,6 +92,11 @@ void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
 	}
 
 	this->font = font;
+}
+
+std::string LUNAText::GetText()
+{
+	return text;
 }
 
 void LUNAText::SetText(const std::string& text)
@@ -52,6 +110,7 @@ void LUNAText::SetText(const std::string& text)
 	this->text = text;
 
 	auto sharedFont = font.lock();
+	sprites.erase(sprites.begin(), sprites.end());
 	sprites.clear();
 	for(char c : text)
 	{
@@ -71,8 +130,11 @@ void LUNAText::Render()
 	int offset = 0;
 	for(auto sprite : sprites)
 	{
-		sprite->SetX(offset);
+		sprite->SetPos(x + offset, y);
+		sprite->SetColor(color.GetR(), color.GetG(), color.GetB());
+		sprite->SetAlpha(color.a);
 		sprite->Render();
+
 		offset += sprite->GetWidth();
 	}
 }

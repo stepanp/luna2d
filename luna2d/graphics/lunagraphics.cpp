@@ -101,6 +101,17 @@ LUNAGraphics::LUNAGraphics()
 	// Register text renderer
 	LuaClass<LUNAText> clsText(lua);
 	clsText.SetConstructor<const std::weak_ptr<LUNAFont>&>();
+	clsText.SetMethod("getX", &LUNAText::GetX);
+	clsText.SetMethod("getY", &LUNAText::GetY);
+	clsText.SetMethod("setX", &LUNAText::SetX);
+	clsText.SetMethod("setY", &LUNAText::SetY);
+	clsText.SetMethod("getPos", &LUNAText::GetPos);
+	clsText.SetMethod("setPos", &LUNAText::SetPos);
+	clsText.SetMethod("setColor", &LUNAText::SetColor);
+	clsText.SetMethod("getColor", &LUNAText::GetColor);
+	clsText.SetMethod("setAlpha", &LUNAText::SetAlpha);
+	clsText.SetMethod("getAlpha", &LUNAText::GetAlpha);
+	clsText.SetMethod("getText", &LUNAText::GetText);
 	clsText.SetMethod("setText", &LUNAText::SetText);
 	clsText.SetMethod("render", &LUNAText::Render);
 	tblGraphics.SetField("Text", clsText);

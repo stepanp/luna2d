@@ -68,7 +68,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	FT_Set_Char_Size(face, fontSize * 64, fontSize * 64, 96, 96);
 
 	// All available chars
-	std::string chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+=";
+	std::string chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+= ";
 
 	// Calculate texture size
 	int charArea = fontSize * fontSize;

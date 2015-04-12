@@ -39,9 +39,23 @@ private:
 	std::weak_ptr<LUNAFont> font;
 	std::vector<std::shared_ptr<LUNASprite>> sprites;
 	std::string text;
+	float x = 0;
+	float y = 0;
+	LUNAColor color = LUNAColor::WHITE;
 
 public:
+	float GetX();
+	float GetY();
+	void SetX(float x);
+	void SetY(float y);
+	glm::vec2 GetPos();
+	void SetPos(float x, float y);
+	void SetColor(float r, float g, float b);
+	LUNAColor GetColor();
+	void SetAlpha(float alpha);
+	float GetAlpha();
 	void SetFont(const std::weak_ptr<LUNAFont> font);
+	std::string GetText();
 	void SetText(const std::string& text);
 	void Render();
 };

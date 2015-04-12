@@ -87,7 +87,7 @@ public:
 	float GetAngle(); // Get rotation angle (in degrees)
 	void SetAngle(float angle); // Set rotation angle (in degrees)
 	void SetColor(float r, float g, float b);
-	LuaTable GetColor();
+	LUNAColor GetColor();
 	void SetAlpha(float alpha);
 	float GetAlpha();
 };

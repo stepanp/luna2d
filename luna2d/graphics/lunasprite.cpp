@@ -286,14 +286,9 @@ void LUNASprite::SetColor(float r, float g, float b)
 	color.b = b / 255.0f;
 }
 
-LuaTable LUNASprite::GetColor()
+LUNAColor LUNASprite::GetColor()
 {
-	LuaTable tblColor(LUNAEngine::SharedLua());
-	tblColor.SetField("r", color.r * 255.0f);
-	tblColor.SetField("g", color.g * 255.0f);
-	tblColor.SetField("b", color.b * 255.0f);
-
-	return std::move(tblColor);
+	return color;
 }
 
 void LUNASprite::SetAlpha(float alpha)
