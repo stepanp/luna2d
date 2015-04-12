@@ -31,59 +31,64 @@
 
 using namespace luna2d;
 
-LUNASprite::LUNASprite(const LuaDynamicType& asset) :
-	x(0),
-	y(0),
-	originX(0),
-	originY(0),
-	width(0),
-	height(0),
-	scaleX(1),
-	scaleY(1),
-	angle(0),
-	u1(0),
-	v1(0),
-	u2(0),
-	v2(0),
-	color(LUNAColor::WHITE)
+// Lua constructor
+LUNASprite::LUNASprite(const LuaDynamicType& asset)
 {
 	// Create sprite from texture
 	texture = asset.To<std::weak_ptr<LUNATexture>>();
-	if(!texture.expired())
-	{
-		u1 = 0;
-		v1 = 0;
-		u2 = 1;
-		v2 = 1;
-
-		// Convert sizes to virtual resolution
-		auto sharedTexture = texture.lock();
-		width = std::floor(sharedTexture->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
-		height = std::floor(sharedTexture->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
-		return;
-	}
+	if(InitFromTexture(texture)) return;
 
 	// Create sprite from texture region
 	auto region = asset.To<std::weak_ptr<LUNATextureRegion>>();
-	if(!region.expired())
-	{
-		auto sharedRegion = region.lock();
-
-		texture = sharedRegion->GetTexture();
-		if(texture.expired()) return;
-
-		u1 = sharedRegion->GetU1();
-		v1 = sharedRegion->GetV1();
-		u2 = sharedRegion->GetU2();
-		v2 = sharedRegion->GetV2();
-
-		// Convert sizes to virtual resolution
-		width = std::floor(sharedRegion->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
-		height = std::floor(sharedRegion->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
-		return;
-	}
+	if(InitFromRegion(region)) return;
 
 	LUNA_LOGE("Attempt to create sprite from invalid asset");
+}
+
+LUNASprite::LUNASprite(const std::weak_ptr<LUNATexture>& texture)
+{
+	if(!InitFromTexture(texture)) LUNA_LOGE("Attempt to create sprite from invalid texture");
+}
+
+LUNASprite::LUNASprite(const std::weak_ptr<LUNATextureRegion>& region)
+{
+	if(!InitFromRegion(region)) LUNA_LOGE("Attempt to create sprite from invalid texture region");
+}
+
+bool LUNASprite::InitFromTexture(const std::weak_ptr<LUNATexture>& texture)
+{
+	if(texture.expired()) return false;
+
+	u1 = 0;
+	v1 = 0;
+	u2 = 1;
+	v2 = 1;
+
+	// Convert sizes to virtual resolution
+	auto sharedTexture = texture.lock();
+	width = std::floor(sharedTexture->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
+	height = std::floor(sharedTexture->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+
+	return true;
+}
+
+bool LUNASprite::InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region)
+{
+	if(region.expired()) return false;
+
+	auto sharedRegion = region.lock();
+	texture = sharedRegion->GetTexture();
+	if(texture.expired()) return false;
+
+	u1 = sharedRegion->GetU1();
+	v1 = sharedRegion->GetV1();
+	u2 = sharedRegion->GetU2();
+	v2 = sharedRegion->GetV2();
+
+	// Convert sizes to virtual resolution
+	width = std::floor(sharedRegion->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
+	height = std::floor(sharedRegion->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+	return true;
 }
 
 float LUNASprite::GetX()
@@ -209,7 +214,7 @@ void LUNASprite::Render()
 		return;
 	}
 
-	LUNARenderer *renderer = LUNAEngine::SharedGraphics()->GetRenderer();
+	LUNARenderer* renderer = LUNAEngine::SharedGraphics()->GetRenderer();
 
 	// Sprite geometry
 	float x1 = 0;

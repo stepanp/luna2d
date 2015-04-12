@@ -24,3 +24,55 @@
 #include "lunatext.h"
 
 using namespace luna2d;
+
+LUNAText::LUNAText(const std::weak_ptr<LUNAFont>& font)
+{
+	SetFont(font);
+}
+
+void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
+{
+	if(font.expired())
+	{
+		LUNA_LOGE("Attemp to set invalid font to text object");
+		return;
+	}
+
+	this->font = font;
+}
+
+void LUNAText::SetText(const std::string& text)
+{
+	if(font.expired())
+	{
+		LUNA_LOGE("Attemp to set text value to invalid text object");
+		return;
+	}
+
+	this->text = text;
+
+	auto sharedFont = font.lock();
+	sprites.clear();
+	for(char c : text)
+	{
+		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
+		sprites.push_back(sprite);
+	}
+}
+
+void LUNAText::Render()
+{
+	if(font.expired())
+	{
+		LUNA_LOGE("Attemp to render invalid text object");
+		return;
+	}
+
+	int offset = 0;
+	for(auto sprite : sprites)
+	{
+		sprite->SetX(offset);
+		sprite->Render();
+		offset += sprite->GetWidth();
+	}
+}

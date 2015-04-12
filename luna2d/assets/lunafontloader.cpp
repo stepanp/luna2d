@@ -23,20 +23,47 @@
 
 #include "lunafontloader.h"
 #include "lunafontgenerator.h"
+#include "lunafiles.h"
+#include <json11.hpp>
 
 using namespace luna2d;
+using namespace json11;
 
 bool LUNAFontLoader::Load(const std::string& filename)
 {
+	LUNAFiles* files = LUNAEngine::SharedFiles();
+
+	// Load description file for font
+	std::string desc = files->ReplaceExtension(filename, "font");
+	if(!files->IsFile(desc)) return false;
+
+	std::string descData = files->ReadFileToString(desc);
+	std::string err;
+	Json jsonDesc = Json::parse(descData, err);
+	if(jsonDesc == nullptr)
+	{
+		LUNA_LOGE(err.c_str());
+		return false;
+	}
+
+	// Load font file
 	LUNAFontGenerator generator;
 	if(!generator.Load(filename)) return false;
 
-	texture = generator.texture;
+	// Generate bitmap fonts for each specifed size in description file
+	for(auto entry : jsonDesc.object_items())
+	{
+		fonts[entry.first] = generator.GenerateFont(entry.second.int_value());
+	}
 
-	return true;
+	return !fonts.empty();
 }
 
 void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
 {
-	parentTable.SetField(name, texture, true);
+	LuaTable tblFont(LUNAEngine::SharedLua());
+	tblFont.MakeReadOnly();
+	parentTable.SetField(name, tblFont, true);
+
+	for(auto entry : fonts) tblFont.SetField(entry.first, entry.second, true);
 }

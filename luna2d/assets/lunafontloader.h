@@ -31,7 +31,6 @@ class LUNAFontLoader : public LUNAAssetLoader
 {
 private:
 	std::unordered_map<std::string, std::shared_ptr<LUNAFont>> fonts;
-	std::shared_ptr<LUNATexture> texture;
 
 public:
 	virtual bool Load(const std::string& filename);

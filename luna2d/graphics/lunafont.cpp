@@ -24,3 +24,21 @@
 #include "lunafont.h"
 
 using namespace luna2d;
+
+LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture,
+	const std::unordered_map<char, std::shared_ptr<LUNATextureRegion>>& chars) :
+	texture(texture),
+	chars(std::move(chars))
+{
+}
+
+std::weak_ptr<LUNATextureRegion> LUNAFont::GetRegionForChar(char c)
+{
+	if(chars.count(c) == 0) return std::weak_ptr<LUNATextureRegion>();
+	return chars[c];
+}
+
+int LUNAFont::GetSize()
+{
+	return size;
+}

@@ -80,3 +80,12 @@ std::string LUNAFiles::AppendResolutionSuffix(const std::string& path, const std
 
 	return ret;
 }
+
+// Replace extension of given filename
+std::string LUNAFiles::ReplaceExtension(const std::string path, const std::string ext)
+{
+	size_t pos = path.rfind('.');
+	if(pos == std::string::npos) return path;
+
+	return path.substr(0, path.rfind(".") + 1) + ext;
+}

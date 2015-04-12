@@ -22,8 +22,21 @@
 //-----------------------------------------------------------------------------
 
 #include "lunafontgenerator.h"
+#include "lunasizes.h"
+#include "lunamath.h"
 
 using namespace luna2d;
+
+struct CharRegion
+{
+	CharRegion(char c, int x, int y, int width, int height) : c(c), x(x), y(y), width(width), height(height) {}
+
+	char c = '\0';
+	int x = 0;
+	int y = 0;
+	int width = 0;
+	int height = 0;
+};
 
 LUNAFontGenerator::~LUNAFontGenerator()
 {
@@ -38,17 +51,37 @@ bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation locat
 	if(error) return false;
 
 	// Load font to FreeType
-	auto buffer = LUNAEngine::SharedFiles()->ReadFile(filename, location);
-	error = FT_New_Memory_Face(library, &buffer[0], buffer.size(), 0, &face);
+	fontBuffer = std::move(LUNAEngine::SharedFiles()->ReadFile(filename, location));
+	error = FT_New_Memory_Face(library, &fontBuffer[0], fontBuffer.size(), 0, &face);
 	if(error) return false;
 
-	// Set font size
-	FT_Set_Char_Size(face, 14 * 64, 14 * 64, 96, 96);
+	return true;
+}
 
-	// Render char symbols to image
-	std::string chars = "QWERTY";
-	LUNAImage image(256, 256, LUNAColorType::RGBA);
-	int offset = 0;
+std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
+{
+	if(!face) return nullptr;
+
+	// For same font size on all resolutions size
+	// scale font size to  virtual screen resolution and sets default DPI
+	int fontSize = size / LUNAEngine::SharedSizes()->GetTextureScale();
+	FT_Set_Char_Size(face, fontSize * 64, fontSize * 64, 96, 96);
+
+	// All available chars
+	std::string chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+=";
+
+	// Calculate texture size
+	int charArea = fontSize * fontSize;
+	int totalArea = chars.size() * charArea;
+	int textureSide = math::NearestPowerOfTwo(std::ceil(std::sqrt(totalArea)));
+	LUNAImage image(textureSide, textureSide, LUNAColorType::RGBA);
+
+	std::vector<CharRegion> charRegions;
+
+	// Render chars to texture
+	int offsetX = 0;
+	int offsetY = 0;
+	FT_Error error;
 	for(char c : chars)
 	{
 		error = FT_Load_Char(face, c, FT_LOAD_RENDER);
@@ -80,20 +113,32 @@ bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation locat
 			}
 		}
 
-		image.DrawImage(offset, 0, charImg);
-		offset += width + 1;
+		if(offsetX + charImg.GetWidth() > image.GetWidth())
+		{
+			offsetY += height;
+			offsetX = 0;
+		}
+		image.DrawImage(offsetX, offsetY, charImg);
+
+		charRegions.push_back(CharRegion(c, offsetX, offsetY, width, height));
+
+		offsetX += width;
 	}
 
-	if(image.IsEmpty()) return false;
+	if(image.IsEmpty()) return nullptr;
+
+	// Create font texture
+	std::shared_ptr<LUNATexture> fontTexture = std::make_shared<LUNATexture>(image);
+
+	// Create texture regions for chars
+	std::unordered_map<char, std::shared_ptr<LUNATextureRegion>> textureRegions;
+	for(auto region : charRegions)
+	{
+		textureRegions[region.c] = std::make_shared<LUNATextureRegion>(fontTexture,
+			region.x, region.y, region.width, region.height);
+	}
 
 	// Create texture from image
-	texture = std::make_shared<LUNATexture>(image);
-
-	return true;
-}
-
-std::shared_ptr<LUNAFont> LUNAFontGenerator::CreateFont(int size)
-{
-	return nullptr;
+	return std::make_shared<LUNAFont>(fontTexture, textureRegions);
 }
 

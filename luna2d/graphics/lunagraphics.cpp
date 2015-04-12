@@ -29,6 +29,7 @@
 #include "lunatextureatlas.h"
 #include "lunasprite.h"
 #include "lunamesh.h"
+#include "lunatext.h"
 #include "lunacurverenderer.h"
 
 using namespace luna2d;
@@ -97,6 +98,13 @@ LUNAGraphics::LUNAGraphics()
 	clsMesh.SetMethod("render", &LUNAMesh::Render);
 	tblGraphics.SetField("Mesh", clsMesh);
 
+	// Register text renderer
+	LuaClass<LUNAText> clsText(lua);
+	clsText.SetConstructor<const std::weak_ptr<LUNAFont>&>();
+	clsText.SetMethod("setText", &LUNAText::SetText);
+	clsText.SetMethod("render", &LUNAText::Render);
+	tblGraphics.SetField("Text", clsText);
+
 	// Register curve renderer
 	LuaClass<LUNACurveRenderer> clsCurveRenderer(lua);
 	clsCurveRenderer.SetConstructor<const LuaTable&>();
@@ -126,6 +134,9 @@ LUNAGraphics::LUNAGraphics()
 	clsTextureRegion.SetMethod("getV1", &LUNATextureRegion::GetV1);
 	clsTextureRegion.SetMethod("getU2", &LUNATextureRegion::GetU2);
 	clsTextureRegion.SetMethod("getV2", &LUNATextureRegion::GetV2);
+
+	LuaClass<LUNAFont> clsFont(lua);
+	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
 }
 
 LUNAGraphics::~LUNAGraphics()

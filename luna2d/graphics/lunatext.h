@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunafont.h"
+#include "lunasprite.h"
 
 namespace luna2d{
 
@@ -31,6 +32,18 @@ class LUNAText
 {
 	LUNA_USERDATA(LUNAText)
 
+public:
+	LUNAText(const std::weak_ptr<LUNAFont>& font);
+
+private:
+	std::weak_ptr<LUNAFont> font;
+	std::vector<std::shared_ptr<LUNASprite>> sprites;
+	std::string text;
+
+public:
+	void SetFont(const std::weak_ptr<LUNAFont> font);
+	void SetText(const std::string& text);
+	void Render();
 };
 
 }

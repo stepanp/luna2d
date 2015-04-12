@@ -45,12 +45,11 @@ public:
 private:
 	FT_Library library = nullptr;
 	FT_Face face = nullptr;
+	std::vector<unsigned char> fontBuffer;
 
 public:
 	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load
-	std::shared_ptr<LUNAFont> CreateFont(int size); // Create bitmap font with given size
-
-	std::shared_ptr<LUNATexture> texture;
+	std::shared_ptr<LUNAFont> GenerateFont(int size); // Create bitmap font with given size
 };
 
 }

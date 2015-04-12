@@ -83,6 +83,9 @@ public:
 
 	// Append resolution suffix to filename
 	std::string AppendResolutionSuffix(const std::string& path, const std::string& suffix);
+
+	// Replace extension of given filename
+	std::string ReplaceExtension(const std::string path, const std::string ext);
 };
 
 }

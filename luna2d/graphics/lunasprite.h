@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "lunatexture.h"
+#include "lunatextureregion.h"
 #include "lunacolor.h"
 #include "lunalua.h"
 #include "lunavector2.h"
@@ -35,17 +35,30 @@ class LUNASprite
 	LUNA_USERDATA(LUNASprite)
 
 public:
-	LUNASprite(const LuaDynamicType& asset);
+	LUNASprite(const LuaDynamicType& asset); // Lua constructor
+	LUNASprite(const std::weak_ptr<LUNATexture>& texture);
+	LUNASprite(const std::weak_ptr<LUNATextureRegion>& region);
 
 private:
 	std::weak_ptr<LUNATexture> texture;
-	float x, y;
-	float originX, originY;
-	float width, height;
-	float scaleX, scaleY;
-	float angle;
-	float u1, v1, u2, v2;
-	LUNAColor color;
+	float x = 0;
+	float y = 0;
+	float originX = 0;
+	float originY = 0;
+	float width = 0;
+	float height = 0;
+	float scaleX = 1;
+	float scaleY = 1;
+	float angle = 0;
+	float u1 = 0;
+	float v1 = 0;
+	float u2 = 0;
+	float v2 = 0;
+	LUNAColor color = LUNAColor::WHITE;
+
+private:
+	bool InitFromTexture(const std::weak_ptr<LUNATexture>& texture);
+	bool InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region);
 
 public:
 	float GetX();

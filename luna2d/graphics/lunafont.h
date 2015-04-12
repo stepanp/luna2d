@@ -31,9 +31,18 @@ class LUNAFont : public LUNAAsset
 {
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
 
+public:
+	LUNAFont(const std::shared_ptr<LUNATexture>& texture,
+		const std::unordered_map<char, std::shared_ptr<LUNATextureRegion>>& chars);
+
 private:
 	std::shared_ptr<LUNATexture> texture;
-	std::unordered_map<int, std::shared_ptr<LUNATextureRegion>> gliphs;
+	std::unordered_map<char, std::shared_ptr<LUNATextureRegion>> chars;
+	int size;
+
+public:
+	std::weak_ptr<LUNATextureRegion> GetRegionForChar(char c);
+	int GetSize();
 };
 
 }

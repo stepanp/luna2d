@@ -28,7 +28,7 @@ using namespace luna2d;
 bool LUNATextureAtlasLoader::Load(const std::string& filename)
 {
 	// Description file for atlas has same name as image, just with different extension
-	std::string atlasPath = filename.substr(0, filename.rfind(".") + 1) + "atlas";
+	std::string atlasPath = LUNAEngine::SharedFiles()->ReplaceExtension(filename, "atlas");
 
 	// Load texture
 	LUNATextureLoader textureLoader;
