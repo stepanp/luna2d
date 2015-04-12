@@ -37,10 +37,15 @@ LOCAL_C_INCLUDES := \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/libzip/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/libpng/ \
 	$(LOCAL_PATH)/../../../luna2d/thirdparty/json11/ \
-	$(LOCAL_PATH)/../../../luna2d/thirdparty/Box2D/
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/Box2D/ \
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/freetype/ \
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/freetype/devel/ \
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/freetype/include/ \
+	$(LOCAL_PATH)/../../../luna2d/thirdparty/utf8cpp/
+	
 	
 LOCAL_LDLIBS := -llog -landroid -lEGL -lGLESv2 -ljnigraphics -lz
-LOCAL_STATIC_LIBRARIES := lua libzip libpng libbox2d
+LOCAL_STATIC_LIBRARIES := lua libzip libpng libbox2d libfreetype
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -49,3 +54,4 @@ include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/lua/Android.mk
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/libzip/Android.mk
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/libpng/Android.mk
 include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/Box2D/Android.mk
+include $(SAVED_LOCAL_PATH)/../../../luna2d/thirdparty/freetype/Android.mk

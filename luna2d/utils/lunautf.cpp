@@ -25,13 +25,13 @@
 #include <utf8.h>
 
 using namespace luna2d;
-using namespace luna2d::utf8;
+using namespace ::utf8::unchecked; // Do not use exceptions
 
 // Convert UTF-8 string to UTF-32 string
 std::u32string luna2d::utf8::ToUtf32(const std::string& string)
 {
 	std::u32string ret;
-	::utf8::utf8to32(string.begin(), string.end(), std::back_inserter(ret));
+	utf8to32(string.begin(), string.end(), std::back_inserter(ret));
 	return std::move(ret);
 }
 
@@ -39,6 +39,6 @@ std::u32string luna2d::utf8::ToUtf32(const std::string& string)
 std::string luna2d::utf8::FromUtf32(const std::u32string& string)
 {
 	std::string ret;
-	::utf8::utf32to8(string.begin(), string.end(), std::back_inserter(ret));
+	utf32to8(string.begin(), string.end(), std::back_inserter(ret));
 	return std::move(ret);
 }

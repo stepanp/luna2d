@@ -42,13 +42,19 @@
 
 	#include <string>
 	#include <cstdlib>
+	#include <math.h>
 
-	// Android's GCC don't support std::stoi
+	// Android's GCC don't support std::stoi and some functions from <cmath>
 	namespace std
 	{
 		inline int stoi(const string& str)
 		{
 			return atoi(str.c_str());
+		}
+
+		inline float roundf(float f)
+		{
+			return ::roundf(f);
 		}
 	}
 

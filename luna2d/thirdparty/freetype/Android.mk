@@ -3,8 +3,9 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := freetype
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/include \
-	$(LOCAL_PATH)/devel
+LOCAL_C_INCLUDES :=  $(LOCAL_PATH)/devel/ \
+	$(LOCAL_PATH)/include/ \
+	
 LOCAL_CFLAGS := -std=c99 -DFT2_BUILD_LIBRARY
 LOCAL_CPPFLAGS := -std=c99 -DFT2_BUILD_LIBRARY
 LOCAL_OPTIM := release
