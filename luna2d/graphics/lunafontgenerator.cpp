@@ -75,7 +75,7 @@ bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation locat
 				// FreeType generates 8-bit per pixel grayscale bitmap
 				// We convert it to 32-bit image with alpha channel
 				// Brightness level of pixels is using as alpha channel
-				unsigned char bmpPixel = bmp.buffer[x * y];
+				unsigned char bmpPixel = bmp.buffer[x + width * y];
 				charImg.SetPixel(x, y, LUNAColor::Rgb(255, 255, 255, bmpPixel));
 			}
 		}

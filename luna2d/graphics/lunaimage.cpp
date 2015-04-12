@@ -63,6 +63,12 @@ LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format,
 	Load(filename, format, location);
 }
 
+// Convert given coordinates to position in data buffer
+int LUNAImage::CoordsToPos(int x, int y) const
+{
+	return (x + y * width) * BytesPerPixel(colorType);
+}
+
 bool LUNAImage::IsEmpty() const
 {
 	return data.empty();
@@ -101,24 +107,32 @@ void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
 
-	int pos = x * y * BytesPerPixel(colorType);
-	unsigned char r = color.r * 255;
-	unsigned char g = color.g * 255;
-	unsigned char b = color.b * 255;
+	if(colorType == LUNAColorType::RGB)
+	{
+		int pos = CoordsToPos(x, y);
+		data[pos] = color.GetR();
+		data[pos + 1] = color.GetG();
+		data[pos + 2] = color.GetB();
+	}
 
-	data[pos] = r;
-	data[pos + 1] = g;
-	data[pos + 2] = b;
-
-	if(colorType == LUNAColorType::RGBA) data[pos + 3] = color.a * 255;
+	else if(colorType == LUNAColorType::RGBA)
+	{
+		int pos = CoordsToPos(x, y);
+		data[pos] = color.GetR();
+		data[pos + 1] = color.GetG();
+		data[pos + 2] = color.GetB();
+		data[pos + 3] = color.GetA();
+	}
 }
 
 LUNAColor LUNAImage::GetPixel(int x, int y) const
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return LUNAColor::RgbFloat(1, 0, 1);
 
-	int pos = x * y * BytesPerPixel(colorType);
-	return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], colorType == LUNAColorType::RGBA ? data[pos + 3] : 255);
+	int pos = CoordsToPos(x, y);
+
+	if(colorType == LUNAColorType::RGB) return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2]);
+	else return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], data[pos + 3]);
 }
 
 // Draw another image to this image
@@ -127,12 +141,11 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
 	if(IsEmpty() || image.IsEmpty()) return;
 	if(x < 0 || y < 0 || x + image.GetWidth() > width || y + image.GetHeight() > height) return;
 
-	auto data = image.GetData();
-	for(int i = x; i < image.GetWidth(); i++)
+	for(int j = 0; j < image.GetHeight(); j++)
 	{
-		for(int j = y; j < image.GetHeight(); j++)
+		for(int i = 0; i < image.GetWidth(); i++)
 		{
-			SetPixel(x, y, image.GetPixel(i, j));
+			SetPixel(x + i, y + j, image.GetPixel(i, j));
 		}
 	}
 }

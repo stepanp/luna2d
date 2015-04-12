@@ -41,6 +41,26 @@ LUNAColor::LUNAColor()
 	this->a = 0;
 }
 
+unsigned char LUNAColor::GetR() const
+{
+	return r * 255;
+}
+
+unsigned char LUNAColor::GetG() const
+{
+	return g * 255;
+}
+
+unsigned char LUNAColor::GetB() const
+{
+	return b * 255;
+}
+
+unsigned char LUNAColor::GetA() const
+{
+	return a * 255;
+}
+
 // Convert value from byte format(0-255) to float format(0.0f-1.0f)
 float LUNAColor::ByteToFloat(unsigned char value)
 {

@@ -38,7 +38,14 @@ public:
 public:
 	float r, g, b, a;
 
+
 public:
+	// Get color valus as bytes
+	unsigned char GetR() const;
+	unsigned char GetG() const;
+	unsigned char GetB() const;
+	unsigned char GetA() const;
+
 	static float ByteToFloat(unsigned char value); // Convert value from byte format(0-255) to float format(0.0f-1.0f)
 
 	static LUNAColor Rgb(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255); // Values from 0 to 255
@@ -56,16 +63,16 @@ struct LuaStack<LUNAColor>
 	static void Push(lua_State* luaVm, const LUNAColor& color)
 	{
 		LuaTable tblColor(luaVm);
-		tblColor.SetArrayField<int>(1, color.r * 255);
-		tblColor.SetArrayField<int>(2, color.g * 255);
-		tblColor.SetArrayField<int>(3, color.b * 255);
+		tblColor.SetArrayField<int>(1, color.GetR());
+		tblColor.SetArrayField<int>(2, color.GetG());
+		tblColor.SetArrayField<int>(3, color.GetB());
 		LuaStack<LuaTable>::Push(luaVm, tblColor);
 	}
 
 	static LUNAColor Pop(lua_State* luaVm, int index = -1)
 	{
 		LuaTable tblColor = LuaStack<LuaTable>::Pop(luaVm, index);
-		if(tblColor == nil) return LUNAColor::RgbFloat(0.0f, 0.0f, 0.0f);
+		if(tblColor == nil) return LUNAColor();
 
 		unsigned char r = (unsigned char)tblColor.GetArrayField<int>(1);
 		unsigned char g = (unsigned char)tblColor.GetArrayField<int>(2);

@@ -55,6 +55,9 @@ private:
 	int width, height;
 	LUNAColorType colorType;
 
+private:
+	int CoordsToPos(int x, int y) const; // Convert given coordinates to position in data buffer
+
 public:
 	bool IsEmpty() const;
 	const std::vector<unsigned char>& GetData() const;
