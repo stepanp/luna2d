@@ -21,31 +21,24 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunautf.h"
+#include <utf8.h>
 
-#include "lunatextureregion.h"
+using namespace luna2d;
+using namespace luna2d::utf8;
 
-namespace luna2d{
-
-class LUNAFont : public LUNAAsset
+// Convert UTF-8 string to UTF-32 string
+std::u32string luna2d::utf8::ToUtf32(const std::string& string)
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
+	std::u32string ret;
+	::utf8::utf8to32(string.begin(), string.end(), std::back_inserter(ret));
+	return std::move(ret);
+}
 
-public:
-	LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size);
-
-private:
-	std::shared_ptr<LUNATexture> texture;
-	std::unordered_map<char32_t, std::shared_ptr<LUNATextureRegion>> chars;
-	std::shared_ptr<LUNATextureRegion> unknownChar;
-	int size;
-
-public:
-	void SetCharRegion(char32_t c, int x, int y, int width, int height); // Set texture region for given char
-	void SetUnknownCharRegion(int x, int y, int width, int height); // Set texture region for unknown char
-
-	std::weak_ptr<LUNATextureRegion> GetRegionForChar(char32_t c);
-	int GetSize();
-};
-
+// Convert UTF-32 string to UTF-8 string
+std::string luna2d::utf8::FromUtf32(const std::u32string& string)
+{
+	std::string ret;
+	::utf8::utf32to8(string.begin(), string.end(), std::back_inserter(ret));
+	return std::move(ret);
 }

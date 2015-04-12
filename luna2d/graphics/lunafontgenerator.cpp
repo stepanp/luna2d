@@ -29,9 +29,9 @@ using namespace luna2d;
 
 struct CharRegion
 {
-	CharRegion(char c, int x, int y, int width, int height) : c(c), x(x), y(y), width(width), height(height) {}
+	CharRegion(char32_t c, int x, int y, int width, int height) : c(c), x(x), y(y), width(width), height(height) {}
 
-	char c = '\0';
+	char32_t c = '\0';
 	int x = 0;
 	int y = 0;
 	int width = 0;
@@ -55,6 +55,9 @@ bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation locat
 	error = FT_New_Memory_Face(library, &fontBuffer[0], fontBuffer.size(), 0, &face);
 	if(error) return false;
 
+	// Set charmap to UTF-32
+	FT_Select_Charmap(face , ft_encoding_unicode);
+
 	return true;
 }
 
@@ -67,8 +70,12 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	int fontSize = size / LUNAEngine::SharedSizes()->GetTextureScale();
 	FT_Set_Char_Size(face, fontSize * 64, fontSize * 64, 96, 96);
 
-	// All available chars
-	std::string chars = "?qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+= ";
+	// Select available chars
+	std::u32string chars;
+	if(enableLatin) chars += LATIN_CHARS;
+	if(enableCyrillic) chars += CYRILLIC_CHARS;
+	if(enableCommon) chars += COMMON_CHARS;
+	if(enableNumbers) chars += NUMBER_CHARS;
 
 	// Calculate texture size
 	int charArea = fontSize * fontSize;
@@ -82,7 +89,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	int offsetX = 0;
 	int offsetY = 0;
 	FT_Error error;
-	for(char c : chars)
+	for(char32_t c : chars)
 	{
 		error = FT_Load_Char(face, c, FT_LOAD_RENDER);
 		if(error)
@@ -132,7 +139,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 	// Set texture regions for chars
 	for(auto region : charRegions) font->SetCharRegion(region.c, region.x, region.y, region.width, region.height);
-	font->SetUnknownCharRegion(charRegions[0].x, charRegions[0].y, charRegions[0].width, charRegions[0].height);
+	font->SetUnknownCharRegion(charRegions[1].x, charRegions[1].y, charRegions[1].width, charRegions[1].height);
 
 	return font;
 }

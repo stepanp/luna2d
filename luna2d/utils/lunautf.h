@@ -23,29 +23,14 @@
 
 #pragma once
 
-#include "lunatextureregion.h"
+#include "lunaengine.h"
 
-namespace luna2d{
+//-------------------------------------
+// Helpers for work with UTF-8 encoding
+//-------------------------------------
+namespace luna2d{ namespace utf8{
 
-class LUNAFont : public LUNAAsset
-{
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
+std::u32string ToUtf32(const std::string& string); // Convert UTF-8 string to UTF-32 string
+std::string FromUtf32(const std::u32string& string); // Convert UTF-32 string to UTF-8 string
 
-public:
-	LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size);
-
-private:
-	std::shared_ptr<LUNATexture> texture;
-	std::unordered_map<char32_t, std::shared_ptr<LUNATextureRegion>> chars;
-	std::shared_ptr<LUNATextureRegion> unknownChar;
-	int size;
-
-public:
-	void SetCharRegion(char32_t c, int x, int y, int width, int height); // Set texture region for given char
-	void SetUnknownCharRegion(int x, int y, int width, int height); // Set texture region for unknown char
-
-	std::weak_ptr<LUNATextureRegion> GetRegionForChar(char32_t c);
-	int GetSize();
-};
-
-}
+}}

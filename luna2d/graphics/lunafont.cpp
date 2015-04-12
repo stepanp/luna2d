@@ -32,7 +32,7 @@ LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size) :
 }
 
  // Set texture region for given char
-void LUNAFont::SetCharRegion(char c, int x, int y, int width, int height)
+void LUNAFont::SetCharRegion(char32_t c, int x, int y, int width, int height)
 {
 	chars[c] = std::make_shared<LUNATextureRegion>(texture, x, y, width, height);
 }
@@ -43,7 +43,7 @@ void LUNAFont::SetUnknownCharRegion(int x, int y, int width, int height)
 	unknownChar = std::make_shared<LUNATextureRegion>(texture, x, y, width, height);
 }
 
-std::weak_ptr<LUNATextureRegion> LUNAFont::GetRegionForChar(char c)
+std::weak_ptr<LUNATextureRegion> LUNAFont::GetRegionForChar(char32_t c)
 {
 	if(chars.count(c) == 0) return unknownChar; // If char not found return unknown char region
 	return chars[c];

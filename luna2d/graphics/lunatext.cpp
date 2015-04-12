@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunatext.h"
+#include "lunautf.h"
 
 using namespace luna2d;
 
@@ -94,11 +95,14 @@ void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
 	this->font = font;
 }
 
+// Get text value in UTF-8 encoding
 std::string LUNAText::GetText()
 {
-	return text;
+	// Convert saved string from UTF-32 to UTF-8
+	return utf8::FromUtf32(text);
 }
 
+// Set text value. Given text in UTF-8 encoding
 void LUNAText::SetText(const std::string& text)
 {
 	if(font.expired())
@@ -107,12 +111,13 @@ void LUNAText::SetText(const std::string& text)
 		return;
 	}
 
-	this->text = text;
+	// Convert given string from UTF-8 to UTF-32
+	this->text = utf8::ToUtf32(text);
 
 	auto sharedFont = font.lock();
 	sprites.erase(sprites.begin(), sprites.end());
 	sprites.clear();
-	for(char c : text)
+	for(char32_t c : this->text)
 	{
 		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
 		sprites.push_back(sprite);

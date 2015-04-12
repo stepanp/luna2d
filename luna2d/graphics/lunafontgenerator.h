@@ -34,6 +34,11 @@
 
 namespace luna2d{
 
+const std::u32string LATIN_CHARS = U"qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+const std::u32string CYRILLIC_CHARS = U"йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
+const std::u32string COMMON_CHARS = U"!@#$%^&*()-+=!№?<>{};,.\\/|`~'\"";
+const std::u32string NUMBER_CHARS = U"1234567890";
+
 //----------------------------------------------
 // Util for generate bitmap fonts using FreeType
 //----------------------------------------------
@@ -46,6 +51,11 @@ private:
 	FT_Library library = nullptr;
 	FT_Face face = nullptr;
 	std::vector<unsigned char> fontBuffer;
+
+	bool enableLatin = true;
+	bool enableCyrillic = true;
+	bool enableCommon = true;
+	bool enableNumbers = true;
 
 public:
 	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load

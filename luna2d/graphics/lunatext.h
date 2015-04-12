@@ -38,7 +38,7 @@ public:
 private:
 	std::weak_ptr<LUNAFont> font;
 	std::vector<std::shared_ptr<LUNASprite>> sprites;
-	std::string text;
+	std::u32string text; // Text in UTF-32 encoding
 	float x = 0;
 	float y = 0;
 	LUNAColor color = LUNAColor::WHITE;
@@ -55,8 +55,8 @@ public:
 	void SetAlpha(float alpha);
 	float GetAlpha();
 	void SetFont(const std::weak_ptr<LUNAFont> font);
-	std::string GetText();
-	void SetText(const std::string& text);
+	std::string GetText(); // Get text value in UTF-8 encoding
+	void SetText(const std::string& text); // Set text value. Given text in UTF-8 encoding
 	void Render();
 };
 
