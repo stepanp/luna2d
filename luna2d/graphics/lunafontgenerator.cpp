@@ -68,11 +68,11 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	FT_Set_Char_Size(face, fontSize * 64, fontSize * 64, 96, 96);
 
 	// All available chars
-	std::string chars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+= ";
+	std::string chars = "?qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM[];',./1234567890!@#$%^&*()-+= ";
 
 	// Calculate texture size
 	int charArea = fontSize * fontSize;
-	int totalArea = chars.size() * charArea;
+	int totalArea = (chars.size() + 1) * charArea;
 	int textureSide = math::NearestPowerOfTwo(std::ceil(std::sqrt(totalArea)));
 	LUNAImage image(textureSide, textureSide, LUNAColorType::RGBA);
 
@@ -127,18 +127,13 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 	if(image.IsEmpty()) return nullptr;
 
-	// Create font texture
-	std::shared_ptr<LUNATexture> fontTexture = std::make_shared<LUNATexture>(image);
+	// Create font
+	auto font = std::make_shared<LUNAFont>(std::make_shared<LUNATexture>(image), size);
 
-	// Create texture regions for chars
-	std::unordered_map<char, std::shared_ptr<LUNATextureRegion>> textureRegions;
-	for(auto region : charRegions)
-	{
-		textureRegions[region.c] = std::make_shared<LUNATextureRegion>(fontTexture,
-			region.x, region.y, region.width, region.height);
-	}
+	// Set texture regions for chars
+	for(auto region : charRegions) font->SetCharRegion(region.c, region.x, region.y, region.width, region.height);
+	font->SetUnknownCharRegion(charRegions[0].x, charRegions[0].y, charRegions[0].width, charRegions[0].height);
 
-	// Create texture from image
-	return std::make_shared<LUNAFont>(fontTexture, textureRegions);
+	return font;
 }
 
