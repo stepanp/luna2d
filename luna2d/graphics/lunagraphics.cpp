@@ -51,6 +51,7 @@ LUNAGraphics::LUNAGraphics()
 
 	tblGraphics.SetField("getFps", LuaFunction(lua, this, &LUNAGraphics::GetFps));
 	tblGraphics.SetField("getDeltaTime", LuaFunction(lua, this, &LUNAGraphics::GetDeltaTime));
+	tblGraphics.SetField("getRenderCalls", LuaFunction(lua, this, &LUNAGraphics::GetRenderCalls));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
@@ -170,6 +171,11 @@ float LUNAGraphics::GetDeltaTime()
 	return deltaTime;
 }
 
+int LUNAGraphics::GetRenderCalls()
+{
+	return renderer->GetRenderCalls();
+}
+
 void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 {
 	renderer->SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
@@ -198,6 +204,4 @@ void LUNAGraphics::OnUpdate()
 	renderer->Begin();
 	LUNAEngine::SharedScenes()->OnRender();
 	renderer->End();
-
-	//LUNA_LOG("Render calls: %d", renderer->GetRenderCalls());
 }

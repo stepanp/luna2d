@@ -45,6 +45,7 @@ public:
 	LUNARenderer* GetRenderer();
 	int GetFps();
 	float GetDeltaTime();
+	int GetRenderCalls();
 	void SetBackgroundColor(float r, float g, float b);
 	void OnUpdate();
 };

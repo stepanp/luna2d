@@ -36,7 +36,7 @@ namespace luna2d{
 
 const std::u32string LATIN_CHARS = U"qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 const std::u32string CYRILLIC_CHARS = U"йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
-const std::u32string COMMON_CHARS = U" !@#$%^&*()-+=!№?<>{};,.\\/|`~'\"";
+const std::u32string COMMON_CHARS = U" !@#$%^&*()-+=!№?<>{}:;,.\\/|`~'\"";
 const std::u32string NUMBER_CHARS = U"1234567890";
 const int CHAR_PADDING = 2; // Size of padding between chars(in pixels)
 
