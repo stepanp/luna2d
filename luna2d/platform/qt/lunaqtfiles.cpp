@@ -24,6 +24,7 @@
 #include "lunaqtfiles.h"
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 
 using namespace luna2d;
 
@@ -47,6 +48,10 @@ std::string LUNAQtFiles::GetRootFolder(LUNAFileLocation location)
 	{
 	case LUNAFileLocation::ASSETS:
 		return gamePath;
+
+	case LUNAFileLocation::APP_FOLDER:
+		QString ret = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/luna2d/Emulator/";
+		return ret.toStdString();
 	}
 
 	return "";
@@ -135,4 +140,22 @@ std::string LUNAQtFiles::ReadFileToString(const std::string &path, LUNAFileLocat
 	file.close();
 
 	return std::move(ret);
+}
+
+// Write given byte buffer to file
+bool LUNAQtFiles::WriteFile(const std::string &path, const std::vector<unsigned char> &data, LUNAFileLocation location)
+{
+	QFile file(GetPathInLocation(path, location));
+
+	// Create dir for file if not exists
+	QFileInfo info(GetPathInLocation(path, location));
+	QDir dir = info.dir();
+	if(!dir.exists()) dir.mkpath(".");
+
+	if(!file.open(QIODevice::WriteOnly)) return false;
+
+	file.write(reinterpret_cast<const char*>(data.data()), data.size());
+	file.close();
+
+	return true;
 }

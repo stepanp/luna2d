@@ -37,7 +37,8 @@ namespace luna2d{
 // Sets root folder for file operations
 enum class LUNAFileLocation
 {
-	ASSETS, // Files in "assets" folder in .apk
+	ASSETS, // Files in main game folder (e.g. on Android "game" folder located in "assets" folder in .apk)
+	APP_FOLDER, // Files in application data folder (e.g. on Android is /data/data/%app_name")
 };
 
 //---------------------
@@ -72,6 +73,9 @@ public:
 
 	// Read all file data as string
 	virtual std::string ReadFileToString(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS) = 0;
+
+	// Write given byte buffer to file
+	virtual bool WriteFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER) = 0;
 
 	std::string GetExtension(const std::string& path); // Get extension of file
 	std::string GetBasename(const std::string& path); // Get filename without path and extension

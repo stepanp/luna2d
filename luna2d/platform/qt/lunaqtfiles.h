@@ -67,6 +67,9 @@ public:
 
 	// Read all file data as string
 	virtual std::string ReadFileToString(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+
+	// Write given byte buffer to file
+	virtual bool WriteFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
 };
 
 }
