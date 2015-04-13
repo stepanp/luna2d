@@ -40,16 +40,18 @@ namespace luna2d{
 class LUNAAndroidFiles : public LUNAFiles
 {
 public:
-	LUNAAndroidFiles(const char* apkPath);
+	LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath);
 
 private:
 	std::string apkPath; // Saved path to this .apk file
+	std::string appFolderPath; // Path to application folder in /data/data/
 	std::unordered_map<std::string, std::pair<int, int>> directoryCache;
 	std::unordered_map<std::string, int> filesCache;
 
 private:
 	zip* OpenApk(); // Open .apk with libzip
 	void CacheZipNames(); // Cache list of files in apk file for quick access to files\directories in .apk
+	std::string GetPathInLocation(const std::string& path, LUNAFileLocation location);
 
 public:
 	// Get root folder for file location
@@ -75,6 +77,9 @@ public:
 
 	// Read all file data as string
 	virtual std::string ReadFileToString(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+
+	// Write given byte buffer to file
+	virtual bool WriteFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
 };
 
 }

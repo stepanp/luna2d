@@ -27,8 +27,9 @@
 
 using namespace luna2d;
 
-LUNAAndroidFiles::LUNAAndroidFiles(const char* apkPath) :
-	apkPath(apkPath)
+LUNAAndroidFiles::LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath) :
+	apkPath(apkPath),
+	appFolderPath(appFolderPath + "/")
 {
 	CacheZipNames();
 }
@@ -79,6 +80,11 @@ void LUNAAndroidFiles::CacheZipNames()
 	zip_close(apk);
 }
 
+std::string LUNAAndroidFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
+{
+	return GetRootFolder(location) + path;
+}
+
 // Check for given path is file
 bool LUNAAndroidFiles::IsFile(const std::string& path, LUNAFileLocation location)
 {
@@ -114,6 +120,8 @@ std::string LUNAAndroidFiles::GetRootFolder(LUNAFileLocation location)
 	{
 	case LUNAFileLocation::ASSETS:
 		return "assets/game/";
+	case LUNAFileLocation::APP_FOLDER:
+		return appFolderPath;
 	}
 }
 
@@ -187,7 +195,7 @@ ssize_t LUNAAndroidFiles::GetFileSize(const std::string& path, LUNAFileLocation 
 // Read all file data
 std::vector<unsigned char> LUNAAndroidFiles::ReadFile(const std::string& path, LUNAFileLocation location)
 {
-	// Read file from assets
+	// Read file from assets folder in apk
 	if(location == LUNAFileLocation::ASSETS)
 	{
 		zip* apk = OpenApk();
@@ -224,13 +232,34 @@ std::vector<unsigned char> LUNAAndroidFiles::ReadFile(const std::string& path, L
 		else return std::move(ret);
 	}
 
+	// Read file from other places
+	else
+	{
+		std::vector<unsigned char> ret;
+
+		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+		if(!file) return std::move(ret);
+	
+		// Get file size
+		fseek(file, 0, SEEK_END);
+		ssize_t size = ftell(file);
+		fseek(file, 0, SEEK_SET);
+	
+		// Read file
+		ret.resize(size);
+		fread(&ret[0], sizeof(unsigned char), size, file);
+		fclose(file);
+
+		return std::move(ret);
+	}
+
 	return std::move(std::vector<unsigned char>());
 }
 
 // Read all file data as string
 std::string LUNAAndroidFiles::ReadFileToString(const std::string& path, LUNAFileLocation location)
 {
-	// Read file from assets
+	// Read file from assets folder in apk
 	if(location == LUNAFileLocation::ASSETS)
 	{
 		zip* apk = OpenApk();
@@ -267,5 +296,40 @@ std::string LUNAAndroidFiles::ReadFileToString(const std::string& path, LUNAFile
 		else return std::move(ret);
 	}
 
+	// Read file from other places
+	else
+	{
+		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+		if(!file) return "";
+		
+		// Get file size
+		fseek(file, 0, SEEK_END);
+		ssize_t size = ftell(file);
+		fseek(file, 0, SEEK_SET);
+		
+		// Read file as string
+		std::string ret;
+		ret.resize(size);
+		fread(&ret[0], sizeof(char), size, file);
+		fclose(file);
+		
+		return std::move(ret);
+	}
+
 	return "";
+}
+
+// Write given byte buffer to file
+bool LUNAAndroidFiles::WriteFile(const std::string &path, const std::vector<unsigned char> &data, LUNAFileLocation location)
+{
+	// Assets folder is readonly
+	if(location == LUNAFileLocation::ASSETS) return false;
+
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(),"w+");
+	if(!file) return false;
+
+	fwrite(data.data(), sizeof(unsigned char), data.size(), file);
+	fclose(file);
+
+	return true;
 }

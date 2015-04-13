@@ -32,15 +32,17 @@
 using namespace luna2d;
 
 LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint jscreenWidth, jint jscreenHeight,
-		jstring javaAppName, jstring javaApkPath)
+		jstring javaAppName, jstring javaApkPath, jstring javaAppFolderPath)
 {
 	// Initialize engine at first creating GL surface
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
 		// Initialize file utils
 		const char* apkPath = env->GetStringUTFChars(javaApkPath, 0);
-		LUNAFiles* files = new LUNAAndroidFiles(apkPath);
+		const char* appFolderPath = env->GetStringUTFChars(javaAppFolderPath, 0);
+		LUNAFiles* files = new LUNAAndroidFiles(apkPath, appFolderPath);
 		env->ReleaseStringUTFChars(javaApkPath, apkPath);
+		env->ReleaseStringUTFChars(javaAppFolderPath, appFolderPath);
 
 		// Set application name as tag for logging
 		const char* appName = env->GetStringUTFChars(javaAppName, 0);

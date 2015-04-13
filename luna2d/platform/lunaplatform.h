@@ -41,12 +41,21 @@
 	#define LUNA_PLATFORM_STRING "android"
 
 	#include <string>
+	#include <sstream>
 	#include <cstdlib>
 	#include <math.h>
 
-	// Android's GCC don't support std::stoi and some functions from <cmath>
+	// Android's std lib doesn't support sone fucntions
 	namespace std
 	{
+		template <typename T>
+		inline std::string to_string(T value)
+		{
+			std::ostringstream os;
+			os << value;
+			return os.str();
+		}
+
 		inline int stoi(const string& str)
 		{
 			return atoi(str.c_str());

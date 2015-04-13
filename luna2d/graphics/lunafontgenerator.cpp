@@ -159,8 +159,18 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 	if(image.IsEmpty()) return nullptr;
 
+	// Create texture from generated image
+	auto texture = std::make_shared<LUNATexture>(image);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Cache generated texture to APP_DATA folder for reloading when lossing GL context
+	std::string reloadPath = LUNAEngine::SharedAssets()->CacheTexture(image);
+	texture->SetReloadPath(reloadPath);
+	texture->SetCached(true);
+#endif
+
 	// Create font
-	auto font = std::make_shared<LUNAFont>(std::make_shared<LUNATexture>(image), size);
+	auto font = std::make_shared<LUNAFont>(texture, size);
 
 	// Set texture regions for chars
 	for(auto region : charRegions) font->SetCharRegion(region.c, region.x, region.y, region.width, region.height);

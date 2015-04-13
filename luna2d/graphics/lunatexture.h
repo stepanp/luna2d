@@ -59,6 +59,7 @@ public:
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 private:
 	std::string reloadPath; // Path to reload texture data
+	bool cached = false; // Check if texture is generated and was cached to APP_FOLDER
 
 public:
 	inline void SetReloadPath(const std::string& path)
@@ -67,28 +68,44 @@ public:
 		LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
 	}
 
+	inline void SetCached(bool cached)
+	{
+		this->cached = cached;
+	}
+
 	virtual void Reload()
 	{
 		if(reloadPath.empty()) return;
 
-		std::string ext = LUNAEngine::SharedFiles()->GetExtension(reloadPath);
-		std::unique_ptr<LUNAImageFormat> format;
-
-		// Select image format to decode
-		if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
-
-		// Reload texture from path
-		if(format)
+		// Generated textures reloads direcly from cached data
+		if(cached)
 		{
-			LUNAImage image(reloadPath, *format, LUNAFileLocation::ASSETS);
-			if(!image.IsEmpty())
+			auto data = LUNAEngine::SharedFiles()->ReadFile(reloadPath, LUNAFileLocation::APP_FOLDER);
+			if(!data.empty())
 			{
-				width = image.GetWidth();
-				height = image.GetHeight();
-				colorType = image.GetColorType();
-				CreateGlTexture(image.GetData());
-
+				CreateGlTexture(data);
 				return;
+			}
+		}
+
+		// Usual textures reload from assets
+		else
+		{
+			std::string ext = LUNAEngine::SharedFiles()->GetExtension(reloadPath);
+			std::unique_ptr<LUNAImageFormat> format;
+
+			// Select image format to decode
+			if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
+
+			// Reload texture from path
+			if(format)
+			{
+				LUNAImage image(reloadPath, *format, LUNAFileLocation::ASSETS);
+				if(!image.IsEmpty())
+				{
+					CreateGlTexture(image.GetData());
+					return;
+				}
 			}
 		}
 

@@ -27,6 +27,10 @@
 #include "lunalua.h"
 #include "lunafiles.h"
 
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+#include "lunaimage.h"
+#endif
+
 namespace luna2d{
 
 const std::string ASSET_CUSTOM_DATA_NAME = "_customData"; // Name of field in asset table with custom data
@@ -118,8 +122,19 @@ public:
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 private:
 	std::unordered_set<LUNAAsset*> reloadableAssets; // List of all assets needing reload
+	int lastCachedId = 0; // Counter for generate unique cached texture names
 
 public:
+	// Cache generated texture to APP_DATA folder
+	// Return path to resulting file
+	inline std::string CacheTexture(const LUNAImage& image)
+	{
+		std::string path = "luna2d_gentexture_" + std::to_string(lastCachedId);
+		if(!LUNAEngine::SharedFiles()->WriteFile(path, image.GetData(), LUNAFileLocation::APP_FOLDER)) return "";
+		lastCachedId++;
+		return path;
+	}
+
 	// Add/remove asset to list of reloadable asets
 	inline void SetAssetReloadable(LUNAAsset* asset, bool reloadable)
 	{
