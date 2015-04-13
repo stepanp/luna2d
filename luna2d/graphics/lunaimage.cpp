@@ -127,7 +127,7 @@ void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 
 LUNAColor LUNAImage::GetPixel(int x, int y) const
 {
-	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return LUNAColor::RgbFloat(1, 0, 1);
+	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return LUNAColor();
 
 	int pos = CoordsToPos(x, y);
 
