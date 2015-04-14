@@ -24,6 +24,7 @@
 #include "lunaandroidfiles.h"
 #include "platform/lunalog.h"
 #include <algorithm>
+#include <zlib.h>
 
 using namespace luna2d;
 
@@ -199,11 +200,12 @@ std::vector<unsigned char> LUNAAndroidFiles::ReadFile(const std::string& path, L
 	if(location == LUNAFileLocation::ASSETS)
 	{
 		zip* apk = OpenApk();
+		std::vector<unsigned char> ret;
 
 		if(!IsFile(path, LUNAFileLocation::ASSETS))
 		{
 			zip_close(apk);
-			return std::move(std::vector<unsigned char>());
+			return ret;
 		}
 
 		// Open file
@@ -221,14 +223,13 @@ std::vector<unsigned char> LUNAAndroidFiles::ReadFile(const std::string& path, L
 		zip_stat_index(apk,fileIndex, 0, &fileInfo);
 
 		// Read file
-		std::vector<unsigned char> ret;
 		ret.resize(fileInfo.size);
 		int result = zip_fread(file, reinterpret_cast<char*>(&ret[0]), fileInfo.size);
 
 		zip_fclose(file);
 		zip_close(apk);
 
-		if(result == -1) return std::move(std::vector<unsigned char>());
+		if(result == -1) return std::vector<unsigned char>();
 		else return std::move(ret);
 	}
 
@@ -237,7 +238,7 @@ std::vector<unsigned char> LUNAAndroidFiles::ReadFile(const std::string& path, L
 	{
 		std::vector<unsigned char> ret;
 
-		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+		FILE* file = fopen(GetPathInLocation(path, location).c_str(), "rb");
 		if(!file) return std::move(ret);
 	
 		// Get file size
@@ -325,11 +326,64 @@ bool LUNAAndroidFiles::WriteFile(const std::string &path, const std::vector<unsi
 	// Assets folder is readonly
 	if(location == LUNAFileLocation::ASSETS) return false;
 
-	FILE* file = fopen(GetPathInLocation(path, location).c_str(),"w+");
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "wb");
 	if(!file) return false;
 
 	fwrite(data.data(), sizeof(unsigned char), data.size(), file);
 	fclose(file);
+
+	return true;
+}
+
+// Write given byte buffer to file
+bool LUNAAndroidFiles::WriteFileFromString(const std::string &path, const std::string& data, LUNAFileLocation location)
+{
+	// Assets folder is readonly
+	if(location == LUNAFileLocation::ASSETS) return false;
+
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "w");
+	if(!file) return false;
+
+	fwrite(data.data(), sizeof(char), data.size(), file);
+	fclose(file);
+
+	return true;
+}
+
+// Read all data from file compressed using "Deflate" algorithm
+std::vector<unsigned char> LUNAAndroidFiles::ReadCompressedFile(const std::string& path, LUNAFileLocation location)
+{
+	std::vector<unsigned char> ret;
+
+	if(location == LUNAFileLocation::ASSETS) return ret;
+
+	gzFile file = gzopen(GetPathInLocation(path, location).c_str(), "rb");
+	if(!file) return ret;
+	
+	// Get file size
+	gzseek(file, 0, SEEK_END);
+	ssize_t size = gztell(file);
+	gzseek(file, 0, SEEK_SET);
+	
+	// Read file
+	ret.resize(size);
+	gzread(file, &ret[0], sizeof(unsigned char) * size);
+	gzclose(file);
+
+	return std::move(ret);
+}
+
+// Write given byte buffer to file and compress it with "Deflate" algorithm
+bool LUNAAndroidFiles::WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location)
+{
+	// Assets folder is readonly
+	if(location == LUNAFileLocation::ASSETS) return false;
+
+	gzFile file = gzopen(GetPathInLocation(path, location).c_str(), "wb");
+	if(!file) return false;
+
+	gzwrite(file, data.data(), sizeof(unsigned char) * data.size());
+	gzclose(file);
 
 	return true;
 }

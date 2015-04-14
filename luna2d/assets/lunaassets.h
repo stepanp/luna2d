@@ -129,8 +129,8 @@ public:
 	// Return path to resulting file
 	inline std::string CacheTexture(const LUNAImage& image)
 	{
-		std::string path = "luna2d_gentexture_" + std::to_string(lastCachedId);
-		if(!LUNAEngine::SharedFiles()->WriteFile(path, image.GetData(), LUNAFileLocation::APP_FOLDER)) return "";
+		std::string path = ".luna2d_gentexture_" + std::to_string(lastCachedId);
+		if(!LUNAEngine::SharedFiles()->WriteCompressedFile(path, image.GetData(), LUNAFileLocation::APP_FOLDER)) return "";
 		lastCachedId++;
 		return path;
 	}

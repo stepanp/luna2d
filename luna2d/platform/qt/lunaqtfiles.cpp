@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaqtfiles.h"
+#include "lunalog.h"
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
@@ -158,4 +159,36 @@ bool LUNAQtFiles::WriteFile(const std::string &path, const std::vector<unsigned 
 	file.close();
 
 	return true;
+}
+
+// Write given text data to file
+bool LUNAQtFiles::WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location)
+{
+	QFile file(GetPathInLocation(path, location));
+
+	// Create dir for file if not exists
+	QFileInfo info(GetPathInLocation(path, location));
+	QDir dir = info.dir();
+	if(!dir.exists()) dir.mkpath(".");
+
+	if(!file.open(QIODevice::WriteOnly)) return false;
+
+	file.write(data.data(), data.size());
+	file.close();
+
+	return true;
+}
+
+// Read all data from file compressed using "Deflate" algorithm
+std::vector<unsigned char> LUNAQtFiles::ReadCompressedFile(const std::string& path, LUNAFileLocation location)
+{
+	LUNA_LOGE("Method LUNAQtFiles::ReadCompressedFile is not implemented");
+	return std::vector<unsigned char>();
+}
+
+// Write given byte buffer to file and compress it with "Deflate" algorithm
+bool LUNAQtFiles::WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location)
+{
+	LUNA_LOGE("Method LUNAQtFiles::WriteCompressedFile is not implemented");
+	return false;
 }

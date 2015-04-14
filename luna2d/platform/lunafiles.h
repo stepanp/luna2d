@@ -77,6 +77,15 @@ public:
 	// Write given byte buffer to file
 	virtual bool WriteFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER) = 0;
 
+	// Write given text data to file
+	virtual bool WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER) = 0;
+
+	// Read all data from file compressed using "Deflate" algorithm
+	virtual std::vector<unsigned char> ReadCompressedFile(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS) = 0;
+
+	// Write given byte buffer to file and compress it with "Deflate" algorithm
+	virtual bool WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER) = 0;
+
 	std::string GetExtension(const std::string& path); // Get extension of file
 	std::string GetBasename(const std::string& path); // Get filename without path and extension
 	std::string GetParentPath(const std::string& path); // Get parent part of path

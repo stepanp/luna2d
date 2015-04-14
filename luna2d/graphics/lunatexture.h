@@ -80,7 +80,7 @@ public:
 		// Generated textures reloads direcly from cached data
 		if(cached)
 		{
-			auto data = LUNAEngine::SharedFiles()->ReadFile(reloadPath, LUNAFileLocation::APP_FOLDER);
+			auto data = LUNAEngine::SharedFiles()->ReadCompressedFile(reloadPath, LUNAFileLocation::APP_FOLDER);
 			if(!data.empty())
 			{
 				CreateGlTexture(data);
