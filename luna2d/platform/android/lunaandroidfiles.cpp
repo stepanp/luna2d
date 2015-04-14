@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidfiles.h"
-#include "platform/lunalog.h"
+#include "lunalog.h"
 #include <algorithm>
 #include <zlib.h>
 
@@ -353,24 +353,31 @@ bool LUNAAndroidFiles::WriteFileFromString(const std::string &path, const std::s
 // Read all data from file compressed using "Deflate" algorithm
 std::vector<unsigned char> LUNAAndroidFiles::ReadCompressedFile(const std::string& path, LUNAFileLocation location)
 {
+	const int BLOCK_SIZE = 4096;
 	std::vector<unsigned char> ret;
 
 	if(location == LUNAFileLocation::ASSETS) return ret;
 
 	gzFile file = gzopen(GetPathInLocation(path, location).c_str(), "rb");
 	if(!file) return ret;
-	
-	// Get file size
-	gzseek(file, 0, SEEK_END);
-	ssize_t size = gztell(file);
-	gzseek(file, 0, SEEK_SET);
-	
-	// Read file
-	ret.resize(size);
-	gzread(file, &ret[0], sizeof(unsigned char) * size);
-	gzclose(file);
 
-	return std::move(ret);
+	// Because we cannot get size of decompressed buffer
+	// we need read bytes per block until end of file
+	while(true)
+	{
+		ret.resize(ret.size() + BLOCK_SIZE);
+		int bytesRead = gzread(file, &ret[ret.size() - BLOCK_SIZE], sizeof(unsigned char) * BLOCK_SIZE);
+
+		if(bytesRead < BLOCK_SIZE && gzeof(file))
+		{
+			ret.resize(ret.size() - BLOCK_SIZE + bytesRead);
+			gzclose(file);
+			return std::move(ret);
+		}
+	}
+
+	gzclose(file);
+	return std::vector<unsigned char>();
 }
 
 // Write given byte buffer to file and compress it with "Deflate" algorithm
