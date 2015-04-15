@@ -40,12 +40,18 @@ LUNAScenes::LUNAScenes() :
 	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
 	LuaTable tblScenes(lua);
 
+	tblScenes.SetField("getCurrentScene", LuaFunction(lua, this, &LUNAScenes::GetCurrrentScene));
 	tblScenes.SetField("setScene", LuaFunction(lua, this, &LUNAScenes::SetScene));
 
 	tblLuna.SetField("scenes", tblScenes);
 }
 
-void LUNAScenes::SetScene(LuaTable tblScene)
+LuaTable LUNAScenes::GetCurrrentScene()
+{
+	return tblCurScene;
+}
+
+void LUNAScenes::SetScene(const LuaTable& tblScene)
 {
 	if(tblScene == nil)
 	{

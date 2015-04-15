@@ -39,7 +39,8 @@ private:
 	LuaFunction fnTouchDown, fnTouchMoved, fnTouchUp;
 
 public:
-	void SetScene(LuaTable tblScene);
+	LuaTable GetCurrrentScene();
+	void SetScene(const LuaTable& tblScene);
 	void OnTouchDown(float x, float y);
 	void OnTouchMoved(float x, float y);
 	void OnTouchUp(float x, float y);
