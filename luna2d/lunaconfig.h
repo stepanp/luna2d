@@ -49,6 +49,7 @@ public:
 	LUNAConfig();
 
 public:
+	std::string gameName;
 	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
 	LUNAScaleMode scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
 	std::vector<std::string> resolutions;
@@ -56,7 +57,7 @@ public:
 	int baseHeight = BASE_SIZE;
 
 public:
-	void Read();
+	bool Read();
 };
 
 }

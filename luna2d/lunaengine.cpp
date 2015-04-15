@@ -74,7 +74,11 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 {
 	// Read config file
 	config = std::unique_ptr<LUNAConfig>(new LUNAConfig());
-	config->Read();
+	if(!config->Read())
+	{
+		LUNA_LOGE("Error with reading config. Stop initializing");
+		return;
+	}
 
 	lua = new LuaScript();
 
@@ -139,6 +143,12 @@ void LUNAEngine::Deinitialize()
 LUNAConfig* LUNAEngine::GetConfig()
 {
 	return config.get();
+}
+
+ // Get name of runned game
+std::string LUNAEngine::GetGameName()
+{
+	return config->gameName;
 }
 
 void LUNAEngine::LoadModules()

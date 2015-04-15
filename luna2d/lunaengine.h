@@ -75,6 +75,7 @@ public:
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
 	LUNAConfig* GetConfig();
+	std::string GetGameName(); // Get name of runned game
 	void LoadModules();
 	void UnloadModules();
 	void RunEmbeddedScripts();

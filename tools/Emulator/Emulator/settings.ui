@@ -35,7 +35,7 @@
    <string>Settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
+   <item row="3" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -55,7 +55,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="1" column="0" colspan="2">
+    <widget class="QCheckBox" name="openLogWhenError">
+     <property name="text">
+      <string>Open log window automatically when error occurs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -65,10 +72,10 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QCheckBox" name="openLogWhenError">
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="showFps">
      <property name="text">
-      <string>Open log window automatically when error occurs</string>
+      <string>Show FPS in window caption</string>
      </property>
     </widget>
    </item>

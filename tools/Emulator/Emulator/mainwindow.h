@@ -35,7 +35,8 @@ class MainWindow;
 }
 
 const QString WINDOW_TITLE = "luna2d Emulator";
-const QString WINDOW_TITLE_FPS = WINDOW_TITLE + " (FPS: %1)";
+const QString WINDOW_TITLE_NAME = "%1 - " + WINDOW_TITLE;
+const QString WINDOW_TITLE_FPS = "%1 - " + WINDOW_TITLE + " [FPS: %2]";
 
 class MainWindow : public QMainWindow
 {
@@ -52,7 +53,8 @@ private:
 	LogStorage* logStorage;
 	LogDialog* logDlg;
 	WatcherDialog* watcherDlg;
-	QString curGamePath; // Path to current open game
+	QString curGamePath; // Path to current opened game
+	QString curGameName; // Name of current opened game
 
 private:
 	void SetupRecentGames(); // Setup recent games menu

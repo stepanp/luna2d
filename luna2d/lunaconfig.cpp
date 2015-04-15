@@ -38,12 +38,12 @@ LUNAConfig::LUNAConfig()
 	resolutions = { DEFAULT_RESOLUTION };
 }
 
-void LUNAConfig::Read()
+bool LUNAConfig::Read()
 {
 	if(!LUNAEngine::SharedFiles()->IsExists(CONFIG_FILENAME))
 	{
-		LUNA_LOGW("\"%s\" not found. Use default config", CONFIG_FILENAME.c_str());
-		return;
+		LUNA_LOGW("Config file \"%s\" not found", CONFIG_FILENAME.c_str());
+		return false;
 	}
 
 	std::string configData = LUNAEngine::SharedFiles()->ReadFileToString(CONFIG_FILENAME, LUNAFileLocation::ASSETS);
@@ -52,7 +52,20 @@ void LUNAConfig::Read()
 	if(jsonConfig == nullptr)
 	{
 		LUNA_LOGE("Error with parsing config: \"%s\"", err.c_str());
-		return;
+		return false;
+	}
+
+	if(jsonConfig["name"] == nullptr)
+	{
+		LUNA_LOGE("\"name\" field not found. It's required field");
+		return false;
+	}
+
+	gameName = jsonConfig["name"].string_value();
+	if(gameName.empty())
+	{
+		LUNA_LOGE("Invalid name");
+		return false;
 	}
 
 	if(jsonConfig["orientation"] != nullptr)
@@ -109,4 +122,6 @@ void LUNAConfig::Read()
 		if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
 		else LUNA_LOGE("Base height must be number");
 	}
+
+	return true;
 }

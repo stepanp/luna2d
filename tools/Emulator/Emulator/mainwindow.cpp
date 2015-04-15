@@ -151,6 +151,9 @@ void MainWindow::OpenGame(const QString &gamePath)
 	auto& resolution = Settings::resolutions.at(Settings::curResolution);
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height);
+
+	curGameName = ui->centralWidget->GetEngine()->GetGameName().c_str();
+	if(!Settings::showFps) setWindowTitle(WINDOW_TITLE_NAME.arg(curGameName));
 }
 
 void MainWindow::SetResolution(int resolutionIndex)
@@ -218,7 +221,7 @@ void MainWindow::OnGlSurfaceInitialized()
 
 void MainWindow::OnGameLoopIteration()
 {
-	setWindowTitle(WINDOW_TITLE_FPS.arg(ui->centralWidget->GetFps()));
+	if(Settings::showFps) setWindowTitle(WINDOW_TITLE_FPS.arg(curGameName).arg(ui->centralWidget->GetFps()));
 }
 
 void MainWindow::OnActionOpen()
@@ -300,12 +303,16 @@ void MainWindow::OnActionSettings()
 
 	uiDialog.openLastGame->setChecked(Settings::openLastGame);
 	uiDialog.openLogWhenError->setChecked(Settings::openLogWhenError);
+	uiDialog.showFps->setChecked(Settings::showFps);
 
 	if(dialog.exec())
 	{
 		Settings::openLastGame = uiDialog.openLastGame->isChecked();
 		Settings::openLogWhenError = uiDialog.openLogWhenError->isChecked();
+		Settings::showFps = uiDialog.showFps->isChecked();
 		Settings::Save();
+
+		if(!Settings::showFps) setWindowTitle(WINDOW_TITLE_NAME.arg(curGameName));
 	}
 }
 
