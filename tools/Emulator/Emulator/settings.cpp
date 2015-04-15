@@ -59,6 +59,7 @@ void Settings::Load()
 	resolutions.push_back(Resolution(800, 480, "WVGA", true));
 	resolutions.push_back(Resolution(1280, 720, "HD", true));
 	resolutions.push_back(Resolution(1024, 768, "iPad", true));
+	resolutions.push_back(Resolution(1920, 1080, "FullHD", true));
 	resolutions.push_back(Resolution(2048, 1536, "Retina iPad", true));
 	bullitinCount = resolutions.size();
 
