@@ -24,7 +24,7 @@
 #include "lunabindings.h"
 #include "lunaengine.h"
 #include "lunalua.h"
-#include "lunalog.h"
+#include "lunaprefs.h"
 #include "math/lunamath.h"
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
@@ -133,6 +133,81 @@ void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 	tblLuna.SetField("platform", LUNA_PLATFORM_STRING);
 }
 
+// Bind "luna.prefs" module
+void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
+{
+	// "__index" metamethod handler
+	// calls whenever acess to "luna.prefs" table like: "local value = luna.prefs.key"
+	// Gets value from preferences
+	// Type of value automaticaly depends by stored pref type
+	std::function<LuaDynamicType(LuaNil, const std::string&)> index =
+		[lua](LuaNil, const std::string& name) -> LuaDynamicType
+	{
+		if(name.empty()) return nil; // Ignore all keys except valid strings
+
+		LUNAPrefs* prefs = LUNAEngine::SharedPrefs();
+		LUNAPrefType type = prefs->GetPrefType(name);
+
+		switch(type)
+		{
+		case LUNAPrefType::NONE:
+			return nil;
+		case LUNAPrefType::STRING:
+			return LuaDynamicType(lua, prefs->GetString(name));
+		case LUNAPrefType::INT:
+			return LuaDynamicType(lua, prefs->GetInt(name));
+		case LUNAPrefType::FLOAT:
+			return LuaDynamicType(lua, prefs->GetFloat(name));
+		case LUNAPrefType::BOOL:
+			return LuaDynamicType(lua, prefs->GetBool(name));
+		}
+
+		return nil;
+	};
+
+	// "__newindex" metamethod handler
+	// calls whenever acsess to "luna.prefs" table like: "luna.prefs.key = value"
+	// Puts value to preferences subsytem and save pref type for automatic getting in "__index" method
+	std::function<void(LuaNil, const std::string&, const LuaDynamicType&)> newIndex =
+		[](LuaNil, const std::string& name, const LuaDynamicType& value)
+	{
+		if(name.empty()) return; // Ignore all keys except valid strings
+
+		LUNAPrefs* prefs = LUNAEngine::SharedPrefs();
+		int luaType = value.GetType();
+
+		switch(luaType)
+		{
+		case LUA_TNIL:
+			prefs->RemoveValue(name);
+			prefs->RemovePrefType(name);
+			break;
+		case LUA_TSTRING:
+			prefs->SetString(name, value.ToString());
+			prefs->SetPrefType(name, LUNAPrefType::STRING);
+			break;
+		case LUA_TNUMBER:
+			prefs->SetFloat(name, value.ToFloat());
+			prefs->SetPrefType(name, LUNAPrefType::FLOAT);
+			break;
+		case LUA_TBOOLEAN:
+			prefs->SetBool(name, value.ToBool());
+			prefs->SetPrefType(name, LUNAPrefType::BOOL);
+			break;
+		default:
+			break;
+		}
+	};
+
+	LuaTable tblPrefs(lua);
+	tblLuna.SetField("prefs", tblPrefs);
+
+	LuaTable meta(lua);
+	meta.SetField("__index", LuaFunction(lua, index));
+	meta.SetField("__newindex", LuaFunction(lua, newIndex));
+	tblPrefs.SetMetatable(meta);
+}
+
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
 // SEE: lunagraphics.cpp, lunassets.cpp
@@ -147,4 +222,5 @@ void luna2d::DoBindings()
 	BindIntersect(lua, tblLuna);
 	BindSplines(lua, tblLuna);
 	BindPlatform(lua, tblLuna);
+	BindPrefs(lua, tblLuna);
 }

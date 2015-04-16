@@ -27,6 +27,19 @@
 
 namespace luna2d{
 
+//---------------------------------
+// Each preference can has a type
+// For useful getting values in lua
+//---------------------------------
+enum class LUNAPrefType : int
+{
+	NONE = 0, // Type for preference not stored
+	STRING = 1,
+	INT = 2,
+	FLOAT = 3,
+	BOOL = 4
+};
+
 //----------------------------------------------------
 // Preferences interface
 // Utility for store preferences and simple game saves
@@ -61,11 +74,23 @@ public:
 	// Set bool value to preferences
 	virtual void SetBool(const std::string& name, bool value) = 0;
 
+	// Check for existing value
+	virtual bool HasValue(const std::string& name) = 0;
+
 	// Remove valuee from preferences
 	virtual void RemoveValue(const std::string& name) = 0;
 
 	// Remove all values from preferences
 	virtual void Clear() = 0;
+
+	// Get type for preference
+	LUNAPrefType GetPrefType(const std::string& name);
+
+	// Set type for preference
+	void SetPrefType(const std::string& name, LUNAPrefType type);
+
+	// Remove type for preference
+	void RemovePrefType(const std::string& name);
 };
 
 }

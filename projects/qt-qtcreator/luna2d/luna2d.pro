@@ -182,7 +182,6 @@ SOURCES += \
     ../../../luna2d/platform/qt/lunaqtlog.cpp \
     ../../../luna2d/platform/qt/lunaqtgl.cpp \
     ../../../luna2d/platform/lunaplatformutils.cpp \
-    ../../../luna2d/platform/qt/lunaqtutils.cpp \
     ../../../luna2d/graphics/lunacurverenderer.cpp \
     ../../../luna2d/assets/lunatextureloader.cpp \
     ../../../luna2d/assets/lunatextureatlasloader.cpp \

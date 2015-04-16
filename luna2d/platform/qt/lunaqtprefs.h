@@ -65,6 +65,9 @@ public:
 	// Set bool value to preferences
 	virtual void SetBool(const std::string& name, bool value);
 
+	// Check for existing value
+	virtual bool HasValue(const std::string& name);
+
 	// Remove valuee from preferences
 	virtual void RemoveValue(const std::string& name);
 

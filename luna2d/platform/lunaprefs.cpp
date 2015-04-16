@@ -25,3 +25,22 @@
 
 using namespace luna2d;
 
+// Get type for preference
+LUNAPrefType LUNAPrefs::GetPrefType(const std::string &name)
+{
+	std::string key = name + "_type";
+	if(!HasValue(key)) return LUNAPrefType::NONE;
+	return static_cast<LUNAPrefType>(GetInt(name + "_type"));
+}
+
+// Set type for preference
+void LUNAPrefs::SetPrefType(const std::string &name, LUNAPrefType type)
+{
+	SetInt(name + "_type", static_cast<int>(type));
+}
+
+// Remove type for preference
+void LUNAPrefs::RemovePrefType(const std::string &name)
+{
+	RemoveValue(name + "_type");
+}
