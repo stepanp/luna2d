@@ -63,11 +63,13 @@ LUNAEngine::~LUNAEngine()
 }
 
 // Assemble engine with platform-specific modules. Must be called before "Iznitialize" method
-void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils)
+void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils,
+	LUNAPrefs* prefs)
 {
 	this->files = files;
 	this->log = log;
 	this->platformUtils = platformUtils;
+	this->prefs = prefs;
 }
 
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)

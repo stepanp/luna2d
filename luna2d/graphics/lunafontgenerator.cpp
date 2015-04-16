@@ -91,7 +91,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	// Get global char metrics
 	int maxW = UnitsToPixels(face->size->metrics.max_advance); // Max char width
 	int maxH = UnitsToPixels(face->size->metrics.height); // Max char height
-	int baseline = std::abs(UnitsToPixels(face->size->metrics.descender)); // Distance from bottom to baseline
+	int baseline = std::fabs(UnitsToPixels(face->size->metrics.descender)); // Distance from bottom to baseline
 
 	// Calculate texture size
 	int charArea = (maxW + CHAR_PADDING) * (maxH + CHAR_PADDING);

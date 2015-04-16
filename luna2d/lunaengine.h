@@ -37,6 +37,7 @@ class LuaScript;
 class LUNAFiles;
 class LUNALog;
 class LUNAPlatformUtils;
+class LUNAPrefs;
 class LUNAModule;
 class LUNAAssets;
 class LUNAGraphics;
@@ -56,6 +57,7 @@ private:
 	LUNAFiles* files;
 	LUNALog* log;
 	LUNAPlatformUtils* platformUtils;
+	LUNAPrefs* prefs;
 
 	LuaScript* lua;
 	LUNAAssets* assets;
@@ -71,7 +73,7 @@ private:
 
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
-	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils);
+	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs);
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
 	LUNAConfig* GetConfig();
@@ -101,6 +103,7 @@ public:
 	inline static LUNAFiles* SharedFiles() { return Shared()->files; }
 	inline static LUNALog* SharedLog() { return Shared()->log; }
 	inline static LUNAPlatformUtils* SharedPlatformUtils() { return Shared()->platformUtils; }
+	inline static LUNAPrefs* SharedPrefs() { return Shared()->prefs; }
 	inline static LuaScript* SharedLua() { return Shared()->lua; }
 	inline static LUNAAssets* SharedAssets() { return Shared()->assets; }
 	inline static LUNAGraphics* SharedGraphics() { return Shared()->graphics; }
