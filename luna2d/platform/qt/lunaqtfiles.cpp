@@ -52,7 +52,7 @@ std::string LUNAQtFiles::GetRootFolder(LUNAFileLocation location)
 
 	case LUNAFileLocation::APP_FOLDER:
 		std::string ret = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation).toStdString();
-		ret += "/luna2d/Emulator/" + LUNAEngine::Shared()->GetGameName() + "/";
+		ret += "/luna2d/game" + LUNAEngine::Shared()->GetGameName() + "/";
 		return ret;
 	}
 
