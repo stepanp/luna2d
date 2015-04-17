@@ -63,7 +63,7 @@ void Settings::Load()
 	resolutions.push_back(Resolution(2048, 1536, "Retina iPad", true));
 	bullitinCount = resolutions.size();
 
-	// Load resolutions
+	// Load user-defined resolutions
 	int resolutionsCount = settings.beginReadArray("resolutions");
 	for(int i = 0; i < resolutionsCount; i++)
 	{
