@@ -26,7 +26,7 @@
 
 using namespace luna2d;
 
-LUNAAndroidLog::LUNAAndroidLog(const char* tag)
+LUNAAndroidLog::LUNAAndroidLog(const std::string& tag)
 {
 	this->tag = tag;
 }

@@ -34,7 +34,7 @@ namespace luna2d{
 class LUNAAndroidLog : public LUNALog
 {
 public:
-	LUNAAndroidLog(const char* tag);
+	LUNAAndroidLog(const std::string& tag);
 
 private:
 	std::string tag;

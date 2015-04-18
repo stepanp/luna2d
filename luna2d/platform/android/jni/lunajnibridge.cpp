@@ -27,34 +27,32 @@
 #include "lunaandroidfiles.h"
 #include "lunaandroidlog.h"
 #include "lunaandroidutils.h"
+#include "lunaandroidprefs.h"
 #include "lunaandroidjni.h"
 
 using namespace luna2d;
 
-LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint jscreenWidth, jint jscreenHeight,
-		jstring javaAppName, jstring javaApkPath, jstring javaAppFolderPath)
+LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screenWidth, jint screenHeight,
+		jstring appName, jstring apkPath, jstring appFolderPath)
 {
 	// Initialize engine at first creating GL surface
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
 		// Initialize file utils
-		const char* apkPath = env->GetStringUTFChars(javaApkPath, 0);
-		const char* appFolderPath = env->GetStringUTFChars(javaAppFolderPath, 0);
-		LUNAFiles* files = new LUNAAndroidFiles(apkPath, appFolderPath);
-		env->ReleaseStringUTFChars(javaApkPath, apkPath);
-		env->ReleaseStringUTFChars(javaAppFolderPath, appFolderPath);
+		LUNAFiles* files = new LUNAAndroidFiles(jni::FromJString(apkPath), jni::FromJString(appFolderPath));
 
-		// Set application name as tag for logging
-		const char* appName = env->GetStringUTFChars(javaAppName, 0);
-		LUNALog* log = new LUNAAndroidLog(appName);
-		env->ReleaseStringUTFChars(javaAppName, appName);
+		// Initialize log
+		LUNALog* log = new LUNAAndroidLog(jni::FromJString(appName));
 
 		// Initialize platform-specific tools
 		LUNAPlatformUtils* platformUtils = new LUNAAndroidUtils();
 
+		// Initialize preferences util
+		LUNAAndroidPrefs* prefs = new LUNAAndroidPrefs();
+
 		// Initialize engine
-		LUNAEngine::Shared()->Assemble(files, log, platformUtils);
-		LUNAEngine::Shared()->Initialize(jscreenWidth, jscreenHeight);
+		LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
+		LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
 	}
 
 	// GL surface recreating when GL context was lost

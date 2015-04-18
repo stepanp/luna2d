@@ -24,24 +24,32 @@
 #pragma once
 
 #include "lunaprefs.h"
-#include <QVariant>
+#include "lunaandroidjni.h"
 
 namespace luna2d{
 
-const QString PREFS_ORGANIZATION_NAME = "luna2d";
-
-//--------------------------------
-// Preferences mplementaton for Qt
-//--------------------------------
-class LUNAQtPrefs : public LUNAPrefs
+//-------------------------------------
+// Preferences mplementaton for Android
+//-------------------------------------
+class LUNAAndroidPrefs : public LUNAPrefs
 {
-private:
-	QString gameName;
+public:
+	LUNAAndroidPrefs();
 
 private:
-	QString GetGameName();
-	QVariant GetValue(const std::string& name);
-	void SetValue(const std::string& name, const QVariant& value);
+	jclass javaPrefs;
+	jmethodID javaGetString;
+	jmethodID javaGetInt;
+	jmethodID javaGetFloat;
+	jmethodID javaGetBool;
+	jmethodID javaSetString;
+	jmethodID javaSetInt;
+	jmethodID javaSetFloat;
+	jmethodID javaSetBool;
+	jmethodID javaHasValue;
+	jmethodID javaRemoveValue;
+	jmethodID javaClear;
+
 
 public:
 	// Get string value from preferences
