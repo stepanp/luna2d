@@ -49,7 +49,7 @@ function ChanceTable:onInit(tbl) \
 end \
 \
 function ChanceTable:getNext() \
-	local rand = math.random(0, 100) \
+	local rand = math.random(1, 100) \
 \
 	for _,v in ipairs(self.chances) do \
 		if rand <= v.chance then \

@@ -72,3 +72,8 @@ bool luna2d::math::IsPowerOfTwo(int value)
 	return (value != 0) && ((value & (value - 1)) == 0);
 }
 
+// Interpolation between "a" and "b" by time "t". "t" must be in range[0,1]
+float luna2d::math::Lerp(float a, float b, float t)
+{
+	return a + (b - a) * t;
+}
