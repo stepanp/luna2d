@@ -180,22 +180,22 @@ void LUNAEngine::MainLoop()
 	graphics->OnUpdate();
 }
 
-void LUNAEngine::OnTouchDown(float x, float y)
+void LUNAEngine::OnTouchDown(float x, float y, int touchIndex)
 {
 	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
-	scenes->OnTouchDown(pos.x, pos.y);
+	scenes->OnTouchDown(pos.x, pos.y, touchIndex);
 }
 
-void LUNAEngine::OnTouchMoved(float x, float y)
+void LUNAEngine::OnTouchMoved(float x, float y, int touchIndex)
 {
 	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
-	scenes->OnTouchMoved(pos.x, pos.y);
+	scenes->OnTouchMoved(pos.x, pos.y, touchIndex);
 }
 
-void LUNAEngine::OnTouchUp(float x, float y)
+void LUNAEngine::OnTouchUp(float x, float y, int touchIndex)
 {
 	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
-	scenes->OnTouchUp(pos.x, pos.y);
+	scenes->OnTouchUp(pos.x, pos.y, touchIndex);
 }
 
 // Get shared instance of engine

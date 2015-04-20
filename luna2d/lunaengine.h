@@ -84,9 +84,9 @@ public:
 	bool IsInitialized();
 
 	void MainLoop();
-	void OnTouchDown(float x, float y);
-	void OnTouchMoved(float x, float y);
-	void OnTouchUp(float x, float y);
+	void OnTouchDown(float x, float y, int touchIndex);
+	void OnTouchMoved(float x, float y, int touchIndex);
+	void OnTouchUp(float x, float y, int touchIndex);
 
 	// Get module by name
 	template<typename Module>

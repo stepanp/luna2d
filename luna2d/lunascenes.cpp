@@ -81,19 +81,19 @@ void LUNAScenes::SetScene(const LuaTable& tblScene)
 	fnTouchUp = tblCurScene.GetFunction("onTouchUp");
 }
 
-void LUNAScenes::OnTouchDown(float x, float y)
+void LUNAScenes::OnTouchDown(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchDown.CallVoid(tblCurScene, x, y);
+	if(fnTouchDown != nil) fnTouchDown.CallVoid(tblCurScene, x, y, touchIndex);
 }
 
-void LUNAScenes::OnTouchMoved(float x, float y)
+void LUNAScenes::OnTouchMoved(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchMoved.CallVoid(tblCurScene, x, y);
+	if(fnTouchDown != nil) fnTouchMoved.CallVoid(tblCurScene, x, y, touchIndex);
 }
 
-void LUNAScenes::OnTouchUp(float x, float y)
+void LUNAScenes::OnTouchUp(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchUp.CallVoid(tblCurScene, x, y);
+	if(fnTouchDown != nil) fnTouchUp.CallVoid(tblCurScene, x, y, touchIndex);
 }
 
 void LUNAScenes::OnUpdate(float deltaTime)

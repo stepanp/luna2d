@@ -50,17 +50,38 @@ public class LunaGlView extends GLSurfaceView
 			@Override
 			public void run()
 			{
-				int action = event.getAction();
-
+				int action = event.getAction() & MotionEvent.ACTION_MASK;
+				int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> 
+					MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+				
 				// Invert Y-axis,
 				// because OpenGl origin in bottom of screen,
-				// but Android View origin in top of screen	
-				int surfaceHeight = getHeight();
-				float y = surfaceHeight - event.getY();
+				// but Android View origin in top of screen				
+				float y = getHeight() - event.getY(pointerIndex);
 				
-				if(action == MotionEvent.ACTION_DOWN) LunaNative.onTouchDown(event.getX(), y);
-				else if(action == MotionEvent.ACTION_MOVE) LunaNative.onTouchMoved(event.getX(), y);
-				else if(action == MotionEvent.ACTION_UP) LunaNative.onTouchUp(event.getX(), y);
+				switch(action)
+				{
+				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_POINTER_DOWN:
+					LunaNative.onTouchDown(event.getX(pointerIndex), y, event.getPointerId(pointerIndex));
+					break;
+					
+				case MotionEvent.ACTION_MOVE:
+					int count = event.getPointerCount();
+					for(int i = 0; i < count; i++) 
+					{
+						float pointerY = getHeight() - event.getY(i);
+						LunaNative.onTouchMoved(event.getX(i), pointerY, event.getPointerId(i));
+					}
+					break;
+					
+				case MotionEvent.ACTION_UP:
+				case MotionEvent.ACTION_POINTER_UP:
+				case MotionEvent.ACTION_OUTSIDE:
+				case MotionEvent.ACTION_CANCEL:
+					LunaNative.onTouchUp(event.getX(pointerIndex), y, event.getPointerId(pointerIndex));
+					break;
+				}
 			}
 		});
 		

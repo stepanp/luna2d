@@ -34,7 +34,7 @@ public class LunaNative
 	public static native void mainLoop();
 	
 	// Touch events
-	public static native void onTouchDown(float x, float y);
-	public static native void onTouchMoved(float x, float y);
-	public static native void onTouchUp(float x, float y);
+	public static native void onTouchDown(float x, float y, int touchIndex);
+	public static native void onTouchMoved(float x, float y, int touchIndex);
+	public static native void onTouchUp(float x, float y, int touchIndex);
 }

@@ -101,7 +101,7 @@ void LUNAQtWidget::paintGL()
 		if(mouseDown)
 		{
 			QPoint mousePos = mapFromGlobal(QCursor::pos());
-			LUNAEngine::Shared()->OnTouchMoved(TranslateMouseX(mousePos.x()), TranslateMouseY(mousePos.y()));
+			LUNAEngine::Shared()->OnTouchMoved(TranslateMouseX(mousePos.x()), TranslateMouseY(mousePos.y()), 0);
 		}
 
 		LUNAEngine::Shared()->MainLoop();
@@ -136,7 +136,7 @@ void LUNAQtWidget::mousePressEvent(QMouseEvent *event)
 	if(QApplication::mouseButtons() == Qt::LeftButton)
 	{
 		mouseDown = true;
-		LUNAEngine::Shared()->OnTouchDown(TranslateMouseX(event->x()), TranslateMouseY(event->y()));
+		LUNAEngine::Shared()->OnTouchDown(TranslateMouseX(event->x()), TranslateMouseY(event->y()), 0);
 	}
 }
 
@@ -145,7 +145,7 @@ void LUNAQtWidget::mouseReleaseEvent(QMouseEvent *event)
 	if(!LUNAEngine::Shared()->IsInitialized()) return;
 
 	mouseDown = false;
-	LUNAEngine::Shared()->OnTouchUp(TranslateMouseX(event->x()), TranslateMouseY(event->y()));
+	LUNAEngine::Shared()->OnTouchUp(TranslateMouseX(event->x()), TranslateMouseY(event->y()), 0);
 }
 
 bool LUNAQtWidget::IsEngineInitialized()

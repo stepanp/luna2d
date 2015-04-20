@@ -69,18 +69,18 @@ LUNA_JNI_FUNC(void, LunaNative, mainLoop)(JNIEnv* env, jclass cls)
 	LUNAEngine::Shared()->MainLoop();
 }
 
-LUNA_JNI_FUNC(void, LunaNative, onTouchDown)(JNIEnv* env, jclass cls, jfloat x, jfloat y)
+LUNA_JNI_FUNC(void, LunaNative, onTouchDown)(JNIEnv* env, jclass cls, jfloat x, jfloat y, jint touchIndex)
 {
-	LUNAEngine::Shared()->OnTouchDown(x, y);
+	LUNAEngine::Shared()->OnTouchDown(x, y, touchIndex);
 }
 
-LUNA_JNI_FUNC(void, LunaNative, onTouchMoved)(JNIEnv* env, jclass cls, jfloat x, jfloat y)
+LUNA_JNI_FUNC(void, LunaNative, onTouchMoved)(JNIEnv* env, jclass cls, jfloat x, jfloat y, jint touchIndex)
 {
-	LUNAEngine::Shared()->OnTouchMoved(x, y);
+	LUNAEngine::Shared()->OnTouchMoved(x, y, touchIndex);
 }
 
-LUNA_JNI_FUNC(void, LunaNative, onTouchUp)(JNIEnv* env, jclass cls, jfloat x, jfloat y)
+LUNA_JNI_FUNC(void, LunaNative, onTouchUp)(JNIEnv* env, jclass cls, jfloat x, jfloat y, jint touchIndex)
 {
-	LUNAEngine::Shared()->OnTouchUp(x, y);
+	LUNAEngine::Shared()->OnTouchUp(x, y, touchIndex);
 }
 

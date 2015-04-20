@@ -41,9 +41,9 @@ private:
 public:
 	LuaTable GetCurrrentScene();
 	void SetScene(const LuaTable& tblScene);
-	void OnTouchDown(float x, float y);
-	void OnTouchMoved(float x, float y);
-	void OnTouchUp(float x, float y);
+	void OnTouchDown(float x, float y, int touchIndex);
+	void OnTouchMoved(float x, float y, int touchIndex);
+	void OnTouchUp(float x, float y, int touchIndex);
 	void OnUpdate(float deltaTime);
 	void OnRender();
 };
