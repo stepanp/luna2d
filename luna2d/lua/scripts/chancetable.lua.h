@@ -34,7 +34,7 @@ function ChanceTable:onInit(tbl) \
 	local chances = {} \
 \
 	for k,v in pairs(tbl) do \
-		table.insert(chances, { chance = v, id = k }) \
+		if v > 0 then table.insert(chances, { chance = v, id = k }) end \
 	end \
 \
 	table.sort(chances, function(v1, v2) return v1.chance < v2.chance end) \
@@ -49,7 +49,7 @@ function ChanceTable:onInit(tbl) \
 end \
 \
 function ChanceTable:getNext() \
-	local rand = math.random(1, 100) \
+	local rand = math.random(0, 100) \
 \
 	for _,v in ipairs(self.chances) do \
 		if rand <= v.chance then \
