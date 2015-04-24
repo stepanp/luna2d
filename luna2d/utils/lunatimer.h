@@ -23,29 +23,36 @@
 
 #pragma once
 
-#include "luaref.h"
-#include <memory>
+#include "lunalua.h"
 
 namespace luna2d{
 
-class LuaObject
+class LUNATimer
 {
-public:
-	LuaObject(const LuaNil& value);
-	LuaObject(LuaScript* lua);
-	LuaObject(lua_State* luaVm);
-	LuaObject(lua_State* luaVm, int ref);
-	LuaObject(const LuaObject& obj);
-
-protected:
-	std::shared_ptr<LuaRef> ref;
+	LUNA_USERDATA(LUNATimer)
 
 public:
-	std::shared_ptr<LuaRef> GetRef() const;
-	bool operator==(const LuaNil&) const;
-	bool operator!=(const LuaNil&) const;
-	operator bool() const;
-	LuaObject operator=(const LuaObject& obj);
+	LUNATimer(float time, const LuaFunction& onFinish, bool loop);
+
+private:
+	float totalTime = 0.0f, time = 0.0f;
+	LuaFunction onFinish = nil;
+	bool loop = false;
+	bool running  = false;
+
+public:
+	bool IsLoop();
+	void SetLoop(bool loop);
+	float GetTotalTime();
+	float GetRemainingTime();
+	void SetTime(float time);
+	LuaFunction GetCallback();
+	void SetCallback(const LuaFunction& onFinish);
+	bool IsRunning();
+	void Start(); // Start or resume timer
+	void Pause(); // Stop timer without reset time
+	void Stop(); // Stop timer
+	void Update(float deltaTime);
 };
 
 }

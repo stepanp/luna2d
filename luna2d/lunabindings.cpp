@@ -25,6 +25,7 @@
 #include "lunaengine.h"
 #include "lunalua.h"
 #include "lunaprefs.h"
+#include "lunatimer.h"
 #include "math/lunamath.h"
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
@@ -62,8 +63,28 @@ void BindLog(LuaScript* lua, LuaTable& tblLuna)
 // Bind "luna.utilss" module
 void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 {
+	LuaTable tblUtils(lua);
+	tblLuna.SetField("utils", tblUtils);
+
 	// Register "ChanceTable" class
 	lua->DoString(LUNA_CHANCE_TABLE);
+
+	// Register timer
+	LuaClass<LUNATimer> clsTimer(lua);
+	clsTimer.SetConstructor<float, const LuaFunction&, bool>();
+	clsTimer.SetMethod("isLoop", &LUNATimer::IsLoop);
+	clsTimer.SetMethod("setLoop", &LUNATimer::SetLoop);
+	clsTimer.SetMethod("getTotalTime", &LUNATimer::GetTotalTime);
+	clsTimer.SetMethod("getRemainingTime", &LUNATimer::GetRemainingTime);
+	clsTimer.SetMethod("setTime", &LUNATimer::SetTime);
+	clsTimer.SetMethod("getCallback", &LUNATimer::GetCallback);
+	clsTimer.SetMethod("setCallback", &LUNATimer::SetCallback);
+	clsTimer.SetMethod("isRunning", &LUNATimer::IsRunning);
+	clsTimer.SetMethod("start", &LUNATimer::Start);
+	clsTimer.SetMethod("pause", &LUNATimer::Pause);
+	clsTimer.SetMethod("stop", &LUNATimer::Stop);
+	clsTimer.SetMethod("update", &LUNATimer::Update);
+	tblUtils.SetField("Timer", clsTimer);
 }
 
 // Bind extension for standard lua "math" module

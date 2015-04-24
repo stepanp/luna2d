@@ -21,31 +21,94 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunatimer.h"
 
-#include "luaref.h"
-#include <memory>
+using namespace luna2d;
 
-namespace luna2d{
-
-class LuaObject
+LUNATimer::LUNATimer(float time, const LuaFunction& onFinish, bool loop)
 {
-public:
-	LuaObject(const LuaNil& value);
-	LuaObject(LuaScript* lua);
-	LuaObject(lua_State* luaVm);
-	LuaObject(lua_State* luaVm, int ref);
-	LuaObject(const LuaObject& obj);
+	SetTime(time);
+	SetCallback(onFinish);
+	SetLoop(loop);
+}
 
-protected:
-	std::shared_ptr<LuaRef> ref;
+bool LUNATimer::IsLoop()
+{
+	return loop;
+}
 
-public:
-	std::shared_ptr<LuaRef> GetRef() const;
-	bool operator==(const LuaNil&) const;
-	bool operator!=(const LuaNil&) const;
-	operator bool() const;
-	LuaObject operator=(const LuaObject& obj);
-};
+void LUNATimer::SetLoop(bool loop)
+{
+	this->loop = loop;
+}
 
+float LUNATimer::GetTotalTime()
+{
+	return totalTime;
+}
+
+float LUNATimer::GetRemainingTime()
+{
+	return totalTime - time;
+}
+
+void LUNATimer::SetTime(float time)
+{
+	Stop();
+
+	this->totalTime = time;
+	this->time = 0;
+}
+
+LuaFunction LUNATimer::GetCallback()
+{
+	return onFinish;
+}
+
+void LUNATimer::SetCallback(const LuaFunction& onFinish)
+{
+	if(!onFinish)
+	{
+		LUNA_LOGE("Attempt to set invalid finish callback to timer");
+		return;
+	}
+
+	this->onFinish = onFinish;
+}
+
+bool LUNATimer::IsRunning()
+{
+	return running;
+}
+
+// Start or resume timer
+void LUNATimer::Start()
+{
+	running = true;
+}
+
+// Stop timer without reset time
+void LUNATimer::Pause()
+{
+	running = false;
+}
+
+// Stop timer
+void LUNATimer::Stop()
+{
+	running = false;
+	time = 0;
+}
+
+void LUNATimer::Update(float deltaTime)
+{
+	if(!running) return;
+
+	time += deltaTime;
+	if(time >= totalTime)
+	{
+		time = 0;
+		if(!loop) running = false;
+		if(onFinish) onFinish.CallVoid();
+	}
 }
