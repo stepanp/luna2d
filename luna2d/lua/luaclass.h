@@ -101,6 +101,7 @@ public:
 
 		// Set "__index" and "__gc" methamethods
 		SetField("__index", &OnIndex);
+		SetField("__newindex", &OnNewIndex);
 		SetField("__gc", &OnGc);
 
 		// Add userdata type to metatable
@@ -207,6 +208,11 @@ private:
 		}
 
 		return 1;
+	}
+
+	static int OnNewIndex(lua_State* luaVm)
+	{
+		return 0;
 	}
 
 	// Handler for "__gc" metamethod

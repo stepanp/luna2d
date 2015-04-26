@@ -123,7 +123,7 @@ public:
 
 	// Bind method to special proxy
 	// Pointer to object not store with pointer to method,
-	// but passing as fist param of lua function
+	// but passing as first param of lua function
 	// Uses for binding methods in "luaclass.h"
 	template<typename Ret, typename Class, typename ... Args>
 	void Bind(Ret (Class::*method)(Args ...))

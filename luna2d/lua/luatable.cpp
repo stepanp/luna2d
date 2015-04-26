@@ -126,7 +126,7 @@ LuaTable LuaTable::GetMetatable() const
 	}
 
 	lua_pop(luaVm, 1); // Remove this table from stack
-	return LuaTable(luaVm, LUA_NOREF); // Return nil table
+	return nil; // Return nil table
 }
 
 // Set given table as metatable for this table
@@ -180,7 +180,7 @@ void LuaTable::Clear()
 }
 
 // Check for table has at least on field
-bool LuaTable::IsEmpty()
+bool LuaTable::IsEmpty() const
 {
 	lua_State *luaVm = ref->GetLuaVm();
 
@@ -192,6 +192,18 @@ bool LuaTable::IsEmpty()
 	lua_pop(luaVm, empty ? 1 : 3); // Remove table, key and value from stack
 
 	return empty;
+}
+
+ // Get count of items for array table
+int LuaTable::GetArrayCount() const
+{
+	lua_State *luaVm = ref->GetLuaVm();
+
+	LuaStack<LuaTable>::Push(luaVm, *this);
+	int ret = lua_rawlen(luaVm, -1);
+	lua_pop(luaVm, 1);
+
+	return ret;
 }
 
 // Deny modify table from lua

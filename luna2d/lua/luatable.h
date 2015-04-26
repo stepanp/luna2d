@@ -66,7 +66,8 @@ public:
 	void SetMetatable(const LuaTable& meta); // Set given table as metatable for this table
 	bool HasField(const std::string& name, bool rawMode = false) const; // Check for field with given key is exists(not nil)
 	void Clear(); // Remove all fields from table
-	bool IsEmpty(); // Check for table has at least on field
+	bool IsEmpty() const; // Check for table has at least on field
+	int GetArrayCount() const; // Get count of items for array table
 	void MakeReadOnly(); // Deny modify table from lua
 
 	// Get field of table by string key
@@ -161,7 +162,7 @@ struct LuaStack<LuaTable>
 
 	static LuaTable Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_istable(luaVm, index)) return LuaTable(luaVm, LUA_NOREF); // Return nil table
+		if(!lua_istable(luaVm, index)) return nil;
 
 		// Push table from index to top of stack
 		// because "luaL_ref" can get ref only from top of stack
