@@ -303,7 +303,6 @@ SOURCES += \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvbsln.c \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvcommn.c \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvfeat.c \
-    ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvfgen.c \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvjust.c \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvkern.c \
     ../../../luna2d/thirdparty/freetype/src/gxvalid/gxvlcar.c \
