@@ -84,7 +84,7 @@ class LuaClass : public LuaTable
 	static_assert(Class::_CheckIsBaseOf(), "");
 #endif
 
-	typedef LuaDynamicType (Class::*IndexHandler)(const LuaDynamicType&);
+	typedef LuaAny (Class::*IndexHandler)(const LuaAny&);
 
 public:
 	LuaClass(LuaScript *lua) : LuaTable(lua->GetLuaVm(), LUA_NOREF)
@@ -158,12 +158,12 @@ private:
 			Class *obj = LuaStack<std::shared_ptr<Class>>::Pop(luaVm, -2).get();
 			if(obj)
 			{
-				const LuaDynamicType& key = LuaStack<LuaDynamicType>::Pop(luaVm, -1);
-				const LuaDynamicType& ret = (obj->*LuaClass<Class>::indexHandler)(key);
+				const LuaAny& key = LuaStack<LuaAny>::Pop(luaVm, -1);
+				const LuaAny& ret = (obj->*LuaClass<Class>::indexHandler)(key);
 
 				if(ret != nil)
 				{
-					LuaStack<LuaDynamicType>::Push(luaVm, ret);
+					LuaStack<LuaAny>::Push(luaVm, ret);
 					return 1;
 				}
 			}
@@ -265,7 +265,7 @@ public:
 
 // Initialize static members of LuaClass
 template<typename Class>
-LuaDynamicType (Class::*LuaClass<Class>::indexHandler)(const LuaDynamicType&) = nullptr;
+LuaAny (Class::*LuaClass<Class>::indexHandler)(const LuaAny&) = nullptr;
 
 // Use same implementation of LuaStack as for LuaTable
 template<typename Class>

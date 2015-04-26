@@ -114,7 +114,6 @@ SOURCES += \
     ../../../luna2d/graphics/lunasprite.cpp \
     ../../../luna2d/thirdparty/json11/json11.cpp \
     ../../../luna2d/utils/lunawatcher.cpp \
-    ../../../luna2d/lua/luadynamictype.cpp \
     ../../../luna2d/graphics/lunamesh.cpp \
     ../../../luna2d/lua/luaobject.cpp \
     ../../../luna2d/physics/lunaphysicsmodule.cpp \
@@ -401,7 +400,8 @@ SOURCES += \
     ../../../luna2d/platform/qt/lunaqtprefs.cpp \
     ../../../luna2d/utils/lunatimer.cpp \
     ../../../luna2d/utils/lunaanimator.cpp \
-    ../../../luna2d/utils/lunaanimatoractions.cpp
+    ../../../luna2d/utils/lunaanimatoractions.cpp \
+    ../../../luna2d/lua/luaany.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -475,7 +475,6 @@ HEADERS += \
     ../../../luna2d/graphics/lunasprite.h \
     ../../../luna2d/thirdparty/json11/json11.hpp \
     ../../../luna2d/utils/lunawatcher.h \
-    ../../../luna2d/lua/luadynamictype.h \
     ../../../luna2d/graphics/lunamesh.h \
     ../../../luna2d/thirdparty/Box2D/Collision/Shapes/b2ChainShape.h \
     ../../../luna2d/thirdparty/Box2D/Collision/Shapes/b2CircleShape.h \
@@ -822,6 +821,7 @@ HEADERS += \
     ../../../luna2d/platform/qt/lunaqtprefs.h \
     ../../../luna2d/utils/lunatimer.h \
     ../../../luna2d/utils/lunaanimator.h \
-    ../../../luna2d/utils/lunaanimatoractions.h
+    ../../../luna2d/utils/lunaanimatoractions.h \
+    ../../../luna2d/lua/luaany.h
 
 QMAKE_MAC_SDK = macosx10.9

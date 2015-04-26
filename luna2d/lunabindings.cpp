@@ -169,8 +169,8 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 	// calls whenever acess to "luna.prefs" table like: "local value = luna.prefs.key"
 	// Gets value from preferences
 	// Type of value automaticaly depends by stored pref type
-	std::function<LuaDynamicType(LuaNil, const std::string&)> index =
-		[lua](LuaNil, const std::string& name) -> LuaDynamicType
+	std::function<LuaAny(LuaNil, const std::string&)> index =
+		[lua](LuaNil, const std::string& name) -> LuaAny
 	{
 		if(name.empty()) return nil; // Ignore all keys except valid strings
 
@@ -182,13 +182,13 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 		case LUNAPrefType::NONE:
 			return nil;
 		case LUNAPrefType::STRING:
-			return LuaDynamicType(lua, prefs->GetString(name));
+			return LuaAny(lua, prefs->GetString(name));
 		case LUNAPrefType::INT:
-			return LuaDynamicType(lua, prefs->GetInt(name));
+			return LuaAny(lua, prefs->GetInt(name));
 		case LUNAPrefType::FLOAT:
-			return LuaDynamicType(lua, prefs->GetFloat(name));
+			return LuaAny(lua, prefs->GetFloat(name));
 		case LUNAPrefType::BOOL:
-			return LuaDynamicType(lua, prefs->GetBool(name));
+			return LuaAny(lua, prefs->GetBool(name));
 		}
 
 		return nil;
@@ -197,8 +197,8 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 	// "__newindex" metamethod handler
 	// calls whenever acsess to "luna.prefs" table like: "luna.prefs.key = value"
 	// Puts value to preferences subsytem and save pref type for automatic getting in "__index" method
-	std::function<void(LuaNil, const std::string&, const LuaDynamicType&)> newIndex =
-		[](LuaNil, const std::string& name, const LuaDynamicType& value)
+	std::function<void(LuaNil, const std::string&, const LuaAny&)> newIndex =
+		[](LuaNil, const std::string& name, const LuaAny& value)
 	{
 		if(name.empty()) return; // Ignore all keys except valid strings
 

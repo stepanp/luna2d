@@ -58,7 +58,7 @@ LUNAGraphics::LUNAGraphics()
 
 	// Register sprite
 	LuaClass<LUNASprite> clsSprite(lua);
-	clsSprite.SetConstructor<const LuaDynamicType&>();
+	clsSprite.SetConstructor<const LuaAny&>();
 	clsSprite.SetMethod("render", &LUNASprite::Render);
 	clsSprite.SetMethod("getX", &LUNASprite::GetX);
 	clsSprite.SetMethod("getY", &LUNASprite::GetY);

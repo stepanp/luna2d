@@ -84,19 +84,19 @@ void WatcherDialog::DetachWatcher()
 void WatcherDialog::OnStringFieldChanged(const QString &value)
 {
 	UserDataWidget<QLineEdit>* edit = static_cast<UserDataWidget<QLineEdit>*>(sender());
-	watcher->SetValue(edit->table, edit->field, LuaDynamicType(LUNAEngine::SharedLua(), value));
+	watcher->SetValue(edit->table, edit->field, LuaAny(LUNAEngine::SharedLua(), value));
 }
 
 void WatcherDialog::OnNumberFieldChanged(double value)
 {
 	UserDataWidget<QDoubleSpinBox>* spinBox = static_cast<UserDataWidget<QDoubleSpinBox>*>(sender());
-	watcher->SetValue(spinBox->table, spinBox->field, LuaDynamicType(LUNAEngine::SharedLua(), (float)value));
+	watcher->SetValue(spinBox->table, spinBox->field, LuaAny(LUNAEngine::SharedLua(), (float)value));
 }
 
 void WatcherDialog::OnBoolFieldChanged(bool value)
 {
 	UserDataWidget<QCheckBox>* checkBox = static_cast<UserDataWidget<QCheckBox>*>(sender());
-	watcher->SetValue(checkBox->table, checkBox->field, LuaDynamicType(LUNAEngine::SharedLua(), value));
+	watcher->SetValue(checkBox->table, checkBox->field, LuaAny(LUNAEngine::SharedLua(), value));
 }
 
 void WatcherDialog::OnEngineInitialized()
@@ -116,7 +116,7 @@ void WatcherDialog::OnTableRemoved(const std::string& name)
 
 }
 
-void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::string& fieldName, const LuaDynamicType& value)
+void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::string& fieldName, const LuaAny& value)
 {
 	int type = value.GetType();
 

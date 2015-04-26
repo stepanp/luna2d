@@ -33,7 +33,7 @@ LUNAWatcher::~LUNAWatcher()
 }
 
 // This method calls when changing any value in hooked table
-void LUNAWatcher::OnNewIndex(const LuaTable& table, const LuaDynamicType& key, const LuaDynamicType& value)
+void LUNAWatcher::OnNewIndex(const LuaTable& table, const LuaAny& key, const LuaAny& value)
 {
 	std::string tableName = table.GetMetatable().GetString("__watcherId");
 
@@ -122,7 +122,7 @@ void LUNAWatcher::RemoveTable(const std::string &name)
 	if(listener) listener->OnTableRemoved(name);
 }
 
-void LUNAWatcher::SetValue(const std::string& tableName, const std::string& fieldName, LuaDynamicType value)
+void LUNAWatcher::SetValue(const std::string& tableName, const std::string& fieldName, LuaAny value)
 {
 	if(hooks.count(tableName) > 0)
 	{

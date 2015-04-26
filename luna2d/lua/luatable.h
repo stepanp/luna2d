@@ -24,12 +24,12 @@
 #pragma once
 
 #include "luafunction.h"
-#include "luadynamictype.h"
+#include "luaany.h"
 #include <iterator>
 
 namespace luna2d{
 
-class LuaTableIterator : public std::iterator<std::forward_iterator_tag, std::pair<LuaDynamicType,LuaDynamicType>>
+class LuaTableIterator : public std::iterator<std::forward_iterator_tag, std::pair<LuaAny,LuaAny>>
 {
 public:
 	LuaTableIterator();
@@ -38,7 +38,7 @@ public:
 private:
 	LuaRef* tableRef;
 	LuaRef keyRef;
-	std::pair<LuaDynamicType,LuaDynamicType> curEntry;
+	std::pair<LuaAny,LuaAny> curEntry;
 	int counter;
 
 private:
@@ -48,7 +48,7 @@ public:
 	bool operator==(const LuaTableIterator& iterator);
 	bool operator!=(const LuaTableIterator& iterator);
 	LuaTableIterator& operator++();
-	std::pair<LuaDynamicType,LuaDynamicType>& operator*();
+	std::pair<LuaAny,LuaAny>& operator*();
 };
 
 

@@ -21,19 +21,19 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "luadynamictype.h"
+#include "luaany.h"
 #include "luatable.h"
 
 using namespace luna2d;
 
-LuaDynamicType::LuaDynamicType() : LuaObject() {}
-LuaDynamicType::LuaDynamicType(const LuaNil& value) : LuaObject(value) {}
-LuaDynamicType::LuaDynamicType(LuaScript* lua) : LuaObject(lua) {}
-LuaDynamicType::LuaDynamicType(lua_State* luaVm) : LuaObject(luaVm) {}
-LuaDynamicType::LuaDynamicType(lua_State *luaVm, int ref) : LuaObject(luaVm, ref) {}
-LuaDynamicType::LuaDynamicType(const LuaDynamicType& type) : LuaObject(type) {}
+LuaAny::LuaAny() : LuaObject() {}
+LuaAny::LuaAny(const LuaNil& value) : LuaObject(value) {}
+LuaAny::LuaAny(LuaScript* lua) : LuaObject(lua) {}
+LuaAny::LuaAny(lua_State* luaVm) : LuaObject(luaVm) {}
+LuaAny::LuaAny(lua_State *luaVm, int ref) : LuaObject(luaVm, ref) {}
+LuaAny::LuaAny(const LuaAny& type) : LuaObject(type) {}
 
-int LuaDynamicType::GetType() const
+int LuaAny::GetType() const
 {
 	lua_State *luaVm = ref->GetLuaVm();
 
@@ -44,18 +44,18 @@ int LuaDynamicType::GetType() const
 	return type;
 }
 
-LuaDynamicType& LuaDynamicType::operator=(const LuaDynamicType& type)
+LuaAny& LuaAny::operator=(const LuaAny& type)
 {
 	ref = type.ref;
 	return *this;
 }
 
-LuaTable LuaDynamicType::ToTable() const
+LuaTable LuaAny::ToTable() const
 {
 	return To<LuaTable>();
 }
 
-LuaFunction LuaDynamicType::ToFunction() const
+LuaFunction LuaAny::ToFunction() const
 {
 	return To<LuaFunction>();
 }

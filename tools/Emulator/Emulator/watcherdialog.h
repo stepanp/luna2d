@@ -81,6 +81,6 @@ public slots:
 public:
 	virtual void OnTableAdded(const std::string& name);
 	virtual void OnTableRemoved(const std::string& name);
-	virtual void OnFieldChanged(const std::string& tableName, const std::string& fieldName, const luna2d::LuaDynamicType& value);
+	virtual void OnFieldChanged(const std::string& tableName, const std::string& fieldName, const luna2d::LuaAny& value);
 	virtual void OnWatcherStopped();
 };

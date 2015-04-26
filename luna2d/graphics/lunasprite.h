@@ -35,7 +35,7 @@ class LUNASprite
 	LUNA_USERDATA(LUNASprite)
 
 public:
-	LUNASprite(const LuaDynamicType& asset); // Lua constructor
+	LUNASprite(const LuaAny& asset); // Lua constructor
 	LUNASprite(const std::weak_ptr<LUNATexture>& texture);
 	LUNASprite(const std::weak_ptr<LUNATextureRegion>& region);
 

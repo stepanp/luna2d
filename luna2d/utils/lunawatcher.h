@@ -41,7 +41,7 @@ public:
 	virtual ~LUNAWatcherListener() {}
 	virtual void OnTableAdded(const std::string& name) = 0;
 	virtual void OnTableRemoved(const std::string& name) = 0;
-	virtual void OnFieldChanged(const std::string& tableName, const std::string& fieldName, const LuaDynamicType& value) = 0;
+	virtual void OnFieldChanged(const std::string& tableName, const std::string& fieldName, const LuaAny& value) = 0;
 	virtual void OnWatcherStopped() = 0;
 };
 
@@ -55,7 +55,7 @@ private:
 	LUNAWatcherListener* listener = nullptr;
 
 private:
-	void OnNewIndex(const LuaTable& table, const LuaDynamicType& key, const LuaDynamicType& value); // This method calls when changing any value in hooked table
+	void OnNewIndex(const LuaTable& table, const LuaAny& key, const LuaAny& value); // This method calls when changing any value in hooked table
 	TableHook SetHook(LuaTable table, const std::string& name);
 	void RemoveHook(LuaTable table);
 	void FetchTable(const LuaTable& table, const std::string& name); // Fetch all fields of given table
@@ -64,7 +64,7 @@ public:
 	void SetListener(LUNAWatcherListener* listener);
 	void AddTable(const std::string& name, LuaTable table);
 	void RemoveTable(const std::string& name);
-	void SetValue(const std::string& tableName, const std::string& fieldName, LuaDynamicType value);
+	void SetValue(const std::string& tableName, const std::string& fieldName, LuaAny value);
 	void FetchAllTables(); // Force fetch field of all tables in watcher
 };
 

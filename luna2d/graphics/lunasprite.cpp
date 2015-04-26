@@ -32,7 +32,7 @@
 using namespace luna2d;
 
 // Lua constructor
-LUNASprite::LUNASprite(const LuaDynamicType& asset)
+LUNASprite::LUNASprite(const LuaAny& asset)
 {
 	// Create sprite from texture
 	texture = asset.To<std::weak_ptr<LUNATexture>>();

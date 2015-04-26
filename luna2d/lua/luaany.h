@@ -30,18 +30,18 @@ namespace luna2d{
 class LuaTable;
 class LuaFunction;
 
-class LuaDynamicType : public LuaObject
+class LuaAny : public LuaObject
 {
 public:
-	LuaDynamicType();
-	LuaDynamicType(const LuaNil& value);
-	LuaDynamicType(LuaScript* lua);
-	LuaDynamicType(lua_State* luaVm);
-	LuaDynamicType(lua_State* luaVm, int ref);
-	LuaDynamicType(const LuaDynamicType& type);
+	LuaAny();
+	LuaAny(const LuaNil& value);
+	LuaAny(LuaScript* lua);
+	LuaAny(lua_State* luaVm);
+	LuaAny(lua_State* luaVm, int ref);
+	LuaAny(const LuaAny& type);
 
 	template<typename T>
-	LuaDynamicType(LuaScript* lua, const T& t) : LuaDynamicType(lua)
+	LuaAny(LuaScript* lua, const T& t) : LuaAny(lua)
 	{
 		FromValue(t);
 	}
@@ -70,7 +70,7 @@ public:
 		ref = std::make_shared<LuaRef>(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
 	}
 
-	LuaDynamicType& operator=(const LuaDynamicType& type);
+	LuaAny& operator=(const LuaAny& type);
 
 	// Helpers for most frequently used types
 	inline bool ToBool() const { return To<bool>(); }
@@ -85,21 +85,21 @@ public:
 
 
 template<>
-struct LuaStack<LuaDynamicType>
+struct LuaStack<LuaAny>
 {
-	static void Push(lua_State* luaVm, LuaDynamicType type)
+	static void Push(lua_State* luaVm, LuaAny type)
 	{
 		LuaStack<LuaRef*>::Push(luaVm, type.GetRef().get());
 	}
 
-	static LuaDynamicType Pop(lua_State* luaVm, int index = -1)
+	static LuaAny Pop(lua_State* luaVm, int index = -1)
 	{
 		// Push variable from index to top of stack
 		// because "luaL_ref" can get ref only from top of stack
 		lua_pushvalue(luaVm, index);
 
 		int ref = luaL_ref(luaVm, LUA_REGISTRYINDEX);
-		return LuaDynamicType(luaVm, ref);
+		return LuaAny(luaVm, ref);
 	}
 };
 

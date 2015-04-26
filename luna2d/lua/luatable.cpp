@@ -33,7 +33,7 @@ int ReadOnlyFunc(lua_State*) { return 0; }
 LuaTableIterator::LuaTableIterator() :
 	tableRef(nullptr),
 	keyRef(nil),
-	curEntry(LuaDynamicType(nil), LuaDynamicType(nil)),
+	curEntry(LuaAny(nil), LuaAny(nil)),
 	counter(-1)
 {
 }
@@ -41,7 +41,7 @@ LuaTableIterator::LuaTableIterator() :
 LuaTableIterator::LuaTableIterator(LuaRef* tableRef) :
 	tableRef(tableRef),
 	keyRef(nil),
-	curEntry(LuaDynamicType(nil), LuaDynamicType(nil)),
+	curEntry(LuaAny(nil), LuaAny(nil)),
 	counter(-1)
 {
 	lua_State* luaVm = tableRef->GetLuaVm();
@@ -63,8 +63,8 @@ void LuaTableIterator::NextIteration()
 	// Push next key-value pair to stack
 	if(lua_next(luaVm, -2) != 0)
 	{
-		curEntry.first = LuaStack<LuaDynamicType>::Pop(luaVm, -2); // Get key
-		curEntry.second = LuaStack<LuaDynamicType>::Pop(luaVm, -1); // Get value
+		curEntry.first = LuaStack<LuaAny>::Pop(luaVm, -2); // Get key
+		curEntry.second = LuaStack<LuaAny>::Pop(luaVm, -1); // Get value
 		counter++;
 
 		lua_pop(luaVm, 1); // Pop value from stack
@@ -94,7 +94,7 @@ LuaTableIterator& LuaTableIterator::operator++()
 	return *this;
 }
 
-std::pair<LuaDynamicType,LuaDynamicType>& LuaTableIterator::operator*()
+std::pair<LuaAny,LuaAny>& LuaTableIterator::operator*()
 {
 	return curEntry;
 }
