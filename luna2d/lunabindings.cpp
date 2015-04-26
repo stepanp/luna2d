@@ -26,6 +26,7 @@
 #include "lunalua.h"
 #include "lunaprefs.h"
 #include "lunatimer.h"
+#include "lunaanimator.h"
 #include "math/lunamath.h"
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
@@ -85,6 +86,12 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsTimer.SetMethod("stop", &LUNATimer::Stop);
 	clsTimer.SetMethod("update", &LUNATimer::Update);
 	tblUtils.SetField("Timer", clsTimer);
+
+	// Register animator
+	LuaClass<LUNAAnimator> clsAnimator(lua);
+	clsAnimator.SetConstructor<const LuaTable&>();
+	clsAnimator.SetMethod("update", &LUNAAnimator::Update);
+	tblUtils.SetField("Animator", clsAnimator);
 }
 
 // Bind extension for standard lua "math" module
