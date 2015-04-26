@@ -33,6 +33,7 @@ class LuaFunction;
 class LuaDynamicType : public LuaObject
 {
 public:
+	LuaDynamicType();
 	LuaDynamicType(const LuaNil& value);
 	LuaDynamicType(LuaScript* lua);
 	LuaDynamicType(lua_State* luaVm);

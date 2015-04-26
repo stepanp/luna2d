@@ -100,6 +100,7 @@ std::pair<LuaDynamicType,LuaDynamicType>& LuaTableIterator::operator*()
 }
 
 
+LuaTable::LuaTable() : LuaObject() {}
 LuaTable::LuaTable(const LuaNil& value) : LuaObject(value) {}
 LuaTable::LuaTable(LuaScript* lua) : LuaTable(lua->GetLuaVm()) {}
 

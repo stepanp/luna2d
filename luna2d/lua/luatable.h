@@ -55,6 +55,7 @@ public:
 class LuaTable : public LuaObject
 {
 public:
+	LuaTable();
 	LuaTable(const LuaNil& value);
 	LuaTable(LuaScript* lua);
 	LuaTable(lua_State* luaVm);

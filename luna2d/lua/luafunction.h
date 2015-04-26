@@ -31,6 +31,7 @@ namespace luna2d{
 class LuaFunction : public LuaObject
 {
 public:
+	LuaFunction();
 	LuaFunction(const LuaNil& value);
 	LuaFunction(LuaScript* lua);
 	LuaFunction(lua_State* luaVm);
@@ -180,7 +181,7 @@ struct LuaStack<LuaFunction>
 
 	static LuaFunction Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_isfunction(luaVm, index)) return LuaFunction(luaVm); // Return non-binded lua function
+		if(!lua_isfunction(luaVm, index)) return nil;
 
 		// Push function from index to top of stack
 		// because "luaL_ref" can get ref only from top of stack

@@ -26,6 +26,7 @@
 
 using namespace luna2d;
 
+LuaDynamicType::LuaDynamicType() : LuaObject() {}
 LuaDynamicType::LuaDynamicType(const LuaNil& value) : LuaObject(value) {}
 LuaDynamicType::LuaDynamicType(LuaScript* lua) : LuaObject(lua) {}
 LuaDynamicType::LuaDynamicType(lua_State* luaVm) : LuaObject(luaVm) {}

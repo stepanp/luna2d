@@ -25,6 +25,7 @@
 
 using namespace luna2d;
 
+LuaFunction::LuaFunction() : LuaObject() {}
 LuaFunction::LuaFunction(const LuaNil& value) : LuaObject(value) {}
 LuaFunction::LuaFunction(LuaScript* lua) : LuaObject(lua) {}
 LuaFunction::LuaFunction(lua_State* luaVm) : LuaObject(luaVm) {}

@@ -25,6 +25,10 @@
 
 using namespace luna2d;
 
+LuaObject::LuaObject() : LuaObject(nil)
+{
+}
+
 LuaObject::LuaObject(const LuaNil& value) :
 	ref(std::make_shared<LuaRef>(value))
 {

@@ -29,8 +29,6 @@
 
 namespace luna2d{
 
-class LuaScript;
-
 //--------------------
 // Holder for lua refs
 //--------------------

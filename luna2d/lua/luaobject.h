@@ -31,6 +31,7 @@ namespace luna2d{
 class LuaObject
 {
 public:
+	LuaObject();
 	LuaObject(const LuaNil& value);
 	LuaObject(LuaScript* lua);
 	LuaObject(lua_State* luaVm);
