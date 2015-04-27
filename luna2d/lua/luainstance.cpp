@@ -21,18 +21,36 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "luascript.h"
-#include "luafunction.h"
-#include "luatable.h"
-#include "luaclass.h"
 #include "luainstance.h"
 
-// Embedded scripts
-// Declared in header files for compiling into binary engine lib
-// and not require load as separate script from assets
-#include "scripts/oopsupport.lua.h"
-#include "scripts/userdatapairs.lua.h"
-#include "scripts/logtable.lua.h"
-#include "scripts/chancetable.lua.h"
+using namespace luna2d;
+
+LuaInstance::LuaInstance() : LuaObject() {}
+LuaInstance::LuaInstance(const LuaNil& value) : LuaObject(value) {}
+LuaInstance::LuaInstance(LuaScript* lua) : LuaObject(lua) {}
+LuaInstance::LuaInstance(lua_State* luaVm) : LuaObject(luaVm) {}
+LuaInstance::LuaInstance(lua_State* luaVm, int ref) : LuaObject(luaVm, ref) {}
+LuaInstance::LuaInstance(const LuaInstance& instance) : LuaObject(instance) {}
+
+bool LuaInstance::IsUserdata() const
+{
+	return isUserdata;
+}
+
+LuaFunction LuaInstance::GetFunction(const std::string &name) const
+{
+	lua_State* luaVm = ref->GetLuaVm();
+
+	LuaStack<LuaRef*>::Push(luaVm, ref.get());
+	lua_getfield(luaVm, -1, name.c_str());
+	LuaFunction fn = LuaStack<LuaFunction>::Pop(luaVm, -1);
+	lua_pop(luaVm, 1);
+
+	return fn;
+}
+
+LuaTable LuaInstance::ToTable() const
+{
+	return LuaTable(ref->GetLuaVm(), ref->GetRef());
+}
+

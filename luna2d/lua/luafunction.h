@@ -139,7 +139,7 @@ public:
 
 	// Call function and get return value
 	template<typename Ret, typename ... Args>
-	Ret Call(Args ... args) const
+	Ret Call(const Args& ... args) const
 	{
 		lua_State *luaVm = ref->GetLuaVm();
 
@@ -156,7 +156,7 @@ public:
 
 	// Call function without return value
 	template<typename ... Args>
-	void CallVoid(Args ... args) const
+	void CallVoid(const Args& ... args) const
 	{
 		lua_State *luaVm = ref->GetLuaVm();
 

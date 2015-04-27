@@ -11,8 +11,8 @@ TEMPLATE = lib
 CONFIG += staticlib c++11
 DEFINES += FT2_BUILD_LIBRARY
 
-QMAKE_CFLAGS_WARN_ON -= -Wextra
-QMAKE_CXXFLAGS_WARN_ON -= -Wextra
+QMAKE_CFLAGS_WARN_ON -= -Wextra -Wunused-parameter
+QMAKE_CXXFLAGS_WARN_ON -= -Wextra -Wunused-parameter
 
 QMAKE_CFLAGS_WARN_ON += -Werror=return-type
 QMAKE_CXXFLAGS_WARN_ON += -Werror=return-type
@@ -400,7 +400,8 @@ SOURCES += \
     ../../../luna2d/utils/lunatimer.cpp \
     ../../../luna2d/utils/lunaanimator.cpp \
     ../../../luna2d/utils/lunaanimatoractions.cpp \
-    ../../../luna2d/lua/luaany.cpp
+    ../../../luna2d/lua/luaany.cpp \
+    ../../../luna2d/lua/luainstance.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -821,6 +822,7 @@ HEADERS += \
     ../../../luna2d/utils/lunatimer.h \
     ../../../luna2d/utils/lunaanimator.h \
     ../../../luna2d/utils/lunaanimatoractions.h \
-    ../../../luna2d/lua/luaany.h
+    ../../../luna2d/lua/luaany.h \
+    ../../../luna2d/lua/luainstance.h
 
 QMAKE_MAC_SDK = macosx10.9
