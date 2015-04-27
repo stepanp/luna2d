@@ -126,7 +126,10 @@ LUNAGraphics::LUNAGraphics()
 	clsCurveRenderer.SetMethod("removeKnot", &LUNACurveRenderer::RemoveKnot);
 	clsCurveRenderer.SetMethod("setKnot", &LUNACurveRenderer::SetKnot);
 	clsCurveRenderer.SetMethod("setKnots", &LUNACurveRenderer::SetKnots);
-	clsCurveRenderer.SetMethod("build", &LUNACurveRenderer::Build);
+	clsCurveRenderer.SetMethod("getColor", &LUNACurveRenderer::GetColor);
+	clsCurveRenderer.SetMethod("setColor", &LUNACurveRenderer::SetColor);
+	clsCurveRenderer.SetMethod("getAlpha", &LUNACurveRenderer::GetAlpha);
+	clsCurveRenderer.SetMethod("setAlpha", &LUNACurveRenderer::SetAlpha);
 	clsCurveRenderer.SetMethod("render", &LUNACurveRenderer::Render);
 	tblGraphics.SetField("CurveRenderer", clsCurveRenderer);
 

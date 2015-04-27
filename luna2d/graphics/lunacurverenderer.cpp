@@ -28,6 +28,8 @@ using namespace luna2d;
 
 LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 {
+	if(!params) LUNA_RETURN_ERR("Attempt to create curve renderer with invalid params table");
+
 	texture = params.GetField<std::weak_ptr<LUNATexture>>("texture");
 	u1 = params.GetFloat("u1");
 	v1 = params.GetFloat("v1");
@@ -36,12 +38,17 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	verticalTexture = params.GetBool("verticalTexture");
 	width = params.GetFloat("width");
 
+	if(params.HasField("color")) color = params.GetField<LUNAColor>("color");
+	if(params.HasField("alpha")) color.a = params.GetFloat("alpha");
+
 	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(texture));
+	needBuild = true;
 }
 
 void LUNACurveRenderer::ClearKnots()
 {
 	knots.clear();
+	needBuild = true;
 }
 
 int LUNACurveRenderer::GetKnotsCount()
@@ -52,6 +59,7 @@ int LUNACurveRenderer::GetKnotsCount()
 void LUNACurveRenderer::AddKnot(float x, float y)
 {
 	knots.push_back(glm::vec2(x, y));
+	needBuild = true;
 }
 
 void LUNACurveRenderer::RemoveKnot(int index)
@@ -63,6 +71,7 @@ void LUNACurveRenderer::RemoveKnot(int index)
 	}
 
 	knots.erase(knots.begin() + index);
+	needBuild = true;
 }
 
 void LUNACurveRenderer::SetKnot(int index, float x, float y)
@@ -75,12 +84,38 @@ void LUNACurveRenderer::SetKnot(int index, float x, float y)
 
 	knots[index].x = x;
 	knots[index].y = y;
+	needBuild = true;
 }
 
 void LUNACurveRenderer::SetKnots(const std::vector<glm::vec2>& knots)
 {
 	this->knots.clear();
 	this->knots.insert(this->knots.begin(), knots.begin(), knots.end());
+	needBuild = true;
+}
+
+LUNAColor LUNACurveRenderer::GetColor()
+{
+	return color;
+}
+
+void LUNACurveRenderer::SetColor(float r, float g, float b)
+{
+	color.r = r / 255.0f;
+	color.g = g / 255.0f;
+	color.b = b / 255.0f;
+	needBuild = true;
+}
+
+float LUNACurveRenderer::GetAlpha()
+{
+	return color.a;
+}
+
+void LUNACurveRenderer::SetAlpha(float alpha)
+{
+	color.a = alpha;
+	needBuild = true;
 }
 
 // Build curve mesh by knots
@@ -88,7 +123,8 @@ void LUNACurveRenderer::Build()
 {
 	if(knots.size() < 3)
 	{
-		LUNA_LOGE("Cannot build curve by less than 3 knots");
+		//LUNA_LOGE("Cannot build curve by less than 3 knots");
+		mesh->Clear();
 		return;
 	}
 
@@ -249,19 +285,27 @@ void LUNACurveRenderer::Build()
 			}
 		}
 
-		mesh->AddVertex(a.x, a.y, 1, 1, 1, 1, ltX, ltY);
-		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, lbX, lbY);
-		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, rtX, rtY);
-		mesh->AddVertex(b.x, b.y, 1, 1, 1, 1, lbX, lbY);
-		mesh->AddVertex(c.x, c.y, 1, 1, 1, 1, rtX, rtY);
-		mesh->AddVertex(d.x, d.y, 1, 1, 1, 1, rbX, rbY);
+		float cR = color.r;
+		float cG = color.g;
+		float cB = color.b;
+		float cA = color.a;
+
+		mesh->AddVertex(a.x, a.y, cR, cG, cB, cA, ltX, ltY);
+		mesh->AddVertex(b.x, b.y, cR, cG, cB, cA, lbX, lbY);
+		mesh->AddVertex(c.x, c.y, cR, cG, cB, cA, rtX, rtY);
+		mesh->AddVertex(b.x, b.y, cR, cG, cB, cA, lbX, lbY);
+		mesh->AddVertex(c.x, c.y, cR, cG, cB, cA, rtX, rtY);
+		mesh->AddVertex(d.x, d.y, cR, cG, cB, cA, rbX, rbY);
 
 		prevA = c;
 		prevB = d;
 	}
+
+	needBuild = false;
 }
 
 void LUNACurveRenderer::Render()
 {
+	if(needBuild) Build();
 	mesh->Render();
 }

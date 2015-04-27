@@ -43,6 +43,7 @@ public:
 private:
 	std::unique_ptr<LUNAMesh> mesh;
 	std::vector<glm::vec2> knots;
+	bool needBuild = false;
 
 	//--------------
 	// Curve params:
@@ -51,6 +52,10 @@ private:
 	float u1,v1,u2,v2; // Texture coordinates for curve
 	bool verticalTexture; // Rotate texture on 90 degree
 	float width; // Curve width
+	LUNAColor color = LUNAColor::WHITE;
+
+private:
+	void Build(); // Build curve mesh by knots
 
 public:
 	void ClearKnots();
@@ -59,7 +64,10 @@ public:
 	void RemoveKnot(int index);
 	void SetKnot(int index, float x, float y);
 	void SetKnots(const std::vector<glm::vec2>& knots);
-	void Build(); // Build curve mesh by knots
+	LUNAColor GetColor();
+	void SetColor(float r, float g, float b);
+	float GetAlpha();
+	void SetAlpha(float alpha);
 	void Render();
 };
 

@@ -33,3 +33,13 @@
 // Short variant of "__FILE__" macro without full file path
 //--------------------------------------------------------
 #define LUNA_FILE (strrchr(__FILE__, LUNA_SLASH) ? strrchr(__FILE__, LUNA_SLASH) + 1 : __FILE__)
+
+//---------------------------------
+// Return with loggging error macro
+//---------------------------------
+#include "lunalog.h"
+#define LUNA_RETURN_ERR(...) \
+{ \
+	luna2d::LUNAEngine::SharedLog()->Error(__VA_ARGS__); \
+	return; \
+}
