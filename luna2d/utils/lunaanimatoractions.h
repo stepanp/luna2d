@@ -24,21 +24,22 @@
 #pragma once
 
 #include "lunaanimator.h"
+#include "lunacolor.h"
 
 namespace luna2d{
 
-//--------------------------------------------
-// Base action for actions working with object
-//--------------------------------------------
-class LUNAObjectAction : public LUNAAction
+//-------------------------------------------
+// Base class for actions working with object
+//-------------------------------------------
+class LUNAObjectAction// : public LUNAAction
 {
 protected:
-	LUNAObjectAction(const LuaTable& tblObj, float time, void* easeFunc = nullptr);
+	LUNAObjectAction(const LuaTable& params);
 
 protected:
-	LuaTable tblObj;
-	void* easeFunc = nullptr;
+	LuaInstance obj;
 };
+
 
 //-----------------------
 // Moving animator action
@@ -46,15 +47,94 @@ protected:
 class LUNAActionMove : public LUNAObjectAction
 {
 public:
-	LUNAActionMove(const LuaTable& tblObj, const glm::vec2& begin, const glm::vec2& end, float time);
+	LUNAActionMove(const LuaTable& params);
 
 private:
-	LuaFunction fnSetPos = nil;
 	glm::vec2 begin;
 	glm::vec2 end;
 
 public:
 	virtual void OnUpdate();
 };
+
+
+//------------------------
+// Scaling animator action
+//------------------------
+/*class LUNAActionScale : public LUNAObjectAction
+{
+public:
+	LUNAActionScale(const LuaTable& params);
+
+private:
+	float begin;
+	float end;
+
+public:
+	virtual void OnUpdate();
+};
+
+
+//-----------------------
+// Fading animator action
+//-----------------------
+class LUNAActionFade : public LUNAObjectAction
+{
+public:
+	LUNAActionFade(const LuaTable& params);
+
+private:
+	float begin;
+	float end;
+
+public:
+	virtual void OnUpdate();
+};
+
+
+//-------------------------
+// Rotating animator action
+//-------------------------
+class LUNAActionRotate : public LUNAObjectAction
+{
+public:
+	LUNAActionRotate(const LuaTable& params);
+
+private:
+	float begin;
+	float end;
+
+public:
+	virtual void OnUpdate();
+};
+
+//-------------------------------
+// Changing color animator action
+//-------------------------------
+class LUNAActionColor : public LUNAObjectAction
+{
+public:
+	LUNAActionColor(const LuaTable& params);
+
+private:
+	LUNAColor begin;
+	LUNAColor end;
+
+public:
+	virtual void OnUpdate();
+};
+
+
+//------------------------
+// Waiting animator action
+//------------------------
+class LUNAActionWait : public LUNAAction
+{
+public:
+	LUNAActionWait(const LuaTable& params);
+
+public:
+	virtual void OnUpdate();
+};*/
 
 }

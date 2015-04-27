@@ -38,14 +38,15 @@ public:
 	LuaInstance(const LuaNil& value);
 	LuaInstance(LuaScript* lua);
 	LuaInstance(lua_State* luaVm);
-	LuaInstance(lua_State* luaVm, int ref);
+	LuaInstance(lua_State* luaVm, int ref, bool isUserdata);
 	LuaInstance(const LuaInstance& instance);
 
 private:
-	bool isUserdata;
+	bool isUserdata = false;
 
 public:
 	bool IsUserdata() const;
+	bool HasField(const std::string& name) const;
 	LuaFunction GetFunction(const std::string& name) const;
 	LuaTable ToTable() const;
 
@@ -65,7 +66,7 @@ public:
 	Ret CallMethod(const std::string& name, const Args& ... args) const
 	{
 		LuaFunction fn = GetFunction(name);
-		if(fn) return fn.Call<Ret>(args...);
+		if(fn) return fn.Call<Ret>(ref.get(), args...);
 		else return Ret();
 	}
 
@@ -73,7 +74,7 @@ public:
 	void CallMethodVoid(const std::string& name, const Args& ... args) const
 	{
 		LuaFunction fn = GetFunction(name);
-		if(fn) fn.CallVoid(args...);
+		if(fn) fn.CallVoid(ref.get(), args...);
 	}
 };
 
@@ -95,7 +96,7 @@ struct LuaStack<LuaInstance>
 		lua_pushvalue(luaVm, index);
 
 		int ref = luaL_ref(luaVm, LUA_REGISTRYINDEX);
-		return LuaInstance(luaVm, ref);
+		return LuaInstance(luaVm, ref, !!lua_isuserdata(luaVm, -1));
 	}
 };
 

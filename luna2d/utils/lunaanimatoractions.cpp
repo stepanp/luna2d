@@ -26,32 +26,34 @@
 
 using namespace luna2d;
 
-//--------------------------------------------
-// Base action for actions working with object
-//--------------------------------------------
-LUNAObjectAction::LUNAObjectAction(const LuaTable& tblObj, float time, void* easeFunc) :
-	LUNAAction(time),
-	tblObj(tblObj),
-	easeFunc(easeFunc)
+//-------------------------------------------
+// Base class for actions working with object
+//-------------------------------------------
+LUNAObjectAction::LUNAObjectAction(const LuaTable& params)// : LUNAAction(params)
 {
+	obj = params.GetField<LuaInstance>("obj");
+	if(!obj) LUNA_LOGE("Object for animator action \"%s\" must be not nil", params.GetString("action").c_str());
 }
 
 //-----------------------
 // Moving animator action
 //-----------------------
-LUNAActionMove::LUNAActionMove(const LuaTable& tblObj, const glm::vec2& begin, const glm::vec2& end, float time) :
-	LUNAObjectAction(tblObj, time),
-	begin(begin),
-	end(end)
+LUNAActionMove::LUNAActionMove(const LuaTable& params) : LUNAObjectAction(params)
 {
-	fnSetPos = tblObj.GetFunction("setPos");
-	if(!fnSetPos) LUNA_LOGE("Object for action \"move\" must have \"setPos\" method");
+	// Get current pos of object if "beginValue" is nil
+	if(!params.HasField("beginValue") && obj && obj.HasField("getPos")) begin = obj.CallMethod<glm::vec2>("getPos");
+
+	else begin = params.GetField<glm::vec2>("beginValue");
+	end = params.GetField<glm::vec2>("endValue");
+
+	if(obj && !obj.HasField("setPos")) LUNA_LOGE("Object for action \"move\" must have \"setPos\" method");
 }
 
 void luna2d::LUNAActionMove::OnUpdate()
 {
-	float x = math::Lerp(begin.x, begin.x, time);
-	float y = math::Lerp(begin.y, begin.y, time);
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	if(fnSetPos) fnSetPos.CallVoid(x, y);
+	//float x = math::Lerp(begin.x, begin.x, time);
+	//float y = math::Lerp(begin.y, begin.y, time);
+	//obj.CallMethodVoid("setPos", x, y);
 }

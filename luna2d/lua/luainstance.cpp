@@ -29,7 +29,7 @@ LuaInstance::LuaInstance() : LuaObject() {}
 LuaInstance::LuaInstance(const LuaNil& value) : LuaObject(value) {}
 LuaInstance::LuaInstance(LuaScript* lua) : LuaObject(lua) {}
 LuaInstance::LuaInstance(lua_State* luaVm) : LuaObject(luaVm) {}
-LuaInstance::LuaInstance(lua_State* luaVm, int ref) : LuaObject(luaVm, ref) {}
+LuaInstance::LuaInstance(lua_State* luaVm, int ref, bool isUserdata) : LuaObject(luaVm, ref), isUserdata(isUserdata) {}
 LuaInstance::LuaInstance(const LuaInstance& instance) : LuaObject(instance) {}
 
 bool LuaInstance::IsUserdata() const
@@ -37,7 +37,19 @@ bool LuaInstance::IsUserdata() const
 	return isUserdata;
 }
 
-LuaFunction LuaInstance::GetFunction(const std::string &name) const
+bool LuaInstance::HasField(const std::string& name) const
+{
+	lua_State* luaVm = ref->GetLuaVm();
+
+	LuaStack<LuaRef*>::Push(luaVm, ref.get());
+	lua_getfield(luaVm, -1, name.c_str());
+	bool ret = !!lua_isnil(luaVm, -1);
+	lua_pop(luaVm, 1);
+
+	return ret;
+}
+
+LuaFunction LuaInstance::GetFunction(const std::string& name) const
 {
 	lua_State* luaVm = ref->GetLuaVm();
 

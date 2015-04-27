@@ -22,12 +22,12 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaanimator.h"
-#include "lunaanimatoractions.h"
+//#include "lunaanimatoractions.h"
 
 using namespace luna2d;
 
 // Check for given table is action params
-bool IsAction(const LuaTable& params)
+/*bool IsAction(const LuaTable& params)
 {
 	return params && params.HasField("action");
 }
@@ -43,6 +43,10 @@ std::shared_ptr<LUNAAction> CreateAction(const LuaTable& params)
 {
 	if(!IsAction(params)) return nullptr;
 
+	std::string name = params.GetString("action");
+	if(name == "move") return std::make_shared<LUNAActionMove>(params);
+
+	LUNA_LOGE("Unknown animator action \"%s\"", name.c_str());
 
 	return nullptr;
 }
@@ -61,12 +65,14 @@ std::shared_ptr<LUNASequence> CreateSequence(const LuaTable& params)
 	}
 
 	return ret;
-}
+}*/
 
-
-LUNAAction::LUNAAction(float time) :
+//--------------------------------
+// Base class for animator actions
+//--------------------------------
+/*LUNAAction::LUNAAction(const LuaTable &params) :
 	time(0),
-	totalTime(time)
+	totalTime(params.GetFloat("time"))
 {
 }
 
@@ -80,43 +86,50 @@ void LUNAAction::Update(float deltaTime)
 	time += deltaTime;
 	if(time >= totalTime) time = totalTime;
 	OnUpdate();
-}
+}*/
 
 
-void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
+//--------------------
+// Sequence of actions
+//--------------------
+/*void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
 {
-	actions.push_back(action);
+	//actions.push_back(action);
 }
 
 void LUNASequence::Update(float deltaTime)
 {
+	/*LUNA_LOG("%d %d", (int)curAction, actions.size());
+
 	if(curAction >= actions.size()) return;
+
+	LUNA_LOG("%d %d", (int)curAction, actions.size());
 
 	auto& action = actions[curAction];
 	action->Update(deltaTime);
 	if(action->IsDone()) curAction++;
-}
+}*/
 
 
 LUNAAnimator::LUNAAnimator(const LuaTable& params)
 {
-	if(!params)
-	{
-		LUNA_LOGE("Attempt to create animator from invalid parameters table");
-		return;
-	}
+	LUNA_LOG("LUNAAnimator2");
+	/*if(!params) LUNA_RETURN_ERR("Attempt to create animator from invalid parameters table");
 
 	// Params is just only action
 	if(IsAction(params))
 	{
-		std::shared_ptr<LUNASequence> seq = std::make_shared<LUNASequence>();
-		seq->AddAction(CreateAction(params));
+		auto action = CreateAction(params);
+		if(!action) LUNA_RETURN_ERR("Attempt to create animator with invalid action");
+
+		auto seq = std::make_shared<LUNASequence>();
+		seq->AddAction(action);
 		sequences.push_back(seq);
 		return;
-	}
+	}*/
 
 	// Params is only sequence
-	if(IsSequence(params))
+	/*if(IsSequence(params))
 	{
 		sequences.push_back(CreateSequence(params));
 		return;
@@ -128,10 +141,13 @@ LUNAAnimator::LUNAAnimator(const LuaTable& params)
 	{
 		auto seq = CreateSequence(params.GetArrayField<LuaTable>(i));
 		if(seq) sequences.push_back(seq);
-	}
+	}*/
 }
 
 void LUNAAnimator::Update(float deltaTime)
 {
-	for(auto& sequence : sequences) sequence->Update(deltaTime);
+	/*for(auto& sequence : sequences)
+	{
+		//sequence->Update(deltaTime);
+	}*/
 }
