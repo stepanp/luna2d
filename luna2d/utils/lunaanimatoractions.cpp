@@ -29,7 +29,7 @@ using namespace luna2d;
 //-------------------------------------------
 // Base class for actions working with object
 //-------------------------------------------
-LUNAObjectAction::LUNAObjectAction(const LuaTable& params)// : LUNAAction(params)
+LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 {
 	obj = params.GetField<LuaInstance>("obj");
 	if(!obj) LUNA_LOGE("Object for animator action \"%s\" must be not nil", params.GetString("action").c_str());
@@ -53,7 +53,7 @@ void luna2d::LUNAActionMove::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	//float x = math::Lerp(begin.x, begin.x, time);
-	//float y = math::Lerp(begin.y, begin.y, time);
-	//obj.CallMethodVoid("setPos", x, y);
+	float x = math::Lerp(begin.x, end.x, GetPercent());
+	float y = math::Lerp(begin.y, end.y, GetPercent());
+	obj.CallMethodVoid("setPos", x, y);
 }

@@ -22,12 +22,12 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaanimator.h"
-//#include "lunaanimatoractions.h"
+#include "lunaanimatoractions.h"
 
 using namespace luna2d;
 
 // Check for given table is action params
-/*bool IsAction(const LuaTable& params)
+bool IsAction(const LuaTable& params)
 {
 	return params && params.HasField("action");
 }
@@ -65,15 +65,20 @@ std::shared_ptr<LUNASequence> CreateSequence(const LuaTable& params)
 	}
 
 	return ret;
-}*/
+}
 
 //--------------------------------
 // Base class for animator actions
 //--------------------------------
-/*LUNAAction::LUNAAction(const LuaTable &params) :
+LUNAAction::LUNAAction(const LuaTable &params) :
 	time(0),
 	totalTime(params.GetFloat("time"))
 {
+}
+
+float LUNAAction::GetPercent()
+{
+	return time / totalTime;
 }
 
 bool LUNAAction::IsDone()
@@ -86,35 +91,30 @@ void LUNAAction::Update(float deltaTime)
 	time += deltaTime;
 	if(time >= totalTime) time = totalTime;
 	OnUpdate();
-}*/
+}
 
 
 //--------------------
 // Sequence of actions
 //--------------------
-/*void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
+void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
 {
-	//actions.push_back(action);
+	actions.push_back(action);
 }
 
 void LUNASequence::Update(float deltaTime)
 {
-	/*LUNA_LOG("%d %d", (int)curAction, actions.size());
-
 	if(curAction >= actions.size()) return;
-
-	LUNA_LOG("%d %d", (int)curAction, actions.size());
 
 	auto& action = actions[curAction];
 	action->Update(deltaTime);
 	if(action->IsDone()) curAction++;
-}*/
+}
 
 
 LUNAAnimator::LUNAAnimator(const LuaTable& params)
 {
-	LUNA_LOG("LUNAAnimator2");
-	/*if(!params) LUNA_RETURN_ERR("Attempt to create animator from invalid parameters table");
+	if(!params) LUNA_RETURN_ERR("Attempt to create animator from invalid parameters table");
 
 	// Params is just only action
 	if(IsAction(params))
@@ -126,10 +126,10 @@ LUNAAnimator::LUNAAnimator(const LuaTable& params)
 		seq->AddAction(action);
 		sequences.push_back(seq);
 		return;
-	}*/
+	}
 
-	// Params is only sequence
-	/*if(IsSequence(params))
+	/*// Params is only sequence
+	if(IsSequence(params))
 	{
 		sequences.push_back(CreateSequence(params));
 		return;
@@ -146,8 +146,5 @@ LUNAAnimator::LUNAAnimator(const LuaTable& params)
 
 void LUNAAnimator::Update(float deltaTime)
 {
-	/*for(auto& sequence : sequences)
-	{
-		//sequence->Update(deltaTime);
-	}*/
+	for(auto& sequence : sequences) sequence->Update(deltaTime);
 }

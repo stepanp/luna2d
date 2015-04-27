@@ -43,7 +43,7 @@ bool LuaInstance::HasField(const std::string& name) const
 
 	LuaStack<LuaRef*>::Push(luaVm, ref.get());
 	lua_getfield(luaVm, -1, name.c_str());
-	bool ret = !!lua_isnil(luaVm, -1);
+	bool ret = lua_isnil(luaVm, -1) == 0;
 	lua_pop(luaVm, 1);
 
 	return ret;

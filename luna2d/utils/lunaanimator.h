@@ -31,7 +31,7 @@ namespace luna2d{
 //--------------------------------
 // Base class for animator actions
 //--------------------------------
-/*class LUNAAction
+class LUNAAction
 {
 protected:
 	LUNAAction(const LuaTable& params);
@@ -41,6 +41,7 @@ protected:
 	float totalTime;
 
 public:
+	float GetPercent();
 	bool IsDone();
 	void Update(float deltaTime);
 	virtual void OnUpdate() = 0;
@@ -53,16 +54,16 @@ public:
 class LUNASequence
 {
 private:
-	//std::vector<std::shared_ptr<LUNAAction>> actions;
+	std::vector<std::shared_ptr<LUNAAction>> actions;
 	size_t curAction = 0;
 
 public:
 	void AddAction(const std::shared_ptr<LUNAAction>& action);
 	/*void Start();
 	void Pause();
-	void Stop();
+	void Stop();*/
 	void Update(float deltaTime);
-};*/
+};
 
 
 class LUNAAnimator
@@ -73,7 +74,7 @@ public:
 	LUNAAnimator(const LuaTable& params);
 
 private:
-	//std::vector<std::shared_ptr<LUNASequence>> sequences;
+	std::vector<std::shared_ptr<LUNASequence>> sequences;
 
 public:
 	/*void Start();

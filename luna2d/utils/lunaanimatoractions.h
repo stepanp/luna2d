@@ -31,7 +31,7 @@ namespace luna2d{
 //-------------------------------------------
 // Base class for actions working with object
 //-------------------------------------------
-class LUNAObjectAction// : public LUNAAction
+class LUNAObjectAction : public LUNAAction
 {
 protected:
 	LUNAObjectAction(const LuaTable& params);
