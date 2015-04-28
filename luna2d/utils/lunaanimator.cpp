@@ -26,31 +26,44 @@
 
 using namespace luna2d;
 
-// Check for given table is action params
-bool IsAction(const LuaTable& params)
+// Check for given params is action params
+bool IsAction(const LuaAny& params)
 {
-	return params && params.HasField("action");
+	if(params.GetType() == LUA_TFUNCTION) return true;
+
+	LuaTable tblParams = params.ToTable();
+	return tblParams && tblParams.HasField("action");
 }
 
-// Check for given table is sequence of actions
+// Check for given params is sequence of actions
 bool IsSequence(const LuaTable& params)
 {
-	return params && IsAction(params.GetArrayField<LuaTable>(1));
+	return params && IsAction(params.GetArrayField<LuaAny>(1));
+}
+
+// Check for given params is timeline
+bool IsTimeline(const LuaTable& params)
+{
+	return params && IsSequence(params.GetArrayField<LuaTable>(1));
 }
 
 // Create LUNAAction object from lua params table
-std::shared_ptr<LUNAAction> CreateAction(const LuaTable& params)
+std::shared_ptr<LUNAAction> CreateAction(const LuaAny& params)
 {
+	if(params.GetType() == LUA_TFUNCTION) return std::make_shared<LUNAActionFunction>(params.ToFunction());
+
 	if(!IsAction(params)) return nullptr;
 
-	std::string name = params.GetString("action");
-	if(name == "move") return std::make_shared<LUNAActionMove>(params);
-	else if(name == "fade") return std::make_shared<LUNAActionFade>(params);
-	else if(name == "scale") return std::make_shared<LUNAActionScale>(params);
-	else if(name == "rotate") return std::make_shared<LUNAActionRotate>(params);
-	else if(name == "color") return std::make_shared<LUNAActionColor>(params);
-	else if(name == "wait") return std::make_shared<LUNAActionWait>(params);
-	else if(name == "custom") return std::make_shared<LUNAActionCustom>(params);
+	LuaTable tblParams = params.ToTable();
+	std::string name = tblParams.GetString("action");
+
+	if(name == "move") return std::make_shared<LUNAActionMove>(tblParams);
+	else if(name == "fade") return std::make_shared<LUNAActionFade>(tblParams);
+	else if(name == "scale") return std::make_shared<LUNAActionScale>(tblParams);
+	else if(name == "rotate") return std::make_shared<LUNAActionRotate>(tblParams);
+	else if(name == "color") return std::make_shared<LUNAActionColor>(tblParams);
+	else if(name == "wait") return std::make_shared<LUNAActionWait>(tblParams);
+	else if(name == "custom") return std::make_shared<LUNAActionCustom>(tblParams);
 
 	LUNA_LOGE("Unknown animator action \"%s\"", name.c_str());
 
@@ -63,9 +76,9 @@ std::shared_ptr<LUNASequence> CreateSequence(const LuaTable& params)
 	std::shared_ptr<LUNASequence> ret = std::make_shared<LUNASequence>();
 
 	int count = params.GetArrayCount();
-	for(int i = 1; i < count; i++)
+	for(int i = 1; i <= count; i++)
 	{
-		auto action = CreateAction(params.GetArrayField<LuaTable>(i));
+		auto action = CreateAction(params.GetArrayField<LuaAny>(i));
 		if(action) ret->AddAction(action);
 		else LUNA_LOGE("Invalid action in animator sequence");
 	}
@@ -82,6 +95,12 @@ LUNAAction::LUNAAction(const LuaTable &params) :
 {
 }
 
+LUNAAction::LUNAAction(float time) :
+	time(0),
+	totalTime(time)
+{
+}
+
 float LUNAAction::GetPercent()
 {
 	return time / totalTime;
@@ -92,11 +111,19 @@ bool LUNAAction::IsDone()
 	return time >= totalTime;
 }
 
-void LUNAAction::Update(float deltaTime)
+float LUNAAction::Update(float deltaTime)
 {
+	float extraTime = 0;
+
 	time += deltaTime;
-	if(time >= totalTime) time = totalTime;
+	if(time >= totalTime)
+	{
+		extraTime = time - totalTime;
+		time = totalTime;
+	}
 	OnUpdate();
+
+	return extraTime;
 }
 
 
@@ -110,23 +137,29 @@ void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
 
 void LUNASequence::Update(float deltaTime)
 {
-	if(curAction >= actions.size()) return;
+	float dt = deltaTime;
 
-	auto& action = actions[curAction];
-	action->Update(deltaTime);
-	if(action->IsDone()) curAction++;
+	while(true)
+	{
+		if(curAction >= actions.size()) break;
+
+		auto& action = actions[curAction];
+		dt = action->Update(dt);
+
+		if(!action->IsDone()) break;
+
+		curAction++;
+	}
 }
 
 
-LUNAAnimator::LUNAAnimator(const LuaTable& params)
+LUNAAnimator::LUNAAnimator(const LuaAny& params)
 {
-	if(!params) LUNA_RETURN_ERR("Attempt to create animator from invalid parameters table");
-
-	// Params is just only action
+	// Params is just one action
 	if(IsAction(params))
 	{
 		auto action = CreateAction(params);
-		if(!action) LUNA_RETURN_ERR("Attempt to create animator with invalid action");
+		if(!action) LUNA_RETURN_ERR("Attempt to create animator from invalid action");
 
 		auto seq = std::make_shared<LUNASequence>();
 		seq->AddAction(action);
@@ -134,20 +167,33 @@ LUNAAnimator::LUNAAnimator(const LuaTable& params)
 		return;
 	}
 
-	/*// Params is only sequence
-	if(IsSequence(params))
+	LuaTable tblParams = params.ToTable();
+	if(tblParams)
 	{
-		sequences.push_back(CreateSequence(params));
-		return;
+		// Params is one sequence
+		if(IsSequence(tblParams))
+		{
+			auto seq = CreateSequence(tblParams);
+			if(!seq) LUNA_RETURN_ERR("Attempt to create animator from invalid sequence");
+			sequences.push_back(seq);
+			return;
+		}
+
+		// Params is full timeline
+		if(IsTimeline(tblParams))
+		{
+			int count = tblParams.GetArrayCount();
+			for(int i = 1; i <= count; i++)
+			{
+				auto seq = CreateSequence(tblParams.GetArrayField<LuaTable>(i));
+				if(seq) sequences.push_back(seq);
+			}
+
+			return;
+		}
 	}
 
-	// Params full timeline of sequences
-	int count = params.GetArrayCount();
-	for(int i = 1; i < count; i++)
-	{
-		auto seq = CreateSequence(params.GetArrayField<LuaTable>(i));
-		if(seq) sequences.push_back(seq);
-	}*/
+	LUNA_LOGE("Attempt to create animator from invalid params");
 }
 
 void LUNAAnimator::Update(float deltaTime)

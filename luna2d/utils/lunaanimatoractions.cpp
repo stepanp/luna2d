@@ -209,3 +209,18 @@ void LUNAActionCustom::OnUpdate()
 	if(!fnHandler) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 	fnHandler.CallVoid(GetPercent(), totalTime);
 }
+
+
+//------------------------------
+// Call function aniamtor action
+//------------------------------
+LUNAActionFunction::LUNAActionFunction(const LuaFunction &fn) :
+	LUNAAction(0),
+	fn(fn)
+{
+}
+
+void LUNAActionFunction::OnUpdate()
+{
+	fn.CallVoid();
+}

@@ -173,4 +173,20 @@ public:
 	virtual void OnUpdate();
 };
 
+
+//------------------------------
+// Call function aniamtor action
+//------------------------------
+class LUNAActionFunction : public LUNAAction
+{
+public:
+	LUNAActionFunction(const LuaFunction& fn);
+
+private:
+	LuaFunction fn;
+
+public:
+	virtual void OnUpdate();
+};
+
 }

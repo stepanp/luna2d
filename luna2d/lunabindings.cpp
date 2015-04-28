@@ -89,7 +89,7 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 
 	// Register animator
 	LuaClass<LUNAAnimator> clsAnimator(lua);
-	clsAnimator.SetConstructor<const LuaTable&>();
+	clsAnimator.SetConstructor<const LuaAny&>();
 	clsAnimator.SetMethod("update", &LUNAAnimator::Update);
 	tblUtils.SetField("Animator", clsAnimator);
 }

@@ -35,6 +35,7 @@ class LUNAAction
 {
 protected:
 	LUNAAction(const LuaTable& params);
+	LUNAAction(float time);
 
 protected:
 	float time;
@@ -43,7 +44,7 @@ protected:
 public:
 	float GetPercent();
 	bool IsDone();
-	void Update(float deltaTime);
+	float Update(float deltaTime);
 	virtual void OnUpdate() = 0;
 };
 
@@ -71,7 +72,7 @@ class LUNAAnimator
 	LUNA_USERDATA(LUNAAnimator)
 
 public:
-	LUNAAnimator(const LuaTable& params);
+	LUNAAnimator(const LuaAny& params);
 
 private:
 	std::vector<std::shared_ptr<LUNASequence>> sequences;
