@@ -114,7 +114,7 @@ public:
 //-------------------------
 // Rotating animator action
 //-------------------------
-/*class LUNAActionRotate : public LUNAObjectAction
+class LUNAActionRotate : public LUNAObjectAction
 {
 public:
 	LUNAActionRotate(const LuaTable& params);
@@ -126,6 +126,7 @@ private:
 public:
 	virtual void OnUpdate();
 };
+
 
 //-------------------------------
 // Changing color animator action
@@ -150,10 +151,26 @@ public:
 class LUNAActionWait : public LUNAAction
 {
 public:
-	LUNAActionWait(const LuaTable& params);
+	LUNAActionWait(const LuaTable& params) : LUNAAction(params) {}
+
+public:
+	virtual void OnUpdate() {}
+};
+
+
+//-----------------------
+// Custom animator action
+//-----------------------
+class LUNAActionCustom : public LUNAAction
+{
+public:
+	LUNAActionCustom(const LuaTable& params);
+
+private:
+	LuaFunction fnHandler;
 
 public:
 	virtual void OnUpdate();
-};*/
+};
 
 }

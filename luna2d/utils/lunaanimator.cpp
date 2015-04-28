@@ -47,6 +47,10 @@ std::shared_ptr<LUNAAction> CreateAction(const LuaTable& params)
 	if(name == "move") return std::make_shared<LUNAActionMove>(params);
 	else if(name == "fade") return std::make_shared<LUNAActionFade>(params);
 	else if(name == "scale") return std::make_shared<LUNAActionScale>(params);
+	else if(name == "rotate") return std::make_shared<LUNAActionRotate>(params);
+	else if(name == "color") return std::make_shared<LUNAActionColor>(params);
+	else if(name == "wait") return std::make_shared<LUNAActionWait>(params);
+	else if(name == "custom") return std::make_shared<LUNAActionCustom>(params);
 
 	LUNA_LOGE("Unknown animator action \"%s\"", name.c_str());
 

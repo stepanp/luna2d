@@ -59,7 +59,7 @@ void luna2d::LUNAActionMove::OnUpdate()
 //-----------------------
 // Fading animator action
 //-----------------------
-LUNAActionFade::LUNAActionFade(const LuaTable &params) : LUNAObjectAction(params)
+LUNAActionFade::LUNAActionFade(const LuaTable& params) : LUNAObjectAction(params)
 {
 	begin = TryGetCurrentValue<float>(params, "beginValue", "getAlpha");
 	end = params.GetFloat("endValue");
@@ -79,7 +79,7 @@ void LUNAActionFade::OnUpdate()
 //------------------------
 // Scaling animator action
 //------------------------
-LUNAActionScale::LUNAActionScale(const LuaTable &params)  : LUNAObjectAction(params)
+LUNAActionScale::LUNAActionScale(const LuaTable& params) : LUNAObjectAction(params)
 {
 	if(params.HasField("endValueX") && params.HasField("endValueY")) mode = ScaleMode::AXIS_BOTH;
 	else if(params.HasField("endValueX") && !params.HasField("endValueY")) mode = ScaleMode::AXIS_X;
@@ -150,4 +150,62 @@ void LUNAActionScale::OnUpdate()
 		float scale = math::Lerp(beginX, endX, GetPercent());
 		obj.CallMethodVoid("setScale", scale);
 	}
+}
+
+
+//-------------------------
+// Rotating animator action
+//-------------------------
+LUNAActionRotate::LUNAActionRotate(const LuaTable& params) : LUNAObjectAction(params)
+{
+	begin = TryGetCurrentValue<float>(params, "beginValue", "getAngle");
+	end = params.GetFloat("endValue");
+
+	if(obj && !obj.HasField("setAngle")) LUNA_LOGE("Object for action \"rotate\" must have \"setAngle\" method");
+}
+
+void LUNAActionRotate::OnUpdate()
+{
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+
+	float angle = math::Lerp(begin, end, GetPercent());
+	obj.CallMethodVoid("setAngle", angle);
+}
+
+
+//-------------------------------
+// Changing color animator action
+//-------------------------------
+LUNAActionColor::LUNAActionColor(const LuaTable& params) : LUNAObjectAction(params)
+{
+	begin = TryGetCurrentValue<LUNAColor>(params, "beginValue", "getColor");
+	end = params.GetField<LUNAColor>("endValue");
+
+	if(obj && !obj.HasField("setColor")) LUNA_LOGE("Object for action \"rotate\" must have \"setColor\" method");
+}
+
+void LUNAActionColor::OnUpdate()
+{
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+
+	int r = math::Lerp(begin.GetR(), end.GetR(), GetPercent());
+	int g = math::Lerp(begin.GetG(), end.GetG(), GetPercent());
+	int b = math::Lerp(begin.GetB(), end.GetB(), GetPercent());
+	obj.CallMethodVoid("setColor", r, g, b);
+}
+
+
+//-----------------------
+// Custom animator action
+//-----------------------
+LUNAActionCustom::LUNAActionCustom(const LuaTable& params) : LUNAAction(params)
+{
+	fnHandler = params.GetFunction("handler");
+	if(!fnHandler) LUNA_LOGE("Animator action \"custom\" must have \"handler\" function in params");
+}
+
+void LUNAActionCustom::OnUpdate()
+{
+	if(!fnHandler) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+	fnHandler.CallVoid(GetPercent(), totalTime);
 }
