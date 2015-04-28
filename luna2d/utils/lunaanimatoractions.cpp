@@ -40,10 +40,7 @@ LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 //-----------------------
 LUNAActionMove::LUNAActionMove(const LuaTable& params) : LUNAObjectAction(params)
 {
-	// Get current pos of object if "beginValue" is nil
-	if(!params.HasField("beginValue") && obj && obj.HasField("getPos")) begin = obj.CallMethod<glm::vec2>("getPos");
-
-	else begin = params.GetField<glm::vec2>("beginValue");
+	begin = TryGetCurrentValue<glm::vec2>(params, "beginValue", "getPos");
 	end = params.GetField<glm::vec2>("endValue");
 
 	if(obj && !obj.HasField("setPos")) LUNA_LOGE("Object for action \"move\" must have \"setPos\" method");
@@ -56,4 +53,101 @@ void luna2d::LUNAActionMove::OnUpdate()
 	float x = math::Lerp(begin.x, end.x, GetPercent());
 	float y = math::Lerp(begin.y, end.y, GetPercent());
 	obj.CallMethodVoid("setPos", x, y);
+}
+
+
+//-----------------------
+// Fading animator action
+//-----------------------
+LUNAActionFade::LUNAActionFade(const LuaTable &params) : LUNAObjectAction(params)
+{
+	begin = TryGetCurrentValue<float>(params, "beginValue", "getAlpha");
+	end = params.GetFloat("endValue");
+
+	if(obj && !obj.HasField("setAlpha")) LUNA_LOGE("Object for action \"fade\" must have \"setAlpha\" method");
+}
+
+void LUNAActionFade::OnUpdate()
+{
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+
+	float alpha = math::Lerp(begin, end, GetPercent());
+	obj.CallMethodVoid("setAlpha", alpha);
+}
+
+
+//------------------------
+// Scaling animator action
+//------------------------
+LUNAActionScale::LUNAActionScale(const LuaTable &params)  : LUNAObjectAction(params)
+{
+	if(params.HasField("endValueX") && params.HasField("endValueY")) mode = ScaleMode::AXIS_BOTH;
+	else if(params.HasField("endValueX") && !params.HasField("endValueY")) mode = ScaleMode::AXIS_X;
+	else if(!params.HasField("endValueX") && params.HasField("endValueY")) mode = ScaleMode::AXIS_Y;
+	else mode = ScaleMode::COMMON;
+
+	if(mode == ScaleMode::COMMON)
+	{
+		beginX = TryGetCurrentValue<float>(params, "beginValue", "getScale");
+		endX = params.GetFloat("endValue");
+
+		if(obj && !obj.HasField("setScale")) LUNA_LOGE("Object for action \"scale\" must have \"setScale\" method");
+	}
+
+	else if(mode == ScaleMode::AXIS_X)
+	{
+		beginX = TryGetCurrentValue<float>(params, "beginValueX", "getScaleX");
+		endX = params.GetFloat("endValueX");
+
+		if(obj && !obj.HasField("setScaleX")) LUNA_LOGE("Object for action \"scale\" must have \"setScaleX\" method");
+	}
+
+	if(mode == ScaleMode::AXIS_Y)
+	{
+		beginY = TryGetCurrentValue<float>(params, "beginValueY", "getScaleY");
+		endY = params.GetFloat("endValueY");
+
+		if(obj && !obj.HasField("setScaleY")) LUNA_LOGE("Object for action \"scale\" must have \"setScaleY\" method");
+	}
+
+	if(mode == ScaleMode::AXIS_BOTH)
+	{
+		beginX = TryGetCurrentValue<float>(params, "beginValueX", "getScaleX");
+		endX = params.GetFloat("endValueX");
+		beginY = TryGetCurrentValue<float>(params, "beginValueY", "getScaleY");
+		endY = params.GetFloat("endValueY");
+
+		if(obj && (!obj.HasField("setScaleX") || !obj.HasField("setScaleY")))
+		{
+			LUNA_LOGE("Object for action \"scale\" must have \"setScaleX\" and \"setScaleY\" methods");
+		}
+	}
+}
+
+void LUNAActionScale::OnUpdate()
+{
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+
+	if(mode == ScaleMode::AXIS_X)
+	{
+		float scaleX = math::Lerp(beginX, endX, GetPercent());
+		obj.CallMethodVoid("setScaleX", scaleX);
+	}
+	else if(mode == ScaleMode::AXIS_Y)
+	{
+		float scaleY = math::Lerp(beginY, endY, GetPercent());
+		obj.CallMethodVoid("setScaleY", scaleY);
+	}
+	else if(mode == ScaleMode::AXIS_BOTH)
+	{
+		float scaleX = math::Lerp(beginX, endX, GetPercent());
+		float scaleY = math::Lerp(beginY, endY, GetPercent());
+		obj.CallMethodVoid("setScaleX", scaleX);
+		obj.CallMethodVoid("setScaleY", scaleY);
+	}
+	else if(mode == ScaleMode::COMMON)
+	{
+		float scale = math::Lerp(beginX, endX, GetPercent());
+		obj.CallMethodVoid("setScale", scale);
+	}
 }

@@ -45,6 +45,8 @@ std::shared_ptr<LUNAAction> CreateAction(const LuaTable& params)
 
 	std::string name = params.GetString("action");
 	if(name == "move") return std::make_shared<LUNAActionMove>(params);
+	else if(name == "fade") return std::make_shared<LUNAActionFade>(params);
+	else if(name == "scale") return std::make_shared<LUNAActionScale>(params);
 
 	LUNA_LOGE("Unknown animator action \"%s\"", name.c_str());
 

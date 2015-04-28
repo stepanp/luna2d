@@ -38,6 +38,16 @@ protected:
 
 protected:
 	LuaInstance obj;
+
+protected:
+	// If given value isn't specifed in params table, try get current value from object
+	// else just get value from params
+	template<typename T>
+	T TryGetCurrentValue(const LuaTable& params, const std::string& valueName, const std::string& methodName)
+	{
+		if(!params.HasField(valueName) && obj && obj.HasField(methodName)) return obj.CallMethod<T>(methodName);
+		else return params.GetField<T>(valueName);
+	}
 };
 
 
@@ -52,23 +62,6 @@ public:
 private:
 	glm::vec2 begin;
 	glm::vec2 end;
-
-public:
-	virtual void OnUpdate();
-};
-
-
-//------------------------
-// Scaling animator action
-//------------------------
-/*class LUNAActionScale : public LUNAObjectAction
-{
-public:
-	LUNAActionScale(const LuaTable& params);
-
-private:
-	float begin;
-	float end;
 
 public:
 	virtual void OnUpdate();
@@ -92,10 +85,36 @@ public:
 };
 
 
+//------------------------
+// Scaling animator action
+//------------------------
+class LUNAActionScale : public LUNAObjectAction
+{
+	enum class ScaleMode
+	{
+		AXIS_X, // Scale only by x-axis
+		AXIS_Y, // Scale only by y-axis
+		AXIS_BOTH, // Scale by both x and y axises
+		COMMON // Scale by common value
+	};
+
+public:
+	LUNAActionScale(const LuaTable& params);
+
+private:
+	ScaleMode mode;
+	float beginX, endX;
+	float beginY, endY;
+
+public:
+	virtual void OnUpdate();
+};
+
+
 //-------------------------
 // Rotating animator action
 //-------------------------
-class LUNAActionRotate : public LUNAObjectAction
+/*class LUNAActionRotate : public LUNAObjectAction
 {
 public:
 	LUNAActionRotate(const LuaTable& params);
