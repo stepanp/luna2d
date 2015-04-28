@@ -111,6 +111,12 @@ bool LUNAAction::IsDone()
 	return time >= totalTime;
 }
 
+// Reset sequence to initial position
+void LUNAAction::Reset()
+{
+	time = 0;
+}
+
 float LUNAAction::Update(float deltaTime)
 {
 	float extraTime = 0;
@@ -133,6 +139,18 @@ float LUNAAction::Update(float deltaTime)
 void LUNASequence::AddAction(const std::shared_ptr<LUNAAction>& action)
 {
 	actions.push_back(action);
+}
+
+bool LUNASequence::IsDone()
+{
+	return curAction >= actions.size();
+}
+
+// Reset sequence to initial position
+void LUNASequence::Reset()
+{
+	curAction = 0;
+	for(auto& action : actions) action->Reset();
 }
 
 void LUNASequence::Update(float deltaTime)
@@ -196,7 +214,53 @@ LUNAAnimator::LUNAAnimator(const LuaAny& params)
 	LUNA_LOGE("Attempt to create animator from invalid params");
 }
 
+bool LUNAAnimator::IsLoop()
+{
+	return loop;
+}
+
+void LUNAAnimator::SetLoop(bool loop)
+{
+	this->loop = loop;
+}
+
+bool LUNAAnimator::IsRunning()
+{
+	return running;
+}
+
+void LUNAAnimator::Start()
+{
+	running = true;
+}
+
+void LUNAAnimator::Pause()
+{
+	running = false;
+}
+
+void LUNAAnimator::Stop()
+{
+	running = false;
+	for(auto& seq : sequences) seq->Reset();
+}
+
 void LUNAAnimator::Update(float deltaTime)
 {
-	for(auto& sequence : sequences) sequence->Update(deltaTime);
+	if(!running) return;
+
+	// Update sequences
+	bool done = true;
+	for(auto& seq : sequences)
+	{
+		seq->Update(deltaTime);
+		if(!seq->IsDone()) done = false;
+	}
+
+	// Handle timeline ending
+	if(done)
+	{
+		Stop();
+		if(loop) Start();
+	}
 }

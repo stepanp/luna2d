@@ -44,6 +44,7 @@ protected:
 public:
 	float GetPercent();
 	bool IsDone();
+	void Reset(); // Reset action to initial position
 	float Update(float deltaTime);
 	virtual void OnUpdate() = 0;
 };
@@ -60,9 +61,8 @@ private:
 
 public:
 	void AddAction(const std::shared_ptr<LUNAAction>& action);
-	/*void Start();
-	void Pause();
-	void Stop();*/
+	bool IsDone();
+	void Reset(); // Reset sequence to initial position
 	void Update(float deltaTime);
 };
 
@@ -76,11 +76,16 @@ public:
 
 private:
 	std::vector<std::shared_ptr<LUNASequence>> sequences;
+	bool running = false;
+	bool loop = false;
 
 public:
-	/*void Start();
+	bool IsLoop();
+	void SetLoop(bool loop);
+	bool IsRunning();
+	void Start();
 	void Pause();
-	void Stop();*/
+	void Stop();
 	void Update(float deltaTime);
 };
 

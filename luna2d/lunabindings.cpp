@@ -90,6 +90,12 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	// Register animator
 	LuaClass<LUNAAnimator> clsAnimator(lua);
 	clsAnimator.SetConstructor<const LuaAny&>();
+	clsAnimator.SetMethod("isLoop", &LUNAAnimator::IsLoop);
+	clsAnimator.SetMethod("setLoop", &LUNAAnimator::SetLoop);
+	clsAnimator.SetMethod("isRunning", &LUNAAnimator::IsRunning);
+	clsAnimator.SetMethod("start", &LUNAAnimator::Start);
+	clsAnimator.SetMethod("pause", &LUNAAnimator::Pause);
+	clsAnimator.SetMethod("stop", &LUNAAnimator::Stop);
 	clsAnimator.SetMethod("update", &LUNAAnimator::Update);
 	tblUtils.SetField("Animator", clsAnimator);
 }
