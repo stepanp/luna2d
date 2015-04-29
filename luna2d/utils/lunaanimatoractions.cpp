@@ -33,6 +33,10 @@ LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 {
 	obj = params.GetField<LuaInstance>("obj");
 	if(!obj) LUNA_LOGE("Object for animator action \"%s\" must be not nil", params.GetString("action").c_str());
+
+	// Get easing function if specifed. Default easing is linear
+	std::string easingName = params.GetString("easing");
+	if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
 }
 
 //-----------------------
@@ -50,8 +54,8 @@ void luna2d::LUNAActionMove::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	float x = math::Lerp(begin.x, end.x, GetPercent());
-	float y = math::Lerp(begin.y, end.y, GetPercent());
+	float x = math::EaseLerp(begin.x, end.x, GetPercent(), easing);
+	float y = math::EaseLerp(begin.y, end.y, GetPercent(), easing);
 	obj.CallMethodVoid("setPos", x, y);
 }
 
@@ -71,7 +75,7 @@ void LUNAActionFade::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	float alpha = math::Lerp(begin, end, GetPercent());
+	float alpha = math::EaseLerp(begin, end, GetPercent(), easing);
 	obj.CallMethodVoid("setAlpha", alpha);
 }
 
@@ -130,24 +134,24 @@ void LUNAActionScale::OnUpdate()
 
 	if(mode == ScaleMode::AXIS_X)
 	{
-		float scaleX = math::Lerp(beginX, endX, GetPercent());
+		float scaleX = math::EaseLerp(beginX, endX, GetPercent(), easing);
 		obj.CallMethodVoid("setScaleX", scaleX);
 	}
 	else if(mode == ScaleMode::AXIS_Y)
 	{
-		float scaleY = math::Lerp(beginY, endY, GetPercent());
+		float scaleY = math::EaseLerp(beginY, endY, GetPercent(), easing);
 		obj.CallMethodVoid("setScaleY", scaleY);
 	}
 	else if(mode == ScaleMode::AXIS_BOTH)
 	{
-		float scaleX = math::Lerp(beginX, endX, GetPercent());
-		float scaleY = math::Lerp(beginY, endY, GetPercent());
+		float scaleX = math::EaseLerp(beginX, endX, GetPercent(), easing);
+		float scaleY = math::EaseLerp(beginY, endY, GetPercent(), easing);
 		obj.CallMethodVoid("setScaleX", scaleX);
 		obj.CallMethodVoid("setScaleY", scaleY);
 	}
 	else if(mode == ScaleMode::COMMON)
 	{
-		float scale = math::Lerp(beginX, endX, GetPercent());
+		float scale = math::EaseLerp(beginX, endX, GetPercent(), easing);
 		obj.CallMethodVoid("setScale", scale);
 	}
 }
@@ -168,7 +172,7 @@ void LUNAActionRotate::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	float angle = math::Lerp(begin, end, GetPercent());
+	float angle = math::EaseLerp(begin, end, GetPercent(), easing);
 	obj.CallMethodVoid("setAngle", angle);
 }
 
@@ -188,9 +192,9 @@ void LUNAActionColor::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	int r = math::Lerp(begin.GetR(), end.GetR(), GetPercent());
-	int g = math::Lerp(begin.GetG(), end.GetG(), GetPercent());
-	int b = math::Lerp(begin.GetB(), end.GetB(), GetPercent());
+	int r = math::EaseLerp(begin.GetR(), end.GetR(), GetPercent(), easing);
+	int g = math::EaseLerp(begin.GetG(), end.GetG(), GetPercent(), easing);
+	int b = math::EaseLerp(begin.GetB(), end.GetB(), GetPercent(), easing);
 	obj.CallMethodVoid("setColor", r, g, b);
 }
 
@@ -202,12 +206,15 @@ LUNAActionCustom::LUNAActionCustom(const LuaTable& params) : LUNAAction(params)
 {
 	fnHandler = params.GetFunction("handler");
 	if(!fnHandler) LUNA_LOGE("Animator action \"custom\" must have \"handler\" function in params");
+
+	std::string easingName = params.GetString("easing");
+	if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
 }
 
 void LUNAActionCustom::OnUpdate()
 {
 	if(!fnHandler) LUNA_RETURN_ERR("Attempt to update invalid animator action");
-	fnHandler.CallVoid(GetPercent(), totalTime);
+	fnHandler.CallVoid(easing(GetPercent()), totalTime);
 }
 
 

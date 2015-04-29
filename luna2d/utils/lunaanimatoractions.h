@@ -25,6 +25,7 @@
 
 #include "lunaanimator.h"
 #include "lunacolor.h"
+#include "lunaeasing.h"
 
 namespace luna2d{
 
@@ -38,6 +39,7 @@ protected:
 
 protected:
 	LuaInstance obj;
+	LUNAEasingFunc easing = &easing::Linear;
 
 protected:
 	// If given value isn't specifed in params table, try get current value from object
@@ -168,6 +170,7 @@ public:
 
 private:
 	LuaFunction fnHandler;
+	LUNAEasingFunc easing = easing::Linear;
 
 public:
 	virtual void OnUpdate();

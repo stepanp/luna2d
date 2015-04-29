@@ -28,9 +28,10 @@
 #include "lunatimer.h"
 #include "lunaanimator.h"
 #include "math/lunamath.h"
+#include "math/lunavector2.h"
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
-#include "math/lunavector2.h"
+#include "math/lunaeasing.h"
 
 using namespace luna2d;
 
@@ -162,6 +163,25 @@ void BindSplines(LuaScript* lua, LuaTable& tblLuna)
 	tblSplines.SetField("quadraticBSpline", LuaFunction(lua, &splines::QuadraticBSpline));
 }
 
+// Bind "luna.easing" module
+void BindEasing(LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblEasing(lua);
+	tblLuna.SetField("easing", tblEasing);
+
+	// Bind all easing functions to lua as interpolation functions like: function(a, b, t)
+	// Each function interpolate value between "a" and "b" by time "t" using own easing. "t" must be in range[0,1]
+	for(auto& entry : EASINGS_MAP)
+	{
+		LUNAEasingFunc easing = entry.second;
+		std::function<float(float, float, float)> easingFunc = [easing](float a, float b, float t) -> float
+		{
+			return math::EaseLerp(a, b, t, easing);
+		};
+		tblEasing.SetField(entry.first, LuaFunction(lua, easingFunc));
+	}
+}
+
 // Bind "luna.platform" module
 void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 {
@@ -256,6 +276,7 @@ void luna2d::DoBindings()
 	BindMath(lua, tblLuna);
 	BindIntersect(lua, tblLuna);
 	BindSplines(lua, tblLuna);
+	BindEasing(lua, tblLuna);
 	BindPlatform(lua, tblLuna);
 	BindPrefs(lua, tblLuna);
 }

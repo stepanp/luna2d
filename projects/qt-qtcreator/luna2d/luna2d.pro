@@ -401,7 +401,8 @@ SOURCES += \
     ../../../luna2d/utils/lunaanimator.cpp \
     ../../../luna2d/utils/lunaanimatoractions.cpp \
     ../../../luna2d/lua/luaany.cpp \
-    ../../../luna2d/lua/luainstance.cpp
+    ../../../luna2d/lua/luainstance.cpp \
+    ../../../luna2d/utils/math/lunaeasing.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \
@@ -823,6 +824,7 @@ HEADERS += \
     ../../../luna2d/utils/lunaanimator.h \
     ../../../luna2d/utils/lunaanimatoractions.h \
     ../../../luna2d/lua/luaany.h \
-    ../../../luna2d/lua/luainstance.h
+    ../../../luna2d/lua/luainstance.h \
+    ../../../luna2d/utils/math/lunaeasing.h
 
 QMAKE_MAC_SDK = macosx10.9
