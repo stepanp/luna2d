@@ -35,33 +35,32 @@ using namespace luna2d;
 LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screenWidth, jint screenHeight,
 		jstring appName, jstring apkPath, jstring appFolderPath)
 {
-	// Initialize engine at first creating GL surface
-	if(!LUNAEngine::Shared()->IsInitialized())
-	{
-		// Initialize file utils
-		LUNAFiles* files = new LUNAAndroidFiles(jni::FromJString(apkPath), jni::FromJString(appFolderPath));
+	// Initialize file utils
+	LUNAFiles* files = new LUNAAndroidFiles(jni::FromJString(apkPath), jni::FromJString(appFolderPath));
 
-		// Initialize log
-		LUNALog* log = new LUNAAndroidLog(jni::FromJString(appName));
+	// Initialize log
+	LUNALog* log = new LUNAAndroidLog(jni::FromJString(appName));
 
-		// Initialize platform-specific tools
-		LUNAPlatformUtils* platformUtils = new LUNAAndroidUtils();
+	// Initialize platform-specific tools
+	LUNAPlatformUtils* platformUtils = new LUNAAndroidUtils();
 
-		// Initialize preferences util
-		LUNAAndroidPrefs* prefs = new LUNAAndroidPrefs();
+	// Initialize preferences util
+	LUNAAndroidPrefs* prefs = new LUNAAndroidPrefs();
 
-		// Initialize engine
-		LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
-		LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
-	}
+	// Initialize engine
+	LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
+	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
+}
 
-	// GL surface recreating when GL context was lost
-	// In that case, we need reload some assets: textures, shaders, etc.
-	else
-	{
-		LUNAEngine::SharedGraphics()->GetRenderer()->ReloadDefaultShader();
-		LUNAEngine::SharedAssets()->ReloadAssets();
-	}
+LUNA_JNI_FUNC(void, LunaNative, reloadAssets)(JNIEnv* env, jclass cls)
+{
+	LUNAEngine::SharedGraphics()->GetRenderer()->ReloadDefaultShader();
+	LUNAEngine::SharedAssets()->ReloadAssets();
+}
+
+LUNA_JNI_FUNC(jboolean, LunaNative, isInitialized)(JNIEnv* env, jclass cls)
+{
+	return LUNAEngine::Shared()->IsInitialized();
 }
 
 LUNA_JNI_FUNC(void, LunaNative, mainLoop)(JNIEnv* env, jclass cls)

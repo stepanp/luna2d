@@ -30,7 +30,10 @@ public class LunaNative
 		System.loadLibrary("luna2d");
 	}
 	
-	public static native void initialize(int screenWidth, int screenHeight, String appName, String apkPath, String appFolderPath);
+	public static native boolean isInitialized();
+	public static native void initialize(int screenWidth, int screenHeight, 
+			String appName, String apkPath, String appFolderPath);
+	public static native void reloadAssets();
 	public static native void mainLoop();
 	
 	// Touch events

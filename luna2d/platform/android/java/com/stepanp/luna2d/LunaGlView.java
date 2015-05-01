@@ -25,19 +25,22 @@ package com.stepanp.luna2d;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import android.content.Context;
+
+import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.opengl.GLSurfaceView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class LunaGlView extends GLSurfaceView
 {	
-	public LunaGlView(Context context)
+	public LunaGlView(Activity activity)
 	{
-		super(context);
+		super(activity);
 		
 		setEGLContextClientVersion(2); // Enable OpenGL ES 2.0
-		setRenderer(new GlRenderer(context));
+		setRenderer(new GlRenderer(activity));
 	}
 	
 	// Handling touch events
@@ -90,29 +93,48 @@ public class LunaGlView extends GLSurfaceView
 	
 	private static class GlRenderer implements GLSurfaceView.Renderer
 	{
-		public GlRenderer(Context context)
+		public GlRenderer(Activity activity)
 		{
-			this.context = context;
+			this.activity = activity;
 		}
 		
-		private Context context;
+		private Activity activity;
 		
 		@Override
 		public void onSurfaceCreated(GL10 unused, EGLConfig config)
 		{
+			// Initialize engine at first creating of surface
+			if(!LunaNative.isInitialized())
+			{
+				// Get screen sizes
+				DisplayMetrics metrics = new DisplayMetrics();
+				activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				int width = metrics.widthPixels;
+				int height = metrics.heightPixels;
+				
+				// Get application label
+				ApplicationInfo appInfo = activity.getApplicationInfo();
+		        String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
+		        
+		        // Get path to this .apk file		
+		        String apkPath = activity.getPackageCodePath();  
+		        
+		        // Get path to application folder in "data/data/"
+		        String appFolderPath = activity.getFilesDir().getAbsolutePath();
+		        
+				LunaNative.initialize(width, height, appName, apkPath, appFolderPath);
+			}
+			
+			// When surface was rectreated, we need reload some assets: textures, shaders, etc.
+			else
+			{
+				LunaNative.reloadAssets();
+			}
 		}
 
 		@Override
 		public void onSurfaceChanged(GL10 unused, int width, int height)
 		{
-			// Get application label
-			ApplicationInfo appInfo = context.getApplicationInfo();
-	        String appName = (String)context.getPackageManager().getApplicationLabel(appInfo);
-	        
-	        String apkPath = context.getPackageCodePath();  // Get path to this .apk file					
-	        String appFolderPath = context.getFilesDir().getAbsolutePath();
-	        
-			LunaNative.initialize(width, height, appName, apkPath, appFolderPath);
 		}
 
 		@Override

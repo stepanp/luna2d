@@ -38,7 +38,7 @@ public class LunaActivity extends Activity
 		LunaPrefs.init(this);
 		
 		// Create OpenGL surface view
-		glView = new LunaGlView(getApplication());
+		glView = new LunaGlView(this);
 		setContentView(glView);
 	}
 	
