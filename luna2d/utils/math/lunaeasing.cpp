@@ -32,18 +32,15 @@ float luna2d::easing::Linear(float t)
 	return t;
 }
 
-
 float luna2d::easing::QuadraticIn(float t)
 {
 	return t * t;
 }
 
-
 float luna2d::easing::QuadraticOut(float t)
 {
 	return -(t * (t - 2));
 }
-
 
 float luna2d::easing::QuadraticInOut(float t)
 {
@@ -51,19 +48,16 @@ float luna2d::easing::QuadraticInOut(float t)
 	return (-2 * t * t) + (t * t) - 1;
 }
 
-
 float luna2d::easing::CubicIn(float t)
 {
 	return t * t * t;
 }
-
 
 float luna2d::easing::CubicOut(float t)
 {
 	float f = (t - 1);
 	return f * f * f + 1;
 }
-
 
 float luna2d::easing::CubicInOut(float t)
 {
@@ -75,19 +69,16 @@ float luna2d::easing::CubicInOut(float t)
 	}
 }
 
-
 float luna2d::easing::QuadricIn(float t)
 {
 	return t * t * t * t;
 }
-
 
 float luna2d::easing::QuadricOut(float t)
 {
 	float f = (t - 1);
 	return f * f * f * (1 - t) + 1;
 }
-
 
 float luna2d::easing::QuadricInOut(float t)
 {
@@ -104,13 +95,11 @@ float luna2d::easing::QuinticIn(float t)
 	return t * t * t * t * t;
 }
 
-
 float luna2d::easing::QuinticOut(float t)
 {
 	float f = (t - 1);
 	return f * f * f * f * f + 1;
 }
-
 
 float luna2d::easing::QuinticInOut(float t)
 {
@@ -133,24 +122,20 @@ float luna2d::easing::SineOut(float t)
 	return std::sin(t * M_PI_2);
 }
 
-
 float luna2d::easing::SineInOut(float t)
 {
 	return 0.5f * (1 - cos(t * M_PI));
 }
-
 
 float luna2d::easing::CircularIn(float t)
 {
 	return 1 - std::sqrt(1 - (t * t));
 }
 
-
 float luna2d::easing::CircularOut(float t)
 {
 	return std::sqrt((2 - t) * t);
 }
-
 
 float luna2d::easing::CircularInOut(float t)
 {
@@ -158,18 +143,15 @@ float luna2d::easing::CircularInOut(float t)
 	return 0.5f * (std::sqrt(-((2 * t) - 3) * ((2 * t) - 1)) + 1);
 }
 
-
 float luna2d::easing::ExpIn(float t)
 {
 	return (t == 0.0f) ? t : std::pow(2, 10 * (t - 1));
 }
 
-
 float luna2d::easing::ExpOut(float t)
 {
 	return (t == 1.0) ? t : 1 - std::pow(2, -10 * t);
 }
-
 
 float luna2d::easing::ExpInOut(float t)
 {
@@ -178,18 +160,15 @@ float luna2d::easing::ExpInOut(float t)
 	else return -0.5f * std::pow(2, (-20 * t) + 10) + 1;
 }
 
-
 float luna2d::easing::ElasticIn(float t)
 {
 	return std::sin(13 * M_PI_2 * t) * std::pow(2, 10 * (t - 1));
 }
 
-
 float luna2d::easing::ElasticOut(float t)
 {
 	return std::sin(-13 * M_PI_2 * (t + 1)) * std::pow(2, -10 * t) + 1;
 }
-
 
 float luna2d::easing::ElasticInOut(float t)
 {
@@ -197,19 +176,16 @@ float luna2d::easing::ElasticInOut(float t)
 	return 0.5f * (std::sin(-13 * M_PI_2 * ((2 * t - 1) + 1)) * std::pow(2, -10 * (2 * t - 1)) + 2);
 }
 
-
 float luna2d::easing::BackIn(float t)
 {
 	return t * t * t - t * std::sin(t * M_PI);
 }
-
 
 float luna2d::easing::BackOut(float t)
 {
 	float f = (1 - t);
 	return 1 - (f * f * f - f * std::sin(f * M_PI));
 }
-
 
 float luna2d::easing::BackInOut(float t)
 {
@@ -225,12 +201,10 @@ float luna2d::easing::BackInOut(float t)
 	}
 }
 
-
 float luna2d::easing::BounceIn(float t)
 {
 	return 1 - BounceOut(1 - t);
 }
-
 
 float luna2d::easing::BounceOut(float t)
 {
@@ -239,7 +213,6 @@ float luna2d::easing::BounceOut(float t)
 	else if(t < 9/10.0) return (4356/361.0 * t * t) - (35442/1805.0 * t) + 16061/1805.0;
 	else return (54/5.0 * t * t) - (513/25.0 * t) + 268/25.0;
 }
-
 
 float luna2d::easing::BounceInOut(float t)
 {
