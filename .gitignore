@@ -21,7 +21,7 @@ tools/Emulator/src/Emulator.pro.user
 tools/Pipeline/build*
 tools/Pipeline/Pipeline.exe
 tools/Pipeline/Pipelined.exe
-tools/Pipeline/Pipeline/Pipeline.pro.user
+tools/Pipeline/src/Pipeline.pro.user
 
 samples/FlappyLuna/project-android/bin/*
 samples/FlappyLuna/project-android/gen/*

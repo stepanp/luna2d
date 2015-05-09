@@ -34,6 +34,7 @@ int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
 bool Settings::openLogWhenError = false;
 bool Settings::showFps = true;
+QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 
 void Settings::Load()
 {
@@ -76,6 +77,16 @@ void Settings::Load()
 		resolutions.push_back(Resolution(width, height, name));
 	}
 	settings.endArray();
+
+	// Load pipeline projects paths
+	int pipelineProjectsCount = settings.beginReadArray("pipelineProjects");
+	for(int i = 0; i < pipelineProjectsCount; i++)
+	{
+		settings.setArrayIndex(i);
+
+		Settings::pipelineProjects[settings.value("game").toString()] = settings.value("project").toString();
+	}
+	settings.endArray();
 }
 
 void Settings::Save()
@@ -107,6 +118,18 @@ void Settings::Save()
 		settings.setValue("name", resolutions.at(i).name);
 	}
 	settings.endArray();
+
+	// Save pipeline projects paths
+	settings.beginWriteArray("pipelineProjects");
+	int i = 0;
+	for(auto it = Settings::pipelineProjects.begin(); it != Settings::pipelineProjects.end(); it++)
+	{
+		settings.setArrayIndex(i);
+		settings.setValue("game", it.key());
+		settings.setValue("project", it.value());
+		i++;
+	}
+	settings.endArray();
 }
 
 void Settings::AddRecentGame(const QString& gamePath)
@@ -123,4 +146,16 @@ void Settings::AddRecentGame(const QString& gamePath)
 		// Limit max games count
 		if(recentGames.size() > MAX_RECENT_GAMES) recentGames.removeLast();
 	}
+}
+
+// Set pipeline project form given game
+void Settings::SetPipelineProject(const QString& gameName, const QString& projectPath)
+{
+	Settings::pipelineProjects[gameName] = projectPath;
+}
+
+// Get path to pipeline project form given game
+QString Settings::GetPipelineProject(const QString& gameName)
+{
+	return Settings::pipelineProjects[gameName];
 }

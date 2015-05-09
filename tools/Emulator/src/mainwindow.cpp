@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QDesktopWidget>
 #include <QCommandLineParser>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -46,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
+	ui->actionRun_project->setEnabled(false);
+	ui->actionOpen_in_Pipeline->setEnabled(false);
+	ui->actionSet_project->setEnabled(false);
+	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
 
 	// Set placeholder image to engine widget
 	ui->centralWidget->SetPlaceholderImage(QImage(":/images/placeholder_image.png"));
@@ -63,6 +68,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionWatcher, &QAction::triggered, this, &MainWindow::OnActionWatcher);
 	connect(ui->actionSettings, &QAction::triggered, this, &MainWindow::OnActionSettings);
 	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::OnAbout);
+	connect(ui->actionRun_project, &QAction::triggered, this, &MainWindow::OnRunPipelineProject);
+	connect(ui->actionOpen_in_Pipeline, &QAction::triggered, this, &MainWindow::OnOpenInPipeline);
+	connect(ui->actionSet_project, &QAction::triggered, this, &MainWindow::OnSetPipelineProject);
 }
 
 MainWindow::~MainWindow()
@@ -83,7 +91,7 @@ void MainWindow::SetupRecentGames()
 	// Add all recent games from settings
 	for(QString game : Settings::recentGames)
 	{
-		QAction *action = new QAction(game, this);
+		QAction* action = new QAction(game, this);
 		ui->menuRecent->addAction(action);
 		connect(action, &QAction::triggered, this, &MainWindow::OnRecentGame);
 	}
@@ -153,8 +161,13 @@ void MainWindow::OpenGame(const QString &gamePath)
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height);
 
-	curGameName = ui->centralWidget->GetEngine()->GetGameName().c_str();
+	// Update window title
+	curGameName = ui->centralWidget->GetGameName();
 	if(!Settings::showFps) setWindowTitle(WINDOW_TITLE_NAME.arg(curGameName));
+
+	// Update "Tools/Pipeline" menu
+	ui->actionSet_project->setEnabled(true);
+	UpdatePipelineMenu();
 }
 
 void MainWindow::SetResolution(int resolutionIndex)
@@ -196,6 +209,19 @@ void MainWindow::OpenLogDialog()
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logDlg, &LogDialog::OnLogInfo);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logDlg, &LogDialog::OnLogWarning);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logDlg, &LogDialog::OnLogError);
+}
+
+// Update "Tools/Pipeline" menu
+void MainWindow::UpdatePipelineMenu()
+{
+	QString pipelineProject = Settings::GetPipelineProject(curGameName);
+	bool hasProject = !pipelineProject.isEmpty();
+
+	ui->actionRun_project->setEnabled(hasProject);
+	ui->actionOpen_in_Pipeline->setEnabled(hasProject);
+
+	if(hasProject) ui->actionPipelineProject->setText(pipelineProject);
+	else ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
 }
 
 void MainWindow::OnGlSurfaceInitialized()
@@ -250,9 +276,13 @@ void MainWindow::OnActionClose()
 	curGamePath = QString::null;
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
+	ui->actionRun_project->setEnabled(false);
+	ui->actionOpen_in_Pipeline->setEnabled(false);
+	ui->actionSet_project->setEnabled(false);
 	Settings::gameWasOpened = false;
 
 	setWindowTitle(WINDOW_TITLE);
+	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
 }
 
 void MainWindow::OnRecentGame()
@@ -341,6 +371,43 @@ void MainWindow::OnLogError()
 	// Open log window when occurs log message with error
 	if(logDlg) logDlg->activateWindow();
 	else OpenLogDialog();
+}
+
+void MainWindow::OnRunPipelineProject()
+{
+	QString projectPath = Settings::GetPipelineProject(curGameName);
+	if(projectPath.isEmpty()) return;
+
+	QString pipelinePath = QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
+	QProcess pipeline;
+
+	pipeline.start(pipelinePath, { projectPath, "-s" });
+	pipeline.waitForFinished();
+}
+
+void MainWindow::OnOpenInPipeline()
+{
+	QString projectPath = Settings::GetPipelineProject(curGameName);
+	if(projectPath.isEmpty()) return;
+
+	QString pipelinePath = QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
+	QProcess pipeline;
+
+	pipeline.startDetached(pipelinePath, { projectPath });
+}
+
+void MainWindow::OnSetPipelineProject()
+{
+	QFileDialog dialog;
+	dialog.setAcceptMode(QFileDialog::AcceptOpen);
+	dialog.setNameFilter("Pipeline project (*.pipeline)");
+
+	if(dialog.exec())
+	{
+		QString projectPath = dialog.selectedFiles().first();
+		Settings::SetPipelineProject(curGameName, projectPath);
+		UpdatePipelineMenu();
+	}
 }
 
 void MainWindow::closeEvent(QCloseEvent*)

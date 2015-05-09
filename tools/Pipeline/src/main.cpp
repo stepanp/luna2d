@@ -24,12 +24,66 @@
 
 #include "ui/mainwindow.h"
 #include <QApplication>
+#include <QCommandLineParser>
+#include <QMessageBox>
+
+enum class LaunchMode
+{
+	OPEN_UI, // Open project in UI
+	RUN_UI, // Run project with output to UI
+	RUN_CONSOLE, // Run project with output to console
+	RUN_SILENT, // Run project without any output
+};
+
+void ParseCommandLine(QString& projectPath, LaunchMode& launchMode)
+{
+	QCommandLineParser cmdParser;
+	cmdParser.addOption(QCommandLineOption("u")); // RUN_UI launch mode
+	cmdParser.addOption(QCommandLineOption("c")); // RUN_CONSOLE launch mode
+	cmdParser.addOption(QCommandLineOption("s")); // RUN_SILENT launch mode
+	cmdParser.process(*QApplication::instance());
+	QStringList args = cmdParser.positionalArguments();
+
+	// Read path to project
+	if(!args.empty())
+	{
+		projectPath = args.first();
+		projectPath.remove("\""); // Remove quotes from path
+	}
+
+	if(cmdParser.isSet("u")) launchMode = LaunchMode::RUN_UI;
+	else if(cmdParser.isSet("c")) launchMode = LaunchMode::RUN_CONSOLE;
+	else if(cmdParser.isSet("s")) launchMode = LaunchMode::RUN_SILENT;
+	else launchMode = LaunchMode::OPEN_UI;
+}
+
+void RunProjectSilent(const QString& projectPath)
+{
+	Pipeline pipeline;
+	if(pipeline.OpenProject(projectPath))
+	{
+		pipeline.RunProject();
+	}
+}
 
 int main(int argc, char* argv[])
 {	
 	QApplication app(argc, argv);
-	MainWindow wnd;
-	wnd.show();
 
-	return app.exec();
+	QString projectPath;
+	LaunchMode launchMode = LaunchMode::OPEN_UI;
+	ParseCommandLine(projectPath, launchMode);
+
+	// Open project in UI. If project path is empty, UI will be opened without project
+	if(launchMode == LaunchMode::OPEN_UI)
+	{
+		MainWindow wnd(projectPath);
+		wnd.show();
+		return app.exec();
+	}
+
+	// Run project with specifed mode
+	else if(launchMode == LaunchMode::RUN_SILENT) RunProjectSilent(projectPath);
+
+	return 0;
 }

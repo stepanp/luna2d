@@ -75,6 +75,7 @@ public:
 	void SetPlaceholderColor(const QColor& color);
 	void SetPlaceholderImage(const QImage& image);
 	int GetFps();
+	QString GetGameName();
 };
 
 }

@@ -37,6 +37,7 @@ class MainWindow;
 const QString WINDOW_TITLE = "luna2d Emulator";
 const QString WINDOW_TITLE_NAME = "%1 - " + WINDOW_TITLE;
 const QString WINDOW_TITLE_FPS = "%1 - " + WINDOW_TITLE + " [FPS: %2]";
+const QString MENU_NO_PIPELINE_PROJECT = "<Project is not specifed>";
 
 class MainWindow : public QMainWindow
 {
@@ -63,6 +64,7 @@ private:
 	void OpenGame(const QString& gamePath); // Launch game from given path
 	void SetResolution(int resolutionIndex);
 	void OpenLogDialog();
+	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
 
 public slots:
 	void OnGlSurfaceInitialized();
@@ -79,6 +81,9 @@ public slots:
 	void OnLogClosed();
 	void OnWatcherClosed();
 	void OnLogError();
+	void OnRunPipelineProject();
+	void OnOpenInPipeline();
+	void OnSetPipelineProject();
 
 public:
 	void closeEvent(QCloseEvent*);

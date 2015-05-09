@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(const QString& projectPath = "");
 	~MainWindow();
 
 private:
@@ -82,6 +82,7 @@ private:
 	Task* GetSelectedTask();
 	TaskNode* GetSelectedTaskNode();
 	Task* GetTaskFromItem(QTreeWidgetItem* item);
+	void OpenProject(const QString& path);
 
 public slots:
 	void OnNewProject();

@@ -29,8 +29,8 @@
 #include <QMessageBox>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget* parent) :
-	QMainWindow(parent),
+MainWindow::MainWindow(const QString& projectPath) :
+	QMainWindow(0),
 	ui(new Ui::MainWindow),
 	curProject(QString::null)
 {
@@ -100,6 +100,9 @@ MainWindow::MainWindow(QWidget* parent) :
 	connect(ui->comboMaxHeight, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsChangedMaxHeight(int)));
 	connect(ui->editPadding,  SIGNAL(valueChanged(int)), this, SLOT(OnTabsChangedPadding(int)));
 	connect(ui->checkDuplicatePadding, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedDuplicatePadding);
+
+	// Try open project specifed in command line arguments
+	if(!projectPath.isEmpty()) OpenProject(projectPath);
 }
 
 MainWindow::~MainWindow()
@@ -340,6 +343,22 @@ Task* MainWindow::GetTaskFromItem(QTreeWidgetItem *item)
 	return data.GetData<Task, ProjectTreeDataType::TASK>();
 }
 
+void MainWindow::OpenProject(const QString& path)
+{
+	if(!pipeline.OpenProject(path))
+	{
+		QMessageBox::critical(this, QString::null, "Cannot open project \"" + path + "\"");
+		return;
+	}
+
+	curProject = path;
+	UpdateProjectTree();
+	UpdateUi();
+
+	Settings::AddRecentProject(path);
+	UpdateRecentMenu();
+}
+
 void MainWindow::OnNewProject()
 {
 	OnCloseProject();
@@ -357,18 +376,7 @@ void MainWindow::OnOpenProject()
 	dialog.setAcceptMode(QFileDialog::AcceptOpen);
 	dialog.setNameFilter("Pipeline project (*.pipeline)");
 
-	if(dialog.exec())
-	{
-		QString path = dialog.selectedFiles().first();
-
-		pipeline.OpenProject(path);
-		curProject = path;
-		UpdateProjectTree();
-		UpdateUi();
-
-		Settings::AddRecentProject(path);
-		UpdateRecentMenu();
-	}
+	if(dialog.exec()) OpenProject(dialog.selectedFiles().first());
 }
 
 void MainWindow::OnSaveProject()

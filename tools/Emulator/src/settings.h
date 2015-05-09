@@ -27,6 +27,7 @@
 #include "resolution.h"
 #include <QStringList>
 #include <QVector>
+#include <QHash>
 
 const QString ORGANIZATION_NAME = "luna2d";
 const QString APP_NAME = "Emulator";
@@ -43,9 +44,12 @@ public:
 	static int bullitinCount; // Count of bullit-in resolutions
 	static bool openLogWhenError; // Open log window when occurs log message with error
 	static bool showFps; // Show FPS in window caption
+	static QHash<QString,QString> pipelineProjects; // Pipeline projects attachet to game name
 
 public:
 	static void Load();
 	static void Save();
 	static void AddRecentGame(const QString& gamePath);
+	static void SetPipelineProject(const QString& gameName, const QString& projectPath); // Set pipeline project form given game
+	static QString GetPipelineProject(const QString& gameName); // Get path to pipeline project form given game
 };

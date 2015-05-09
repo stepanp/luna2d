@@ -197,3 +197,8 @@ int LUNAQtWidget::GetFps()
 	if(!LUNAEngine::Shared()->IsInitialized()) return 0;
 	return LUNAEngine::SharedGraphics()->GetFps();
 }
+
+QString LUNAQtWidget::GetGameName()
+{
+	return QString::fromStdString(LUNAEngine::Shared()->GetGameName());
+}
