@@ -16,8 +16,17 @@ QMAKE_CXXFLAGS_WARN_ON -= -Wextra
 QMAKE_CFLAGS_WARN_ON += -Werror=return-type
 QMAKE_CXXFLAGS_WARN_ON += -Werror=return-type
 
-TARGET = Pipeline
+CONFIG(debug, debug|release) {
+	TARGET = Pipelined
+}
+
+CONFIG(release, debug|release) {
+	TARGET = Pipeline
+}
+
 TEMPLATE = app
+
+DESTDIR = $$PWD/../
 
 INCLUDEPATH += ../../../luna2d/ \
     ../../../luna2d/utils/ \
