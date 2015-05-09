@@ -24,13 +24,14 @@
 
 #include "mainwindow.h"
 #include <QApplication>
+#include <QDir>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
 	Settings::Load();
-	MainWindow w;
-	w.show();
+	MainWindow wnd;
+	wnd.show();
 
-	return a.exec();
+	return app.exec();
 }

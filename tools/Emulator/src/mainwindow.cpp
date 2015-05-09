@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
 	logStorage(new LogStorage()),
+	logDlg(nullptr),
 	curGamePath(QString::null)
 {
 	ui->setupUi(this);

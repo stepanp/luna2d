@@ -14,7 +14,9 @@ projects/ios-xcode/luna2d.xcodeproj/xcuserdata/*
 projects/ios-xcode/build/*
 
 tools/Emulator/build*
-tools/Emulator/Emulator/Emulator.pro.user
+tools/Emulator/Emulator.exe
+tools/Emulator/Emulatord.exe
+tools/Emulator/src/Emulator.pro.user
 
 tools/Pipeline/build*
 tools/Pipeline/Pipeline/Pipeline.pro.user

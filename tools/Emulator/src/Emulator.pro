@@ -7,9 +7,15 @@
 QT       += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Emulator
-TEMPLATE = app
+CONFIG(debug, debug|release) {
+	TARGET = Emulatord
+}
 
+CONFIG(release, debug|release) {
+	TARGET = Emulator
+}
+
+TEMPLATE = app
 CONFIG += c++11
 
 QMAKE_CFLAGS_WARN_ON -= -Wextra
@@ -17,6 +23,8 @@ QMAKE_CXXFLAGS_WARN_ON -= -Wextra
 
 QMAKE_CFLAGS_WARN_ON += -Werror=return-type
 QMAKE_CXXFLAGS_WARN_ON += -Werror=return-type
+
+DESTDIR = $$PWD/../
 
 INCLUDEPATH += ../../../luna2d \
         ../../../luna2d/graphics/ \
