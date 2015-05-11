@@ -31,15 +31,6 @@ const std::string LUNA_LUA_OOP_SUPPORT = \
 	local newClass = {} \
 	newClass.base = baseClass \
 \
-	if not newClass.baseInit then \
-		newClass.baseInit = function(obj, ...) \
-			obj.base.onInit(obj, ...) \
-		end \
-		newClass.baseFunc = function(obj, name, ...) \
-			obj.base[name](obj, ...) \
-		end \
-	end \
-\
 	local construct = function(_, ...) \
 		local newObject = {} \
 		setmetatable(newObject, {__index = newClass}) \
