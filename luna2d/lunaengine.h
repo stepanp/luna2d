@@ -68,7 +68,7 @@ private:
 
 	std::unordered_map<std::string, LUNAModule*> modules;
 
-	std::unique_ptr<LUNAConfig> config;
+	std::shared_ptr<LUNAConfig> config;
 	bool initialized;
 
 public:
@@ -76,7 +76,7 @@ public:
 	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs);
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
-	LUNAConfig* GetConfig();
+	std::shared_ptr<LUNAConfig> GetConfig();
 	std::string GetGameName(); // Get name of runned game
 	void LoadModules();
 	void UnloadModules();

@@ -41,8 +41,6 @@ using namespace luna2d;
 
 LUNAEngine::LUNAEngine() : modules(modulesList)
 {
-	config = nullptr;
-
 	lua = nullptr;
 	files = nullptr;
 	log = nullptr;
@@ -75,7 +73,7 @@ void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *pla
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 {
 	// Read config file
-	config = std::unique_ptr<LUNAConfig>(new LUNAConfig());
+	config = std::make_shared<LUNAConfig>();
 	if(!config->Read())
 	{
 		LUNA_LOGE("Error with reading config. Stop initializing");
@@ -119,6 +117,7 @@ void LUNAEngine::Deinitialize()
 	UnloadModules();
 
 	config.reset();
+
 	delete assets;
 	delete graphics;
 	delete scenes;
@@ -142,9 +141,9 @@ void LUNAEngine::Deinitialize()
 	initialized = false;
 }
 
-LUNAConfig* LUNAEngine::GetConfig()
+std::shared_ptr<LUNAConfig> LUNAEngine::GetConfig()
 {
-	return config.get();
+	return config;
 }
 
  // Get name of runned game
