@@ -32,7 +32,7 @@ bool Settings::gameWasOpened = false;
 QVector<Resolution> Settings::resolutions = QVector<Resolution>();
 int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
-bool Settings::openLogWhenError = false;
+bool Settings::openLogWhenError = true;
 bool Settings::showFps = true;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 
