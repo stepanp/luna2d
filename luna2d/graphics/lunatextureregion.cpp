@@ -21,6 +21,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "lunatextureregion.h"
+#include "lunasizes.h"
 
 using namespace luna2d;
 
@@ -72,6 +73,7 @@ float LUNATextureRegion::GetV2()
 	return v2;
 }
 
+// Get sizes in pixels
 float LUNATextureRegion::GetWidth()
 {
 	if(texture.expired()) return 0;
@@ -82,4 +84,15 @@ float LUNATextureRegion::GetHeight()
 {
 	if(texture.expired()) return 0;
 	return (v2 - v1) * texture.lock()->GetHeight();
+}
+
+// Get sizes in game points (scaled to virtual resoultion)
+float LUNATextureRegion::GetWidthPoints()
+{
+	return std::floor(GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
+}
+
+float LUNATextureRegion::GetHeightPoints()
+{
+	return std::floor(GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
 }

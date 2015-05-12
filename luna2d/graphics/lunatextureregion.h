@@ -48,8 +48,14 @@ public:
 	float GetV1();
 	float GetU2();
 	float GetV2();
+
+	// Get sizes in pixels
 	float GetWidth();
 	float GetHeight();
+
+	// Get sizes in game points (scaled to virtual resoultion)
+	float GetWidthPoints();
+	float GetHeightPoints();
 };
 
 }

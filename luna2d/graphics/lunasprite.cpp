@@ -24,7 +24,6 @@
 #include "lunasprite.h"
 #include "lunaengine.h"
 #include "lunagraphics.h"
-#include "lunasizes.h"
 #include "lunaassets.h"
 #include "lunalog.h"
 #include "lunamath.h"
@@ -64,10 +63,10 @@ bool LUNASprite::InitFromTexture(const std::weak_ptr<LUNATexture>& texture)
 	u2 = 1;
 	v2 = 1;
 
-	// Convert sizes to virtual resolution
+	// Use texture size in points (scaled to virtual resolution)
 	auto sharedTexture = texture.lock();
-	width = std::floor(sharedTexture->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
-	height = std::floor(sharedTexture->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+	width = sharedTexture->GetWidthPoints();
+	height = sharedTexture->GetHeightPoints();
 
 	return true;
 }
@@ -86,8 +85,8 @@ bool LUNASprite::InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region)
 	v2 = sharedRegion->GetV2();
 
 	// Convert sizes to virtual resolution
-	width = std::floor(sharedRegion->GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
-	height = std::floor(sharedRegion->GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+	width = sharedRegion->GetWidthPoints();
+	height = sharedRegion->GetHeightPoints();
 	return true;
 }
 

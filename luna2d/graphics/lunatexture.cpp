@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunatexture.h"
+#include "lunasizes.h"
 #include "lunalog.h"
 
 using namespace luna2d;
@@ -65,6 +66,7 @@ void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+// Get sizes in pixels
 int LUNATexture::GetWidth()
 {
 	return width;
@@ -73,6 +75,17 @@ int LUNATexture::GetWidth()
 int LUNATexture::GetHeight()
 {
 	return height;
+}
+
+// Get sizes in game points (scaled to virtual resoultion)
+float LUNATexture::GetWidthPoints()
+{
+	return std::floor(width * LUNAEngine::SharedSizes()->GetTextureScale());
+}
+
+float LUNATexture::GetHeightPoints()
+{
+	return std::floor(height * LUNAEngine::SharedSizes()->GetTextureScale());
 }
 
 GLuint LUNATexture::GetId()

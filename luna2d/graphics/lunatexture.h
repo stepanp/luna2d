@@ -47,8 +47,14 @@ private:
 	void CreateGlTexture(const std::vector<unsigned char>& data);
 
 public:
+	// Get sizes in pixels
 	int GetWidth();
-	int GetHeight();
+	int GetHeight();	
+
+	// Get sizes in game points (scaled to virtual resoultion)
+	float GetWidthPoints();
+	float GetHeightPoints();
+
 	GLuint GetId();
 	bool IsValid(); // Check for texture is valid. Can be invalid after loss GL context
 	void Bind();

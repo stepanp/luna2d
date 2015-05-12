@@ -140,11 +140,15 @@ LUNAGraphics::LUNAGraphics()
 	LuaClass<LUNATexture> clsTexture(lua);
 	clsTexture.SetMethod("getWidth", &LUNATexture::GetWidth);
 	clsTexture.SetMethod("getHeight", &LUNATexture::GetHeight);
+	clsTexture.SetMethod("getWidthPoints", &LUNATexture::GetWidthPoints);
+	clsTexture.SetMethod("getHeightPoints", &LUNATexture::GetHeightPoints);
 
 	LuaClass<LUNATextureRegion> clsTextureRegion(lua);
 	clsTextureRegion.SetMethod("getTexture", &LUNATextureRegion::GetTexture);
 	clsTextureRegion.SetMethod("getWidth", &LUNATextureRegion::GetWidth);
 	clsTextureRegion.SetMethod("getHeight", &LUNATextureRegion::GetHeight);
+	clsTextureRegion.SetMethod("getWidthPoints", &LUNATextureRegion::GetWidthPoints);
+	clsTextureRegion.SetMethod("getHeightPoints", &LUNATextureRegion::GetHeightPoints);
 	clsTextureRegion.SetMethod("getU1", &LUNATextureRegion::GetU1);
 	clsTextureRegion.SetMethod("getV1", &LUNATextureRegion::GetV1);
 	clsTextureRegion.SetMethod("getU2", &LUNATextureRegion::GetU2);
