@@ -50,7 +50,7 @@ void LUNAPhysicsModule::Load(luna2d::LuaScript* lua)
 	clsWorld.SetMethod("getGravityY", &LUNAPhysicsWorld::GetGravityY);
 	clsWorld.SetMethod("setGravity", &LUNAPhysicsWorld::SetGravity);
 	clsWorld.SetMethod("update", &LUNAPhysicsWorld::OnUpdate);
-	clsWorld.SetMethod("debugRender", &LUNAPhysicsWorld::OnDebugRender);
+	clsWorld.SetMethod("debug_render", &LUNAPhysicsWorld::OnDebugRender);
 	tblPhysics.SetField("World", clsWorld);
 
 	// Register body
