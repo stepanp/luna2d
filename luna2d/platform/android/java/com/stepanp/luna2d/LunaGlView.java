@@ -30,11 +30,49 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class LunaGlView extends GLSurfaceView
 {	
+	private enum TouchType
+	{
+		DOWN,
+		MOVED,
+		UP,	
+	}
+	
+	private static class TouchEvent implements Runnable
+	{
+		public TouchEvent(TouchType type, float x, float y, int touchIndex)
+		{
+			this.x = x;
+			this.y = y;
+			this.type = type;
+			this.touchIndex = touchIndex;
+		}
+		
+		public TouchType type;
+		public float x, y;
+		public int touchIndex;
+		
+		@Override
+		public void run()
+		{
+			switch(type)
+			{
+			case DOWN:
+				LunaNative.onTouchDown(x, y, touchIndex);
+				break;
+			case MOVED:
+				LunaNative.onTouchMoved(x, y, touchIndex);
+				break;
+			case UP:
+				LunaNative.onTouchUp(x, y, touchIndex);
+				break;
+			}
+		}		
+	}
+	
 	public LunaGlView(Activity activity)
 	{
 		super(activity);
@@ -43,50 +81,48 @@ public class LunaGlView extends GLSurfaceView
 		setRenderer(new GlRenderer(activity));
 	}
 	
+	// Handle touch event in renderer thread
+	private void queueTouchEvent(TouchType type, float x, float y, int touchIndex)
+	{
+		queueEvent(new TouchEvent(type, x, y, touchIndex));
+	}
+	
 	// Handling touch events
 	@Override
-	public boolean onTouchEvent(final MotionEvent event)
+	public boolean onTouchEvent(MotionEvent event)
 	{
-		// Handle touch events in renderer thread
-		queueEvent(new Runnable()
+		int action = event.getActionMasked();
+		int pointerIndex = event.getActionIndex();
+		int pointerId = event.getPointerId(pointerIndex);
+		
+		// Invert Y-axis,
+		// because OpenGl origin in bottom of screen,
+		// but Android View origin in top of screen				
+		float y = getHeight() - event.getY(pointerIndex);
+		
+		switch(action)
 		{
-			@Override
-			public void run()
+		case MotionEvent.ACTION_DOWN:
+		case MotionEvent.ACTION_POINTER_DOWN:
+			queueTouchEvent(TouchType.DOWN, event.getX(pointerIndex), y, pointerId);
+			break;
+			
+		case MotionEvent.ACTION_MOVE:
+			int count = event.getPointerCount();
+			for(int i = 0; i < count; i++) 
 			{
-				int action = event.getAction() & MotionEvent.ACTION_MASK;
-				int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> 
-					MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-				
-				// Invert Y-axis,
-				// because OpenGl origin in bottom of screen,
-				// but Android View origin in top of screen				
-				float y = getHeight() - event.getY(pointerIndex);
-				
-				switch(action)
-				{
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_POINTER_DOWN:
-					LunaNative.onTouchDown(event.getX(pointerIndex), y, event.getPointerId(pointerIndex));
-					break;
-					
-				case MotionEvent.ACTION_MOVE:
-					int count = event.getPointerCount();
-					for(int i = 0; i < count; i++) 
-					{
-						float pointerY = getHeight() - event.getY(i);
-						LunaNative.onTouchMoved(event.getX(i), pointerY, event.getPointerId(i));
-					}
-					break;
-					
-				case MotionEvent.ACTION_UP:
-				case MotionEvent.ACTION_POINTER_UP:
-				case MotionEvent.ACTION_OUTSIDE:
-				case MotionEvent.ACTION_CANCEL:
-					LunaNative.onTouchUp(event.getX(pointerIndex), y, event.getPointerId(pointerIndex));
-					break;
-				}
+				float pointerY = getHeight() - event.getY(i);
+				queueTouchEvent(TouchType.MOVED, event.getX(i), pointerY, event.getPointerId(i));
 			}
-		});
+			break;
+			
+		case MotionEvent.ACTION_UP:
+		case MotionEvent.ACTION_POINTER_UP:
+		case MotionEvent.ACTION_OUTSIDE:
+		case MotionEvent.ACTION_CANCEL:
+			queueTouchEvent(TouchType.UP, event.getX(pointerIndex), y, pointerId);
+			break;
+		}
 		
 		return true;		
 	}
