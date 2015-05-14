@@ -88,12 +88,12 @@ void LUNAScenes::OnTouchDown(float x, float y, int touchIndex)
 
 void LUNAScenes::OnTouchMoved(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchMoved.CallVoid(tblCurScene, x, y, touchIndex);
+	if(fnTouchMoved != nil) fnTouchMoved.CallVoid(tblCurScene, x, y, touchIndex);
 }
 
 void LUNAScenes::OnTouchUp(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchUp.CallVoid(tblCurScene, x, y, touchIndex);
+	if(fnTouchUp != nil) fnTouchUp.CallVoid(tblCurScene, x, y, touchIndex);
 }
 
 void LUNAScenes::OnUpdate(float deltaTime)

@@ -25,7 +25,6 @@ package com.stepanp.luna2d;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.opengl.GLSurfaceView;
@@ -94,6 +93,7 @@ public class LunaGlView extends GLSurfaceView
 		int action = event.getActionMasked();
 		int pointerIndex = event.getActionIndex();
 		int pointerId = event.getPointerId(pointerIndex);
+		int pointersCount =  event.getPointerCount();
 		
 		// Invert Y-axis,
 		// because OpenGl origin in bottom of screen,
@@ -108,8 +108,7 @@ public class LunaGlView extends GLSurfaceView
 			break;
 			
 		case MotionEvent.ACTION_MOVE:
-			int count = event.getPointerCount();
-			for(int i = 0; i < count; i++) 
+			for(int i = 0; i < pointersCount; i++) 
 			{
 				float pointerY = getHeight() - event.getY(i);
 				queueTouchEvent(TouchType.MOVED, event.getX(i), pointerY, event.getPointerId(i));
@@ -119,8 +118,18 @@ public class LunaGlView extends GLSurfaceView
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
 		case MotionEvent.ACTION_OUTSIDE:
-		case MotionEvent.ACTION_CANCEL:
 			queueTouchEvent(TouchType.UP, event.getX(pointerIndex), y, pointerId);
+			break;
+			
+		// This event triggered when gesture was canceled (E.g. when phone change screen orientation)
+		// Call "onTouchUp" for all pointers in that case
+		case MotionEvent.ACTION_CANCEL:
+			for(int i = 0; i < pointersCount; i++) 
+			{
+				float pointerY = getHeight() - event.getY(i);
+				queueTouchEvent(TouchType.UP, event.getX(i), pointerY, event.getPointerId(i));
+			}
+			
 			break;
 		}
 		
