@@ -123,7 +123,13 @@ int LuaVector2::Perp(lua_State *luaVm)
 int LuaVector2::Angle(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
-	LuaStack<float>::Push(luaVm, glm::degrees(glm::angle(vec, glm::vec2(1.0f, 0.0f))));
+
+	if(vec.x == 0 && vec.y == 0) LuaStack<float>::Push(luaVm, 0.0f);
+	else
+	{
+		float angle = glm::angle(glm::normalize(vec), glm::vec2(1.0f, 0.0f));
+		LuaStack<float>::Push(luaVm,  glm::degrees(angle));
+	}
 	return 1;
 }
 
@@ -131,7 +137,13 @@ int LuaVector2::Angle(lua_State *luaVm)
 int LuaVector2::Angler(lua_State* luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
-	LuaStack<float>::Push(luaVm, glm::angle(vec, glm::vec2(1.0f, 0.0f)));
+
+	if(vec.x == 0 && vec.y == 0) LuaStack<float>::Push(luaVm, 0.0f);
+	else
+	{
+		float angle = glm::angle(glm::normalize(vec), glm::vec2(1.0f, 0.0f));
+		LuaStack<float>::Push(luaVm, angle);
+	}
 	return 1;
 }
 
