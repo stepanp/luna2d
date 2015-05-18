@@ -124,7 +124,7 @@ int LuaVector2::Angle(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 
-	if(vec.x == 0 && vec.y == 0) LuaStack<float>::Push(luaVm, 0.0f);
+	if(glm::epsilonEqual(vec.x, vec.y, GLM_EPSILON)) LuaStack<float>::Push(luaVm, 0.0f);
 	else
 	{
 		float angle = glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(vec));
@@ -138,7 +138,7 @@ int LuaVector2::Angler(lua_State* luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 
-	if(vec.x == 0 && vec.y == 0) LuaStack<float>::Push(luaVm, 0.0f);
+	if(glm::epsilonEqual(vec.x, vec.y, GLM_EPSILON)) LuaStack<float>::Push(luaVm, 0.0f);
 	else
 	{
 		float angle = glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(vec));

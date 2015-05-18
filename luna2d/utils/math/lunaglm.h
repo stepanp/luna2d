@@ -34,3 +34,5 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/norm.hpp>
 
+const float GLM_EPSILON = 0.00001f;
+
