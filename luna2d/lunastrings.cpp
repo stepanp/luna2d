@@ -23,20 +23,11 @@
 
 #include "lunastrings.h"
 #include "lunafiles.h"
+#include "lunaplatformutils.h"
 #include <json11.hpp>
 
 using namespace luna2d;
 using namespace json11;
-
-// "__index" metamethod handler for "luna.strings" table
-// Calls when key not found in table
-// For string keys, return key value
-int StringsIndex(lua_State* luaVm)
-{
-	if(lua_isstring(luaVm, -1)) return 1;
-	return 0;
-}
-
 
 LUNAStrings::LUNAStrings():
 	tblStrings(LUNAEngine::SharedLua())
@@ -63,7 +54,15 @@ LUNAStrings::LUNAStrings():
 	// Bind strings table to lua
 	tblLuna.SetField("strings", tblStrings);
 	tblStrings.MakeReadOnly();
-	tblStrings.GetMetatable().SetField("__index", &StringsIndex);
+
+	// "__index" metamethod handler for "luna.strings" table
+	// If string not found in table (i.e. string is not translated)
+	// return string value of key and highlight it with speical symbols
+	std::function<std::string(LuaNil, const std::string&)> index = [](LuaNil, const std::string& k) -> std::string
+	{
+		return "<" + k + ">";
+	};
+	tblStrings.GetMetatable().SetField("__index", LuaFunction(lua, index));
 
 	// Bind strings manager to lua
 	LuaTable tblStringsMgr(lua);
@@ -147,7 +146,7 @@ std::string LUNAStrings::GetDefaultLocale()
 
 std::string LUNAStrings::GetSystemLocale()
 {
-	return "ru_RU";
+	return LUNAEngine::SharedPlatformUtils()->GetSystemLocale();
 }
 
 void LUNAStrings::SetLocale(const std::string& locale)
