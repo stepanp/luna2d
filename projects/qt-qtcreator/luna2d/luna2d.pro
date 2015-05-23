@@ -403,7 +403,8 @@ SOURCES += \
     ../../../luna2d/lua/luaany.cpp \
     ../../../luna2d/lua/luainstance.cpp \
     ../../../luna2d/utils/math/lunaeasing.cpp \
-    ../../../luna2d/lunastrings.cpp
+    ../../../luna2d/lunastrings.cpp \
+    ../../../luna2d/platform/qt/lunaqtutils.cpp
 
 HEADERS += \
     ../../../luna2d/graphics/shaders/default.frag.h \

@@ -21,27 +21,18 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+package com.stepanp.luna2d;
 
-#include "lunaengine.h"
+import java.util.Locale;
 
-namespace luna2d{
-
-//-------------------------
-// Platform utils interface
-//-------------------------
-class LUNAPlatformUtils
+//---------------------------------------------------------
+//Java wrapper for Android implementation of platform utils
+//---------------------------------------------------------
+public class LunaUtils 
 {
-public:
-	virtual ~LUNAPlatformUtils() {}
-
-public:
-	// Get system time in seconds
-	double GetSystemTime();
-
-	// Get system locale in "xx_XX" format
-	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-	virtual std::string GetSystemLocale() = 0;
-};
-
+	// Get system locale
+	public static String getSystemLocale()
+	{
+		return Locale.getDefault().toString();
+	}
 }

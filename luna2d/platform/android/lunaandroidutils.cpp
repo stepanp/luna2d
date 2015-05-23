@@ -22,3 +22,25 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidutils.h"
+
+using namespace luna2d;
+
+LUNAAndroidUtils::LUNAAndroidUtils()
+{
+	jni::Env env;
+
+	// Get ref to java wrapper class
+	jclass localRef = env->FindClass("com/stepanp/luna2d/LunaUtils");
+	javaUtils = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
+	env->DeleteLocalRef(localRef);
+
+	// Get java wrapper method ids
+	javaGetSystemLocale = env->GetStaticMethodID(javaUtils, "getSystemLocale", "()Ljava/lang/String;");
+}
+
+// Get system locale in "xx_XX" format
+// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+std::string LUNAAndroidUtils::GetSystemLocale()
+{
+	return jni::FromJString(jni::Env()->CallStaticObjectMethod(javaUtils, javaGetSystemLocale));
+}

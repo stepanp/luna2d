@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "platform/lunaplatformutils.h"
+#include "lunaplatformutils.h"
 
 namespace luna2d{
 
@@ -32,7 +32,10 @@ namespace luna2d{
 //------------------------------------
 class LUNAQtUtils : public LUNAPlatformUtils
 {
-
+public:
+	// Get system locale in "xx_XX" format
+	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+	virtual std::string GetSystemLocale();
 };
 
 }

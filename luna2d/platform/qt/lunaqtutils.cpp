@@ -21,27 +21,16 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunaqtutils.h"
+#include <QLocale>
 
-#include "lunaengine.h"
+using namespace luna2d;
 
-namespace luna2d{
-
-//-------------------------
-// Platform utils interface
-//-------------------------
-class LUNAPlatformUtils
+// Get system locale in "xx_XX" format
+// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+std::string LUNAQtUtils::GetSystemLocale()
 {
-public:
-	virtual ~LUNAPlatformUtils() {}
-
-public:
-	// Get system time in seconds
-	double GetSystemTime();
-
-	// Get system locale in "xx_XX" format
-	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-	virtual std::string GetSystemLocale() = 0;
-};
-
+	return QLocale::system().name().toStdString();
 }
+
+
