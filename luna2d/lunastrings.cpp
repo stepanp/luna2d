@@ -28,6 +28,16 @@
 using namespace luna2d;
 using namespace json11;
 
+// "__index" metamethod handler for "luna.strings" table
+// Calls when key not found in table
+// For string keys, return key value
+int StringsIndex(lua_State* luaVm)
+{
+	if(lua_isstring(luaVm, -1)) return 1;
+	return 0;
+}
+
+
 LUNAStrings::LUNAStrings():
 	tblStrings(LUNAEngine::SharedLua())
 {
@@ -53,6 +63,7 @@ LUNAStrings::LUNAStrings():
 	// Bind strings table to lua
 	tblLuna.SetField("strings", tblStrings);
 	tblStrings.MakeReadOnly();
+	tblStrings.GetMetatable().SetField("__index", &StringsIndex);
 
 	// Bind strings manager to lua
 	LuaTable tblStringsMgr(lua);
