@@ -23,15 +23,45 @@
 
 #pragma once
 
-#include <string>
+#include "lunaengine.h"
+#include "lunalua.h"
 
 namespace luna2d{
 
-const std::string DEFAULT_RESOLUTION = "HVGA";
-const int BASE_SIZE = 320;
-const std::string SCRIPTS_PATH = "scripts/"; // Path to scripts in root directory
-const std::string LOCALIZATION_PATH = "languages/"; // Path to localization files in root directory
-const std::string CONFIG_FILENAME = "config.luna2d"; // Name of config file
+const std::string DEFAULT_LOCALE_SUFFIX = "Default";
+const std::string LOCALE_FILE_EXTENSION = "json";
+
+//-----------------------
+// Localization subsystem
+//-----------------------
+class LUNAStrings
+{
+public:
+	LUNAStrings();
+
+private:
+	std::string defaultLocale;
+	std::string curLocale;
+	LuaTable tblStrings; // Loaded strings, binded to lua
+	std::unordered_set<std::string> localesList; // List of available locales
+
+private:
+	void FetchLocales(); // Fetch all available locales
+	void LoadStrings(); // Load strings for current locale
+
+public:
+	std::string GetString(const std::string& name);
+	std::string GetLocale();
+	std::string GetDefaultLocale();
+	std::string GetSystemLocale();
+	void SetLocale(const std::string& locale);
+	void SetDefaultLocale(const std::string& locale);
+	bool HasLocale(const std::string& locale);
+	const std::unordered_set<std::string>& GetLocalesList();
+
+	std::string ParseLang(const std::string& locale); // Parse language from full locale
+	std::string ParseCountry(const std::string& locale); // Parse country from full locale
+	bool IsValidLocale(const std::string& locale); // Check if given string is valid locale name
+};
 
 }
-

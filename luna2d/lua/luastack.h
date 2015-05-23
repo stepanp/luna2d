@@ -169,10 +169,10 @@ struct LuaStack<std::vector<T>>
 {
 	static void Push(lua_State* luaVm, const std::vector<T>& vector)
 	{
-		int count = vector.size();
+		size_t count = vector.size();
 		lua_createtable(luaVm, count, 0);
 
-		for(int i = 0; i < count; i++)
+		for(size_t i = 0; i < count; i++)
 		{
 			LuaStack<T>::Push(luaVm, vector[i]);
 			lua_rawseti(luaVm, -2, i + 1/* Indexes in lua starts with 1 instead of 0 */);
@@ -195,6 +195,24 @@ struct LuaStack<std::vector<T>>
 		}
 
 		return std::move(vector);
+	}
+};
+
+template<typename T>
+struct LuaStack<std::unordered_set<T>>
+{
+	static void Push(lua_State* luaVm, const std::unordered_set<T>& set)
+	{
+		size_t count = set.size();
+		lua_createtable(luaVm, count, 0);
+
+		size_t i = 1; // Indexes in lua starts with 1
+		for(auto& item : set)
+		{
+			LuaStack<T>::Push(luaVm, item);
+			lua_rawseti(luaVm, -2, i);
+			i++;
+		}
 	}
 };
 

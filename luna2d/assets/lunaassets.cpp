@@ -103,6 +103,8 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 	LUNAFiles* files = LUNAEngine::SharedFiles(); 
 
 	if(path == CONFIG_FILENAME) return true; // Ignore config file
+	if(path == SCRIPTS_PATH) return true; // Ignore scripts folder
+	if(path == LOCALIZATION_PATH) return true; // Ignore localization folder
 
 	// Ignore description files
 	std::string ext = files->GetExtension(path);
@@ -194,7 +196,7 @@ void LUNAAssets::LoadAll()
 // Load all assets in given folder
 void LUNAAssets::LoadFolder(const std::string& path, bool recursive)
 {
-	if(path == "scripts/") return; // Ignore scripts
+	if(IsIgnored(path)) return;
 
 	LUNAFiles* files = LUNAEngine::SharedFiles();
 
