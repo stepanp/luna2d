@@ -78,7 +78,7 @@ void LUNAStrings::FetchLocales()
 	{
 		if(files->GetExtension(filename) != LOCALE_FILE_EXTENSION) continue;
 
-		auto locale = files->SplitResolutionSuffix(files->GetBasename(filename));
+		auto locale = files->SplitSuffix(files->GetBasename(filename));
 		if(IsValidLocale(locale.first))
 		{
 			localesList.insert(locale.first);

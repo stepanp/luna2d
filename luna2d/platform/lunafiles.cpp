@@ -54,9 +54,9 @@ std::string LUNAFiles::GetParentPath(const std::string& path)
 	return path.substr(0, path.rfind('/'));
 }
 
-// Split basename to name and resolution suffix
+// Split basename to name and @Suffix
 // Return pair: name - suffix
-std::pair<std::string,std::string> LUNAFiles::SplitResolutionSuffix(const std::string &basename)
+std::pair<std::string,std::string> LUNAFiles::SplitSuffix(const std::string &basename)
 {
 	size_t suffixPos = basename.rfind("@");
 	if(suffixPos == std::string::npos) return std::make_pair(basename, "");
@@ -68,8 +68,8 @@ std::pair<std::string,std::string> LUNAFiles::SplitResolutionSuffix(const std::s
 	}
 }
 
-// Append resolution suffix to filename
-std::string LUNAFiles::AppendResolutionSuffix(const std::string& path, const std::string& suffix)
+// Append @Suffix to filename
+std::string LUNAFiles::AppendSuffix(const std::string& path, const std::string& suffix)
 {
 	size_t pos = path.rfind('.');
 	if(pos == std::string::npos) pos = path.length();

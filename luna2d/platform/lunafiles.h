@@ -90,12 +90,12 @@ public:
 	std::string GetBasename(const std::string& path); // Get filename without path and extension
 	std::string GetParentPath(const std::string& path); // Get parent part of path
 
-	// Split basename to name and resolution suffix
+	// Split basename to name and @Suffix
 	// Return pair: name - suffix
-	std::pair<std::string,std::string> SplitResolutionSuffix(const std::string& basename);
+	std::pair<std::string,std::string> SplitSuffix(const std::string& basename);
 
-	// Append resolution suffix to filename
-	std::string AppendResolutionSuffix(const std::string& path, const std::string& suffix);
+	// Append @Suffix to filename
+	std::string AppendSuffix(const std::string& path, const std::string& suffix);
 
 	// Replace extension of given filename
 	std::string ReplaceExtension(const std::string path, const std::string ext);

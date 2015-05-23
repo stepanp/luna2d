@@ -111,7 +111,7 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 	if(ext == "atlas" || ext == "font") return true;
 
 	// Ignore files with different from current resolution suffix
-	std::string suffix = files->SplitResolutionSuffix(files->GetBasename(path)).second;
+	std::string suffix = files->SplitSuffix(files->GetBasename(path)).second;
 	if(!suffix.empty() && suffix != LUNAEngine::SharedSizes()->GetResolutionSuffix()) return true;
 
 	return false;
@@ -150,7 +150,7 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 	}
 
 	LuaTable parentTable = GetParentTableForPath(path, true);
-	std::string name = files->SplitResolutionSuffix(files->GetBasename(path)).first; // Remove resolution suffix
+	std::string name = files->SplitSuffix(files->GetBasename(path)).first; // Remove resolution suffix
 
 	// Don't load asset if it already exists
 	if(parentTable.HasField(name)) return;
@@ -220,7 +220,7 @@ void LUNAAssets::Load(const std::string& path)
 {
 	LUNAFiles* files = LUNAEngine::SharedFiles();
 
-	auto name = files->SplitResolutionSuffix(path);
+	auto name = files->SplitSuffix(path);
 	if(!name.second.empty())
 	{
 		LUNA_LOGE("Filename must be specifed without resolution suffix");
@@ -234,7 +234,7 @@ void LUNAAssets::Load(const std::string& path)
 		return;
 	}
 
-	std::string suffixPath = files->AppendResolutionSuffix(path, LUNAEngine::SharedSizes()->GetResolutionSuffix());
+	std::string suffixPath = files->AppendSuffix(path, LUNAEngine::SharedSizes()->GetResolutionSuffix());
 	if(!files->IsFile(suffixPath))
 	{
 		LUNA_LOGE("File \"%s\" not found", path.c_str());
