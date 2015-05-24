@@ -35,8 +35,8 @@ INCLUDEPATH += ../../../luna2d/ \
     ../../../luna2d/lua/ \
     ../../../luna2d/platform/ \
     ../../../luna2d/platform/qt \
-    ../../../luna2d/thirdparty/RectangleBinPack/ \
-    ../../../luna2d/thirdparty/
+	../../../thirdparty/ \
+	../../../thirdparty/RectangleBinPack/
 
 SOURCES += main.cpp\
         ui/mainwindow.cpp \
@@ -51,8 +51,8 @@ SOURCES += main.cpp\
     utils/mathutils.cpp \
     pipeline/atlasbuilder.cpp \
 	ui/settings.cpp \
-    ../../../luna2d/thirdparty/RectangleBinPack/MaxRectsBinPack.cpp \
-    ../../../luna2d/thirdparty/RectangleBinPack/Rect.cpp \
+	../../../thirdparty/RectangleBinPack/MaxRectsBinPack.cpp \
+	../../../thirdparty/RectangleBinPack/Rect.cpp \
 
 HEADERS  += ui/mainwindow.h \
     project/project.h \
@@ -66,8 +66,8 @@ HEADERS  += ui/mainwindow.h \
     utils/mathutils.h \
     pipeline/atlasbuilder.h \
     ui/settings.h \
-    ../../../luna2d/thirdparty/RectangleBinPack/MaxRectsBinPack.h \
-    ../../../luna2d/thirdparty/RectangleBinPack/Rect.h \
+	../../../thirdparty/RectangleBinPack/MaxRectsBinPack.h \
+	../../../thirdparty/RectangleBinPack/Rect.h \
 
 FORMS    += mainwindow.ui
 

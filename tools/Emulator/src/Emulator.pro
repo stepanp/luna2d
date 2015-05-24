@@ -32,20 +32,18 @@ INCLUDEPATH += ../../../luna2d \
         ../../../luna2d/modules/ \
         ../../../luna2d/platform/ \
         ../../../luna2d/platform/qt/ \
-        ../../../luna2d/thirdparty/lua/ \
+		../../../thirdparty/lua/ \
         ../../../luna2d/utils/
 
 CONFIG(debug, debug|release) {
-	LIBS += -L$$PWD/../../../lib/qt/debug/ -lluna2d
-	PRE_TARGETDEPS += $$PWD/../../../lib/qt/debug/libluna2d.a
+	LIBS += -L$$PWD/../../../lib/qt/ -lluna2dd
+	PRE_TARGETDEPS += $$PWD/../../../lib/qt/libluna2dd.a
 }
 
 CONFIG(release, debug|release) {
-	LIBS += -L$$PWD/../../../lib/qt/release/ -lluna2d
-	PRE_TARGETDEPS += $$PWD/../../../lib/qt/release/libluna2d.a
+	LIBS += -L$$PWD/../../../lib/qt/ -lluna2d
+	PRE_TARGETDEPS += $$PWD/../../../lib/qt/libluna2d.a
 }
-
-LIBS += -lz
 
 SOURCES += main.cpp\
         mainwindow.cpp \

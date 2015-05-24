@@ -31,19 +31,21 @@ namespace luna2d{
 
 class LUNATextureAtlas
 {
+	typedef std::unordered_map<std::string, std::shared_ptr<LUNATextureRegion>> RegionsMap;
+
 public:
 	LUNATextureAtlas(const std::shared_ptr<LUNATexture>& texture, const std::string& atlasFile,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<LUNATextureRegion>> regions;
+	RegionsMap regions;
 
 private:
 	void Load(const std::shared_ptr<LUNATexture>&, const std::string& atlasFile, LUNAFileLocation location);
 
 public:
 	bool IsLoaded() const;
-	auto GetRegions() -> decltype(LUNATextureAtlas::regions);
+	const RegionsMap& GetRegions() const;
 };
 
 }

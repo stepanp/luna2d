@@ -70,7 +70,7 @@ bool LUNATextureAtlas::IsLoaded() const
 	return !regions.empty();
 }
 
-auto LUNATextureAtlas::GetRegions() -> decltype(LUNATextureAtlas::regions)
+const LUNATextureAtlas::RegionsMap& LUNATextureAtlas::GetRegions() const
 {
 	return regions;
 }
