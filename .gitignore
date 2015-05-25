@@ -1,13 +1,13 @@
 lib/*
 
+build*
+CMakeLists.txt.user
+
 projects/android-eclipse/bin/*
 projects/android-eclipse/gen/*
 projects/android-eclipse/obj/*
 projects/android-eclipse/libs/*
 projects/android-eclipse/.settings/*
-
-projects/cmake/build*
-projects/cmake/luna2d/CMakeLists.txt.user
 
 projects/qt-qtcreator/build*
 projects/qt-qtcreator/luna2d/luna2d.pro.user

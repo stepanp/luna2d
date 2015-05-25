@@ -1,7 +1,6 @@
 project(luna2d)
 cmake_minimum_required(VERSION 2.8)
 
-
 if(NOT CMAKE_BUILD_TYPE)
 	message(FATAL_ERROR "CMAKE_BUILD_TYPE is not set, it bust be Debug or Release")
 endif()
@@ -23,7 +22,7 @@ endif()
 
 
 # luna2d sources
-set(LUNA2D_DIR ${PROJECT_SOURCE_DIR}/../../../luna2d)
+set(LUNA2D_DIR ${PROJECT_SOURCE_DIR}/luna2d)
 
 set(LUNA2D_DIRS
 	${LUNA2D_DIR}
@@ -40,15 +39,16 @@ set(LUNA2D_DIRS
 )
 
 foreach(DIR ${LUNA2D_DIRS})
-	file (GLOB LUNA2D_HEADERS "${DIR}/*.h")
 	aux_source_directory(${DIR} LUNA2D_SOURCES)
+	file (GLOB TEMP "${DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${TEMP})
 endforeach()
 
 include_directories(${LUNA2D_DIRS})
 
 
 # Thirdparty sources
-set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/../../../thirdparty)
+set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 
 set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}
@@ -110,14 +110,13 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	# luna2d Qt source
 	set(LUNA2D_QT_DIR ${LUNA2D_DIR}/platform/qt)
 	include_directories(${LUNA2D_QT_DIR})
-	file (GLOB LUNA2D_HEADERS "${LUNA2D_QT_DIR}/*.h")
 	aux_source_directory(${LUNA2D_QT_DIR} LUNA2D_SOURCES)
+	file (GLOB TEMP "${LUNA2D_QT_DIR}/*.h")
+	list(APPEND LUNA2D_QT_HEADERS ${TEMP})
 
-	message(STATUS ${LUNA2D_HEADERS})
-
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../../lib/${PLATFROM_NAME})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../../lib/${PLATFROM_NAME})
-	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
+
+	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_QT_HEADERS}
 		$<TARGET_OBJECTS:lua>
 		$<TARGET_OBJECTS:png>
 		$<TARGET_OBJECTS:json11>
