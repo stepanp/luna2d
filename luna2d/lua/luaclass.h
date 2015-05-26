@@ -24,64 +24,7 @@
 #pragma once
 
 #include "luatable.h"
-
-// VS2013 not supports constexpr 
-#if LUNA_PLATFORM == LUNA_PLATFORM_WP
-	#define constexpr	
-#endif
-
-#define LUNA_USERDATA(cls) \
-	static_assert(std::is_class<cls>::value, "Type \"" #cls "\" is must be a class"); \
-	protected: \
-		std::shared_ptr<LuaWeakRef> _ref = std::make_shared<LuaWeakRef>(nil); \
-	public: \
-		void _SetLuaRef(const std::shared_ptr<LuaWeakRef>& ref) { _ref = ref; } \
-		std::shared_ptr<LuaWeakRef> _GetLuaRef() { return _ref; } \
-		/* Forced release shared_ptr passed to Lua */ \
-		/* i.e. userdata object in lua will still exists, but references nothing */ \
-		/* and it will can be safety deleted by GC */ \
-		void _KillLuaRef() \
-		{ \
-			if(!_ref || *_ref == nil) return; \
-			\
-			lua_State* luaVm = _ref->GetLuaVm(); \
-			LuaStack<LuaWeakRef*>::Push(luaVm, _ref.get()); \
-			std::shared_ptr<cls>* ptr = *static_cast<std::shared_ptr<cls>**>(lua_touserdata(luaVm, -1)); \
-			lua_pop(luaVm, 1); \
-			\
-			ptr->reset(); \
-			_ref->Release(); \
-		} \
-		template<typename T> \
-		bool _InstanceOf() { return _IsTypeOf(T::_GetTypeId()); } \
-		static const char* _GetUserdataType() { return #cls; } \
-		static const char* _GetBaseClassType() { return nullptr; } \
-		static int _GetTypeId() { return __COUNTER__; } \
-		static int _GetBaseTypeId() { return -1; } \
-		static bool _IsTypeOf(int typeId) { return typeId == _GetTypeId(); } \
-		constexpr static bool _CheckIsBaseOf() { return true; } \
-	private: \
-
-#define LUNA_USERDATA_DERIVED(basecls, cls) \
-	static_assert(std::is_class<basecls>::value && std::is_class<cls>::value, \
-		"Types \"" #basecls "\" and \"" #cls "\" are must be a classes"); \
-	public:  \
-		static const char* _GetUserdataType() { return #cls; } \
-		static const char* _GetBaseClassType() { return #basecls; } \
-		static int _GetTypeId() { return __COUNTER__; } \
-		static int _GetBaseTypeId() { basecls::_GetTypeId(); } \
-		static bool _IsTypeOf(int typeId) \
-		{ \
-			if(typeId == _GetTypeId()) return true; \
-			return basecls::_IsTypeOf(typeId); \
-		} \
-		constexpr static bool _CheckIsBaseOf() \
-		{ \
-			static_assert(std::is_base_of<basecls,cls>::value, "\"" #basecls "\" is not base class of \"" #cls "\""); \
-			return true; \
-		} \
-	private:
-
+#include "luareflection.h"
 
 namespace luna2d{
 
@@ -92,7 +35,7 @@ template<typename Class>
 class LuaClass : public LuaTable
 {
 #if LUNA_PLATFORM != LUNA_PLATFORM_WP
-	static_assert(Class::_CheckIsBaseOf(), "");
+	static_assert(Class::_AssertIsBaseOf(), "");
 #endif
 
 	typedef LuaAny (Class::*IndexHandler)(const LuaAny&);
@@ -104,7 +47,7 @@ public:
 
 		// Create metatable for Class in lua registry
 		// If metatable for Class already exists, just get it from registry
-		bool alreadyRegistred = luaL_newmetatable(luaVm, Class::_GetUserdataType()) == 0;
+		bool alreadyRegistred = luaL_newmetatable(luaVm, Class::_GetTypeName()) == 0;
 
 		// Now, this object of LuaClass is represents the metatable
 		ref->Hold(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
@@ -115,23 +58,21 @@ public:
 		SetField("__newindex", &OnNewIndex);
 		SetField("__gc", &OnGc);
 
-		// Add userdata type to metatable
-		// Userdata type stored in metatable as pointer to string
-		// for fast checking type at the time of casting from lua to C++ object
-		// SEE: LuaStack<T*>::Push/Pop
-		int userdataType = Class::_GetTypeId();
-		SetField("_userdataType", userdataType);
+		// Save userdata type to metatable
+		// For safe-casting from lua userdata to C++ object
+		// SEE: "luaptr.h"
+		SetField("_typeId", Class::_GetTypeId());
 
 		// Save metatable of base class in this table
 		// For support inheritance in lua and support polyphormism for casting from lua to C++ object
-		int baseClassType = Class::_GetBaseTypeId();
-		if(baseClassType != -1)
+		const char* baseTypeName = Class::_GetBaseTypeName();
+		if(baseTypeName)
 		{
-			luaL_getmetatable(luaVm, Class::_GetBaseClassType());
+			luaL_getmetatable(luaVm, baseTypeName);
 
 			if(lua_isnil(luaVm, -1))
 			{
-				//LUNA_LOGE("Metatable for base class \"%s\" must be initialized before metatable for derived class \"%s\"", userdataType, baseClassType);
+				LUNA_LOGE("Metatable for base class \"%s\" must be initialized before metatable for derived class \"%s\"",  Class::_GetTypeName(), baseTypeName);
 				lua_pop(luaVm, 1); // Remove nil from stack
 			}
 			else

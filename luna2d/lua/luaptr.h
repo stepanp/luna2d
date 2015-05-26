@@ -57,7 +57,7 @@ struct LuaStack<std::shared_ptr<T>>
 			*userData = heapPtr;
 
 			// Set metatable to userdata object
-			luaL_getmetatable(luaVm, T::_GetUserdataType());
+			luaL_getmetatable(luaVm, T::_GetTypeName());
 			lua_setmetatable(luaVm, -2);
 
 			// Save ref to userdata object in C++ object
@@ -71,14 +71,13 @@ struct LuaStack<std::shared_ptr<T>>
 		if(!lua_isuserdata(luaVm, index)) return nullptr;
 
 		// Get userdata type from metatable
-		lua_getfield(luaVm, index, "_userdataType");
+		lua_getfield(luaVm, index, "_typeId");
 		if(!lua_isnumber(luaVm, -1))
 		{
 			lua_pop(luaVm, 1); // Remove userdata type from stack
 			return nullptr;
 		}
 
-		// Check type of given userdata
 		int userdataType = lua_tointeger(luaVm, -1);
 		int classType = T::_GetTypeId();
 		lua_pop(luaVm, 1); // Remove userdata type from stack
@@ -117,11 +116,7 @@ struct LuaStack<std::shared_ptr<T>>
 			}
 			lua_pop(luaVm, popCount);
 
-			if(!checkBaseClass)
-			{
-				//LUNA_LOGE("Cannot cast \"%s\" to \"%s\"", userdataType, classType);
-				return nullptr;
-			}
+			if(!checkBaseClass) return nullptr;
 		}
 
 		// Return valid shared_ptr

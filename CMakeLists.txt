@@ -27,8 +27,10 @@ set(LUNA2D_DIR ${PROJECT_SOURCE_DIR}/luna2d)
 set(LUNA2D_DIRS
 	${LUNA2D_DIR}
 	${LUNA2D_DIR}/lua
+	${LUNA2D_DIR}/lua/scripts
 	${LUNA2D_DIR}/assets
 	${LUNA2D_DIR}/graphics
+	${LUNA2D_DIR}/graphics/shaders
 	${LUNA2D_DIR}/modules
 	${LUNA2D_DIR}/physics
 	${LUNA2D_DIR}/physics/shapes
