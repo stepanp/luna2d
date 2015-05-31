@@ -99,7 +99,7 @@ void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
 std::string LUNAText::GetText()
 {
 	// Convert saved string from UTF-32 to UTF-8
-	return utf8::FromUtf32(text);
+	return utf::FromUtf32(text);
 }
 
 // Set text value. Given text in UTF-8 encoding
@@ -112,7 +112,7 @@ void LUNAText::SetText(const std::string& text)
 	}
 
 	// Convert given string from UTF-8 to UTF-32
-	this->text = utf8::ToUtf32(text);
+	this->text = utf::ToUtf32(text);
 
 	auto sharedFont = font.lock();
 	sprites.erase(sprites.begin(), sprites.end());

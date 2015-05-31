@@ -28,7 +28,7 @@
 //-------------------------------------
 // Helpers for work with UTF-8 encoding
 //-------------------------------------
-namespace luna2d{ namespace utf8{
+namespace luna2d{ namespace utf{
 
 std::u32string ToUtf32(const std::string& string); // Convert UTF-8 string to UTF-32 string
 std::string FromUtf32(const std::u32string& string); // Convert UTF-32 string to UTF-8 string
