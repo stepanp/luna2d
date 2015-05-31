@@ -135,26 +135,35 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	qt5_use_modules(${LIB_NAME} OpenGL)
 
 
-# Build Windows Phone static library
+# Build Windows Phone shared library
 elseif(${PLATFROM_NAME} STREQUAL "wp")
+	set(ANGLE_PATH ${THIRDPARTY_DIR}/angle)
+	set(ANGLE_INCLUDE_PATH = ${ANGLE_PATH}/include)
+	set(ANGLE_LIB_PATH = ${ANGLE_PATH}/prebuilt/wp/arm)
+
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm200 /wd\"4251\" /wd\"4457\" /wd\"4458\"")
+	#C4244
 
 	# Include angle
-	include_directories(${THIRDPARTY_DIR}/angle/include)
+	include_directories(${ANGLE_INCLUDE_PATH})
 
 	# luna2d Windows Phone source
 	set(LUNA2D_WP_DIR ${LUNA2D_DIR}/platform/wp)
 	include_directories(${LUNA2D_WP_DIR})
-	aux_source_directory(${LUNA2D_WP_DIR} LUNA2D_SOURCES)
+	aux_source_directory(${LUNA2D_WP_DIR} LUNA2D_WP_SOURCES)
 	file (GLOB LUNA2D_WP_HEADERS "${LUNA2D_WP_DIR}/*.h")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_HEADERS})
 
 	# Set same ouput directory for debug and release configurations
-	SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
-	SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
-	SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+
+	# Enable WinRT extesion only for luna2d wp files
+	set_source_files_properties(${LUNA2D_WP_SOURCES} PROPERTIES COMPILE_FLAGS -ZW)
 
 	# Make source groups
 	foreach(DIR ${LUNA2D_DIRS})
@@ -162,7 +171,7 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	endforeach()
 	source_group("luna2d/platform/wp" ${LUNA2D_WP_DIR})
 
-	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_WP_SOURCES}
 		$<TARGET_OBJECTS:lua>
 		$<TARGET_OBJECTS:png>
 		$<TARGET_OBJECTS:json11>
@@ -172,6 +181,12 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	)
 
 	set_property(TARGET ${LIB_NAME} PROPERTY FOLDER "luna2d")
+	set_target_properties(${LIB_NAME} PROPERTIES VS_WINRT_EXTENSIONS TRUE)
+
+	# Link angle static libs
+	message(STATUS ${ANGLE_LIB_PATH})
+	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
+    target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libGLESv2.lib)
 
 else()
 	message(FATAL_ERROR "Unknown platform")

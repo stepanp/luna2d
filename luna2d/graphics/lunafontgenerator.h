@@ -24,7 +24,6 @@
 #pragma once
 
 #include "lunafont.h"
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -34,10 +33,22 @@
 
 namespace luna2d{
 
-const std::u32string LATIN_CHARS = U"qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-const std::u32string CYRILLIC_CHARS = U"йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
-const std::u32string COMMON_CHARS = U" !@#$%^&*()-+=!№?<>{}:;,.\\/|`~'\"_";
-const std::u32string NUMBER_CHARS = U"1234567890";
+#if LUNA_PLATFORM == LUNA_PLATFORM_WP
+	// WP8.1 toolset don't support unicode literals
+	const std::string LATIN_CHARS = "qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+	const std::string CYRILLIC_CHARS = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
+	const std::string COMMON_CHARS = " !@#$%^&*()-+=!№?<>{}:;,.\\/|`~'\"_";
+	const std::string NUMBER_CHARS = "1234567890";
+	int UTF32_SPACE_CHAR = 0x00000020;
+
+#else
+	const std::u32string LATIN_CHARS = U"qwertyyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+	const std::u32string CYRILLIC_CHARS = U"йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ";
+	const std::u32string COMMON_CHARS = U" !@#$%^&*()-+=!№?<>{}:;,.\\/|`~'\"_";
+	const std::u32string NUMBER_CHARS = U"1234567890";
+	char32_t UTF32_SPACE_CHAR = U' ';
+#endif
+
 const int CHAR_PADDING = 2; // Size of padding between chars(in pixels)
 
 //----------------------------------------------

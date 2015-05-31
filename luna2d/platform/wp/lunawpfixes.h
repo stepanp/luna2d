@@ -21,6 +21,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 //-------------------------------------------
 // Fix some platform-specific compiler issues
 //-------------------------------------------
@@ -29,8 +31,8 @@
 #include <ctype.h>
 namespace std
 {
-	int islower(int c) { return ::islower(c); }
-	int isupper(int c) { return ::isupper(c); }
+	inline int islower(int c) { return ::islower(c); }
+	inline int isupper(int c) { return ::isupper(c); }
 }
 
 // Add support "ssize_t"

@@ -24,7 +24,6 @@
 #pragma once
 
 #include "lunatexture.h"
-#include <memory>
 
 namespace luna2d{
 
