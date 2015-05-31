@@ -2,7 +2,7 @@ project(luna2d)
 cmake_minimum_required(VERSION 2.8)
 
 if(NOT CMAKE_BUILD_TYPE)
-	message(FATAL_ERROR "CMAKE_BUILD_TYPE is not set, it bust be Debug or Release")
+	message(FATAL_ERROR "CMAKE_BUILD_TYPE is not set, it must be Debug or Release")
 endif()
 
 
@@ -59,6 +59,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/json11
 	${THIRDPARTY_DIR}/libpng
 	${THIRDPARTY_DIR}/utf8cpp
+	${THIRDPARTY_DIR}/zlib
 )
 
 include_directories(${THIRDPARTY_DIRS})
@@ -96,7 +97,10 @@ add_library(z OBJECT ${ZLIB_SOURCES})
 
 
 # Set platform name
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
+	set(PLATFROM_NAME "wp")
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	set(PLATFROM_NAME "qt")
 endif()
 
@@ -113,12 +117,12 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	set(LUNA2D_QT_DIR ${LUNA2D_DIR}/platform/qt)
 	include_directories(${LUNA2D_QT_DIR})
 	aux_source_directory(${LUNA2D_QT_DIR} LUNA2D_SOURCES)
-	file (GLOB TEMP "${LUNA2D_QT_DIR}/*.h")
-	list(APPEND LUNA2D_QT_HEADERS ${TEMP})
+	file (GLOB LUNA2D_QT_HEADERS "${LUNA2D_QT_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${TEMP})
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
-	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_QT_HEADERS}
+	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
 		$<TARGET_OBJECTS:lua>
 		$<TARGET_OBJECTS:png>
 		$<TARGET_OBJECTS:json11>
@@ -129,6 +133,42 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
+
+
+# Build Windows Phone static library
+elseif(${PLATFROM_NAME} STREQUAL "wp")
+	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+	# Include angle
+	include_directories(${THIRDPARTY_DIR}/angle/include)
+
+	# luna2d Windows Phone source
+	set(LUNA2D_WP_DIR ${LUNA2D_DIR}/platform/wp)
+	include_directories(${LUNA2D_WP_DIR})
+	aux_source_directory(${LUNA2D_WP_DIR} LUNA2D_SOURCES)
+	file (GLOB LUNA2D_WP_HEADERS "${LUNA2D_WP_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_HEADERS})
+
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+
+	# Make source groups
+	foreach(DIR ${LUNA2D_DIRS})
+		source_group(${DIR} ${DIR})
+	endforeach()
+	source_group("luna2d/platform/wp" ${LUNA2D_WP_DIR})
+
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
+		$<TARGET_OBJECTS:lua>
+		$<TARGET_OBJECTS:png>
+		$<TARGET_OBJECTS:json11>
+		$<TARGET_OBJECTS:Box2D>
+		$<TARGET_OBJECTS:freetype>
+		$<TARGET_OBJECTS:z>
+	)
+
+	set_property(TARGET ${LIB_NAME} PROPERTY FOLDER "luna2d")
 
 else()
 	message(FATAL_ERROR "Unknown platform")
