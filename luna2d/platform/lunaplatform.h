@@ -77,6 +77,8 @@
 #elif (WINAPI_FAMILY == WINAPI_FAMILY_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
 	#define LUNA_PLATFORM LUNA_PLATFORM_WP
 	#define LUNA_PLATFORM_STRING "wp"
+	
+	#include "lunawpfixes.h"
 
 // Check for unsupported platforms
 #else
