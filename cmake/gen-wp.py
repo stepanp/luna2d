@@ -4,7 +4,7 @@ import shutil
 import sys
 
 LUNA2D_PATH = os.path.realpath(__file__) + "/../../"
-VS_VERSION = "Visual Studio 12 2013"
+VS_VERSION = "Visual Studio 12 2013 ARM"
 BUILD_TYPE = sys.argv[1] if len(sys.argv) > 1 else "Release"
 BUILD_PATH = LUNA2D_PATH + "/build/wp/" + BUILD_TYPE.lower()
 
