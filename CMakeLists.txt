@@ -157,6 +157,13 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	file (GLOB LUNA2D_WP_HEADERS "${LUNA2D_WP_DIR}/*.h")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_HEADERS})
 
+	include_directories(${LUNA2D_WP_DIR}/application)
+	aux_source_directory(${LUNA2D_WP_DIR}/application LUNA2D_WP_SOURCES)
+	file (GLOB LUNA2D_WP_APP_HEADERS "${LUNA2D_WP_DIR}/application/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_APP_HEADERS})
+
+	file (GLOB LUNA2D_WP_XAML "${LUNA2D_WP_DIR}/application/*.xaml")
+
 	# Set same ouput directory for debug and release configurations
 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
@@ -167,11 +174,14 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 
 	# Make source groups
 	foreach(DIR ${LUNA2D_DIRS})
-		source_group(${DIR} ${DIR})
+		STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" GROUP_NAME ${DIR})
+		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
+		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
-	source_group("luna2d/platform/wp" ${LUNA2D_WP_DIR})
+	source_group("luna2d\\platform\\wp" ${LUNA2D_WP_DIR})
+	source_group("luna2d\\platform\\wp\\application" ${LUNA2D_WP_DIR}/application)
 
-	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_WP_SOURCES}
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_WP_SOURCES} ${LUNA2D_WP_XAML}
 		$<TARGET_OBJECTS:lua>
 		$<TARGET_OBJECTS:png>
 		$<TARGET_OBJECTS:json11>
@@ -184,8 +194,16 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
 	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libGLESv2.lib)
 
+	# Set groups for projects
 	set_property(TARGET ${LIB_NAME} PROPERTY FOLDER "luna2d")
+	set_property(TARGET lua PROPERTY FOLDER "thirdparty")
+	set_property(TARGET png PROPERTY FOLDER "thirdparty")
+	set_property(TARGET json11 PROPERTY FOLDER "thirdparty")
+	set_property(TARGET Box2D PROPERTY FOLDER "thirdparty")
+	set_property(TARGET z PROPERTY FOLDER "thirdparty")
+
 	set_target_properties(${LIB_NAME} PROPERTIES VS_WINRT_EXTENSIONS TRUE)
+	set_target_properties(${LIB_NAME} PROPERTIES VS_WINRT_COMPONENT TRUE)
 
 else()
 	message(FATAL_ERROR "Unknown platform")
