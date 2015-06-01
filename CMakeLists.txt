@@ -138,8 +138,8 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 # Build Windows Phone shared library
 elseif(${PLATFROM_NAME} STREQUAL "wp")
 	set(ANGLE_PATH ${THIRDPARTY_DIR}/angle)
-	set(ANGLE_INCLUDE_PATH = ${ANGLE_PATH}/include)
-	set(ANGLE_LIB_PATH = ${ANGLE_PATH}/prebuilt/wp/arm)
+	set(ANGLE_INCLUDE_PATH ${ANGLE_PATH}/include)
+	set(ANGLE_LIB_PATH ${ANGLE_PATH}/prebuilt/wp/arm)
 
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -180,13 +180,12 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 		$<TARGET_OBJECTS:z>
 	)
 
+	# Link angle static libs
+	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
+	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libGLESv2.lib)
+
 	set_property(TARGET ${LIB_NAME} PROPERTY FOLDER "luna2d")
 	set_target_properties(${LIB_NAME} PROPERTIES VS_WINRT_EXTENSIONS TRUE)
-
-	# Link angle static libs
-	message(STATUS ${ANGLE_LIB_PATH})
-	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
-    target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libGLESv2.lib)
 
 else()
 	message(FATAL_ERROR "Unknown platform")
