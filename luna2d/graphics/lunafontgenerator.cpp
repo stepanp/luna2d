@@ -24,7 +24,6 @@
 #include "lunafontgenerator.h"
 #include "lunasizes.h"
 #include "lunamath.h"
-#include "lunautf.h"
 
 using namespace luna2d;
 
@@ -85,23 +84,15 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	// Select available chars
 	std::u32string chars;
 
-#if LUNA_PLATFORM == LUNA_PLATFORM_WP
-	// WP8.1 toolset don't support unicode literals
-	if(enableLatin) chars += utf::ToUtf32(LATIN_CHARS);
-	if(enableCyrillic) chars += utf::ToUtf32(CYRILLIC_CHARS);
-	if(enableCommon) chars += utf::ToUtf32(COMMON_CHARS);
-	if(enableNumbers) chars += utf::ToUtf32(NUMBER_CHARS);
-#else
 	if (enableLatin) chars += LATIN_CHARS;
 	if (enableCyrillic) chars += CYRILLIC_CHARS;
 	if (enableCommon) chars += COMMON_CHARS;
 	if (enableNumbers) chars += NUMBER_CHARS;
-#endif
 
 	// Get global char metrics
 	int maxW = UnitsToPixels(face->size->metrics.max_advance); // Max char width
 	int maxH = UnitsToPixels(face->size->metrics.height); // Max char height
-	int baseline = std::fabsf(UnitsToPixels(face->size->metrics.descender)); // Distance from bottom to baseline
+	int baseline = std::fabs((float)UnitsToPixels(face->size->metrics.descender)); // Distance from bottom to baseline
 
 	// Calculate texture size
 	int charArea = (maxW + CHAR_PADDING) * (maxH + CHAR_PADDING);
@@ -144,7 +135,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 		int bmpHeight = bmp.rows;
 
 		// Skip all empty chars except space
-		if((bmpWidth == 0 || bmpHeight == 0) && c != UTF32_SPACE_CHAR) continue;
+		if((bmpWidth == 0 || bmpHeight == 0) && c != ' ') continue;
 
 		int charDescender = bmpHeight - face->glyph->bitmap_top;
 		int charW = UnitsToPixels(face->glyph->advance.x);

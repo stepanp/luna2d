@@ -34,3 +34,14 @@ std::u32string ToUtf32(const std::string& string); // Convert UTF-8 string to UT
 std::string FromUtf32(const std::u32string& string); // Convert UTF-32 string to UTF-8 string
 
 }}
+
+
+//--------------------------------------------------------------------------------
+// WP8.1 toolset don't support unicode literals
+// So, for UTF32 strings, "LUNA_UTF32" macro should be used instead of "U" literal
+//--------------------------------------------------------------------------------
+#if LUNA_PLATFORM == LUNA_PLATFORM_WP
+	#define LUNA_UTF32(str) luna2d::utf::ToUtf32(str)
+#else
+	#define LUNA_UTF32(str) U##str
+#endif
