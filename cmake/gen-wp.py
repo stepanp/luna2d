@@ -11,7 +11,7 @@ BUILD_PATH = LUNA2D_PATH + "/build/wp/" + BUILD_TYPE.lower()
 shutil.rmtree(BUILD_PATH, ignore_errors=True)
 os.makedirs(BUILD_PATH)
 
-subprocess.call(["cmake", "-G", VS_VERSION,
+subprocess.call(["c:\\Program Files (x86)\\CMake Nightly\\bin\\cmake", "-G", VS_VERSION,
     "-DCMAKE_SYSTEM_NAME=WindowsPhone",
     "-DCMAKE_SYSTEM_VERSION=8.1",
     '-DCMAKE_BUILD_TYPE="' + BUILD_TYPE +'"',

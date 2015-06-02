@@ -18,7 +18,6 @@
 #include "lunawputils.h"
 
 using namespace Platform;
-using namespace WpTestApp;
 using namespace luna2d;
 
 HelloTriangleRenderer::HelloTriangleRenderer()

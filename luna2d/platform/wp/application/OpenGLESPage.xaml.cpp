@@ -3,7 +3,6 @@
 #include "lunasizes.h"
 #include "OpenGLESPage.xaml.h"
 
-using namespace WpTestApp;
 using namespace Platform;
 using namespace Concurrency;
 using namespace Windows::Foundation;
@@ -12,13 +11,7 @@ using namespace Windows::System::Threading;
 using namespace luna2d;
 
 OpenGLESPage::OpenGLESPage() :
-    OpenGLESPage(nullptr)
-{
-
-}
-
-OpenGLESPage::OpenGLESPage(OpenGLES* openGLES) :
-    mOpenGLES(openGLES),
+    mOpenGLES(&gles),
     mRenderSurface(EGL_NO_SURFACE),
     mCustomRenderSurfaceSize(0,0),
     mUseCustomRenderSurfaceSize(false)

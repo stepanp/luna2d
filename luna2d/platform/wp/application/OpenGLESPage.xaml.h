@@ -5,7 +5,7 @@
 #include "HelloTriangleRenderer.h"
 #include <concurrent_queue.h>
 
-namespace WpTestApp
+namespace luna2d
 {
 	enum class TouchType
 	{
@@ -31,11 +31,10 @@ namespace WpTestApp
     public ref class OpenGLESPage sealed
     {
     public:
-        OpenGLESPage();
         virtual ~OpenGLESPage();
 
-    internal:
-        OpenGLESPage(OpenGLES* openGLES);
+	internal:
+		OpenGLESPage();
 
     private:
         void OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
@@ -48,6 +47,7 @@ namespace WpTestApp
         void StartRenderLoop();
         void StopRenderLoop();
 
+		OpenGLES gles;
         OpenGLES* mOpenGLES;
 
         Windows::Foundation::Size mSwapChainPanelSize;

@@ -10,7 +10,7 @@
 #include <math.h>
 #include "lunagl.h"
 
-namespace WpTestApp
+namespace luna2d
 {
     class HelloTriangleRenderer
     {
