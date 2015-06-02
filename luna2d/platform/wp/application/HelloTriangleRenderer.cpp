@@ -36,7 +36,7 @@ void HelloTriangleRenderer::Draw(GLsizei width, GLsizei height)
 {
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
-		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils());
+		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), nullptr);
 		LUNAEngine::Shared()->Initialize(width, height);
 	}
 

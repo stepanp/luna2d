@@ -22,3 +22,13 @@
 //-----------------------------------------------------------------------------
 
 #include "lunawputils.h"
+
+using namespace luna2d;
+
+// Get system locale in "xx_XX" format
+// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+std::string LUNAWpUtils::GetSystemLocale()
+{
+	return "en";
+}
+

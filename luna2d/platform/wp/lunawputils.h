@@ -32,7 +32,9 @@ namespace luna2d{
 //-----------------------------------------------------
 class LUNAWpUtils : public LUNAPlatformUtils
 {
-
+	// Get system locale in "xx_XX" format
+	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+	virtual std::string GetSystemLocale();
 };
 
 }

@@ -232,13 +232,13 @@ void OpenGLESPage::ProcessPointers()
 		switch(touch->type)
 		{
 		case TouchType::TOUCH_DOWN:
-			LUNAEngine::Shared()->OnTouchDown(x, y);
+			LUNAEngine::Shared()->OnTouchDown(x, y, 0);
 			break;
 		case TouchType::TOUCH_MOVED:
-			LUNAEngine::Shared()->OnTouchMoved(x, y);
+			LUNAEngine::Shared()->OnTouchMoved(x, y, 0);
 			break;
 		case TouchType::TOUCH_UP:
-			LUNAEngine::Shared()->OnTouchUp(x, y);
+			LUNAEngine::Shared()->OnTouchUp(x, y, 0);
 			break;
 		}
 	}
