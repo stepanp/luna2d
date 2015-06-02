@@ -11,7 +11,6 @@
 // This file is used by the template to render a basic scene using GL.
 //
 
-#include "pch.h"
 #include "HelloTriangleRenderer.h"
 #include "lunaengine.h"
 #include "lunawpfiles.h"

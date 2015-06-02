@@ -1,7 +1,7 @@
-﻿#include "pch.h"
-#include "OpenGLESPage.xaml.h"
+﻿
 #include "lunaengine.h"
 #include "lunasizes.h"
+#include "OpenGLESPage.xaml.h"
 
 using namespace WpTestApp;
 using namespace Platform;

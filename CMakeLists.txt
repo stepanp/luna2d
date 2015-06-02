@@ -138,6 +138,7 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 # Build Windows Phone shared library
 elseif(${PLATFROM_NAME} STREQUAL "wp")
 	cmake_minimum_required(VERSION 3.2)
+	message(WARNING "Latest version CMake (3.2.3) still not support XAML, use nightly CMake build for generating VS solution")
 
 	set(ANGLE_PATH ${THIRDPARTY_DIR}/angle)
 	set(ANGLE_INCLUDE_PATH ${ANGLE_PATH}/include)

@@ -25,12 +25,15 @@
 
 #include "lunautf.h"
 #include "lunafont.h"
+
+#define generic _FREETYPE_GENERIC // Avoid conflict with C++/CX keyword
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include FT_TYPES_H
 #include FT_OUTLINE_H
 #include FT_RENDER_H
+#undef generic
 
 namespace luna2d{
 

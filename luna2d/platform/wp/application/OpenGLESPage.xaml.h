@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "OpenGLESPage.g.h"
+#include "OpenGLES.h"
+#include "HelloTriangleRenderer.h"
 #include <concurrent_queue.h>
 
 namespace WpTestApp

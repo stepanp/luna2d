@@ -1,5 +1,7 @@
 #pragma once
 
+#include "HelloTriangleRenderer.h"
+
 class OpenGLES
 {
 public:
