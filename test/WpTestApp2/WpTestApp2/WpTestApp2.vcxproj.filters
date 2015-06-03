@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>50c2bc77-6b66-4cb0-82c9-af00ad7c16c4</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Image Include="Assets\Logo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square71x71Logo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\WideLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="Binaries">
+      <UniqueIdentifier>{1fc21841-5692-4ffd-b49b-433c9a019d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\game">
+      <UniqueIdentifier>{68dea424-043a-43f2-85d3-deef924d79bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\game\art">
+      <UniqueIdentifier>{22948658-f7f0-4c68-9f2e-b47082fa73a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\game\scripts">
+      <UniqueIdentifier>{115c3405-5da9-4d89-8a02-b3c164042f50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="MainPage.xaml.cpp" />
+    <ClCompile Include="pch.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="MainPage.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\thirdparty\angle\prebuilt\wp\arm\libEGL.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="..\..\..\thirdparty\angle\prebuilt\wp\arm\libGLESv2.dll">
+      <Filter>Binaries</Filter>
+    </None>
+    <None Include="Assets\game\config.luna2d">
+      <Filter>Assets\game</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40HD.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40HVGA.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\art\items%40WVGA.atlas">
+      <Filter>Assets\game\art</Filter>
+    </None>
+    <None Include="Assets\game\scripts\background.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\bird.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\gamescene.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\main.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\settings.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+    <None Include="Assets\game\scripts\tube.lua">
+      <Filter>Assets\game\scripts</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\game\art\items%40HD.png">
+      <Filter>Assets\game\art</Filter>
+    </Image>
+    <Image Include="Assets\game\art\items%40HVGA.png">
+      <Filter>Assets\game\art</Filter>
+    </Image>
+    <Image Include="Assets\game\art\items%40WVGA.png">
+      <Filter>Assets\game\art</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

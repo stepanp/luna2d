@@ -1,0 +1,12 @@
+*.sdf
+*.suo
+*.opensdf
+ipch/*
+Debug/*
+Release/*
+ARM/*
+WpTestApp2/Debug/*
+WpTestApp2/Release/*
+WpTestApp2/ARM/*
+WpTestApp2/Generated Files/*
+WpTestApp2/WpTestApp2.vcxproj.user

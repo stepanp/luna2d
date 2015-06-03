@@ -1,0 +1,10 @@
+{
+	"name" : "FlappyLuna",
+	"orientation" : "landscape",
+	"resolutions" :
+	[
+		"HVGA",
+		"WVGA",
+		"HD"
+	]
+}

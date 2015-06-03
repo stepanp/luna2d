@@ -31,10 +31,8 @@ namespace luna2d
     public ref class OpenGLESPage sealed
     {
     public:
-        virtual ~OpenGLESPage();
-
-	internal:
-		OpenGLESPage();
+    	OpenGLESPage();
+        virtual ~OpenGLESPage();		
 
     private:
         void OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
