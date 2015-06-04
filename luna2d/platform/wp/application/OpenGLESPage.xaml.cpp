@@ -1,7 +1,11 @@
 ﻿
-#include "lunaengine.h"
-#include "lunasizes.h"
 #include "OpenGLESPage.xaml.h"
+#include "lunaengine.h"
+#include "lunawpfiles.h"
+#include "lunawplog.h"
+#include "lunawputils.h"
+#include "lunawpprefs.h"
+#include "lunasizes.h"
 
 using namespace Platform;
 using namespace Concurrency;
@@ -57,7 +61,14 @@ OpenGLESPage::OpenGLESPage() :
 
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
-    mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };}
+    mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };
+
+    // Hide status and navigation bars for Windows Phone
+#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
+    Windows::UI::ViewManagement::StatusBar::GetForCurrentView()->HideAsync();
+    Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->SuppressSystemOverlays = true;
+#endif
+}
 
 OpenGLESPage::~OpenGLESPage()
 {
@@ -172,17 +183,21 @@ void OpenGLESPage::StartRenderLoop()
         critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
 
         mOpenGLES->MakeCurrent(mRenderSurface);
-        HelloTriangleRenderer renderer;
 
-        while (action->Status == Windows::Foundation::AsyncStatus::Started)
+        while(action->Status == Windows::Foundation::AsyncStatus::Started)
         {
 			ProcessPointers();
 
             GLsizei panelWidth = 0;
             GLsizei panelHeight = 0;
-
             GetSwapChainPanelSize(&panelWidth, &panelHeight);
-            renderer.Draw(panelWidth, panelHeight);
+
+            if(!LUNAEngine::Shared()->IsInitialized())
+            {
+                LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
+                LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
+            }
+            else LUNAEngine::Shared()->MainLoop();
 
             // The call to eglSwapBuffers might not be successful (i.e. due to Device Lost)
             // If the call fails, then we must reinitialize EGL and the GL resources.
@@ -225,13 +240,13 @@ void OpenGLESPage::ProcessPointers()
 		switch(touch->type)
 		{
 		case TouchType::TOUCH_DOWN:
-			LUNAEngine::Shared()->OnTouchDown(x, y, 0);
+			LUNAEngine::Shared()->OnTouchDown(x, y, touch->touchIndex);
 			break;
 		case TouchType::TOUCH_MOVED:
-			LUNAEngine::Shared()->OnTouchMoved(x, y, 0);
+			LUNAEngine::Shared()->OnTouchMoved(x, y, touch->touchIndex);
 			break;
 		case TouchType::TOUCH_UP:
-			LUNAEngine::Shared()->OnTouchUp(x, y, 0);
+			LUNAEngine::Shared()->OnTouchUp(x, y, touch->touchIndex);
 			break;
 		}
 	}

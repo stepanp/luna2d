@@ -1,6 +1,6 @@
 #pragma once
 
-#include "HelloTriangleRenderer.h"
+#include "lunagl.h"
 
 class OpenGLES
 {

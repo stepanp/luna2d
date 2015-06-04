@@ -2,8 +2,15 @@
 
 #include "OpenGLESPage.g.h"
 #include "OpenGLES.h"
-#include "HelloTriangleRenderer.h"
+#include <wrl.h>
+#include <wrl/client.h>
+#include <memory>
+#include <agile.h>
+#include <concrt.h>
+#include <collection.h>
+#include <ppltasks.h>
 #include <concurrent_queue.h>
+#include <math.h>
 
 namespace luna2d
 {
@@ -22,10 +29,12 @@ namespace luna2d
 			this->type = type;
 			this->x = args->CurrentPoint->Position.X;
 			this->y = args->CurrentPoint->Position.Y;
+			this->touchIndex = args->CurrentPoint->PointerId;
 		}
 
 		TouchType type;
 		float x, y;
+		int touchIndex;
 	};
 
     public ref class OpenGLESPage sealed
