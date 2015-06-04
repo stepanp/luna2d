@@ -21,19 +21,57 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include <string>
-#include <windows.h>
-
 #pragma once
 
-//-----------------------------------------------------------
-// Functions for casting between std::string and std::wstring
-//-----------------------------------------------------------
+#include "lunaprefs.h"
+#include <windows.h>
+
 namespace luna2d{
 
-std::wstring ToWString(const std::string& str); // Convert std::string to std::wstring
-std::string FromWString(const std::wstring& str); // Convert std::wstring to std::string
-Platform::String^ ToPlatformString(const std::string& str); // Convert std::string to Platform::String
-std::string FromPlatfromString(Platform::String^ str); // Convert Platform::String to std::string
+//------------------------------------------------
+// Preferences mplementaton for Windows Phone / RT
+//------------------------------------------------
+class LUNAWpPrefs : public LUNAPrefs
+{
+public:
+	LUNAWpPrefs();
+
+private:
+	Windows::Storage::ApplicationDataContainer^ settings;
+
+public:
+	// Get string value from preferences
+	virtual std::string GetString(const std::string& name);
+
+	// Get int value from preferences
+	virtual int GetInt(const std::string& name);
+
+	// Get float value from preferences
+	virtual float GetFloat(const std::string& name);
+
+	// Get bool value from preferences
+	virtual bool GetBool(const std::string& name);
+
+	// Set string value to preferences
+	virtual void SetString(const std::string& name, const std::string& value);
+
+	// Set int value to preferences
+	virtual void SetInt(const std::string& name, int value);
+
+	// Set float value to preferences
+	virtual void SetFloat(const std::string& name, float value);
+
+	// Set bool value to preferences
+	virtual void SetBool(const std::string& name, bool value);
+
+	// Check for existing value
+	virtual bool HasValue(const std::string& name);
+
+	// Remove valuee from preferences
+	virtual void RemoveValue(const std::string& name);
+
+	// Remove all values from preferences
+	virtual void Clear();
+};
 
 }

@@ -24,7 +24,7 @@
 #include "lunawpfiles.h"
 #include "platform/lunalog.h"
 #include "lunawstring.h"
-#include <Windows.h>
+#include <windows.h>
 
 using namespace luna2d;
 

@@ -16,6 +16,7 @@
 #include "lunawpfiles.h"
 #include "lunawplog.h"
 #include "lunawputils.h"
+#include "lunawpprefs.h"
 
 using namespace Platform;
 using namespace luna2d;
@@ -35,7 +36,7 @@ void HelloTriangleRenderer::Draw(GLsizei width, GLsizei height)
 {
 	if(!LUNAEngine::Shared()->IsInitialized())
 	{
-		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), nullptr);
+		LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
 		LUNAEngine::Shared()->Initialize(width, height);
 		if(!LUNAEngine::Shared()->IsInitialized()) return;
 	}

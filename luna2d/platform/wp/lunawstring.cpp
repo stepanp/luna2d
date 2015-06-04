@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "lunawstring.h"
-#include <Windows.h>
 
 using namespace luna2d;
 
@@ -42,4 +41,18 @@ std::string luna2d::FromWString(const std::wstring& str)
 	WideCharToMultiByte(CP_ACP, 0, str.c_str(), str.length(), &ret[0], ret.length(), "", FALSE);
 
 	return std::move(ret);
+}
+
+// Convert std::string to Platform::String
+Platform::String^ luna2d::ToPlatformString(const std::string& str)
+{
+	std::wstring wstr = std::wstring(str.begin(), str.end());
+	return ref new Platform::String(wstr.c_str());
+}
+
+// Convert Platform::String to std::string
+std::string luna2d::FromPlatfromString(Platform::String^ str)
+{
+	std::wstring wstr = str->Data();
+	return std::string(wstr.begin(), wstr.end());
 }

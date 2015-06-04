@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "platform/lunaplatformutils.h"
+#include "lunaplatformutils.h"
 
 namespace luna2d{
 

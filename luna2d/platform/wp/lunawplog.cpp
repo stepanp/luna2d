@@ -23,7 +23,7 @@
 
 #include "lunawplog.h"
 #include "lunawstring.h"
-#include <Windows.h>
+#include <windows.h>
 
 using namespace luna2d;
 
