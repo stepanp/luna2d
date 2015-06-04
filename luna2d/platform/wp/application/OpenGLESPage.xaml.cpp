@@ -134,8 +134,11 @@ void OpenGLESPage::CreateRenderSurface()
 
 		// Create custom render surface with screen size
 		// To avoid incorrect swap chain panel size in Windows Phone
+		auto dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 		auto bounds = Windows::UI::Xaml::Window::Current->Bounds;
-		mCustomRenderSurfaceSize = Size(bounds.Width, bounds.Height);
+		scaleFactor = dispInfo->RawPixelsPerViewPixel;
+		
+		mCustomRenderSurfaceSize = Size(bounds.Width * scaleFactor, bounds.Height * scaleFactor);
 		mUseCustomRenderSurfaceSize = true;
 
         mRenderSurface = mOpenGLES->CreateSurface(swapChainPanel, mUseCustomRenderSurfaceSize ? &mCustomRenderSurfaceSize : nullptr);
@@ -195,7 +198,7 @@ void OpenGLESPage::StartRenderLoop()
             if(!LUNAEngine::Shared()->IsInitialized())
             {
                 LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
-                LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
+				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
             }
             else LUNAEngine::Shared()->MainLoop();
 
@@ -249,8 +252,8 @@ void OpenGLESPage::ProcessPointers()
 	std::shared_ptr<TouchEvent> touch;
 	while(pointers.try_pop(touch))
 	{
-		float x = touch->x;
-		float y = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight() - touch->y;
+		float x = scaleFactor * touch->x;
+		float y = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight() - (scaleFactor * touch->y);
 		int id = touch->id;
 
 		switch (touch->type)

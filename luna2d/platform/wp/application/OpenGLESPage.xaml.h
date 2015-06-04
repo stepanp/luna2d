@@ -62,6 +62,7 @@ namespace luna2d
 
         Windows::Foundation::Size mCustomRenderSurfaceSize;
         bool mUseCustomRenderSurfaceSize;
+		float scaleFactor;
 
         EGLSurface mRenderSurface;     // This surface is associated with a swapChainPanel on the page
         Concurrency::critical_section mRenderSurfaceCriticalSection;
