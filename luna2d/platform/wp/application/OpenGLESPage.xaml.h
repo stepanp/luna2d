@@ -29,12 +29,12 @@ namespace luna2d
 			this->type = type;
 			this->x = args->CurrentPoint->Position.X;
 			this->y = args->CurrentPoint->Position.Y;
-			this->touchIndex = args->CurrentPoint->PointerId;
+			this->id = args->CurrentPoint->PointerId;
 		}
 
 		TouchType type;
 		float x, y;
-		int touchIndex;
+		int id;
 	};
 
     public ref class OpenGLESPage sealed
@@ -71,10 +71,12 @@ namespace luna2d
 		Windows::Foundation::IAsyncAction^ m_inputLoopWorker;
 		Windows::UI::Core::CoreIndependentInputSource^ m_coreInput;
 
-		Concurrency::concurrent_queue<std::shared_ptr<TouchEvent>> pointers;
-		void ProcessPointers();
 		void OnPointerPressed(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
 		void OnPointerMoved(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
 		void OnPointerReleased(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
+
+		Concurrency::concurrent_queue<std::shared_ptr<TouchEvent>> pointers;
+		std::vector<int> touchIndexes;
+		void ProcessPointers();
     };
 }

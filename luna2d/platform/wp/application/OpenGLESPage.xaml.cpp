@@ -227,31 +227,6 @@ void OpenGLESPage::StopRenderLoop()
     }
 }
 
-void OpenGLESPage::ProcessPointers()
-{
-	if(!LUNAEngine::Shared()->IsInitialized()) return;
-
-	std::shared_ptr<TouchEvent> touch;
-	while(pointers.try_pop(touch))
-	{
-		float x = touch->x;
-		float y = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight() - touch->y;
-
-		switch(touch->type)
-		{
-		case TouchType::TOUCH_DOWN:
-			LUNAEngine::Shared()->OnTouchDown(x, y, touch->touchIndex);
-			break;
-		case TouchType::TOUCH_MOVED:
-			LUNAEngine::Shared()->OnTouchMoved(x, y, touch->touchIndex);
-			break;
-		case TouchType::TOUCH_UP:
-			LUNAEngine::Shared()->OnTouchUp(x, y, touch->touchIndex);
-			break;
-		}
-	}
-}
-
 void OpenGLESPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
 {
 	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_DOWN, e));
@@ -265,4 +240,55 @@ void OpenGLESPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
 void OpenGLESPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
 {
 	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_UP, e));
+}
+
+void OpenGLESPage::ProcessPointers()
+{
+	if(!LUNAEngine::Shared()->IsInitialized()) return;
+
+	std::shared_ptr<TouchEvent> touch;
+	while(pointers.try_pop(touch))
+	{
+		float x = touch->x;
+		float y = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight() - touch->y;
+		int id = touch->id;
+
+		switch (touch->type)
+		{
+		case TouchType::TOUCH_DOWN:
+		{
+			auto it = std::find(touchIndexes.begin(), touchIndexes.end(), -1);
+			int touchIndex;
+
+			if(it != touchIndexes.end())
+			{
+				touchIndex = it - touchIndexes.begin();
+				touchIndexes[touchIndex] = id;
+			}
+			else
+			{
+				touchIndex = touchIndexes.size();
+				touchIndexes.push_back(id);
+			}
+
+			LUNAEngine::Shared()->OnTouchDown(x, y, touchIndex);
+			break;
+		}
+		case TouchType::TOUCH_MOVED:
+		{
+			auto it = std::find(touchIndexes.begin(), touchIndexes.end(), id);
+			int touchIndex = it - touchIndexes.begin();
+			LUNAEngine::Shared()->OnTouchMoved(x, y, touchIndex);
+			break;
+		}
+		case TouchType::TOUCH_UP:
+		{
+			auto it = std::find(touchIndexes.begin(), touchIndexes.end(), id);
+			int touchIndex = it - touchIndexes.begin();
+			touchIndexes[touchIndex] = -1;
+			LUNAEngine::Shared()->OnTouchUp(x, y, touchIndex);
+			break;
+		}
+		}
+	}
 }
