@@ -12,6 +12,7 @@ using namespace Concurrency;
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System::Threading;
+using namespace Windows::UI::ViewManagement;
 using namespace luna2d;
 
 OpenGLESPage::OpenGLESPage() :
@@ -23,6 +24,13 @@ OpenGLESPage::OpenGLESPage() :
     InitializeComponent();
 
     Windows::UI::Core::CoreWindow^ window = Windows::UI::Xaml::Window::Current->CoreWindow;
+
+	// Set fullscreen mode on Windows Phone
+#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
+	StatusBar::GetForCurrentView()->HideAsync(); // Hide status bar
+	ApplicationView::GetForCurrentView()->SuppressSystemOverlays = true; // Hide navigation bar
+	ApplicationView::GetForCurrentView()->SetDesiredBoundsMode(ApplicationViewBoundsMode::UseCoreWindow); // Disable stretching layout by navigation bar
+#endif	
 
     window->VisibilityChanged +=
         ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::VisibilityChangedEventArgs^>(this, &OpenGLESPage::OnVisibilityChanged);
@@ -62,12 +70,6 @@ OpenGLESPage::OpenGLESPage() :
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
     mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };
-
-    // Hide status and navigation bars for Windows Phone
-#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
-    Windows::UI::ViewManagement::StatusBar::GetForCurrentView()->HideAsync();
-    Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()->SuppressSystemOverlays = true;
-#endif
 }
 
 OpenGLESPage::~OpenGLESPage()
