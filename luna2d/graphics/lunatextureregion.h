@@ -40,9 +40,7 @@ private:
 	float u1, v1, u2, v2;
 
 public:
-	// "GetTexture" returns std::shared_ptr instead of std::weak_ptr
-	// to be able to bind this method to Lua
-	std::shared_ptr<LUNATexture> GetTexture();
+	std::weak_ptr<LUNATexture> GetTexture();
 	float GetU1();
 	float GetV1();
 	float GetU2();

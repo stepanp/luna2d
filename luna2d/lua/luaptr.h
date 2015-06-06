@@ -125,10 +125,18 @@ struct LuaStack<std::shared_ptr<T>>
 	}
 };
 
-// Helper to implicit casting from std::shared_ptr to std::weak_ptr when working with lua stack
+// Helper to implicit casting between std::weak_ptr and std::shared_ptr when working with lua stack
 template<typename T>
 struct LuaStack<std::weak_ptr<T>>
 {
+	// "std::weak_ptr" cannot be pushed directly to lua
+	// Instead, original "std::shared_ptr" will pushed
+	// If ptr is expired, nil will pushed
+	static void Push(lua_State* luaVm, const std::weak_ptr<T>& ptr)
+	{
+		return LuaStack<std::shared_ptr<T>>::Push(luaVm, ptr.lock());
+	}
+
 	static std::weak_ptr<T> Pop(lua_State* luaVm, int index)
 	{
 		return std::weak_ptr<T>(LuaStack<std::shared_ptr<T>>::Pop(luaVm, index));

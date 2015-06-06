@@ -46,11 +46,9 @@ LUNATextureRegion::LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, 
 	v2 = (y + height) / (float)sharedTexture->GetHeight();
 }
 
-// "GetTexture" returns std::shared_ptr instead of std::weak_ptr
-// to be able to bind this method to Lua
-std::shared_ptr<LUNATexture> LUNATextureRegion::GetTexture()
+std::weak_ptr<LUNATexture> LUNATextureRegion::GetTexture()
 {
-	return texture.lock();
+	return texture;
 }
 
 float LUNATextureRegion::GetU1()
