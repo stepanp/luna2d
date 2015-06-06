@@ -77,17 +77,17 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	if(!face) return nullptr;
 
 	// For same font size on all resolutions size
-	// scale font size to  virtual screen resolution and sets default DPI
+	// scale font size to virtual screen resolution and sets default DPI
 	int fontSize = size / LUNAEngine::SharedSizes()->GetTextureScale();
 	FT_Set_Char_Size(face, PixelsToUnits(fontSize), 0, 0, 0);
 
 	// Select available chars
 	std::u32string chars;
 
-	if (enableLatin) chars += LATIN_CHARS;
-	if (enableCyrillic) chars += CYRILLIC_CHARS;
-	if (enableCommon) chars += COMMON_CHARS;
-	if (enableNumbers) chars += NUMBER_CHARS;
+	if(enableLatin) chars += LATIN_CHARS;
+	if(enableCyrillic) chars += CYRILLIC_CHARS;
+	if(enableCommon) chars += COMMON_CHARS;
+	if(enableNumbers) chars += NUMBER_CHARS;
 
 	// Get global char metrics
 	int maxW = UnitsToPixels(face->size->metrics.max_advance); // Max char width

@@ -27,7 +27,7 @@ namespace luna2d{
 
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
-// SEE: lunagraphics.cpp, lunassets.cpp
+// SEE: "lunagraphics.cpp", "lunassets.cpp"
 void DoBindings();
 
 }

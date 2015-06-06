@@ -265,7 +265,7 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
-// SEE: lunagraphics.cpp, lunassets.cpp
+// SEE: "lunagraphics.cpp", "lunassets.cpp"
 void luna2d::DoBindings()
 {
 	LuaScript* lua = LUNAEngine::SharedLua();
