@@ -22,13 +22,19 @@
 //-----------------------------------------------------------------------------
 
 #include "lunawputils.h"
+#include "lunawstring.h"
+#include <algorithm>
+#include <windows.h>
 
+using namespace Windows::System::UserProfile;
 using namespace luna2d;
 
 // Get system locale in "xx_XX" format
 // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
 std::string LUNAWpUtils::GetSystemLocale()
 {
-	return "en";
+	std::string ret = FromPlatfromString(GlobalizationPreferences::Languages->GetAt(0));
+	std::replace(ret.begin(), ret.end(), '-', '_');
+	return std::move(ret);
 }
 
