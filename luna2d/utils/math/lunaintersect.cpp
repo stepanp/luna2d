@@ -26,14 +26,10 @@ using namespace luna2d;
 using namespace luna2d::intersect;
 
 // Check for point insinde in rectangle
-bool luna2d::intersect::PointInRectangle(const glm::vec2& point, const LuaTable& rect)
+bool luna2d::intersect::PointInRectangle(const glm::vec2& point, const LUNARect& rect)
 {
-	float rx = rect.GetFloat("x");
-	float ry = rect.GetFloat("y");
-	float rwidth = rect.GetFloat("width");
-	float rheight = rect.GetFloat("height");
-
-	return point.x > rx && point.y > ry && point.x < rx + rwidth && point.y < ry + rheight;
+	return point.x > rect.x && point.y > rect.y &&
+		point.x < rect.x + rect.width && point.y < rect.y + rect.height;
 }
 
 // Check for point insinde in cirle
@@ -59,19 +55,10 @@ bool luna2d::intersect::PointInPolygon(const glm::vec2& point, const std::vector
 }
 
 // Check intersection between two rectangles
-bool luna2d::intersect::Rectangles(const LuaTable& rect1, const LuaTable& rect2)
+bool luna2d::intersect::Rectangles(const LUNARect& rect1, const LUNARect& rect2)
 {
-	float x1 = rect1.GetFloat("x");
-	float y1 = rect1.GetFloat("y");
-	float width1 = rect1.GetFloat("width");
-	float height1 = rect1.GetFloat("height");
-
-	float x2 = rect2.GetFloat("x");
-	float y2 = rect2.GetFloat("y");
-	float width2 = rect2.GetFloat("width");
-	float height2 = rect2.GetFloat("height");
-
-	return x1 < x2 + width2 && x1 + width1 > x2 && y1 < y2 + height2 && y1 + height1 > y2;
+	return rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x
+		&& rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y;
 }
 
 // Check intersection between two lines

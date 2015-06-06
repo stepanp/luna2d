@@ -21,22 +21,39 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "lunavector2.h"
 #include "lunarect.h"
 
-//--------------------------------------------------
-// Functions for check intersections between objects
-//--------------------------------------------------
-namespace luna2d{ namespace intersect{
+using namespace luna2d;
 
-bool PointInRectangle(const glm::vec2& point, const LUNARect& rect); // Check for point insinde in rectangle
-bool PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r); // Check for point insinde in cirle
-bool PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon); // Check for point inside polygon
-bool Rectangles(const LUNARect& rect1, const LUNARect& rect2); // Check intersection between two rectangles
-bool Lines(const LuaTable& line1, const LuaTable& line2); // Check intersection between two lines
-bool LineCircle(const LuaTable& line, const glm::vec2& point, float r); // Check intersection between line and circle
-LuaTable PointBetweenLines(const LuaTable& line1, const LuaTable& line2); // Get intersection point between two lines
+LUNARect::LUNARect() : LUNARect(0, 0, 0, 0)
+{
+}
 
-}}
+LUNARect::LUNARect(float x, float y, float width, float height) :
+	x(x), y(y), width(width), height(height)
+{
+}
+
+// Conctuctor for creating instance in lua
+int LUNARect::LuaConstruct(lua_State* luaVm)
+{
+	int argsCount = lua_gettop(luaVm);
+
+	// Make empty rect
+	if(argsCount == 0) LuaStack<LUNARect>::Push(luaVm, LUNARect());
+
+	// Make copy of given rect
+	else if(argsCount == 1) LuaStack<LUNARect>::Push(luaVm, LuaStack<LUNARect>::Pop(luaVm, 1));
+
+	// Make rect from given params
+	else
+	{
+		float x = LuaStack<float>::Pop(luaVm, 1);
+		float y = LuaStack<float>::Pop(luaVm, 2);
+		float width = LuaStack<float>::Pop(luaVm, 3);
+		float height = LuaStack<float>::Pop(luaVm, 4);
+		LuaStack<LUNARect>::Push(luaVm, LUNARect(x, y, width, height));
+	}
+
+	return 1;
+}

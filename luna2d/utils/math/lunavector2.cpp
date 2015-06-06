@@ -29,7 +29,7 @@ int LuaVector2::Construct(lua_State *luaVm)
 {
 	int argsCount = lua_gettop(luaVm);
 
-	// Make emtty vector
+	// Make empty vector
 	if(argsCount == 1) LuaStack<glm::vec2>::Push(luaVm, glm::vec2());
 
 	// Make copy of given vector

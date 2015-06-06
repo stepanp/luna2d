@@ -29,6 +29,7 @@
 #include "lunaanimator.h"
 #include "math/lunamath.h"
 #include "math/lunavector2.h"
+#include "math/lunarect.h"
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
 #include "math/lunaeasing.h"
@@ -111,7 +112,7 @@ void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 
-	// Register metatable for Vector2
+	// Register metatable for "Vector2"
 	luaL_newmetatable(*lua, VECTOR2_METATABLE_NAME.c_str());
 	LuaTable tblVector2(*lua, luaL_ref(*lua, LUA_REGISTRYINDEX));
 	tblVector2.SetField("__index", tblVector2);
@@ -134,6 +135,9 @@ void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	LuaTable metaVector2(lua);
 	metaVector2.SetField("__call", &LuaVector2::Construct);
 	tblVector2.SetMetatable(metaVector2);
+
+	// Register constructor for "Rect"
+	tblMath.SetField("Rect", LUNARect::LuaConstruct);
 
 	// Set "luna.math" as alias for standard "math" module
 	tblLuna.SetField("math", tblMath);
