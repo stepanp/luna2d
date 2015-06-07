@@ -38,8 +38,6 @@ class LuaClass : public LuaTable
 	static_assert(Class::_AssertIsBaseOf(), "");
 #endif
 
-	typedef LuaAny (Class::*IndexHandler)(const LuaAny&);
-
 public:
 	LuaClass(LuaScript *lua) : LuaTable(lua->GetLuaVm(), LUA_NOREF)
 	{
@@ -55,7 +53,6 @@ public:
 
 		// Set "__index" and "__gc" methamethods
 		SetField("__index", &OnIndex);
-		SetField("__newindex", &OnNewIndex);
 		SetField("__gc", &OnGc);
 
 		// Save userdata type to metatable
@@ -77,17 +74,14 @@ public:
 			}
 			else
 			{
-				LuaTable baseMeta(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
-				SetField("_baseClass", baseMeta);
+				SetField("_baseClass", LuaStack<LuaTable>::Pop(luaVm, -1));
+				lua_pop(luaVm, 1); // Remove metatable from stack
 			}
 		}
 
 		// Deny change class table from lua
 		MakeReadOnly();
 	}
-
-private:
-	static IndexHandler indexHandler;
 
 private:
 	// Wrapper for constructor
@@ -104,23 +98,6 @@ private:
 	// -1 key
 	static int OnIndex(lua_State* luaVm)
 	{
-		// Try call index handler for given userdata object
-		if(indexHandler)
-		{
-			Class *obj = LuaStack<std::shared_ptr<Class>>::Pop(luaVm, -2).get();
-			if(obj)
-			{
-				const LuaAny& key = LuaStack<LuaAny>::Pop(luaVm, -1);
-				const LuaAny& ret = (obj->*LuaClass<Class>::indexHandler)(key);
-
-				if(ret != nil)
-				{
-					LuaStack<LuaAny>::Push(luaVm, ret);
-					return 1;
-				}
-			}
-		}
-
 		// Get value from metatable
 		lua_getmetatable(luaVm, -2);
 		lua_pushvalue(luaVm, -2); // Push copy of key to front of metatable
@@ -160,11 +137,6 @@ private:
 		}
 
 		return 1;
-	}
-
-	static int OnNewIndex(lua_State* luaVm)
-	{
-		return 0;
 	}
 
 	// Handler for "__gc" metamethod
@@ -208,16 +180,7 @@ public:
 		fn.Bind<Ret, Class, Args...>(method);
 		SetField(name, fn, true);
 	}
-
-	void SetIndexHandler(IndexHandler indexHandler)
-	{
-		LuaClass<Class>::indexHandler = indexHandler;
-	}
 };
-
-// Initialize static members of LuaClass
-template<typename Class>
-LuaAny (Class::*LuaClass<Class>::indexHandler)(const LuaAny&) = nullptr;
 
 // Use same implementation of LuaStack as for LuaTable
 template<typename Class>
