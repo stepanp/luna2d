@@ -23,35 +23,43 @@
 
 #pragma once
 
-#include "lunalua.h"
+#include "lunasprite.h"
 
 namespace luna2d{
 
-class LUNATimer
+//----------------
+// Frame animation
+//----------------
+class LUNAAnimation : public LUNASprite
 {
-	LUNA_USERDATA(LUNATimer)
+	LUNA_USERDATA_DERIVED(LUNASprite, LUNAAnimation)
+
+	typedef std::vector<std::weak_ptr<LUNATextureRegion>> FramesList;
 
 public:
-	LUNATimer(float time, const LuaFunction& onFinish, bool loop);
+	LUNAAnimation(const FramesList& frames, float frameTime);
 
-private:
-	float totalTime = 0.0f, time = 0.0f;
-	LuaFunction onFinish = nil;
+protected:
+	FramesList frames;
+	float frameTime = 0;
+	float time = 0;
 	bool loop = false;
 	bool running = false;
 
 public:
+	int GetFramesCount();
+	const FramesList& GetFrames();
+	void SetFrames(const FramesList& frames);
+	float GetFrameTime(float frameTime);
+	void SetFrameTime(float frameTime);
+	int GetCurFrame();
+	void SetCurFrame(int frameIndex);
 	bool IsLoop();
 	void SetLoop(bool loop);
-	float GetTotalTime();
-	float GetRemainingTime();
-	void SetTime(float time);
-	LuaFunction GetCallback();
-	void SetCallback(const LuaFunction& onFinish);
 	bool IsRunning();
-	void Start(); // Start or resume timer
-	void Pause(); // Stop timer without reset time
-	void Stop(); // Stop timer
+	void Start(); // Start or resume animation
+	void Pause(); // Stop animation without reset time
+	void Stop(); // Stop animation
 	void Update(float deltaTime);
 };
 

@@ -24,10 +24,8 @@
 #include "lunagraphics.h"
 #include "lunaengine.h"
 #include "lunaplatformutils.h"
-#include "lunaassets.h"
 #include "lunascenes.h"
-#include "lunatextureatlas.h"
-#include "lunasprite.h"
+#include "lunaanimation.h"
 #include "lunamesh.h"
 #include "lunatext.h"
 #include "lunacurverenderer.h"
@@ -59,7 +57,8 @@ LUNAGraphics::LUNAGraphics()
 	// Register sprite
 	LuaClass<LUNASprite> clsSprite(lua);
 	clsSprite.SetConstructor<const LuaAny&>();
-	clsSprite.SetMethod("render", &LUNASprite::Render);
+	clsSprite.SetMethod("setTexture", &LUNASprite::SetTexture);
+	clsSprite.SetMethod("setTextureRegion", &LUNASprite::SetTextureRegion);
 	clsSprite.SetMethod("getX", &LUNASprite::GetX);
 	clsSprite.SetMethod("getY", &LUNASprite::GetY);
 	clsSprite.SetMethod("setX", &LUNASprite::SetX);
@@ -88,7 +87,26 @@ LUNAGraphics::LUNAGraphics()
 	clsSprite.SetMethod("getColor", &LUNASprite::GetColor);
 	clsSprite.SetMethod("setAlpha", &LUNASprite::SetAlpha);
 	clsSprite.SetMethod("getAlpha", &LUNASprite::GetAlpha);
+	clsSprite.SetMethod("render", &LUNASprite::Render);
 	tblGraphics.SetField("Sprite", clsSprite);
+
+	// Register animation
+	LuaClass<LUNAAnimation> clsAnimation(lua);
+	clsAnimation.SetConstructor<const std::vector<std::weak_ptr<LUNATextureRegion>>&, float>();
+	clsAnimation.SetMethod("getFramesCount", &LUNAAnimation::GetFramesCount);
+	clsAnimation.SetMethod("getFrames", &LUNAAnimation::GetFrames);
+	clsAnimation.SetMethod("setFrames", &LUNAAnimation::SetFrames);
+	clsAnimation.SetMethod("getFrameTime", &LUNAAnimation::GetFrameTime);
+	clsAnimation.SetMethod("setFrameTime", &LUNAAnimation::SetFrameTime);
+	clsAnimation.SetMethod("getCurFrame", &LUNAAnimation::GetCurFrame);
+	clsAnimation.SetMethod("setCurFrame", &LUNAAnimation::SetCurFrame);
+	clsAnimation.SetMethod("setLoop", &LUNAAnimation::SetLoop);
+	clsAnimation.SetMethod("isRunning", &LUNAAnimation::IsRunning);
+	clsAnimation.SetMethod("start", &LUNAAnimation::Start);
+	clsAnimation.SetMethod("pause", &LUNAAnimation::Pause);
+	clsAnimation.SetMethod("stop", &LUNAAnimation::Stop);
+	clsAnimation.SetMethod("update", &LUNAAnimation::Update);
+	tblGraphics.SetField("Animation", clsAnimation);
 
 	// Register mesh
 	LuaClass<LUNAMesh> clsMesh(lua);

@@ -35,11 +35,12 @@ class LUNASprite
 	LUNA_USERDATA(LUNASprite)
 
 public:
+	LUNASprite();
 	LUNASprite(const LuaAny& asset); // Lua constructor
 	LUNASprite(const std::weak_ptr<LUNATexture>& texture);
 	LUNASprite(const std::weak_ptr<LUNATextureRegion>& region);
 
-private:
+protected:
 	std::weak_ptr<LUNATexture> texture;
 	float x = 0;
 	float y = 0;
@@ -56,11 +57,13 @@ private:
 	float v2 = 0;
 	LUNAColor color = LUNAColor::WHITE;
 
-private:
+protected:
 	bool InitFromTexture(const std::weak_ptr<LUNATexture>& texture);
 	bool InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region);
 
 public:
+	void SetTexture(const std::weak_ptr<LUNATexture>& texture);
+	void SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region);
 	float GetX();
 	float GetY();
 	void SetX(float x);

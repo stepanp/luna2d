@@ -30,6 +30,8 @@
 
 using namespace luna2d;
 
+LUNASprite::LUNASprite() {}
+
 // Lua constructor
 LUNASprite::LUNASprite(const LuaAny& asset)
 {
@@ -88,6 +90,38 @@ bool LUNASprite::InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region)
 	width = sharedRegion->GetWidthPoints();
 	height = sharedRegion->GetHeightPoints();
 	return true;
+}
+
+void LUNASprite::SetTexture(const std::weak_ptr<LUNATexture>& texture)
+{
+	if(texture.expired()) LUNA_RETURN_ERR("Attempt set invalid texure to sprite");
+
+	this->texture = texture.lock();
+	u1 = 0;
+	v1 = 0;
+	u2 = 1;
+	v2 = 1;
+}
+
+void LUNASprite::SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region)
+{
+	if(!region.expired())
+	{
+		auto sharedRegion = region.lock();
+		auto regionTexture = sharedRegion->GetTexture();
+
+		if(!regionTexture.expired())
+		{
+			texture = regionTexture.lock();
+			u1 = sharedRegion->GetU1();
+			v1 = sharedRegion->GetV1();
+			u2 = sharedRegion->GetU2();
+			v2 = sharedRegion->GetV2();
+			return;
+		}
+	}
+
+	LUNA_RETURN_ERR("Attempt set invalid texure region to sprite")
 }
 
 float LUNASprite::GetX()
