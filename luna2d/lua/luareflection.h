@@ -32,8 +32,8 @@
 
 //-------------------------------------------------------------------------
 // Macro for simple lua reflection and safe-cast
-// Any classes binding to lua wia LuaClass<T>
-// must have in begin of class declaration LUNA_USERDATA macro
+// Any classes binding to lua via LuaClass<T>
+// must have LUNA_USERDATA macro in begin of class declaration
 // (or LUNA_USERDATA_DERIVED macro for derived from already binded classes)
 //-------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@
 		static int _GetTypeId() { return __COUNTER__; } \
 		\
 		static const char* _GetTypeName() { return #cls; } \
-		static const char* _GetBaseTypeName() { return basecls::_GetBaseTypeName(); } \
+		static const char* _GetBaseTypeName() { return basecls::_GetTypeName(); } \
 		\
 		constexpr static bool _AssertIsBaseOf() \
 		{ \

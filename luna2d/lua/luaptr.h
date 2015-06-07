@@ -98,7 +98,7 @@ struct LuaStack<std::shared_ptr<T>>
 				lua_rawget(luaVm, -2);
 				if(lua_isnil(luaVm, -1)) break;
 
-				lua_getfield(luaVm, -1, "_userdataType");
+				lua_getfield(luaVm, -1, "_typeId");
 				if(!lua_isnumber(luaVm, -1))
 				{
 					lua_pop(luaVm, 1); // Remove base class type from stack
