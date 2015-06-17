@@ -45,7 +45,7 @@ float luna2d::easing::QuadraticOut(float t)
 float luna2d::easing::QuadraticInOut(float t)
 {
 	if(t < 0.5f) return 2 * t * t;
-	return (-2 * t * t) + (t * t) - 1;
+	return (-2 * t * t) + (4 * t) - 1;
 }
 
 float luna2d::easing::CubicIn(float t)
