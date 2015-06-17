@@ -245,10 +245,28 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 			prefs->SetString(name, value.ToString());
 			prefs->SetPrefType(name, LUNAPrefType::STRING);
 			break;
+
+		// All numbers in lua stored as floats
+		// But for preferences in several cases (e.g. in Windows registry) it's not useful
+		// So, check and store integer numbers as integers
 		case LUA_TNUMBER:
-			prefs->SetFloat(name, value.ToFloat());
-			prefs->SetPrefType(name, LUNAPrefType::FLOAT);
+		{
+			float fValue = value.ToFloat();
+			int iValue = (int)fValue;
+
+			if(fValue == iValue)
+			{
+				prefs->SetInt(name, iValue);
+				prefs->SetPrefType(name, LUNAPrefType::INT);
+			}
+			else
+			{
+				prefs->SetFloat(name, fValue);
+				prefs->SetPrefType(name, LUNAPrefType::FLOAT);
+			}
+
 			break;
+		}
 		case LUA_TBOOLEAN:
 			prefs->SetBool(name, value.ToBool());
 			prefs->SetPrefType(name, LUNAPrefType::BOOL);
