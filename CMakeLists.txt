@@ -140,6 +140,13 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 # Build Android shared library
 elseif(${PLATFROM_NAME} STREQUAL "android")
+	# Set optimization level same as in ndk-build
+	string(REPLACE "-O3" "-Os" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
+	string(REPLACE "-O3" "-Os" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+
+	# Disable RTTI and exceptions
+	string(REPLACE "-fexceptions" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+	string(REPLACE "-frtti" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 	# libzip
 	aux_source_directory(${THIRDPARTY_DIR}/libzip ZIP_SOURCES)
