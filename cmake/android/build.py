@@ -14,10 +14,10 @@ for arch in ARCHS:
 		os.makedirs(BUILD_PATH)
 
 	subprocess.call(["cmake", "-G", "Ninja",
-	    "-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_TOOLCHAIN_PATH,
-	   	"-DANDROID_NATIVE_API_LEVEL=android-9",
-	    "-DANDROID_ABI=" + arch,
-	    "-DANDROID_STL=gnustl_static",
-	    '-DCMAKE_BUILD_TYPE="' + BUILD_TYPE +'"',
-	    LUNA2D_PATH], cwd=BUILD_PATH)
+		"-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_TOOLCHAIN_PATH,
+		"-DANDROID_NATIVE_API_LEVEL=android-9",
+		"-DANDROID_ABI=" + arch,
+		"-DANDROID_STL=gnustl_static",
+		'-DCMAKE_BUILD_TYPE="' + BUILD_TYPE +'"',
+		LUNA2D_PATH], cwd=BUILD_PATH)
 	subprocess.call(["cmake", "--build", BUILD_PATH])
