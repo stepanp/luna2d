@@ -10,7 +10,6 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
-
 # Debug config
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	set(LIB_NAME ${PROJECT_NAME}d)
@@ -59,6 +58,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/json11
 	${THIRDPARTY_DIR}/libpng
 	${THIRDPARTY_DIR}/utf8cpp
+	${THIRDPARTY_DIR}/libzip
 	${THIRDPARTY_DIR}/zlib
 )
 
@@ -91,17 +91,25 @@ include(${FREETYPE_PATH}/freetype.cmake)
 aux_source_directory(${THIRDPARTY_DIR}/json11 JSON11_SOURCES)
 add_library(json11 OBJECT ${JSON11_SOURCES})
 
+# libzip
+aux_source_directory(${THIRDPARTY_DIR}/libzip ZIP_SOURCES)
+add_library(zip OBJECT ${ZIP_SOURCES})
+
 # zlib
 aux_source_directory(${THIRDPARTY_DIR}/zlib ZLIB_SOURCES)
 add_library(z OBJECT ${ZLIB_SOURCES})
 
 
 # Set platform name
-if(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+	set(PLATFROM_NAME "android")
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
 	set(PLATFROM_NAME "wp")
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	set(PLATFROM_NAME "qt")
+
 endif()
 
 
@@ -118,7 +126,7 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	include_directories(${LUNA2D_QT_DIR})
 	aux_source_directory(${LUNA2D_QT_DIR} LUNA2D_SOURCES)
 	file (GLOB LUNA2D_QT_HEADERS "${LUNA2D_QT_DIR}/*.h")
-	list(APPEND LUNA2D_HEADERS ${TEMP})
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_QT_HEADERS})
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
@@ -134,6 +142,33 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
 
+# Build Android shared library
+elseif(${PLATFROM_NAME} STREQUAL "android")
+
+	# Add JNI includes
+	include_directories(${JNI_INCLUDE_DIRS})
+
+	# Add luna2d Android sources
+	set(LUNA2D_ANDROID_DIR ${LUNA2D_DIR}/platform/android)
+	include_directories(${LUNA2D_ANDROID_DIR})
+	aux_source_directory(${LUNA2D_ANDROID_DIR} LUNA2D_SOURCES)
+	file (GLOB LUNA2D_ANDROID_HEADERS "${LUNA2D_ANDROID_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_ANDROID_HEADERS})
+	list(APPEND LUNA2D_SOURCES ${LUNA2D_ANDROID_DIR}/jni/lunajnibridge.cpp)
+
+	sET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
+		$<TARGET_OBJECTS:lua>
+		$<TARGET_OBJECTS:png>
+		$<TARGET_OBJECTS:json11>
+		$<TARGET_OBJECTS:Box2D>
+		$<TARGET_OBJECTS:freetype>
+		$<TARGET_OBJECTS:zip>
+		$<TARGET_OBJECTS:z>
+	)
+
+	 target_link_libraries(${LIB_NAME} GLESv2 log android)
 
 # Build Windows Phone shared library
 elseif(${PLATFROM_NAME} STREQUAL "wp")
