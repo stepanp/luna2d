@@ -2,11 +2,10 @@
 /build*
 CMakeLists.txt.user
 
-projects/android-eclipse/bin/*
-projects/android-eclipse/gen/*
-projects/android-eclipse/obj/*
-projects/android-eclipse/libs/*
-projects/android-eclipse/.settings/*
+cmake/android/eclipse-project/bin/*
+cmake/android/eclipse-project/gen/*
+cmake/android/eclipse-project/obj/*
+cmake/android/eclipse-project/.settings/*
 
 projects/ios-xcode/luna2d.xcodeproj/project.xcworkspace/*
 projects/ios-xcode/luna2d.xcodeproj/xcuserdata/*

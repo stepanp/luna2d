@@ -5,7 +5,6 @@ if(NOT CMAKE_BUILD_TYPE)
 	message(FATAL_ERROR "CMAKE_BUILD_TYPE is not set, it must be Debug or Release")
 endif()
 
-
 if (CMAKE_COMPILER_IS_GNUCXX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(CMAKE_COMPILER_IS_GNUCXX)
@@ -17,6 +16,19 @@ if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 # Release config
 elseif(${CMAKE_BUILD_TYPE} MATCHES "Release")
 	set(LIB_NAME ${PROJECT_NAME})
+endif()
+
+
+# Set platform name
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+	set(PLATFROM_NAME "android")
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
+	set(PLATFROM_NAME "wp")
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+	set(PLATFROM_NAME "qt")
+
 endif()
 
 
@@ -91,26 +103,9 @@ include(${FREETYPE_PATH}/freetype.cmake)
 aux_source_directory(${THIRDPARTY_DIR}/json11 JSON11_SOURCES)
 add_library(json11 OBJECT ${JSON11_SOURCES})
 
-# libzip
-aux_source_directory(${THIRDPARTY_DIR}/libzip ZIP_SOURCES)
-add_library(zip OBJECT ${ZIP_SOURCES})
-
 # zlib
 aux_source_directory(${THIRDPARTY_DIR}/zlib ZLIB_SOURCES)
 add_library(z OBJECT ${ZLIB_SOURCES})
-
-
-# Set platform name
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
-	set(PLATFROM_NAME "android")
-
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
-	set(PLATFROM_NAME "wp")
-
-elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	set(PLATFROM_NAME "qt")
-
-endif()
 
 
 # Build Qt static library
@@ -142,8 +137,13 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
 
+
 # Build Android shared library
 elseif(${PLATFROM_NAME} STREQUAL "android")
+
+	# libzip
+	aux_source_directory(${THIRDPARTY_DIR}/libzip ZIP_SOURCES)
+	add_library(zip OBJECT ${ZIP_SOURCES})
 
 	# Add JNI includes
 	include_directories(${JNI_INCLUDE_DIRS})
@@ -164,11 +164,12 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 		$<TARGET_OBJECTS:json11>
 		$<TARGET_OBJECTS:Box2D>
 		$<TARGET_OBJECTS:freetype>
-		$<TARGET_OBJECTS:zip>
 		$<TARGET_OBJECTS:z>
+		$<TARGET_OBJECTS:zip>
 	)
 
-	 target_link_libraries(${LIB_NAME} GLESv2 log android)
+	target_link_libraries(${LIB_NAME} GLESv2 log android)
+
 
 # Build Windows Phone shared library
 elseif(${PLATFROM_NAME} STREQUAL "wp")
@@ -247,6 +248,7 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_WINRT_EXTENSIONS TRUE)
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_WINRT_COMPONENT TRUE)
+
 
 else()
 	message(FATAL_ERROR "Unknown platform")
