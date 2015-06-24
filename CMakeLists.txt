@@ -67,6 +67,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}
 	${THIRDPARTY_DIR}/lua
 	${THIRDPARTY_DIR}/Box2D
+	${THIRDPARTY_DIR}/freetype
 	${THIRDPARTY_DIR}/json11
 	${THIRDPARTY_DIR}/libpng
 	${THIRDPARTY_DIR}/utf8cpp
@@ -78,34 +79,30 @@ include_directories(${THIRDPARTY_DIRS})
 
 
 # Lua
-aux_source_directory(${THIRDPARTY_DIR}/lua LUA_SOURCES)
-add_library(lua OBJECT ${LUA_SOURCES})
+aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
 
 # libpng
-aux_source_directory(${THIRDPARTY_DIR}/libpng PNG_SOURCES)
-add_library(png OBJECT ${PNG_SOURCES})
+aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
 
 # Box2D
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision/Shapes BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Common BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Contacts BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Joints BOX2D_SOURCES)
-aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Rope BOX2D_SOURCES)
-add_library(Box2D OBJECT ${BOX2D_SOURCES})
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision/Shapes THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Common THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Contacts THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Joints THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/Box2D/Dynamics/Rope THIRDPARTY_SOURCES)
 
 # Freetype
 set(FREETYPE_PATH ${THIRDPARTY_DIR}/freetype)
 include(${FREETYPE_PATH}/freetype.cmake)
+list(APPEND THIRDPARTY_SOURCES ${FREETYPE_SOURCES})
 
 # json11
-aux_source_directory(${THIRDPARTY_DIR}/json11 JSON11_SOURCES)
-add_library(json11 OBJECT ${JSON11_SOURCES})
+aux_source_directory(${THIRDPARTY_DIR}/json11 THIRDPARTY_SOURCES)
 
 # zlib
-aux_source_directory(${THIRDPARTY_DIR}/zlib ZLIB_SOURCES)
-add_library(z OBJECT ${ZLIB_SOURCES})
+aux_source_directory(${THIRDPARTY_DIR}/zlib THIRDPARTY_SOURCES)
 
 
 # Build Qt static library
@@ -125,14 +122,7 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
-	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
-		$<TARGET_OBJECTS:lua>
-		$<TARGET_OBJECTS:png>
-		$<TARGET_OBJECTS:json11>
-		$<TARGET_OBJECTS:Box2D>
-		$<TARGET_OBJECTS:freetype>
-		$<TARGET_OBJECTS:z>
-	)
+	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
@@ -149,8 +139,7 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 	string(REPLACE "-frtti" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 
 	# libzip
-	aux_source_directory(${THIRDPARTY_DIR}/libzip ZIP_SOURCES)
-	add_library(zip OBJECT ${ZIP_SOURCES})
+	aux_source_directory(${THIRDPARTY_DIR}/libzip THIRDPARTY_SOURCES)
 
 	# Add JNI includes
 	include_directories(${JNI_INCLUDE_DIRS})
@@ -165,15 +154,7 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 
 	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${ANDROID_ABI})
 
-	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS}
-		$<TARGET_OBJECTS:lua>
-		$<TARGET_OBJECTS:png>
-		$<TARGET_OBJECTS:json11>
-		$<TARGET_OBJECTS:Box2D>
-		$<TARGET_OBJECTS:freetype>
-		$<TARGET_OBJECTS:z>
-		$<TARGET_OBJECTS:zip>
-	)
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
 	target_link_libraries(${LIB_NAME} GLESv2 log android)
 
@@ -226,17 +207,18 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
 		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
+
+	foreach(DIR ${THIRDPARTY_DIRS})
+		STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" GROUP_NAME ${DIR})
+		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
+		source_group(${GROUP_NAME} ${DIR})
+	endforeach()
+
 	source_group("luna2d\\platform\\wp" ${LUNA2D_WP_DIR})
 	source_group("luna2d\\platform\\wp\\application" ${LUNA2D_WP_DIR}/application)
 
-	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${LUNA2D_WP_SOURCES} ${LUNA2D_WP_XAML}
-		$<TARGET_OBJECTS:lua>
-		$<TARGET_OBJECTS:png>
-		$<TARGET_OBJECTS:json11>
-		$<TARGET_OBJECTS:Box2D>
-		$<TARGET_OBJECTS:freetype>
-		$<TARGET_OBJECTS:z>
-	)
+	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES}
+		${LUNA2D_WP_SOURCES} ${LUNA2D_WP_XAML})
 
 	# Link angle static libs
 	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
@@ -244,18 +226,10 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_GLOBAL_ROOTNAMESPACE "luna2d")
 
-	# Set groups for projects
 	set_property(TARGET ${LIB_NAME} PROPERTY FOLDER "luna2d")
-	set_property(TARGET lua PROPERTY FOLDER "thirdparty")
-	set_property(TARGET png PROPERTY FOLDER "thirdparty")
-	set_property(TARGET json11 PROPERTY FOLDER "thirdparty")
-	set_property(TARGET Box2D PROPERTY FOLDER "thirdparty")
-	set_property(TARGET freetype PROPERTY FOLDER "thirdparty")
-	set_property(TARGET z PROPERTY FOLDER "thirdparty")
 
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_WINRT_EXTENSIONS TRUE)
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_WINRT_COMPONENT TRUE)
-
 
 else()
 	message(FATAL_ERROR "Unknown platform")

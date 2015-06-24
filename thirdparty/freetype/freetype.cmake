@@ -68,9 +68,7 @@ include_directories("${FREETYPE_PATH}/src/raster")
 include_directories("${FREETYPE_PATH}/src/psaux")
 include_directories("${FREETYPE_PATH}/src/psnames")
 
-add_library(freetype OBJECT
-  ${PUBLIC_HEADERS}
-  ${PUBLIC_CONFIG_HEADERS}
-  ${PRIVATE_HEADERS}
-  ${BASE_SRCS}
-)
+list(APPEND FREETYPE_SOURCES ${PUBLIC_HEADERS})
+list(APPEND FREETYPE_SOURCES ${PUBLIC_CONFIG_HEADERS})
+list(APPEND FREETYPE_SOURCES ${PRIVATE_HEADERS})
+list(APPEND FREETYPE_SOURCES ${BASE_SRCS})
