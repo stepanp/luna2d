@@ -66,6 +66,7 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}
 	${THIRDPARTY_DIR}/lua
+	${THIRDPARTY_DIR}/squirrel
 	${THIRDPARTY_DIR}/Box2D
 	${THIRDPARTY_DIR}/freetype
 	${THIRDPARTY_DIR}/json11
@@ -77,9 +78,11 @@ set(THIRDPARTY_DIRS
 
 include_directories(${THIRDPARTY_DIRS})
 
-
 # Lua
 aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
+
+# Squirrel
+add_subdirectory(${THIRDPARTY_DIR}/squirrel)
 
 # libpng
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
