@@ -34,6 +34,7 @@
 
 namespace luna2d{
 
+class SqVm;
 class LuaScript;
 class LUNAFiles;
 class LUNALog;
@@ -61,6 +62,7 @@ private:
 	LUNAPlatformUtils* platformUtils = nullptr;
 	LUNAPrefs* prefs = nullptr;
 
+	SqVm* squirrel = nullptr;
 	LuaScript* lua = nullptr;
 	LUNAAssets* assets = nullptr;
 	LUNAGraphics* graphics = nullptr;
@@ -107,6 +109,7 @@ public:
 	inline static LUNALog* SharedLog() { return Shared()->log; }
 	inline static LUNAPlatformUtils* SharedPlatformUtils() { return Shared()->platformUtils; }
 	inline static LUNAPrefs* SharedPrefs() { return Shared()->prefs; }
+	inline static SqVm* SharedSquirrel() { return Shared()->squirrel; }
 	inline static LuaScript* SharedLua() { return Shared()->lua; }
 	inline static LUNAAssets* SharedAssets() { return Shared()->assets; }
 	inline static LUNAGraphics* SharedGraphics() { return Shared()->graphics; }

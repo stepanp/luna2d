@@ -39,6 +39,7 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}
 	${LUNA2D_DIR}/lua
 	${LUNA2D_DIR}/lua/scripts
+	${LUNA2D_DIR}/squirrel
 	${LUNA2D_DIR}/assets
 	${LUNA2D_DIR}/graphics
 	${LUNA2D_DIR}/graphics/shaders
@@ -83,6 +84,7 @@ aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
 
 # Squirrel
 add_subdirectory(${THIRDPARTY_DIR}/squirrel)
+include_directories(${THIRDPARTY_DIR}/squirrel/include)
 
 # libpng
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)

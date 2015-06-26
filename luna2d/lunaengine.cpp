@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaengine.h"
+#include "sqvm.h"
 #include "lunalua.h"
 #include "lunafiles.h"
 #include "lunalog.h"
@@ -76,6 +77,8 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	LuaTable tblLuna(lua);
 	tblGlobal.SetField("luna", tblLuna);
 
+	squirrel = new SqVm();
+
 	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
@@ -115,6 +118,7 @@ void LUNAEngine::Deinitialize()
 	delete strings;
 	delete debug;
 	delete lua;
+	delete squirrel;
 	delete files;
 	delete platformUtils;
 	delete log;
@@ -126,6 +130,7 @@ void LUNAEngine::Deinitialize()
 	strings = nullptr;
 	debug = nullptr;
 	lua = nullptr;
+	squirrel = nullptr;
 	files = nullptr;
 	platformUtils = nullptr;
 	log = nullptr;
