@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "sqvm.h"
+#include "sqstack.h"
 #include "lunalog.h"
 #include "lunafiles.h"
 #include <cstdarg>
