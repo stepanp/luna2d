@@ -23,31 +23,39 @@
 
 #include "sqvm.h"
 #include "lunalog.h"
-
+#include "lunafiles.h"
 #include <cstdarg>
 #include <cstdio>
 
 using namespace luna2d;
 
-void TestPrintFunc(HSQUIRRELVM vm, const SQChar* str, ...)
+// Default print function
+void OnPrint(HSQUIRRELVM vm, const SQChar* str, ...)
 {
-	va_list args;
-	va_start(args, str);
-	const int size = vsnprintf(nullptr, 0, str, args);
-	va_end(args);
-	va_start(args, str);
-	std::string chars(size + 1, 0);
-	vsnprintf(&chars[0], size + 1, str, args);
-	va_end(args);
+	va_list va;
+	va_start(va, str);
 
-	LUNAEngine::SharedLog()->InfoString(chars);
+	int size = vsnprintf(nullptr, 0, str, va);
+	std::string buf(size, '\0');
+	vsnprintf(&buf[0], size, str, va);
+
+	va_end(va);
+
+	LUNAEngine::SharedLog()->InfoString(buf);
 }
 
 // Runtime error handler
 SQInteger OnRuntimeError(HSQUIRRELVM vm)
 {
-	//LUNA_LOG("%s:%d:%d: %s", source, line, column, desc);
-	LUNA_LOG("Runtime error");
+	const SQChar* error = nullptr;
+
+	if(sq_gettop(vm) >= 1)
+	{
+		if(SQ_SUCCEEDED(sq_getstring(vm, 2, &error))) LUNA_LOG("%s", error);
+		else LUNA_LOG("Unknown runtime error");
+
+		sqstd_printcallstack(vm);
+	}
 
 	return SQ_ERROR;;
 }
@@ -67,12 +75,13 @@ SqVm::SqVm() :
 	sqstd_register_stringlib(vm);
 	sqstd_register_bloblib(vm);
 
+	// Set default print function
+	sq_setprintfunc(vm, &OnPrint, &OnPrint);
+
 	// Set error handlers
 	sq_newclosure(vm, OnRuntimeError, 0);
 	sq_seterrorhandler(vm);
 	sq_setcompilererrorhandler(vm, OnComplileError);
-
-	sq_setprintfunc(vm, &TestPrintFunc, &TestPrintFunc);
 }
 
 SqVm::~SqVm()
@@ -80,16 +89,19 @@ SqVm::~SqVm()
 	sq_close(vm);
 }
 
-bool SqVm::DoString(const std::string& str)
+bool SqVm::DoString(const std::string& str, const std::string& sourceName)
 {
-	if(SQ_FAILED(sq_compilebuffer(vm, str.c_str(), str.size(), "", true))) return false;
+	if(SQ_FAILED(sq_compilebuffer(vm, str.c_str(), str.size(), sourceName.c_str(), true))) return false;
 	sq_pushroottable(vm);
 	return SQ_SUCCEEDED(sq_call(vm, 1, false, true));
 }
 
 bool SqVm::DoFile(const std::string& filename)
 {
+	std::string buffer = LUNAEngine::SharedFiles()->ReadFileToString(filename);
+	if(buffer.empty()) return false;
 
+	return DoString(buffer, filename);
 }
 
 SqVm::operator HSQUIRRELVM()
