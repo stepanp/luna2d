@@ -92,7 +92,7 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
 			if(n < 0) return -1;
 			SQInteger addlen = 0;
 			SQInteger valtype = 0;
-			const SQChar *ts;
+			const SQChar *ts = 0;
 			SQInteger ti;
 			SQFloat tf;
 			switch(format[n]) {

@@ -177,6 +177,9 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+	# Disable unsupported squirrel functions on Windows Phone
+	add_definitions(-DSQ_NO_GETENV)
 	#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm200 /wd\"4251\" /wd\"4457\" /wd\"4458\"")
 	#C4244
 
