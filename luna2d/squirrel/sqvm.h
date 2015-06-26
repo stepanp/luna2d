@@ -45,6 +45,9 @@ private:
 	HSQUIRRELVM vm;
 
 public:
+	bool DoString(const std::string& str);
+	bool DoFile(const std::string& filename);
+
 	operator HSQUIRRELVM();
 };
 

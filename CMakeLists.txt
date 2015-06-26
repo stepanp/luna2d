@@ -83,8 +83,9 @@ include_directories(${THIRDPARTY_DIRS})
 aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
 
 # Squirrel
-add_subdirectory(${THIRDPARTY_DIR}/squirrel)
 include_directories(${THIRDPARTY_DIR}/squirrel/include)
+aux_source_directory(${THIRDPARTY_DIR}/squirrel/squirrel THIRDPARTY_SOURCES)
+aux_source_directory(${THIRDPARTY_DIR}/squirrel/sqstdlib THIRDPARTY_SOURCES)
 
 # libpng
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
