@@ -23,33 +23,40 @@
 
 #pragma once
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+#include "sqobject.h"
 
 namespace luna2d{
 
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqVm
+class SqFunction : public SqObject
 {
+	friend struct SqStack<SqFunction>;
+
 public:
-	SqVm();
-	~SqVm();
+	SqFunction(SqVm* vm);
+	SqFunction(HSQUIRRELVM vm);
+	SqFunction(const SqFunction& fn);
 
 private:
-	HSQUIRRELVM vm;
+	SqFunction(const std::shared_ptr<SqRef>& ref);
 
 public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
+	SqFunction& operator=(const SqFunction& fn);
+};
 
-	operator HSQUIRRELVM() const;
+
+template<>
+struct SqStack<SqFunction>
+{
+	inline static void Push(HSQUIRRELVM vm, const SqFunction& fn)
+	{
+		SqStack<std::shared_ptr<SqRef>>::Push(vm, fn.GetRef());
+	}
+
+	inline static SqFunction Get(HSQUIRRELVM vm, int index = -1)
+	{
+		if(sq_gettype(vm, index) != OT_CLOSURE) return SqFunction(vm);
+		return SqFunction(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
+	}
 };
 
 }

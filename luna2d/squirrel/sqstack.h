@@ -29,8 +29,8 @@ namespace luna2d{
 template<typename T>
 struct SqStack
 {
-	static void Push(HSQUIRRELVM vm, const T& value) = delete; // Push value to squirrel stack
-	static T Get(HSQUIRRELVM vm, int index = -1) = delete; // Get value from squirrel stack
+	inline static void Push(HSQUIRRELVM vm, const T& value) = delete; // Push value to squirrel stack
+	inline static T Get(HSQUIRRELVM vm, int index = -1) = delete; // Get value from squirrel stack
 };
 
 // By default, for const references use same implementation
@@ -41,12 +41,12 @@ struct SqStack<const T&> : public SqStack<T> {};
 template<>
 struct SqStack<SQInteger>
 {
-	static void Push(HSQUIRRELVM vm, SQInteger value)
+	inline static void Push(HSQUIRRELVM vm, SQInteger value)
 	{
 		sq_pushinteger(vm, value);
 	}
 
-	static SQInteger Get(HSQUIRRELVM vm, int index = -1)
+	inline static SQInteger Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) == OT_INTEGER)
 		{
@@ -69,12 +69,12 @@ struct SqStack<SQInteger>
 template<>
 struct SqStack<SQFloat>
 {
-	static void Push(HSQUIRRELVM vm, SQFloat value)
+	inline static void Push(HSQUIRRELVM vm, SQFloat value)
 	{
 		sq_pushfloat(vm, value);
 	}
 
-	static SQFloat Get(HSQUIRRELVM vm, int index = -1)
+	inline static SQFloat Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) == OT_FLOAT)
 		{
@@ -97,12 +97,12 @@ struct SqStack<SQFloat>
 template<>
 struct SqStack<SQBool>
 {
-	static void Push(HSQUIRRELVM vm, SQBool value)
+	inline static void Push(HSQUIRRELVM vm, SQBool value)
 	{
 		sq_pushbool(vm, value);
 	}
 
-	static SQBool Get(HSQUIRRELVM vm, int index = -1)
+	inline static SQBool Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) != OT_BOOL) return false;
 
@@ -115,12 +115,12 @@ struct SqStack<SQBool>
 template<>
 struct SqStack<std::string>
 {
-	static void Push(HSQUIRRELVM vm, const std::string& value)
+	inline static void Push(HSQUIRRELVM vm, const std::string& value)
 	{
 		sq_pushstring(vm, value.c_str(), value.size());
 	}
 
-	static std::string Get(HSQUIRRELVM vm, int index = -1)
+	inline static std::string Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) != OT_STRING) return "";
 
@@ -133,7 +133,7 @@ struct SqStack<std::string>
 template<>
 struct SqStack<const char*>
 {
-	static void Push(HSQUIRRELVM vm, const char* value)
+	inline static void Push(HSQUIRRELVM vm, const char* value)
 	{
 		sq_pushstring(vm, value, strlen(value));
 	}
@@ -142,17 +142,17 @@ struct SqStack<const char*>
 template<>
 struct SqStack<std::nullptr_t>
 {
-	static void Push(HSQUIRRELVM vm, const std::nullptr_t&)
+	inline static void Push(HSQUIRRELVM vm, const std::nullptr_t&)
 	{
 		Push(vm);
 	}
 
-	static void Push(HSQUIRRELVM vm)
+	inline static void Push(HSQUIRRELVM vm)
 	{
 		sq_pushnull(vm);
 	}
 
-	static std::nullptr_t Get(HSQUIRRELVM vm, int index = -1)
+	inline static std::nullptr_t Get(HSQUIRRELVM vm, int index = -1)
 	{
 		return std::nullptr_t();
 	}

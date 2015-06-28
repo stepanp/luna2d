@@ -23,33 +23,8 @@
 
 #pragma once
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+#include "sqvm.h"
 
 namespace luna2d{
-
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqVm
-{
-public:
-	SqVm();
-	~SqVm();
-
-private:
-	HSQUIRRELVM vm;
-
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
-
-	operator HSQUIRRELVM() const;
-};
 
 }

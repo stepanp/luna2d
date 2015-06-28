@@ -21,35 +21,17 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "sqfunction.h"
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+using namespace luna2d;
 
-namespace luna2d{
+SqFunction::SqFunction(SqVm* vm) : SqObject(*vm) {}
+SqFunction::SqFunction(HSQUIRRELVM vm) : SqObject(vm) {}
+SqFunction::SqFunction(const SqFunction& fn) : SqObject(fn.GetRef()) {}
+SqFunction::SqFunction(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqVm
+SqFunction& SqFunction::operator=(const SqFunction& fn)
 {
-public:
-	SqVm();
-	~SqVm();
-
-private:
-	HSQUIRRELVM vm;
-
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
-
-	operator HSQUIRRELVM() const;
-};
-
+	ref = fn.GetRef();
+	return *this;
 }

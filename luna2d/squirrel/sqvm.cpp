@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "sqvm.h"
-#include "sqstack.h"
 #include "lunalog.h"
 #include "lunafiles.h"
 #include <cstdarg>
@@ -90,6 +89,11 @@ SqVm::~SqVm()
 	sq_close(vm);
 }
 
+HSQUIRRELVM SqVm::GetVm() const
+{
+	return vm;
+}
+
 bool SqVm::DoString(const std::string& str, const std::string& sourceName)
 {
 	if(SQ_FAILED(sq_compilebuffer(vm, str.c_str(), str.size(), sourceName.c_str(), true))) return false;
@@ -105,7 +109,7 @@ bool SqVm::DoFile(const std::string& filename)
 	return DoString(buffer, filename);
 }
 
-SqVm::operator HSQUIRRELVM()
+SqVm::operator HSQUIRRELVM() const
 {
 	return vm;
 }

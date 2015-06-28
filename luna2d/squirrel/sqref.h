@@ -23,33 +23,42 @@
 
 #pragma once
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+#include "sqstack.h"
 
 namespace luna2d{
 
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqVm
+class SqRef
 {
 public:
-	SqVm();
-	~SqVm();
+	SqRef(HSQUIRRELVM vm);
+	SqRef(HSQUIRRELVM vm, int index);
+	~SqRef();
 
 private:
 	HSQUIRRELVM vm;
+	HSQOBJECT ref;
 
 public:
 	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
+	HSQOBJECT GetRef() const;
+	bool IsNull() const;
 
-	operator HSQUIRRELVM() const;
+	operator HSQOBJECT() const;
+};
+
+
+template<>
+struct SqStack<std::shared_ptr<SqRef>>
+{
+	inline static void Push(HSQUIRRELVM vm, const std::shared_ptr<SqRef>& value)
+	{
+		sq_pushobject(vm, *value);
+	}
+
+	inline static std::shared_ptr<SqRef> Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return std::make_shared<SqRef>(vm, index);
+	}
 };
 
 }

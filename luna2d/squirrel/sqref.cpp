@@ -21,35 +21,46 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "sqref.h"
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+using namespace luna2d;
 
-namespace luna2d{
-
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqVm
+SqRef::SqRef(HSQUIRRELVM vm) :
+	vm(vm)
 {
-public:
-	SqVm();
-	~SqVm();
+	sq_resetobject(&ref);
+}
 
-private:
-	HSQUIRRELVM vm;
+SqRef::SqRef(HSQUIRRELVM vm, int index) : SqRef(vm)
+{
+	if(vm)
+	{
+		sq_getstackobj(vm, index, &ref);
+		sq_addref(vm, &ref);
+	}
+}
 
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
+SqRef::~SqRef()
+{
+	if(!IsNull()) sq_release(vm, &ref);
+}
 
-	operator HSQUIRRELVM() const;
-};
+HSQUIRRELVM SqRef::GetVm() const
+{
+	return vm;
+}
 
+HSQOBJECT SqRef::GetRef() const
+{
+	return ref;
+}
+
+bool SqRef::IsNull() const
+{
+	return sq_isnull(ref);
+}
+
+SqRef::operator HSQOBJECT() const
+{
+	return ref;
 }
