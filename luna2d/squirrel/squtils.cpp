@@ -45,3 +45,42 @@ SqScopedRemove::~SqScopedRemove()
 {
 	sq_remove(vm, index);
 }
+
+
+// Get string represenation of squirrel type
+const char* luna2d::SqTypeName(SQObjectType type)
+{
+	switch(type)
+	{
+	case OT_NULL:
+		return "null";
+	case OT_INTEGER:
+		return "integer";
+	case OT_FLOAT:
+		return "float";
+	case OT_STRING:
+		return "string";
+	case OT_TABLE:
+		return "table";
+	case OT_ARRAY:
+		return "array";
+	case OT_USERDATA:
+		return "userdata";
+	case OT_CLOSURE:
+		return "function";
+	case OT_NATIVECLOSURE:
+		return "C function";
+	case OT_GENERATOR:
+		return "generator";
+	case OT_USERPOINTER:
+		return "userpointer";
+	case OT_CLASS:
+		return "class";
+	case OT_INSTANCE:
+		return "instance";
+	case OT_WEAKREF:
+		return "weak reference";
+	default:
+		return "unknown";
+	}
+}

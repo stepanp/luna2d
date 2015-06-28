@@ -24,6 +24,9 @@
 #pragma once
 
 #include "sqobject.h"
+#include "sqproxy.h"
+#include "squtils.h"
+#include "lunalog.h"
 
 namespace luna2d{
 
@@ -40,7 +43,57 @@ public:
 private:
 	SqFunction(const std::shared_ptr<SqRef>& ref);
 
+private:
+	void PushArgs(HSQUIRRELVM) const {}
+
+	template<typename T>
+	void PushArgs(HSQUIRRELVM vm, const T& t) const
+	{
+		SqStack<T>::Push(vm, t);
+	}
+
+	template<typename T, typename ... Args>
+	void PushArgs(HSQUIRRELVM vm, const T& t, const Args& ... args) const
+	{
+		SqStack<T>::Push(vm, t);
+		PushArgs(vm, args...);
+	}
+
 public:
+	// Call function and get return value
+	template<typename Ret, typename ... Args>
+	Ret Call(const Args& ... args) const
+	{
+		if(IsNull()) return Ret();
+
+		HSQUIRRELVM vm = ref->GetVm();
+
+		SqStack<SqObject>::Push(vm, *this);
+		sq_pushroottable(vm);
+		PushArgs(vm, args...);
+
+		sq_call(vm, sizeof...(args) + 1, true, true);
+
+		SqScopedPop pop(vm, 2); // Pop function object and return value from stack after return
+		return SqStack<Ret>::Get(vm, -1);
+	}
+
+	// Call function without getting return value
+	template<typename ... Args>
+	void CallVoid(const Args& ... args) const
+	{
+		if(IsNull()) return;
+
+		HSQUIRRELVM vm = ref->GetVm();
+
+		SqStack<SqObject>::Push(vm, *this);
+		sq_pushroottable(vm);
+		PushArgs(vm, args...);
+
+		sq_call(vm, sizeof...(args) + 1, false, true);
+		sq_pop(vm, 1); // Pop function object from stack
+	}
+
 	SqFunction& operator=(const SqFunction& fn);
 };
 
@@ -55,7 +108,8 @@ struct SqStack<SqFunction>
 
 	inline static SqFunction Get(HSQUIRRELVM vm, int index = -1)
 	{
-		if(sq_gettype(vm, index) != OT_CLOSURE) return SqFunction(vm);
+		SQObjectType type = sq_gettype(vm, index);
+		if(type != OT_CLOSURE && type != OT_NATIVECLOSURE) return SqFunction(vm);
 		return SqFunction(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
 	}
 };

@@ -75,6 +75,7 @@ struct SqStack<SQFloat>
 
 	inline static SQFloat Get(HSQUIRRELVM vm, int index = -1)
 	{
+
 		if(sq_gettype(vm, index) == OT_FLOAT)
 		{
 			SQFloat ret;
@@ -94,20 +95,20 @@ struct SqStack<SQFloat>
 };
 
 template<>
-struct SqStack<SQBool>
+struct SqStack<bool>
 {
-	inline static void Push(HSQUIRRELVM vm, SQBool value)
+	inline static void Push(HSQUIRRELVM vm, bool value)
 	{
-		sq_pushbool(vm, value);
+		sq_pushbool(vm, value ? SQTrue : SQFalse);
 	}
 
-	inline static SQBool Get(HSQUIRRELVM vm, int index = -1)
+	inline static bool Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) != OT_BOOL) return false;
 
 		SQBool ret;
 		sq_getbool(vm, index, &ret);
-		return ret;
+		return ret == SQTrue;
 	}
 };
 

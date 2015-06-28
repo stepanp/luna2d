@@ -72,9 +72,11 @@ SqVm::SqVm() :
 	vm(sq_open(SQUIRREL_STACK_SIZE))
 {
 	// Initialize squiirel std lib
-	sqstd_register_mathlib(vm);
-	sqstd_register_stringlib(vm);
+	/*sqstd_register_iolib(vm);
 	sqstd_register_bloblib(vm);
+	sqstd_register_mathlib(vm);
+	sqstd_register_systemlib(vm);
+	sqstd_register_stringlib(vm);*/
 
 	// Set default print function
 	sq_setprintfunc(vm, &OnPrint, &OnPrint);

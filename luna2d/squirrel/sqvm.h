@@ -24,12 +24,14 @@
 #pragma once
 
 #include "lunaengine.h"
+#include "lunalog.h"
 #include <squirrel.h>
 #include <sqstdmath.h>
 #include <sqstdstring.h>
 #include <sqstdblob.h>
-#include <sqstdaux.h>
 #include <sqstdio.h>
+#include <sqstdsystem.h>
+#include <sqstdaux.h>
 
 namespace luna2d{
 

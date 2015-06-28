@@ -23,16 +23,12 @@
 
 #pragma once
 
-#if defined(_WIN32) || defined(WIN32)
-	#define LUNA_SLASH '\\'
-#else
-	#define LUNA_SLASH '/'
-#endif
+#include <cstring>
 
 //--------------------------------------------------------
 // Short variant of "__FILE__" macro without full file path
 //--------------------------------------------------------
-#define LUNA_FILE (strrchr(__FILE__, LUNA_SLASH) ? strrchr(__FILE__, LUNA_SLASH) + 1 : __FILE__)
+#define LUNA_FILE (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 //---------------------------------
 // Return with loggging error macro

@@ -24,6 +24,7 @@
 #pragma once
 
 #include "sqvm.h"
+#include "lunamacro.h"
 
 namespace luna2d{
 
@@ -54,5 +55,28 @@ private:
 	int index;
 };
 
+
+// Get string represenation of squirrel type
+const char* SqTypeName(SQObjectType type);
+
+
+// Macro for print squirrel stack
+#define LUNA_SQ_PRINT_STACK(vm) \
+{ \
+	LUNA_LOGE("%s:%d:", LUNA_FILE, __LINE__); \
+	int count = sq_gettop(vm); \
+	for(int i = 1; i < count; i++) \
+	{ \
+		SQObjectType type = sq_gettype(vm, i); \
+		\
+		sq_tostring(vm, i); \
+		const SQChar* value; \
+		sq_getstring(vm, -1, &value); \
+		\
+		LUNA_LOG("%d: %s(%s)", i - count, SqTypeName(type), value); \
+		\
+		sq_pop(vm, 1); \
+	} \
+}
 
 }
