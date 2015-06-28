@@ -29,10 +29,14 @@ SqTable::SqTable() : SqObject() {}
 SqTable::SqTable(SqVm* vm) : SqTable(*vm) {}
 SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm)
 {
-	if(vm) sq_newtable(vm);
+	if(vm)
+	{
+		sq_newtable(vm);
+		ref = std::make_shared<SqRef>(vm, -1);
+		sq_pop(vm, 1);
+	}
 }
 
-SqTable::SqTable(const SqNull&) : SqObject(nullptr) {}
 SqTable::SqTable(const SqTable& fn) : SqObject(fn.GetRef()) {}
 SqTable::SqTable(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 

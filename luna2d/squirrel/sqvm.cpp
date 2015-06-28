@@ -58,7 +58,7 @@ SQInteger OnRuntimeError(HSQUIRRELVM vm)
 		sqstd_printcallstack(vm);
 	}
 
-	return SQ_ERROR;;
+	return SQ_ERROR;
 }
 
 // Compile error handler
@@ -69,7 +69,7 @@ void OnComplileError(HSQUIRRELVM vm, const SQChar *desc, const SQChar *source, S
 
 
 SqVm::SqVm() :
-	vm(::sq_open(SQUIRREL_STACK_SIZE))
+	vm(sq_open(SQUIRREL_STACK_SIZE))
 {
 	// Initialize squiirel std lib
 	sqstd_register_mathlib(vm);
@@ -113,9 +113,8 @@ bool SqVm::DoFile(const std::string& filename)
 SqTable SqVm::GetRootTable()
 {
 	sq_pushroottable(vm);
-	SqTable ret = SqStack<SqTable>::Get(vm, -1);
-	sq_pop(vm, 1);
-	return ret;
+	SqScopedPop pop(vm, 1);
+	return SqStack<SqTable>::Get(vm, -1);
 }
 
 SqVm::operator HSQUIRRELVM() const

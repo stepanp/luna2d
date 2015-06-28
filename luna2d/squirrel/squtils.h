@@ -23,57 +23,36 @@
 
 #pragma once
 
-#include "sqobject.h"
-#include "squtils.h"
+#include "sqvm.h"
 
 namespace luna2d{
 
-class SqTable : public SqObject
+// Pop n values from squirrel stack after goes out scope
+// e.g. after return statement
+class SqScopedPop
 {
-	friend struct SqStack<SqTable>;
-
 public:
-	SqTable();
-	SqTable(SqVm* vm);
-	SqTable(HSQUIRRELVM vm);
-	SqTable(const SqTable& fn);
+	SqScopedPop(HSQUIRRELVM vm, int n);
+	~SqScopedPop();
 
 private:
-	SqTable(const std::shared_ptr<SqRef>& ref);
-
-public:
-	template<typename T>
-	T GetSlot(const std::string& name) const
-	{
-		if(ref->IsNull()) return T();
-
-		HSQUIRRELVM vm = ref->GetVm();
-
-		SqStack<SqObject>::Push(vm, *this);
-		SqStack<std::string>::Push(vm, name);
-		if(SQ_FAILED(sq_get(vm, -2))) sq_pushnull(vm);
-
-		SqScopedPop pop(vm, 2);
-		return SqStack<T>::Get(vm, -1);
-	}
-
-	SqTable& operator=(const SqTable& fn);
+	HSQUIRRELVM vm;
+	int n;
 };
 
 
-template<>
-struct SqStack<SqTable>
+// Remove value from squirrel stack at "index" after goes out scope
+// e.g. after return statement
+class SqScopedRemove
 {
-	inline static void Push(HSQUIRRELVM vm, const SqTable& tbl)
-	{
-		SqStack<SqObject>::Push(vm, tbl);
-	}
+public:
+	SqScopedRemove(HSQUIRRELVM vm, int index);
+	~SqScopedRemove();
 
-	inline static SqTable Get(HSQUIRRELVM vm, int index = -1)
-	{
-		if(sq_gettype(vm, index) != OT_TABLE) return SqTable();
-		return SqTable(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
-	}
+private:
+	HSQUIRRELVM vm;
+	int index;
 };
+
 
 }
