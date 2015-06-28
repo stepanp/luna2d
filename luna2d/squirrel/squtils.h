@@ -23,36 +23,36 @@
 
 #pragma once
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+#include "sqvm.h"
 
 namespace luna2d{
 
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqTable;
-
-class SqVm
+// Pop n values from squirrel stack after goes out scope
+// e.g. after return statement
+class SqScopedPop
 {
 public:
-	SqVm();
-	~SqVm();
+	SqScopedPop(HSQUIRRELVM vm, int n);
+	~SqScopedPop();
 
 private:
 	HSQUIRRELVM vm;
-
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
-	SqTable GetRootTable();
-
-	operator HSQUIRRELVM() const;
+	int n;
 };
+
+
+// Remove value from squirrel stack at "index" after goes out scope
+// e.g. after return statement
+class SqScopedRemove
+{
+public:
+	SqScopedRemove(HSQUIRRELVM vm, int index);
+	~SqScopedRemove();
+
+private:
+	HSQUIRRELVM vm;
+	int index;
+};
+
 
 }

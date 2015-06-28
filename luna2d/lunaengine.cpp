@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaengine.h"
-#include "sqvm.h"
+#include "lunasquirrel.h"
 #include "lunalua.h"
 #include "lunafiles.h"
 #include "lunalog.h"
@@ -79,6 +79,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 
 	squirrel = new SqVm();
 
+	
 	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();

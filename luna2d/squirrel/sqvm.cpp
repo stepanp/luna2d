@@ -22,6 +22,8 @@
 //-----------------------------------------------------------------------------
 
 #include "sqvm.h"
+#include "sqtable.h"
+#include "squtils.h"
 #include "lunalog.h"
 #include "lunafiles.h"
 #include <cstdarg>
@@ -107,6 +109,13 @@ bool SqVm::DoFile(const std::string& filename)
 	if(buffer.empty()) return false;
 
 	return DoString(buffer, filename);
+}
+
+SqTable SqVm::GetRootTable()
+{
+	sq_pushroottable(vm);
+	SqScopedPop(vm, 1);
+	return SqStack<SqTable>::Get(vm, -1);
 }
 
 SqVm::operator HSQUIRRELVM() const

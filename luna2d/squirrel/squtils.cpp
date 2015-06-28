@@ -21,38 +21,27 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "squtils.h"
 
-#include "lunaengine.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdaux.h>
-#include <sqstdio.h>
+using namespace luna2d;
 
-namespace luna2d{
-
-const size_t SQUIRREL_STACK_SIZE = 1024;
-
-class SqTable;
-
-class SqVm
+SqScopedPop::SqScopedPop(HSQUIRRELVM vm, int n) :
+	vm(vm), n(n)
 {
-public:
-	SqVm();
-	~SqVm();
+}
 
-private:
-	HSQUIRRELVM vm;
+SqScopedPop::~SqScopedPop()
+{
+	sq_pop(vm, n);
+}
 
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
-	SqTable GetRootTable();
 
-	operator HSQUIRRELVM() const;
-};
+SqScopedRemove::SqScopedRemove(HSQUIRRELVM vm, int index) :
+	vm(vm), index(index)
+{
+}
 
+SqScopedRemove::~SqScopedRemove()
+{
+	sq_remove(vm, index);
 }
