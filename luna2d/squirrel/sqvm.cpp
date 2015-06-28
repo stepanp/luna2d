@@ -37,8 +37,8 @@ void OnPrint(HSQUIRRELVM vm, const SQChar* str, ...)
 	va_start(va, str);
 
 	int size = vsnprintf(nullptr, 0, str, va);
-	std::string buf(size, '\0');
-	vsnprintf(&buf[0], size, str, va);
+	std::string buf(size + 1, '\0');
+	vsnprintf(&buf[0], size + 1, str, va);
 
 	va_end(va);
 

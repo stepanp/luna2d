@@ -44,6 +44,7 @@ private:
 	SqFunction(const std::shared_ptr<SqRef>& ref);
 
 private:
+	// Push arguments list to stack
 	void PushArgs(HSQUIRRELVM) const {}
 
 	template<typename T>

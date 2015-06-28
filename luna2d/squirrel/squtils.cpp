@@ -54,6 +54,8 @@ const char* luna2d::SqTypeName(SQObjectType type)
 	{
 	case OT_NULL:
 		return "null";
+	case OT_BOOL:
+		return "bool";
 	case OT_INTEGER:
 		return "integer";
 	case OT_FLOAT:

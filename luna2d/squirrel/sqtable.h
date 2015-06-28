@@ -54,8 +54,50 @@ public:
 		SqStack<std::string>::Push(vm, name);
 		if(SQ_FAILED(sq_get(vm, -2))) sq_pushnull(vm);
 
-		SqScopedPop pop(vm, 2);
+		SqScopedPop pop(vm, 2); // Pop table and slot value from stack
 		return SqStack<T>::Get(vm, -1);
+	}
+
+	template<typename T>
+	bool NewSlot(const std::string& name, const T& t)
+	{
+		if(IsNull()) return false;
+
+		HSQUIRRELVM vm = ref->GetVm();
+
+		SqStack<SqObject>::Push(vm, *this);
+		SqStack<std::string>::Push(vm, name);
+		SqStack<T>::Push(vm, t);
+
+		if(SQ_FAILED(sq_newslot(vm, -3, false)))
+		{
+			sq_pop(vm, 2); // Pop table and name from stack
+			return false;
+		}
+
+		sq_pop(vm, 1); // Pop table from stack
+		return true;
+	}
+
+	template<typename T>
+	bool SetSlot(const std::string& name, const T& t)
+	{
+		if(IsNull()) return false;
+
+		HSQUIRRELVM vm = ref->GetVm();
+
+		SqStack<SqObject>::Push(vm, *this);
+		SqStack<std::string>::Push(vm, name);
+		SqStack<T>::Push(vm, t);
+
+		if(SQ_FAILED(sq_set(vm, -3)))
+		{
+			sq_pop(vm, 2); // Pop table and name from stack
+			return false;
+		}
+
+		sq_pop(vm, 1); // Pop table from stack
+		return true;
 	}
 
 	SqTable& operator=(const SqTable& fn);

@@ -75,7 +75,6 @@ struct SqStack<SQFloat>
 
 	inline static SQFloat Get(HSQUIRRELVM vm, int index = -1)
 	{
-
 		if(sq_gettype(vm, index) == OT_FLOAT)
 		{
 			SQFloat ret;

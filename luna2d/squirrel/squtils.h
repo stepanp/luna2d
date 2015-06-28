@@ -65,7 +65,7 @@ const char* SqTypeName(SQObjectType type);
 { \
 	LUNA_LOGE("%s:%d:", LUNA_FILE, __LINE__); \
 	int count = sq_gettop(vm); \
-	for(int i = 1; i < count; i++) \
+	for(int i = 1; i <= count; i++) \
 	{ \
 		SQObjectType type = sq_gettype(vm, i); \
 		\
@@ -73,7 +73,7 @@ const char* SqTypeName(SQObjectType type);
 		const SQChar* value; \
 		sq_getstring(vm, -1, &value); \
 		\
-		LUNA_LOG("%d: %s(%s)", i - count, SqTypeName(type), value); \
+		LUNA_LOG("%d: %s(%s)", i - count - 1, SqTypeName(type), value); \
 		\
 		sq_pop(vm, 1); \
 	} \
