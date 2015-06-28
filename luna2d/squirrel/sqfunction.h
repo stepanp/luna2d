@@ -32,6 +32,7 @@ class SqFunction : public SqObject
 	friend struct SqStack<SqFunction>;
 
 public:
+	SqFunction();
 	SqFunction(SqVm* vm);
 	SqFunction(HSQUIRRELVM vm);
 	SqFunction(const SqFunction& fn);

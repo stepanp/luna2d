@@ -25,6 +25,7 @@
 
 using namespace luna2d;
 
+SqFunction::SqFunction() : SqObject() {}
 SqFunction::SqFunction(SqVm* vm) : SqObject(*vm) {}
 SqFunction::SqFunction(HSQUIRRELVM vm) : SqObject(vm) {}
 SqFunction::SqFunction(const SqFunction& fn) : SqObject(fn.GetRef()) {}

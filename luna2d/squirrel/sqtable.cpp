@@ -25,8 +25,14 @@
 
 using namespace luna2d;
 
-SqTable::SqTable(SqVm* vm) : SqObject(*vm) {}
-SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm) {}
+SqTable::SqTable() : SqObject() {}
+SqTable::SqTable(SqVm* vm) : SqTable(*vm) {}
+SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm)
+{
+	if(vm) sq_newtable(vm);
+}
+
+SqTable::SqTable(const SqNull&) : SqObject(nullptr) {}
 SqTable::SqTable(const SqTable& fn) : SqObject(fn.GetRef()) {}
 SqTable::SqTable(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 

@@ -27,32 +27,31 @@
 
 namespace luna2d{
 
-// Pop n values from squirrel stack after goes out scope
-// e.g. after return statement
-class SqScopedPop
-{
-public:
-	SqScopedPop(HSQUIRRELVM vm, int n);
-	~SqScopedPop();
+//----------------------------------------------------
+// Special type, equivalent of "null" type in squirrel
+//----------------------------------------------------
+struct SqNull{};
 
-private:
-	HSQUIRRELVM vm;
-	int n;
+//-------------------
+// Constant for using
+//-------------------
+const SqNull null = SqNull();
+
+
+template<>
+struct SqStack<SqNull>
+{
+	inline static void Push(HSQUIRRELVM vm, const SqNull& value = null)
+	{
+		sq_pushnull(vm);
+	}
+
+	inline static SqNull Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return SqNull();
+	}
 };
 
-
-// Remove value from squirrel stack at "index" after goes out scope
-// e.g. after return statement
-class SqScopedRemove
-{
-public:
-	SqScopedRemove(HSQUIRRELVM vm, int index);
-	~SqScopedRemove();
-
-private:
-	HSQUIRRELVM vm;
-	int index;
-};
 
 
 }

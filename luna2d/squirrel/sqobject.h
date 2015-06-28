@@ -30,6 +30,7 @@ namespace luna2d{
 class SqObject
 {
 public:
+	SqObject();
 	SqObject(HSQUIRRELVM vm);
 	SqObject(const std::shared_ptr<SqRef>& ref);
 
@@ -39,6 +40,18 @@ protected:
 public:
 	std::shared_ptr<SqRef> GetRef() const;
 	bool IsNull() const;
+
+	operator bool() const;
+};
+
+
+template<>
+struct SqStack<SqObject>
+{
+	inline static void Push(HSQUIRRELVM vm, const SqObject& obj)
+	{
+		SqStack<std::shared_ptr<SqRef>>::Push(vm, obj.GetRef());
+	}
 };
 
 }

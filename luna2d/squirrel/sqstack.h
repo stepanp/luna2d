@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "sqvm.h"
-#include <cstring>
 
 namespace luna2d{
 
@@ -135,26 +134,7 @@ struct SqStack<const char*>
 {
 	inline static void Push(HSQUIRRELVM vm, const char* value)
 	{
-		sq_pushstring(vm, value, strlen(value));
-	}
-};
-
-template<>
-struct SqStack<std::nullptr_t>
-{
-	inline static void Push(HSQUIRRELVM vm, const std::nullptr_t&)
-	{
-		Push(vm);
-	}
-
-	inline static void Push(HSQUIRRELVM vm)
-	{
-		sq_pushnull(vm);
-	}
-
-	inline static std::nullptr_t Get(HSQUIRRELVM vm, int index = -1)
-	{
-		return std::nullptr_t();
+		sq_pushstring(vm, value, -1);
 	}
 };
 

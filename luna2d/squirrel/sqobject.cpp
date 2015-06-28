@@ -25,6 +25,11 @@
 
 using namespace luna2d;
 
+SqObject::SqObject() :
+	ref(std::make_shared<SqRef>(nullptr))
+{
+}
+
 SqObject::SqObject(HSQUIRRELVM vm) :
 	ref(std::make_shared<SqRef>(vm))
 {
@@ -43,4 +48,9 @@ std::shared_ptr<SqRef> SqObject::GetRef() const
 bool SqObject::IsNull() const
 {
 	return ref->IsNull();
+}
+
+SqObject::operator bool() const
+{
+	return !IsNull();
 }

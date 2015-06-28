@@ -57,7 +57,7 @@ HSQOBJECT SqRef::GetRef() const
 
 bool SqRef::IsNull() const
 {
-	return sq_isnull(ref);
+	return !vm || sq_isnull(ref);
 }
 
 SqRef::operator HSQOBJECT() const
