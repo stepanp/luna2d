@@ -138,4 +138,13 @@ struct SqStack<const char*>
 	}
 };
 
+template<size_t Size>
+struct SqStack<char[Size]>
+{
+	inline static void Push(HSQUIRRELVM vm, const char(&value)[Size])
+	{
+		sq_pushstring(vm, value, Size);
+	}
+};
+
 }
