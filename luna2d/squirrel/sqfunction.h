@@ -25,6 +25,7 @@
 
 #include "sqobject.h"
 #include "sqproxy.h"
+#include "sqnull.h"
 #include "squtils.h"
 #include "lunalog.h"
 
@@ -65,12 +66,26 @@ public:
 	template<typename Ret, typename ... Args>
 	Ret Call(const Args& ... args) const
 	{
+		return CallWithEnv<Ret>(null, args...);
+	}
+
+	// Call function without getting return value
+	template<typename ... Args>
+	void Call(const Args& ... args) const
+	{
+		CallWithEnv(null, args...);
+	}
+
+	// Call function with given environment
+	template<typename Ret, typename Env, typename ... Args>
+	Ret CallWithEnv(const Env& env, const Args& ... args) const
+	{
 		if(IsNull()) return Ret();
 
 		HSQUIRRELVM vm = ref->GetVm();
 
 		SqStack<SqObject>::Push(vm, *this);
-		sq_pushroottable(vm);
+		SqStack<Env>::Push(vm, env);
 		PushArgs(vm, args...);
 
 		sq_call(vm, sizeof...(args) + 1, true, true);
@@ -79,16 +94,16 @@ public:
 		return SqStack<Ret>::Get(vm, -1);
 	}
 
-	// Call function without getting return value
-	template<typename ... Args>
-	void CallVoid(const Args& ... args) const
+	// Call function with given environment without return value
+	template<typename Env, typename ... Args>
+	void CallWithEnv(const Env& env, const Args& ... args) const
 	{
 		if(IsNull()) return;
 
 		HSQUIRRELVM vm = ref->GetVm();
 
 		SqStack<SqObject>::Push(vm, *this);
-		sq_pushroottable(vm);
+		SqStack<Env>::Push(vm, env);
 		PushArgs(vm, args...);
 
 		sq_call(vm, sizeof...(args) + 1, false, true);
@@ -110,7 +125,7 @@ struct SqStack<SqFunction>
 	inline static SqFunction Get(HSQUIRRELVM vm, int index = -1)
 	{
 		SQObjectType type = sq_gettype(vm, index);
-		if(type != OT_CLOSURE && type != OT_NATIVECLOSURE) return SqFunction(vm);
+		if(type != OT_CLOSURE && type != OT_NATIVECLOSURE) return SqFunction();
 		return SqFunction(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
 	}
 };
