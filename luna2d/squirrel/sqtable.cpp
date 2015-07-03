@@ -40,6 +40,60 @@ SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm)
 SqTable::SqTable(const SqTable& fn) : SqObject(fn.GetRef()) {}
 SqTable::SqTable(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
+int SqTable::GetSlotCount()
+{
+	if(IsNull()) return 0;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	int ret = sq_getsize(vm, -1);
+	sq_pop(vm, 1); // Pop table from stack
+
+	return ret;
+}
+
+void SqTable::Clear()
+{
+	if(IsNull()) return;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	sq_clear(vm, -1);
+	sq_pop(vm, 1);
+}
+
+bool SqTable::HasSlot(const std::string& name) const
+{
+	if(IsNull()) return false;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	SqStack<std::string>::Push(vm, name);
+	if(SQ_FAILED(sq_rawget(vm, -2)))
+	{
+		sq_pop(vm, 1); // Pop table from stack
+		return false;
+	}
+
+	sq_pop(vm, 2); // Pop table and slot value from stack
+	return true;
+}
+
+void SqTable::RemoveSlot(const std::string& name)
+{
+	if(IsNull()) return;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	SqStack<std::string>::Push(vm, name);
+	sq_deleteslot(vm, -2, false);
+	sq_pop(vm, 1); // Pop table from stack
+}
+
 SqTable& SqTable::operator=(const SqTable& fn)
 {
 	ref = fn.GetRef();

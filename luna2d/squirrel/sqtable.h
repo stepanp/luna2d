@@ -43,6 +43,10 @@ private:
 	SqTable(const std::shared_ptr<SqRef>& ref);
 
 public:
+	int GetSlotCount();
+	void Clear();
+	bool HasSlot(const std::string& name) const;
+
 	template<typename T>
 	T GetSlot(const std::string& name) const
 	{
@@ -99,6 +103,8 @@ public:
 		sq_pop(vm, 1); // Pop table from stack
 		return true;
 	}
+
+	void RemoveSlot(const std::string& name);
 
 	SqTable& operator=(const SqTable& fn);
 
