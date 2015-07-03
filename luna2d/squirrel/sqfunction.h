@@ -41,6 +41,19 @@ public:
 	SqFunction(HSQUIRRELVM vm);
 	SqFunction(const SqFunction& fn);
 
+	// Binding constructors
+	template<typename Ret, typename ... Args>
+	SqFunction(SqVm* vm, const std::function<Ret(Args...)>& func) : SqFunction(vm)
+	{
+		Bind<Ret, Args...>(func);
+	}
+
+	template<typename Ret, typename ... Args>
+	SqFunction(SqVm* vm, Ret(*func)(Args...)) : SqFunction(vm)
+	{
+		Bind<Ret, Args...>(func);
+	}
+
 private:
 	SqFunction(const std::shared_ptr<SqRef>& ref);
 
@@ -61,7 +74,47 @@ private:
 		PushArgs(vm, args...);
 	}
 
+	template<typename Proxy>
+	void PushProxy(HSQUIRRELVM vm, Proxy* proxy) const
+	{
+		SQUserPointer proxyPtr = sq_newuserdata(vm, sizeof(Proxy*));
+		memcpy(proxyPtr, &proxy, sizeof(Proxy*));
+
+		sq_setreleasehook(vm, -1, &SqFunction::OnProxyGc<Proxy>);
+	}
+
+	template<typename Proxy>
+	static SQInteger OnProxyGc(SQUserPointer ptr, SQInteger size)
+	{
+		Proxy* proxyPtr = reinterpret_cast<Proxy*>(ptr);
+		delete proxyPtr;
+
+		return 1;
+	}
+
 public:
+	// Bind function
+	template<typename Ret, typename ... Args>
+	void Bind(const std::function<Ret(Args ...)>& func)
+	{
+		HSQUIRRELVM vm = ref->GetVm();
+
+		PushProxy(vm, new SqFunctionProxy<Ret,Args...>(func));
+		sq_newclosure(vm, &SqFunctionProxy<Ret,Args...>::Callback, 1);
+		sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
+
+		ref = std::make_shared<SqRef>(vm, -1);
+		sq_pop(vm, 1); // Pop function from stack
+	}
+
+	// Helper for automatic detecting argument types of binding function
+	template<typename Ret, typename ... Args>
+	void Bind(Ret(*ptr)(Args ...))
+	{
+		std::function<Ret(Args...)> func = ptr;
+		Bind(func);
+	}
+
 	// Call function and get return value
 	template<typename Ret, typename ... Args>
 	Ret Call(const Args& ... args) const
@@ -94,7 +147,7 @@ public:
 		return SqStack<Ret>::Get(vm, -1);
 	}
 
-	// Call function with given environment without return value
+	// Call function with given environmen without return value
 	template<typename Env, typename ... Args>
 	void CallWithEnv(const Env& env, const Args& ... args) const
 	{

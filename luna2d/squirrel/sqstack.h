@@ -21,6 +21,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 #include "sqvm.h"
 
 namespace luna2d{

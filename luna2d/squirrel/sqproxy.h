@@ -24,7 +24,77 @@
 #pragma once
 
 #include "sqvm.h"
+#include "squtils.h"
+#include "sqstack.h"
+#include "lunaindexlist.h"
 
 namespace luna2d{
+
+template<typename Ret, typename ... Args>
+class SqFunctionProxy
+{
+	typedef SqFunctionProxy<Ret, Args...> Proxy;
+	typedef std::function<Ret(Args...)> Func;
+
+public:
+	SqFunctionProxy(const Func& func) : func(func) {}
+
+private:
+	Func func;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+
+		SQUserPointer proxyPtr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		SqStack<Ret>::Push(vm, Call(vm, proxy, LUNAMakeIndexList<Args...>()));
+
+		return 1;
+	}
+
+	template<size_t ... Index>
+	static Ret Call(HSQUIRRELVM vm, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		return proxy->func(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
+
+template<typename ... Args>
+class SqFunctionProxy<void, Args...>
+{
+	typedef SqFunctionProxy<void, Args...> Proxy;
+	typedef std::function<void(Args...)> Func;
+
+public:
+	SqFunctionProxy(const Func& func) : func(func) {}
+
+private:
+	Func func;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+
+		SQUserPointer proxyPtr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		Call(vm, proxy, LUNAMakeIndexList<Args...>());
+
+		return 0;
+	}
+
+	template<size_t ... Index>
+	static void Call(HSQUIRRELVM vm, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		proxy->func(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
 
 }
