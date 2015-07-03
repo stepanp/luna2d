@@ -97,4 +97,74 @@ public:
 	}
 };
 
+
+template<typename Ret, typename Class, typename ... Args>
+class SqMethodProxy
+{
+	typedef SqMethodProxy<Ret, Class, Args...> Proxy;
+	typedef Ret (Class::*Method)(Args ...);
+
+public:
+	SqMethodProxy(Class* obj, Method method) : obj(obj), method(method) {}
+
+private:
+	Class* obj;
+	Method method;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+
+		SQUserPointer proxyPtr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		SqStack<Ret>::Push(vm, Call(vm, proxy, LUNAMakeIndexList<Args...>()));
+
+		return 1;
+	}
+
+	template<size_t ... Index>
+	static Ret Call(HSQUIRRELVM vm, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		return (proxy->obj->*proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
+
+template<typename Class, typename ... Args>
+class SqMethodProxy<void, Class, Args ...>
+{
+	typedef SqMethodProxy<void, Class, Args...> Proxy;
+	typedef void (Class::*Method)(Args ...);
+
+public:
+	SqMethodProxy(Class* obj, Method method) : obj(obj), method(method) {}
+
+private:
+	Class* obj;
+	Method method;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+
+		SQUserPointer proxyPtr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		Call(vm, proxy, LUNAMakeIndexList<Args...>());
+
+		return 1;
+	}
+
+	template<size_t ... Index>
+	static void Call(HSQUIRRELVM vm, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		(proxy->obj->*proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
 }

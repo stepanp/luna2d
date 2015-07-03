@@ -45,13 +45,19 @@ public:
 	template<typename Ret, typename ... Args>
 	SqFunction(SqVm* vm, const std::function<Ret(Args...)>& func) : SqFunction(vm)
 	{
-		Bind<Ret, Args...>(func);
+		Bind<Ret,Args...>(func);
 	}
 
 	template<typename Ret, typename ... Args>
 	SqFunction(SqVm* vm, Ret(*func)(Args...)) : SqFunction(vm)
 	{
-		Bind<Ret, Args...>(func);
+		Bind<Ret,Args...>(func);
+	}
+
+	template<typename Ret, typename Class, typename ... Args>
+	SqFunction(SqVm* vm, Class* obj, Ret (Class::*method)(Args ...))  : SqFunction(vm)
+	{
+		Bind<Ret,Class,Args...>(obj, method);
 	}
 
 private:
@@ -86,7 +92,7 @@ private:
 	template<typename Proxy>
 	static SQInteger OnProxyGc(SQUserPointer ptr, SQInteger size)
 	{
-		Proxy* proxyPtr = reinterpret_cast<Proxy*>(ptr);
+		Proxy* proxyPtr = *reinterpret_cast<Proxy**>(ptr);
 		delete proxyPtr;
 
 		return 1;
@@ -113,6 +119,20 @@ public:
 	{
 		std::function<Ret(Args...)> func = ptr;
 		Bind(func);
+	}
+
+	// Bind method as function
+	template<typename Ret, typename Class, typename ... Args>
+	void Bind(Class* obj, Ret (Class::*method)(Args ...))
+	{
+		HSQUIRRELVM vm = ref->GetVm();
+
+		PushProxy(vm, new SqMethodProxy<Ret,Class,Args...>(obj, method));
+		sq_newclosure(vm, &SqMethodProxy<Ret,Class,Args...>::Callback, 1);
+		sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
+
+		ref = std::make_shared<SqRef>(vm, -1);
+		sq_pop(vm, 1); // Pop function from stack
 	}
 
 	// Call function and get return value
