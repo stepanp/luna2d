@@ -21,45 +21,6 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "sqclass.h"
 
-#include "lunaengine.h"
-#include "lunalog.h"
-#include <squirrel.h>
-#include <sqstdmath.h>
-#include <sqstdstring.h>
-#include <sqstdblob.h>
-#include <sqstdio.h>
-#include <sqstdsystem.h>
-#include <sqstdaux.h>
-
-namespace luna2d{
-
-const size_t SQUIRREL_STACK_SIZE = 1024;
-const std::string SQ_CLASSES_TABLE = "_luna2d_classes";
-
-class SqTable;
-
-class SqVm
-{
-public:
-	SqVm();
-	~SqVm();
-
-private:
-	HSQUIRRELVM vm;
-
-public:
-	HSQUIRRELVM GetVm() const;
-	bool DoString(const std::string& str, const std::string& sourceName = "");
-	bool DoFile(const std::string& filename);
-	SqTable GetRootTable() const;
-	SqTable GetRegistryTable() const;
-	SqTable GetClassesTable() const;
-
-	operator HSQUIRRELVM() const;
-
-	static SqVm* FromVm(HSQUIRRELVM vm); // Get wrapper instance from HSQUIRRELVM
-};
-
-}
+using namespace luna2d;

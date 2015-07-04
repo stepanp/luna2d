@@ -186,13 +186,8 @@ public:
 
 
 template<>
-struct SqStack<SqFunction>
+struct SqStack<SqFunction> : public SqStack<SqObject>
 {
-	inline static void Push(HSQUIRRELVM vm, const SqFunction& fn)
-	{
-		SqStack<SqObject>::Push(vm, fn);
-	}
-
 	inline static SqFunction Get(HSQUIRRELVM vm, int index = -1)
 	{
 		SQObjectType type = sq_gettype(vm, index);

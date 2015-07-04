@@ -28,3 +28,4 @@
 #include "sqtable.h"
 #include "sqfunction.h"
 #include "sqany.h"
+#include "sqclass.h"

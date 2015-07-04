@@ -65,7 +65,7 @@ public:
 	}
 
 	template<typename T>
-	void NewSlot(const std::string& name, const T& t)
+	void NewSlot(const std::string& name, const T& t, bool isStatic = false)
 	{
 		if(IsNull()) return;
 
@@ -75,7 +75,7 @@ public:
 		SqStack<std::string>::Push(vm, name);
 		SqStack<T>::Push(vm, t);
 
-		if(SQ_FAILED(sq_newslot(vm, -3, false)))
+		if(SQ_FAILED(sq_newslot(vm, -3, isStatic)))
 		{
 			sq_pop(vm, 3); // Pop table, name and value from stack
 			return;
@@ -120,16 +120,12 @@ public:
 
 
 template<>
-struct SqStack<SqTable>
+struct SqStack<SqTable> : public SqStack<SqObject>
 {
-	inline static void Push(HSQUIRRELVM vm, const SqTable& tbl)
-	{
-		SqStack<SqObject>::Push(vm, tbl);
-	}
-
 	inline static SqTable Get(HSQUIRRELVM vm, int index = -1)
 	{
-		if(sq_gettype(vm, index) != OT_TABLE) return SqTable();
+		SQObjectType type = sq_gettype(vm, index);
+		if(type != OT_TABLE && type != OT_CLASS) return SqTable();
 		return SqTable(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
 	}
 };

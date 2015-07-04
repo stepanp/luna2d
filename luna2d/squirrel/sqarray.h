@@ -127,13 +127,8 @@ public:
 
 
 template<>
-struct SqStack<SqArray>
+struct SqStack<SqArray> : public SqStack<SqObject>
 {
-	inline static void Push(HSQUIRRELVM vm, const SqArray& arr)
-	{
-		SqStack<SqObject>::Push(vm, arr);
-	}
-
 	inline static SqArray Get(HSQUIRRELVM vm, int index = -1)
 	{
 		if(sq_gettype(vm, index) != OT_ARRAY) return SqArray();

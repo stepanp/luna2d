@@ -90,13 +90,8 @@ public:
 
 
 template<>
-struct SqStack<SqAny>
+struct SqStack<SqAny> : public SqStack<SqObject>
 {
-	inline static void Push(HSQUIRRELVM vm, const SqAny& any)
-	{
-		SqStack<SqObject>::Push(vm, any);
-	}
-
 	inline static SqAny Get(HSQUIRRELVM vm, int index = -1)
 	{
 		return SqAny(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
