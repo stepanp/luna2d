@@ -23,9 +23,14 @@
 
 #pragma once
 
-#include "sqtable.h"
+#include "sqobject.h"
+#include "squtils.h"
 
 namespace luna2d{
+
+class SqArray;
+class SqTable;
+class SqFunction;
 
 class SqAny : public SqObject
 {
@@ -73,22 +78,23 @@ public:
 
 	SqAny& operator=(const SqAny& fn);
 
-	// Inline getters for most common used types
+	// Getters for most common used types
 	inline bool ToBool() const { return To<bool>(); }
 	inline int ToInt() const { return To<int>(); }
 	inline float ToFloat() const { return To<float>(); }
 	inline std::string ToString() const { return To<std::string>(); }
-	inline SqTable ToTable() const { return To<SqTable>(); }
-	inline SqFunction ToFunction() const { return To<SqFunction>(); }
+	SqArray ToArray() const;
+	SqTable ToTable() const;
+	SqFunction ToFunction() const;
 };
 
 
 template<>
 struct SqStack<SqAny>
 {
-	inline static void Push(HSQUIRRELVM vm, const SqAny& fn)
+	inline static void Push(HSQUIRRELVM vm, const SqAny& any)
 	{
-		SqStack<std::shared_ptr<SqRef>>::Push(vm, fn.GetRef());
+		SqStack<SqObject>::Push(vm, any);
 	}
 
 	inline static SqAny Get(HSQUIRRELVM vm, int index = -1)

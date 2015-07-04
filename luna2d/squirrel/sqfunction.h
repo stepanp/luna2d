@@ -25,7 +25,6 @@
 
 #include "sqobject.h"
 #include "sqproxy.h"
-#include "sqnull.h"
 #include "squtils.h"
 
 namespace luna2d{
@@ -138,14 +137,14 @@ public:
 	template<typename Ret, typename ... Args>
 	Ret Call(const Args& ... args) const
 	{
-		return CallWithEnv<Ret>(null, args...);
+		return CallWithEnv<Ret>(nullptr, args...);
 	}
 
 	// Call function without getting return value
 	template<typename ... Args>
 	void Call(const Args& ... args) const
 	{
-		CallWithEnv(null, args...);
+		CallWithEnv(nullptr, args...);
 	}
 
 	// Call function with given environment
@@ -191,7 +190,7 @@ struct SqStack<SqFunction>
 {
 	inline static void Push(HSQUIRRELVM vm, const SqFunction& fn)
 	{
-		SqStack<std::shared_ptr<SqRef>>::Push(vm, fn.GetRef());
+		SqStack<SqObject>::Push(vm, fn);
 	}
 
 	inline static SqFunction Get(HSQUIRRELVM vm, int index = -1)

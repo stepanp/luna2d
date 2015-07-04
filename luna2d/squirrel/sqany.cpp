@@ -22,6 +22,9 @@
 //-----------------------------------------------------------------------------
 
 #include "sqany.h"
+#include "sqarray.h"
+#include "sqtable.h"
+#include "sqfunction.h"
 
 using namespace luna2d;
 
@@ -30,13 +33,6 @@ SqAny::SqAny(SqVm* vm) : SqObject(*vm) {}
 SqAny::SqAny(HSQUIRRELVM vm) : SqObject(vm) {}
 SqAny::SqAny(const SqAny& any) : SqObject(any.GetRef()) {}
 SqAny::SqAny(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
-
-SqAny& SqAny::operator=(const SqAny& fn)
-{
-	ref = fn.GetRef();
-	return *this;
-}
-
 
 SQObjectType SqAny::GetType() const
 {
@@ -49,4 +45,25 @@ SQObjectType SqAny::GetType() const
 	sq_pop(vm, 1); // Pop object from stack
 
 	return ret;
+}
+
+SqAny& SqAny::operator=(const SqAny& fn)
+{
+	ref = fn.GetRef();
+	return *this;
+}
+
+SqArray SqAny::ToArray() const
+{
+	return To<SqArray>();
+}
+
+SqTable SqAny::ToTable() const
+{
+	return To<SqTable>();
+}
+
+SqFunction SqAny::ToFunction() const
+{
+	return To<SqFunction>();
 }

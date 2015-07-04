@@ -60,7 +60,7 @@ private:
 const char* SqTypeName(SQObjectType type);
 
 
-// Macro for print squirrel stack
+// Debug macro for print squirrel stack
 #define LUNA_SQ_PRINT_STACK(vm) \
 { \
 	LUNA_LOGE("%s:%d:", LUNA_FILE, __LINE__); \
@@ -79,4 +79,24 @@ const char* SqTypeName(SQObjectType type);
 	} \
 }
 
+// Debug macros for checking squirrel stack state
+// before/afrer using functions working with stack
+// For example:
+//   LUNA_SQ_CHECK_STACK_BEGIN(vm);
+//   SqTable tbl = sq->GetRootTable(vm);
+//   LUNA_SQ_CHECK_STACK(vm);
+//   tbl.SetSlot("slotName", "sloValue");
+//   LUNA_SQ_CHECK_STACK(vm);
+#define LUNA_SQ_CHECK_STACK_BEGIN(vm) \
+	int _stackSize = sq_gettop(vm); \
+	int _nStackSize = sq_gettop(vm); \
+
+#define LUNA_SQ_CHECK_STACK(vm) \
+	_nStackSize = sq_gettop(vm); \
+	if(_stackSize != _nStackSize) \
+	{ \
+		LUNA_LOGE("Stack size is diffirent! %d:%d", _stackSize, _nStackSize); \
+		LUNA_SQ_PRINT_STACK(vm); \
+	} \
+	_stackSize = _nStackSize
 }

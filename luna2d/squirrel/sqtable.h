@@ -24,10 +24,12 @@
 #pragma once
 
 #include "sqobject.h"
-#include "sqfunction.h"
 #include "squtils.h"
 
 namespace luna2d{
+
+class SqArray;
+class SqFunction;
 
 class SqTable : public SqObject
 {
@@ -43,7 +45,7 @@ private:
 	SqTable(const std::shared_ptr<SqRef>& ref);
 
 public:
-	int GetSlotCount();
+	int GetCount() const;
 	void Clear();
 	bool HasSlot(const std::string& name) const;
 
@@ -108,13 +110,14 @@ public:
 
 	SqTable& operator=(const SqTable& fn);
 
-	// Inline getters for most common used types
-	inline SqTable GetTable(const std::string& name) const { return GetSlot<SqTable>(name); }
-	inline SqFunction GetFunction(const std::string& name) const { return GetSlot<SqFunction>(name); }
+	// Getters for most common used types
 	inline bool GetBool(const std::string& name) const { return GetSlot<bool>(name); }
 	inline int GetInt(const std::string& name) const { return GetSlot<int>(name); }
 	inline float GetFloat(const std::string& name) const { return GetSlot<float>(name); }
 	inline std::string GetString(const std::string& name) const { return GetSlot<std::string>(name); }
+	inline SqTable GetTable(const std::string& name) const { return GetSlot<SqTable>(name); }
+	SqArray GetArray(const std::string& name) const;
+	SqFunction GetFunction(const std::string& name) const;
 };
 
 

@@ -24,5 +24,7 @@
 #pragma once
 
 #include "sqvm.h"
+#include "sqarray.h"
 #include "sqtable.h"
+#include "sqfunction.h"
 #include "sqany.h"

@@ -21,28 +21,28 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "sqtable.h"
 #include "sqarray.h"
+#include "sqtable.h"
 #include "sqfunction.h"
 
 using namespace luna2d;
 
-SqTable::SqTable() : SqObject() {}
-SqTable::SqTable(SqVm* vm) : SqTable(*vm) {}
-SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm)
+SqArray::SqArray() : SqObject() {}
+SqArray::SqArray(SqVm* vm, int count) : SqArray(*vm, count) {}
+SqArray::SqArray(HSQUIRRELVM vm, int count) : SqObject(vm)
 {
 	if(vm)
 	{
-		sq_newtable(vm);
+		sq_newarray(vm, count);
 		ref = std::make_shared<SqRef>(vm, -1);
 		sq_pop(vm, 1);
 	}
 }
 
-SqTable::SqTable(const SqTable& fn) : SqObject(fn.GetRef()) {}
-SqTable::SqTable(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
+SqArray::SqArray(const SqArray& fn) : SqObject(fn.GetRef()) {}
+SqArray::SqArray(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
-int SqTable::GetCount() const
+int SqArray::GetCount() const
 {
 	if(IsNull()) return 0;
 
@@ -50,12 +50,12 @@ int SqTable::GetCount() const
 
 	SqStack<SqObject>::Push(vm, *this);
 	int ret = sq_getsize(vm, -1);
-	sq_pop(vm, 1); // Pop table from stack
+	sq_pop(vm, 1); // Pop array from stack
 
 	return ret;
 }
 
-void SqTable::Clear()
+void SqArray::Clear()
 {
 	if(IsNull()) return;
 
@@ -66,48 +66,51 @@ void SqTable::Clear()
 	sq_pop(vm, 1);
 }
 
-bool SqTable::HasSlot(const std::string& name) const
-{
-	if(IsNull()) return false;
-
-	HSQUIRRELVM vm = ref->GetVm();
-
-	SqStack<SqObject>::Push(vm, *this);
-	SqStack<std::string>::Push(vm, name);
-	if(SQ_FAILED(sq_rawget(vm, -2)))
-	{
-		sq_pop(vm, 1); // Pop table from stack
-		return false;
-	}
-
-	sq_pop(vm, 2); // Pop table and slot value from stack
-	return true;
-}
-
-void SqTable::RemoveSlot(const std::string& name)
+void SqArray::Resize(int size)
 {
 	if(IsNull()) return;
 
 	HSQUIRRELVM vm = ref->GetVm();
 
 	SqStack<SqObject>::Push(vm, *this);
-	SqStack<std::string>::Push(vm, name);
-	sq_deleteslot(vm, -2, false);
-	sq_pop(vm, 1); // Pop table from stack
+	sq_arrayresize(vm, -1, size);
+	sq_pop(vm, 1); // Pop array from stack
 }
 
-SqTable& SqTable::operator=(const SqTable& fn)
+void SqArray::Reverse()
+{
+	if(IsNull()) return;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	sq_arrayreverse(vm, -1);
+	sq_pop(vm, 1); // Pop array from stack
+}
+
+void SqArray::RemoveValue(int index)
+{
+	if(IsNull()) return;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	sq_arrayremove(vm, -1, index);
+	sq_pop(vm, 1); // Pop array from stack
+}
+
+SqArray& SqArray::operator=(const SqArray& fn)
 {
 	ref = fn.GetRef();
 	return *this;
 }
 
-SqArray SqTable::GetArray(const std::string& name) const
+SqTable SqArray::GetTable(int index) const
 {
-	return GetSlot<SqArray>(name);
+	return GetValue<SqTable>(index);
 }
 
-SqFunction SqTable::GetFunction(const std::string& name) const
+SqFunction SqArray::GetFunction(int index) const
 {
-	return GetSlot<SqFunction>(name);
+	return GetValue<SqFunction>(index);
 }

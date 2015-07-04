@@ -149,4 +149,18 @@ struct SqStack<char[Size]>
 	}
 };
 
+template<>
+struct SqStack<std::nullptr_t>
+{
+	inline static void Push(HSQUIRRELVM vm, const std::nullptr_t& value = nullptr)
+	{
+		sq_pushnull(vm);
+	}
+
+	inline static std::nullptr_t Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return std::nullptr_t();
+	}
+};
+
 }
