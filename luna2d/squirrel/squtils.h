@@ -95,7 +95,7 @@ const char* SqTypeName(SQObjectType type);
 	_nStackSize = sq_gettop(vm); \
 	if(_stackSize != _nStackSize) \
 	{ \
-		LUNA_LOGE("Stack size is diffirent! %d:%d", _stackSize, _nStackSize); \
+		LUNA_LOGE("Stack size is diffirent! %d -> %d", _stackSize, _nStackSize); \
 		LUNA_SQ_PRINT_STACK(vm); \
 	} \
 	_stackSize = _nStackSize

@@ -94,7 +94,7 @@ public:
 	template<typename T>
 	void SetValue(int index, const T& t)
 	{
-		if(IsNull()) return false;
+		if(IsNull()) return;
 
 		HSQUIRRELVM vm = ref->GetVm();
 
@@ -104,7 +104,7 @@ public:
 
 		if(SQ_FAILED(sq_set(vm, -3)))
 		{
-			sq_pop(vm, 2); // Pop array and index from stack
+			sq_pop(vm, 3); // Pop array, index and value from stack
 			return;
 		}
 

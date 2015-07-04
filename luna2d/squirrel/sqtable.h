@@ -65,9 +65,9 @@ public:
 	}
 
 	template<typename T>
-	bool NewSlot(const std::string& name, const T& t)
+	void NewSlot(const std::string& name, const T& t)
 	{
-		if(IsNull()) return false;
+		if(IsNull()) return;
 
 		HSQUIRRELVM vm = ref->GetVm();
 
@@ -77,18 +77,17 @@ public:
 
 		if(SQ_FAILED(sq_newslot(vm, -3, false)))
 		{
-			sq_pop(vm, 2); // Pop table and name from stack
-			return false;
+			sq_pop(vm, 3); // Pop table, name and value from stack
+			return;
 		}
 
 		sq_pop(vm, 1); // Pop table from stack
-		return true;
 	}
 
 	template<typename T>
-	bool SetSlot(const std::string& name, const T& t)
+	void SetSlot(const std::string& name, const T& t)
 	{
-		if(IsNull()) return false;
+		if(IsNull()) return;
 
 		HSQUIRRELVM vm = ref->GetVm();
 
@@ -98,12 +97,11 @@ public:
 
 		if(SQ_FAILED(sq_set(vm, -3)))
 		{
-			sq_pop(vm, 2); // Pop table and name from stack
-			return false;
+			sq_pop(vm, 3); // Pop table, name and value from stack
+			return;
 		}
 
 		sq_pop(vm, 1); // Pop table from stack
-		return true;
 	}
 
 	void RemoveSlot(const std::string& name);
