@@ -21,8 +21,32 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "sqvm.h"
-#include "sqtable.h"
 #include "sqany.h"
+
+using namespace luna2d;
+
+SqAny::SqAny() : SqObject() {}
+SqAny::SqAny(SqVm* vm) : SqObject(*vm) {}
+SqAny::SqAny(HSQUIRRELVM vm) : SqObject(vm) {}
+SqAny::SqAny(const SqAny& any) : SqObject(any.GetRef()) {}
+SqAny::SqAny(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
+
+SqAny& SqAny::operator=(const SqAny& fn)
+{
+	ref = fn.GetRef();
+	return *this;
+}
+
+
+SQObjectType SqAny::GetType() const
+{
+	if(IsNull()) return OT_NULL;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	SQObjectType ret = sq_gettype(vm, -1);
+	sq_pop(vm, 1); // Pop object from stack
+
+	return ret;
+}

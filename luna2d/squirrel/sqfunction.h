@@ -27,7 +27,6 @@
 #include "sqproxy.h"
 #include "sqnull.h"
 #include "squtils.h"
-#include "lunalog.h"
 
 namespace luna2d{
 
@@ -163,7 +162,7 @@ public:
 
 		sq_call(vm, sizeof...(args) + 1, true, true);
 
-		SqScopedPop pop(vm, 2); // Pop function object and return value from stack after return
+		SqScopedPop pop(vm, 2); // Pop function object and return value from stack
 		return SqStack<Ret>::Get(vm, -1);
 	}
 
