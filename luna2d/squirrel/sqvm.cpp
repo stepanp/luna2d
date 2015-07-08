@@ -144,5 +144,5 @@ SqVm::operator HSQUIRRELVM() const
 
 SqVm* SqVm::FromVm(HSQUIRRELVM vm)
 {
-	return static_cast<SQUserPointer>(sq_getforeignptr(vm));
+	return static_cast<SqVm*>(sq_getforeignptr(vm));
 }

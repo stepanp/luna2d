@@ -24,6 +24,7 @@
 #pragma once
 
 #include "sqtable.h"
+#include "sqptr.h"
 
 namespace luna2d{
 
