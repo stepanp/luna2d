@@ -45,6 +45,19 @@ std::shared_ptr<SqRef> SqObject::GetRef() const
 	return ref;
 }
 
+SQObjectType SqObject::GetType() const
+{
+	if(IsNull()) return OT_NULL;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	SQObjectType ret = sq_gettype(vm, -1);
+	sq_pop(vm, 1); // Pop object from stack
+
+	return ret;
+}
+
 bool SqObject::IsNull() const
 {
 	return ref->IsNull();

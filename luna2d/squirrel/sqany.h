@@ -52,8 +52,6 @@ private:
 	SqAny(const std::shared_ptr<SqRef>& ref);
 
 public:
-	SQObjectType GetType() const;
-
 	template<typename T>
 	T To() const
 	{

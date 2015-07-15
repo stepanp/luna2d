@@ -40,6 +40,7 @@ protected:
 public:
 	std::shared_ptr<SqRef> GetRef() const;
 	bool IsNull() const;
+	SQObjectType GetType() const;
 
 	operator bool() const;
 };
