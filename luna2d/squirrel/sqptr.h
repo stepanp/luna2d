@@ -58,4 +58,72 @@ public:
 	}
 };
 
+
+template<typename T>
+struct SqStack<SqPtr<T>>
+{
+	template<typename PtrType>
+	inline static void Push(HSQUIRRELVM vm, const PtrType& value)
+	{
+		SqStack<SqClassInfo<T>>::Push(vm);
+		if(sq_gettype(vm, -1) == OT_NULL) return;
+
+		sq_createinstance(vm, -1);
+		sq_setinstanceup(vm, -1, static_cast<SQUserPointer>(new SqPtr<T>(value)));
+		sq_setreleasehook(vm, -1, [](SQUserPointer ptr, SQInteger) -> SQInteger
+		{
+			SqPtr<T>* wrapPtr = static_cast<SqPtr<T>*>(ptr);
+			delete wrapPtr;
+			return 0;
+		});
+	}
+
+	inline static SqPtr<T>* Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return nullptr;
+	}
+};
+
+
+template<typename T>
+struct SqStack<std::shared_ptr<T>>
+{
+	inline static void Push(HSQUIRRELVM vm, const std::shared_ptr<T>& value)
+	{
+		if(!value)
+		{
+			sq_pushnull(vm);
+			return;
+		}
+
+		SqStack<SqPtr<T>>::Push(vm, value);
+	}
+
+	inline static std::shared_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return SqStack<SqPtr<T>>::Get(vm, index)->ToShared();
+	}
+};
+
+
+template<typename T>
+struct SqStack<std::weak_ptr<T>>
+{
+	inline static void Push(HSQUIRRELVM vm, const std::weak_ptr<T>& value)
+	{
+		if(value.expired())
+		{
+			sq_pushnull(vm);
+			return;
+		}
+
+		SqStack<SqPtr<T>>::Push(vm, value);
+	}
+
+	inline static std::weak_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
+	{
+		return SqStack<SqPtr<T>>::Get(vm, index)->ToWeak();
+	}
+};
+
 }
