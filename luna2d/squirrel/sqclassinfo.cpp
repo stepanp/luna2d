@@ -21,41 +21,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "sqclassinfo.h"
 
-namespace luna2d{
+using namespace luna2d;
 
-template<typename T>
-class SqPtr
-{
-	union SqPtrType
-	{
-		std::shared_ptr<T> shared;
-		std::weak_ptr<T> weak;
-	};
-
-public:
-	SqPtr(const std::shared_ptr<T>& ptr) : isWeak(false), type(ptr) {}
-	SqPtr(const std::weak_ptr<T>& ptr) : isWeak(true), type(ptr) {}
-
-private:
-	bool isWeak;
-	SqPtrType type;
-
-public:
-	std::shared_ptr<T> ToShared()
-	{
-		if(isWeak) return nullptr; // Don't allow implicit casting from weak_ptr to shared_ptr
-		else return type.shared;
-	}
-
-	std::weak_ptr<T> ToWeak()
-	{
-		if(isWeak) return type.weak;
-		else return type.shared;
-	}
-};
-
-}
+size_t SqTypeIdCounter::unique = 0;
