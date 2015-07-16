@@ -25,4 +25,11 @@
 
 using namespace luna2d;
 
-size_t SqTypeIdCounter::unique = 0;
+size_t SqTypeTags::counter = 0;
+std::vector<void(*)()> SqTypeTags::cleaners;
+
+void SqTypeTags::Reset()
+{
+	for(auto run : cleaners) run();
+	cleaners.clear();
+}

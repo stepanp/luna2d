@@ -93,13 +93,12 @@ SqVm::SqVm() :
 
 	// Attach wrapper instance to squirrel VM
 	sq_setforeignptr(vm, static_cast<SQUserPointer>(this));
-
-	SqTypeIdCounter::unique = 0;
 }
 
 SqVm::~SqVm()
 {
 	sq_close(vm);
+	SqTypeTags::Reset();
 }
 
 HSQUIRRELVM SqVm::GetVm() const

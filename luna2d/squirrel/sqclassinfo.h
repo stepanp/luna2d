@@ -24,65 +24,74 @@
 #pragma once
 
 #include "sqobject.h"
-#include "squtils.h"
 
 namespace luna2d{
 
-class SqTypeIdCounter
+class SqTypeTags
 {
-public:
-	static size_t unique;
+	friend class SqVm;
+
+protected:
+	static size_t counter;
+	static std::vector<void(*)()> cleaners;
+
+	static void Reset();
 };
 
 
 template<typename Class>
-class SqClassInfo
+class SqClassInfo : public SqTypeTags
 {
 private:
 	static size_t typeTag;
 
 public:
-	static size_t GetTypeTag() { return typeTag; }
-	static void ResetTypeTag() { typeTag = -1; }
+	static size_t GetTypeTag()
+	{
+		return typeTag;
+	}
 
-	static bool IsRegistered(HSQUIRRELVM vm)
+	static void ResetTypeTag()
+	{
+		typeTag = -1;
+		SqTypeTags::counter--;
+	}
+
+	static bool IsRegistered(SqVm* vm)
 	{
 		if(typeTag == -1) return false;
 
-		LUNA_SQ_CHECK_STACK_BEGIN(vm);
+		sq_pushregistrytable(*vm);
+		SqStack<std::string>::Push(*vm, SQ_CLASSES_REGISTRY);
+		sq_get(*vm, -2);
 
-		sq_pushregistrytable(vm);
-		SqStack<std::string>::Push(vm, SQ_CLASSES_REGISTRY);
-		sq_get(vm, -2);
-
-		sq_pushinteger(vm, static_cast<SQInteger>(typeTag));
-		if(SQ_FAILED(sq_get(vm, -2)))
+		sq_pushinteger(*vm, static_cast<SQInteger>(typeTag));
+		if(SQ_FAILED(sq_get(*vm, -2)))
 		{
-			sq_pop(vm, 2); // Pop registry table and classes registry from stack
-			LUNA_SQ_CHECK_STACK(vm);
+			sq_pop(*vm, 2); // Pop registry table and classes registry from stack
 			return false;
 		}
 
-		sq_pop(vm, 3); // Pop registry table, classes registry amd class value from stack
-		LUNA_SQ_CHECK_STACK(vm);
+		sq_pop(*vm, 3); // Pop registry table, classes registry amd class value from stack
 		return true;
 	}
 
-	static void Register(HSQUIRRELVM vm, const SqObject& cls)
+	static void Register(SqVm* vm, const SqObject& cls)
 	{
 		if(typeTag != -1 || cls.GetType() != OT_CLASS) return;
 
-		typeTag = SqTypeIdCounter::unique++;
+		typeTag = SqTypeTags::counter++;
+		SqTypeTags::cleaners.push_back(&ResetTypeTag);
 
-		sq_pushregistrytable(vm);
-		SqStack<std::string>::Push(vm, SQ_CLASSES_REGISTRY);
-		sq_get(vm, -2);
+		sq_pushregistrytable(*vm);
+		SqStack<std::string>::Push(*vm, SQ_CLASSES_REGISTRY);
+		sq_get(*vm, -2);
 
-		sq_pushinteger(vm, static_cast<SQInteger>(typeTag));
-		SqStack<SqObject>::Push(vm, cls);
-		sq_arrayappend(vm, -3);
+		sq_pushinteger(*vm, static_cast<SQInteger>(typeTag));
+		SqStack<SqObject>::Push(*vm, cls);
+		sq_arrayappend(*vm, -3);
 
-		sq_pop(vm, 3); // Pop registry table, classes registry and typeTag from stack
+		sq_pop(*vm, 3); // Pop registry table, classes registry and typeTag from stack
 	}
 };
 

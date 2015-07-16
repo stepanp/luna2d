@@ -35,18 +35,18 @@ public:
 	SqClass(SqVm* vm) : SqObject(*vm)
 	{
 		if(!vm) return;
-		if(SqClassInfo<Class>::IsRegistered(*vm)) LUNA_RETURN_ERR("Class can be registered only once");
+		if(SqClassInfo<Class>::IsRegistered(vm)) LUNA_RETURN_ERR("Class can be registered only once");
 
 		bool hasBase = !std::is_void<BaseClass>::value;
 		if(hasBase)
 		{
-			if(!SqClassInfo<BaseClass>::IsRegistered(*vm)) LUNA_RETURN_ERR("Baseclass must be registered before class");
+			if(!SqClassInfo<BaseClass>::IsRegistered(vm)) LUNA_RETURN_ERR("Baseclass must be registered before class");
 			SqStack<SqClassInfo<BaseClass>>::Push(*vm);
 		}
 
 		sq_newclass(*vm, hasBase);
 		ref = std::make_shared<SqRef>(*vm, -1);
-		SqClassInfo<Class>::Register(*vm, *this);
+		SqClassInfo<Class>::Register(vm, *this);
 		sq_settypetag(*vm, -1, reinterpret_cast<SQUserPointer>(SqClassInfo<Class>::GetTypeTag()));
 		sq_pop(*vm, 1); // Pop class from stack
 	}
