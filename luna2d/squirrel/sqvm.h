@@ -32,6 +32,7 @@
 #include <sqstdio.h>
 #include <sqstdsystem.h>
 #include <sqstdaux.h>
+#include "squtils.h"
 
 namespace luna2d{
 

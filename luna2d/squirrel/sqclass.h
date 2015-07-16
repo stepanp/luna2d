@@ -24,15 +24,16 @@
 #pragma once
 
 #include "sqfunction.h"
+#include "sqtable.h"
 #include "sqptr.h"
 
 namespace luna2d{
 
 template<typename Class, typename BaseClass = void>
-class SqClass : public SqObject
+class SqClass : public SqTable
 {
 public:
-	SqClass(SqVm* vm) : SqObject(*vm)
+	SqClass(SqVm* vm) : SqTable()
 	{
 		if(!vm) return;
 		if(SqClassInfo<Class>::IsRegistered(vm)) LUNA_RETURN_ERR("Class can be registered only once");
@@ -48,7 +49,27 @@ public:
 		ref = std::make_shared<SqRef>(*vm, -1);
 		SqClassInfo<Class>::Register(vm, *this);
 		sq_settypetag(*vm, -1, reinterpret_cast<SQUserPointer>(SqClassInfo<Class>::GetTypeTag()));
+
 		sq_pop(*vm, 1); // Pop class from stack
+	}
+
+private:
+	template<typename ... Args>
+	static std::shared_ptr<Class> Construct(Args ... args)
+	{
+		return std::make_shared<Class>(args ...);
+	}
+
+public:
+	template<typename ... Args>
+	void BindConstructor()
+	{
+		if(IsNull()) return;
+
+		SqFunction fnConsturct(ref->GetVm());
+		fnConsturct.Bind<std::shared_ptr<Class>,Args...>(&Construct);
+
+		NewSlot("constructor", fnConsturct);
 	}
 };
 

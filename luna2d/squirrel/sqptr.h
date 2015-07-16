@@ -30,31 +30,30 @@ namespace luna2d{
 template<typename T>
 class SqPtr
 {
-	union SqPtrType
+public:
+	SqPtr(const std::shared_ptr<T>& ptr) : isWeak(false), shared(ptr) {}
+	SqPtr(const std::weak_ptr<T>& ptr) : isWeak(true), weak(ptr) {}
+	~SqPtr() { isWeak ? weak.~weak_ptr() : shared.~shared_ptr(); }
+
+private:
+	bool isWeak;
+	union
 	{
 		std::shared_ptr<T> shared;
 		std::weak_ptr<T> weak;
 	};
 
 public:
-	SqPtr(const std::shared_ptr<T>& ptr) : isWeak(false), type(ptr) {}
-	SqPtr(const std::weak_ptr<T>& ptr) : isWeak(true), type(ptr) {}
-
-private:
-	bool isWeak;
-	SqPtrType type;
-
-public:
 	std::shared_ptr<T> ToShared()
 	{
 		if(isWeak) return nullptr; // Don't allow implicit casting from weak_ptr to shared_ptr
-		else return type.shared;
+		else return shared;
 	}
 
 	std::weak_ptr<T> ToWeak()
 	{
-		if(isWeak) return type.weak;
-		else return type.shared;
+		if(isWeak) return weak;
+		else return shared;
 	}
 };
 
@@ -69,18 +68,30 @@ struct SqStack<SqPtr<T>>
 		if(sq_gettype(vm, -1) == OT_NULL) return;
 
 		sq_createinstance(vm, -1);
-		sq_setinstanceup(vm, -1, static_cast<SQUserPointer>(new SqPtr<T>(value)));
+		sq_setinstanceup(vm, -1, new SqPtr<T>(value));
 		sq_setreleasehook(vm, -1, [](SQUserPointer ptr, SQInteger) -> SQInteger
 		{
+			LUNA_LOG("RELEASE");
 			SqPtr<T>* wrapPtr = static_cast<SqPtr<T>*>(ptr);
 			delete wrapPtr;
 			return 0;
 		});
+
+		sq_remove(vm, -2); // Remove class from stack
+		LUNA_LOG("PUSH");
 	}
 
 	inline static SqPtr<T>* Get(HSQUIRRELVM vm, int index = -1)
 	{
-		return nullptr;
+		if(sq_gettype(vm, index) != OT_INSTANCE) return nullptr;
+
+		size_t typeTag = SqClassInfo<T>::GetTypeTag();
+		if(typeTag == -1) return nullptr;
+
+		SQUserPointer ptr = nullptr;
+		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return nullptr;
+
+		return static_cast<SqPtr<T>*>(ptr);
 	}
 };
 
@@ -101,7 +112,8 @@ struct SqStack<std::shared_ptr<T>>
 
 	inline static std::shared_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
 	{
-		return SqStack<SqPtr<T>>::Get(vm, index)->ToShared();
+		SqPtr<T>* ptr = SqStack<SqPtr<T>>::Get(vm, index);
+		return ptr ? ptr->ToShared() : nullptr;
 	}
 };
 
@@ -122,7 +134,8 @@ struct SqStack<std::weak_ptr<T>>
 
 	inline static std::weak_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
 	{
-		return SqStack<SqPtr<T>>::Get(vm, index)->ToWeak();
+		SqPtr<T>* ptr = SqStack<SqPtr<T>>::Get(vm, index);
+		return ptr ? ptr->ToWeak() : std::weak_ptr<T>();
 	}
 };
 
