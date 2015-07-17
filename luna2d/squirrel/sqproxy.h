@@ -23,9 +23,7 @@
 
 #pragma once
 
-#include "sqvm.h"
-#include "squtils.h"
-#include "sqstack.h"
+#include "sqptr.h"
 #include "lunaindexlist.h"
 
 namespace luna2d{
@@ -164,6 +162,24 @@ public:
 	static void Call(HSQUIRRELVM vm, Proxy* proxy, LUNAIndexList<Index...>)
 	{
 		(proxy->obj->*proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
+
+template<typename Class, typename ... Args>
+class SqConstructProxy
+{
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		SqSetInstance(vm, 1, new SqPtr<Class>(CreateInstance(vm, LUNAMakeIndexList<Args...>())));
+		return 1;
+	}
+
+	template<size_t ... Index>
+	static std::shared_ptr<Class> CreateInstance(HSQUIRRELVM vm, LUNAIndexList<Index...>)
+	{
+		return std::make_shared<Class>(SqStack<Args>::Get(vm, Index + 2)...);
 	}
 };
 

@@ -59,41 +59,17 @@ public:
 
 
 template<typename T>
-struct SqStack<SqPtr<T>>
+void SqSetInstance(HSQUIRRELVM vm, int index, SqPtr<T>* instance)
 {
-	template<typename PtrType>
-	inline static void Push(HSQUIRRELVM vm, const PtrType& value)
+	sq_setinstanceup(vm, index, instance);
+	sq_setreleasehook(vm, index, [](SQUserPointer ptr, SQInteger) -> SQInteger
 	{
-		SqStack<SqClassInfo<T>>::Push(vm);
-		if(sq_gettype(vm, -1) == OT_NULL) return;
-
-		sq_createinstance(vm, -1);
-		sq_setinstanceup(vm, -1, new SqPtr<T>(value));
-		sq_setreleasehook(vm, -1, [](SQUserPointer ptr, SQInteger) -> SQInteger
-		{
-			LUNA_LOG("RELEASE");
-			SqPtr<T>* wrapPtr = static_cast<SqPtr<T>*>(ptr);
-			delete wrapPtr;
-			return 0;
-		});
-
-		sq_remove(vm, -2); // Remove class from stack
-		LUNA_LOG("PUSH");
-	}
-
-	inline static SqPtr<T>* Get(HSQUIRRELVM vm, int index = -1)
-	{
-		if(sq_gettype(vm, index) != OT_INSTANCE) return nullptr;
-
-		size_t typeTag = SqClassInfo<T>::GetTypeTag();
-		if(typeTag == -1) return nullptr;
-
-		SQUserPointer ptr = nullptr;
-		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return nullptr;
-
-		return static_cast<SqPtr<T>*>(ptr);
-	}
-};
+		LUNA_LOG("RELEASE");
+		SqPtr<T>* wrapPtr = static_cast<SqPtr<T>*>(ptr);
+		delete wrapPtr;
+		return 0;
+	});
+}
 
 
 template<typename T>
@@ -107,13 +83,27 @@ struct SqStack<std::shared_ptr<T>>
 			return;
 		}
 
-		SqStack<SqPtr<T>>::Push(vm, value);
+		SqStack<SqClassInfo<T>>::Push(vm);
+		if(sq_gettype(vm, -1) == OT_NULL) return;
+
+		sq_createinstance(vm, -1);
+		sq_remove(vm, -2); // Remove class from stack
+
+		SqSetInstance(vm, -1, new SqPtr<T>(value));
+		LUNA_LOG("PUSH");
 	}
 
 	inline static std::shared_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
 	{
-		SqPtr<T>* ptr = SqStack<SqPtr<T>>::Get(vm, index);
-		return ptr ? ptr->ToShared() : nullptr;
+		if(sq_gettype(vm, index) != OT_INSTANCE) return nullptr;
+
+		size_t typeTag = SqClassInfo<T>::GetTypeTag();
+		if(typeTag == -1) return nullptr;
+
+		SQUserPointer ptr = nullptr;
+		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return nullptr;
+
+		return static_cast<SqPtr<T>*>(ptr)->ToShared();
 	}
 };
 
@@ -129,13 +119,26 @@ struct SqStack<std::weak_ptr<T>>
 			return;
 		}
 
-		SqStack<SqPtr<T>>::Push(vm, value);
+		SqStack<SqClassInfo<T>>::Push(vm);
+		if(sq_gettype(vm, -1) == OT_NULL) return;
+
+		sq_createinstance(vm, -1);
+		sq_remove(vm, -2); // Remove class from stack
+
+		SqSetInstance(vm, -1, new SqPtr<T>(value));
 	}
 
 	inline static std::weak_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
 	{
-		SqPtr<T>* ptr = SqStack<SqPtr<T>>::Get(vm, index);
-		return ptr ? ptr->ToWeak() : std::weak_ptr<T>();
+		if(sq_gettype(vm, index) != OT_INSTANCE) return  std::weak_ptr<T>();
+
+		size_t typeTag = SqClassInfo<T>::GetTypeTag();
+		if(typeTag == -1) return  std::weak_ptr<T>();
+
+		SQUserPointer ptr = nullptr;
+		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return std::weak_ptr<T>();
+
+		return static_cast<SqPtr<T>*>(ptr)->ToWeak();
 	}
 };
 

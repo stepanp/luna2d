@@ -54,11 +54,7 @@ public:
 	}
 
 private:
-	template<typename ... Args>
-	static std::shared_ptr<Class> Construct(Args ... args)
-	{
-		return std::make_shared<Class>(args ...);
-	}
+
 
 public:
 	template<typename ... Args>
@@ -66,10 +62,15 @@ public:
 	{
 		if(IsNull()) return;
 
-		SqFunction fnConsturct(ref->GetVm());
-		fnConsturct.Bind<std::shared_ptr<Class>,Args...>(&Construct);
+		HSQUIRRELVM vm = ref->GetVm();
 
-		NewSlot("constructor", fnConsturct);
+		SqStack<SqObject>::Push(vm, *this);
+		SqStack<std::string>::Push(vm, "constructor");
+		sq_newclosure(vm, &SqConstructProxy<Class,Args...>::Callback, 0);
+		sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
+		sq_newslot(vm, -3, false);
+
+		sq_pop(vm, 1); // Pop class from stack
 	}
 };
 
