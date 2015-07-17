@@ -64,7 +64,6 @@ void SqSetInstance(HSQUIRRELVM vm, int index, SqPtr<T>* instance)
 	sq_setinstanceup(vm, index, instance);
 	sq_setreleasehook(vm, index, [](SQUserPointer ptr, SQInteger) -> SQInteger
 	{
-		LUNA_LOG("RELEASE");
 		SqPtr<T>* wrapPtr = static_cast<SqPtr<T>*>(ptr);
 		delete wrapPtr;
 		return 0;
@@ -90,7 +89,6 @@ struct SqStack<std::shared_ptr<T>>
 		sq_remove(vm, -2); // Remove class from stack
 
 		SqSetInstance(vm, -1, new SqPtr<T>(value));
-		LUNA_LOG("PUSH");
 	}
 
 	inline static std::shared_ptr<T> Get(HSQUIRRELVM vm, int index = -1)

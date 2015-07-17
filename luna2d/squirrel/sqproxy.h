@@ -183,4 +183,40 @@ public:
 	}
 };
 
+
+template<typename Ret, typename Class, typename ... Args>
+class SqClassProxy
+{
+	typedef SqClassProxy<Ret, Class, Args...> Proxy;
+	typedef Ret (Class::*Method)(Args ...);
+
+public:
+	SqClassProxy(Method method) : method(method) {}
+
+private:
+	Method method;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		LUNA_SQ_PRINT_STACK(vm);
+		/*if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+
+		SQUserPointer proxyPtr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		SqStack<Ret>::Push(vm, Call(vm, proxy, LUNAMakeIndexList<Args...>()));*/
+
+		return 0;
+	}
+
+	template<size_t ... Index>
+	static Ret Call(HSQUIRRELVM vm, Class* obj, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		return obj->*(proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
+
 }

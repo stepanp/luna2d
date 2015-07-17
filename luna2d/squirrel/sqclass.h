@@ -24,16 +24,15 @@
 #pragma once
 
 #include "sqfunction.h"
-#include "sqtable.h"
 #include "sqptr.h"
 
 namespace luna2d{
 
 template<typename Class, typename BaseClass = void>
-class SqClass : public SqTable
+class SqClass : public SqObject
 {
 public:
-	SqClass(SqVm* vm) : SqTable()
+	SqClass(SqVm* vm) : SqObject()
 	{
 		if(!vm) return;
 		if(SqClassInfo<Class>::IsRegistered(vm)) LUNA_RETURN_ERR("Class can be registered only once");
@@ -53,9 +52,6 @@ public:
 		sq_pop(*vm, 1); // Pop class from stack
 	}
 
-private:
-
-
 public:
 	template<typename ... Args>
 	void BindConstructor()
@@ -68,6 +64,24 @@ public:
 		SqStack<std::string>::Push(vm, "constructor");
 		sq_newclosure(vm, &SqConstructProxy<Class,Args...>::Callback, 0);
 		sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
+		sq_newslot(vm, -3, false);
+
+		sq_pop(vm, 1); // Pop class from stack
+	}
+
+	template<typename Ret, typename ... Args>
+	void BindMethod(const std::string& name, Ret (Class::*method)(Args ...))
+	{
+		if(IsNull()) return;
+
+		HSQUIRRELVM vm = ref->GetVm();
+
+		SqFunction fn(vm);
+		fn.Bind(method);
+
+		SqStack<SqObject>::Push(vm, *this);
+		SqStack<std::string>::Push(vm, name);
+		SqStack<SqFunction>::Push(vm, fn);
 		sq_newslot(vm, -3, false);
 
 		sq_pop(vm, 1); // Pop class from stack
