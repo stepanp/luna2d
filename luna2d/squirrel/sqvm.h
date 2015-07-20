@@ -37,7 +37,7 @@
 namespace luna2d{
 
 const size_t SQUIRREL_STACK_SIZE = 1024;
-const std::string SQ_CLASSES_REGISTRY = "_luna2d_classes";
+const std::string SQ_CLASSES_TABLE = "_luna2d_classes";
 
 class SqTable;
 

@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "sqvm.h"
-#include "sqarray.h"
 #include "sqtable.h"
 #include "sqclassinfo.h"
 #include "lunalog.h"
@@ -88,8 +87,8 @@ SqVm::SqVm() :
 	sq_seterrorhandler(vm);
 	sq_setcompilererrorhandler(vm, OnComplileError);
 
-	// Create classes registry in registry table
-	GetRegistryTable().NewSlot(SQ_CLASSES_REGISTRY, SqArray(this), true);
+	// Create classes table in registry table
+	GetRegistryTable().NewSlot(SQ_CLASSES_TABLE, SqTable(this), true);
 
 	// Attach wrapper instance to squirrel VM
 	sq_setforeignptr(vm, static_cast<SQUserPointer>(this));

@@ -199,22 +199,27 @@ private:
 public:
 	static SQInteger Callback(HSQUIRRELVM vm)
 	{
-		LUNA_SQ_PRINT_STACK(vm);
-		/*if(sq_gettype(vm, -1) != OT_USERDATA) return SQ_ERROR;
+		std::weak_ptr<Class> ptr = SqStack<std::weak_ptr<Class>>::Get(vm, 1);
+		if(ptr.expired())
+		{
+			LUNA_LOGE("Attempt to call method for expired instance");
+			return SQ_ERROR;
+		}
 
-		SQUserPointer proxyPtr;
+		SQUserPointer proxyPtr = nullptr;
 		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+		if(!proxyPtr) return SQ_ERROR;
 
 		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
-		SqStack<Ret>::Push(vm, Call(vm, proxy, LUNAMakeIndexList<Args...>()));*/
+		SqStack<Ret>::Push(vm, Call(vm, ptr.lock().get(), proxy, LUNAMakeIndexList<Args...>()));
 
-		return 0;
+		return 1;
 	}
 
 	template<size_t ... Index>
 	static Ret Call(HSQUIRRELVM vm, Class* obj, Proxy* proxy, LUNAIndexList<Index...>)
 	{
-		return obj->*(proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+		return (obj->*proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
 	}
 };
 

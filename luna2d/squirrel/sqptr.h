@@ -96,7 +96,7 @@ struct SqStack<std::shared_ptr<T>>
 		if(sq_gettype(vm, index) != OT_INSTANCE) return nullptr;
 
 		size_t typeTag = SqClassInfo<T>::GetTypeTag();
-		if(typeTag == -1) return nullptr;
+		if(typeTag == 0) return nullptr;
 
 		SQUserPointer ptr = nullptr;
 		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return nullptr;
@@ -128,10 +128,10 @@ struct SqStack<std::weak_ptr<T>>
 
 	inline static std::weak_ptr<T> Get(HSQUIRRELVM vm, int index = -1)
 	{
-		if(sq_gettype(vm, index) != OT_INSTANCE) return  std::weak_ptr<T>();
+		if(sq_gettype(vm, index) != OT_INSTANCE) return std::weak_ptr<T>();
 
 		size_t typeTag = SqClassInfo<T>::GetTypeTag();
-		if(typeTag == -1) return  std::weak_ptr<T>();
+		if(typeTag == 0) return std::weak_ptr<T>();
 
 		SQUserPointer ptr = nullptr;
 		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return std::weak_ptr<T>();

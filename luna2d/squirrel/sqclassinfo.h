@@ -53,50 +53,51 @@ public:
 
 	static void ResetTypeTag()
 	{
-		typeTag = -1;
+		typeTag = 0;
 		SqTypeTags::counter--;
 	}
 
 	static bool IsRegistered(SqVm* vm)
 	{
-		if(typeTag == -1) return false;
+		if(typeTag == 0) return false;
 
 		sq_pushregistrytable(*vm);
-		SqStack<std::string>::Push(*vm, SQ_CLASSES_REGISTRY);
+		SqStack<std::string>::Push(*vm, SQ_CLASSES_TABLE);
 		sq_get(*vm, -2);
 
 		sq_pushinteger(*vm, static_cast<SQInteger>(typeTag));
 		if(SQ_FAILED(sq_get(*vm, -2)))
 		{
-			sq_pop(*vm, 2); // Pop registry table and classes registry from stack
+			sq_pop(*vm, 2); // Pop registry table and classes table from stack
 			return false;
 		}
 
-		sq_pop(*vm, 3); // Pop registry table, classes registry amd class value from stack
+		sq_pop(*vm, 3); // Pop registry table, classes table amd class value from stack
+
 		return true;
 	}
 
 	static void Register(SqVm* vm, const SqObject& cls)
 	{
-		if(typeTag != -1 || cls.GetType() != OT_CLASS) return;
+		if(typeTag != 0 || cls.GetType() != OT_CLASS) return;
 
-		typeTag = SqTypeTags::counter++;
+		typeTag = (SqTypeTags::counter++) + 1; // Because 0 is invalid typeTag
 		SqTypeTags::cleaners.push_back(&ResetTypeTag);
 
 		sq_pushregistrytable(*vm);
-		SqStack<std::string>::Push(*vm, SQ_CLASSES_REGISTRY);
+		SqStack<std::string>::Push(*vm, SQ_CLASSES_TABLE);
 		sq_get(*vm, -2);
 
 		sq_pushinteger(*vm, static_cast<SQInteger>(typeTag));
 		SqStack<SqObject>::Push(*vm, cls);
-		sq_arrayappend(*vm, -3);
+		sq_newslot(*vm, -3, false);
 
-		sq_pop(*vm, 3); // Pop registry table, classes registry and typeTag from stack
+		sq_pop(*vm, 2); // Pop registry table and classes table from stack
 	}
 };
 
 template<typename Class>
-size_t SqClassInfo<Class>::typeTag = -1;
+size_t SqClassInfo<Class>::typeTag = 0;
 
 
 template<typename Class>
@@ -106,21 +107,21 @@ struct SqStack<SqClassInfo<Class>>
 	{
 		size_t typeTag = SqClassInfo<Class>::GetTypeTag();
 
-		if(typeTag == -1)
+		if(typeTag == 0)
 		{
 			sq_pushnull(vm);
 			return;
 		}
 
 		sq_pushregistrytable(vm);
-		SqStack<std::string>::Push(vm, SQ_CLASSES_REGISTRY);
+		SqStack<std::string>::Push(vm, SQ_CLASSES_TABLE);
 		sq_get(vm, -2);
 		sq_remove(vm, -2); // Remove registry table from stack
 
 		sq_pushinteger(vm, static_cast<SQInteger>(typeTag));
 		if(SQ_FAILED(sq_get(vm, -2)))
 		{
-			sq_pop(vm, 2); // Pop classes registry and typeTag from stack
+			sq_pop(vm, 2); // Pop classes table and typeTag from stack
 			sq_pushnull(vm);
 			return;
 		}
