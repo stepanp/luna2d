@@ -73,12 +73,17 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	lua = new LuaScript();
 
 	// Make "luna" table in global table
-	LuaTable tblGlobal = lua->GetGlobalTable();
-	LuaTable tblLuna(lua);
-	tblGlobal.SetField("luna", tblLuna);
+	{
+		LuaTable tblGlobal = lua->GetGlobalTable();
+		LuaTable tblLuna(lua);
+		tblGlobal.SetField("luna", tblLuna);
+	}
 
 	squirrel = new SqVm();
 
+	// Make "luna" table in root table
+	SqTable tblLuna(squirrel);
+	squirrel->GetRootTable().NewSlot("luna", tblLuna);
 	
 	math::InitializeRandom();
 	RunEmbeddedScripts();
@@ -92,6 +97,9 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	strings = new LUNAStrings();
 	debug = new LUNADebug();
 
+	// Run main squirrel script
+	if(!squirrel->DoFile(SCRIPTS_PATH + "main.nut")) LUNA_RETURN_ERR("\"main.nut\" not found. Stop initializing");
+
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))
 	{
@@ -99,9 +107,11 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 		return;
 	}
 
-	// Call "luna.main" function
-	LuaFunction fnMain = tblLuna.GetFunction("main");
-	if(fnMain != nil) fnMain.CallVoid();
+	{
+		// Call "luna.main" function
+		LuaFunction fnMain = lua->GetGlobalTable().GetTable("luna").GetFunction("main");
+		if(fnMain != nil) fnMain.CallVoid();
+	}
 
 	initialized = true;
 }

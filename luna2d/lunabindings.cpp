@@ -23,6 +23,7 @@
 
 #include "lunabindings.h"
 #include "lunaengine.h"
+#include "lunasquirrel.h"
 #include "lunalua.h"
 #include "lunaprefs.h"
 #include "lunatimer.h"
@@ -35,6 +36,19 @@
 #include "math/lunaeasing.h"
 
 using namespace luna2d;
+
+// Bind "luna.log" module
+void BindLog(SqVm* sq, SqTable& tblLuna)
+{
+	SqTable tblLog(sq);
+	tblLuna.NewSlot("log", tblLog);
+
+	// Register "info", "warning", "error" functions in "luna.log" table
+	tblLog.NewSlot("info", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::InfoString));
+	tblLog.NewSlot("warning", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::WarningString));
+	tblLog.NewSlot("error", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::ErrorString));
+}
+
 
 // Bind "luna.log" module
 void BindLog(LuaScript* lua, LuaTable& tblLuna)
@@ -290,15 +304,22 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 // SEE: "lunagraphics.cpp", "lunassets.cpp"
 void luna2d::DoBindings()
 {
-	LuaScript* lua = LUNAEngine::SharedLua();
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+	SqVm* sq = LUNAEngine::SharedSquirrel();
+	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
-	BindLog(lua, tblLuna);
-	BindUtils(lua, tblLuna);
-	BindMath(lua, tblLuna);
-	BindIntersect(lua, tblLuna);
-	BindSplines(lua, tblLuna);
-	BindEasing(lua, tblLuna);
-	BindPlatform(lua, tblLuna);
-	BindPrefs(lua, tblLuna);
+	BindLog(sq, tblLuna);
+
+	{
+		LuaScript* lua = LUNAEngine::SharedLua();
+		LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+
+		BindLog(lua, tblLuna);
+		BindUtils(lua, tblLuna);
+		BindMath(lua, tblLuna);
+		BindIntersect(lua, tblLuna);
+		BindSplines(lua, tblLuna);
+		BindEasing(lua, tblLuna);
+		BindPlatform(lua, tblLuna);
+		BindPrefs(lua, tblLuna);
+	}
 }
