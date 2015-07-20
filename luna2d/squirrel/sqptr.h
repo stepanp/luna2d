@@ -101,6 +101,8 @@ struct SqStack<std::shared_ptr<T>>
 		SQUserPointer ptr = nullptr;
 		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return nullptr;
 
+		if(!ptr) return nullptr;
+
 		return static_cast<SqPtr<T>*>(ptr)->ToShared();
 	}
 };
@@ -135,6 +137,8 @@ struct SqStack<std::weak_ptr<T>>
 
 		SQUserPointer ptr = nullptr;
 		if(SQ_FAILED(sq_getinstanceup(vm, index, &ptr, reinterpret_cast<SQUserPointer>(typeTag)))) return std::weak_ptr<T>();
+
+		if(!ptr) return std::weak_ptr<T>();
 
 		return static_cast<SqPtr<T>*>(ptr)->ToWeak();
 	}
