@@ -23,6 +23,7 @@
 
 #include "sqvm.h"
 #include "sqtable.h"
+#include "sqfunction.h"
 #include "sqclassinfo.h"
 #include "lunalog.h"
 #include "lunafiles.h"
@@ -92,12 +93,21 @@ SqVm::SqVm() :
 
 	// Attach wrapper instance to squirrel VM
 	sq_setforeignptr(vm, static_cast<SQUserPointer>(this));
+
+	// Bind "require" function
+	GetRootTable().NewSlot("require", SqFunction(this, this, &SqVm::Require));
 }
 
 SqVm::~SqVm()
 {
 	sq_close(vm);
 	SqTypeTags::Reset();
+}
+
+void SqVm::Require(const std::string& file)
+{
+	if(loadedFiles.count(file) == 1) return;
+	if(DoFile(file)) loadedFiles.insert(file);
 }
 
 HSQUIRRELVM SqVm::GetVm() const

@@ -49,6 +49,10 @@ public:
 
 private:
 	HSQUIRRELVM vm;
+	std::unordered_set<std::string> loadedFiles;
+
+private:
+	void Require(const std::string& file);
 
 public:
 	HSQUIRRELVM GetVm() const;
