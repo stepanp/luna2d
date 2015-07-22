@@ -96,6 +96,32 @@ void SqTable::RemoveSlot(const std::string& name)
 	sq_pop(vm, 1); // Pop table from stack
 }
 
+SqTable SqTable::GetDelegate() const
+{
+	if(IsNull()) return SqTable();
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqTable>::Push(vm, *this);
+	sq_getdelegate(vm, -1);
+
+	SqScopedPop(vm, 2); // Pop table and delegate from stack
+	return SqStack<SqTable>::Get(vm, -1);
+}
+
+void SqTable::SetDelegate(const SqTable& delegate)
+{
+	if(IsNull()) return;
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqTable>::Push(vm, *this);
+	SqStack<SqTable>::Push(vm, delegate);
+	sq_setdelegate(vm, -2);
+
+	sq_pop(vm, 1); // Pop table from stack
+}
+
 SqTable& SqTable::operator=(const SqTable& fn)
 {
 	ref = fn.GetRef();

@@ -47,6 +47,17 @@ void BindLog(SqVm* sq, SqTable& tblLuna)
 	tblLog.NewSlot("info", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::InfoString));
 	tblLog.NewSlot("warning", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::WarningString));
 	tblLog.NewSlot("error", SqFunction(sq, LUNAEngine::SharedLog(), &LUNALog::ErrorString));
+
+	// Use "__call" metamethod of "luna.log" table as alias for "info" function
+	// i.e. luna.log("message") = luna.log.info("message")
+	SqTable tblDelegate(sq);
+	std::function<void(std::nullptr_t, const std::string&)> proxy = [](std::nullptr_t, const std::string& msg)
+	{
+		LUNAEngine::SharedLog()->InfoString(msg);
+	};
+
+	tblDelegate.NewSlot("_call", SqFunction(sq, proxy));
+	tblLog.SetDelegate(tblDelegate);
 }
 
 

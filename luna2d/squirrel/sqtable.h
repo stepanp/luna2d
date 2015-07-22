@@ -106,6 +106,10 @@ public:
 
 	void RemoveSlot(const std::string& name);
 
+	SqTable GetDelegate() const;
+	void SetDelegate(const SqTable& delegate);
+	inline RemoveDelegate() { SetDelegate(SqTable()); }
+
 	SqTable& operator=(const SqTable& fn);
 
 	// Getters for most common used types
