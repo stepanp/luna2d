@@ -24,7 +24,7 @@
 #pragma once
 
 #include "lunagraphics.h"
-#include "lunalua.h"
+#include "lunasquirrel.h"
 
 namespace luna2d{
 
@@ -34,17 +34,17 @@ public:
 	LUNAScenes();
 
 private:
-	LuaTable tblCurScene;
-	LuaFunction fnUpdate, fnRender;
-	LuaFunction fnTouchDown, fnTouchMoved, fnTouchUp;
+	SqTable tblCurScene;
+	SqFunction fnUpdate, fnRender;
+	SqFunction fnTouchDown, fnTouchMoved, fnTouchUp;
 
 public:
-	LuaTable GetCurrrentScene();
-	void SetScene(const LuaTable& tblScene);
+	SqTable GetCurrrentScene();
+	void SetScene(const SqTable& tblScene);
 	void OnTouchDown(float x, float y, int touchIndex);
 	void OnTouchMoved(float x, float y, int touchIndex);
 	void OnTouchUp(float x, float y, int touchIndex);
-	void OnUpdate(float deltaTime);
+	void OnUpdate(float dt);
 	void OnRender();
 };
 

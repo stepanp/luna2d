@@ -100,19 +100,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	// Run main squirrel script
 	if(!squirrel->DoFile(SCRIPTS_PATH + "main.nut")) LUNA_RETURN_ERR("\"main.nut\" not found. Stop initializing");
 
-	// Run main lua script
-	if(!lua->DoFile("scripts/main.lua"))
-	{
-		LUNA_LOGE("\"main.lua\" not found. Stop initializing");
-		return;
-	}
-
-	{
-		// Call "luna.main" function
-		LuaFunction fnMain = lua->GetGlobalTable().GetTable("luna").GetFunction("main");
-		if(fnMain != nil) fnMain.CallVoid();
-	}
-
 	initialized = true;
 }
 

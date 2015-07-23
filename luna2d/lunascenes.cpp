@@ -26,46 +26,40 @@
 
 using namespace luna2d;
 
-LUNAScenes::LUNAScenes() :
-	tblCurScene(nil),
-	fnUpdate(nil),
-	fnRender(nil),
-	fnTouchDown(nil),
-	fnTouchMoved(nil),
-	fnTouchUp(nil)
+LUNAScenes::LUNAScenes()
 {
-	LuaScript *lua = LUNAEngine::SharedLua();
+	SqVm* sq = LUNAEngine::SharedSquirrel();
 
 	// Register "luna.scenes" module
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-	LuaTable tblScenes(lua);
+	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
+	SqTable tblScenes(sq);
 
-	tblScenes.SetField("getCurrentScene", LuaFunction(lua, this, &LUNAScenes::GetCurrrentScene));
-	tblScenes.SetField("setScene", LuaFunction(lua, this, &LUNAScenes::SetScene));
+	tblScenes.NewSlot("getCurrentScene", SqFunction(sq, this, &LUNAScenes::GetCurrrentScene));
+	tblScenes.NewSlot("setScene", SqFunction(sq, this, &LUNAScenes::SetScene));
 
-	tblLuna.SetField("scenes", tblScenes);
+	tblLuna.NewSlot("scenes", tblScenes);
 }
 
-LuaTable LUNAScenes::GetCurrrentScene()
+SqTable LUNAScenes::GetCurrrentScene()
 {
 	return tblCurScene;
 }
 
-void LUNAScenes::SetScene(const LuaTable& tblScene)
+void LUNAScenes::SetScene(const SqTable& tblScene)
 {
-	if(tblScene == nil)
+	if(tblScene.IsNull())
 	{
 		LUNA_LOGE("Scene object is nil");
 		return;
 	}
 
-	if(!tblScene.HasField("onUpdate"))
+	if(!tblScene.HasSlot("onUpdate"))
 	{
 		LUNA_LOGE("Scene hasn'n \"onUpdate\" method");
 		return;
 	}
 
-	if(!tblScene.HasField("onRender"))
+	if(!tblScene.HasSlot("onRender"))
 	{
 		LUNA_LOGE("Scene hasn'n \"onRender\" method");
 		return;
@@ -83,25 +77,25 @@ void LUNAScenes::SetScene(const LuaTable& tblScene)
 
 void LUNAScenes::OnTouchDown(float x, float y, int touchIndex)
 {
-	if(fnTouchDown != nil) fnTouchDown.CallVoid(tblCurScene, x, y, touchIndex);
+	if(!fnTouchDown.IsNull()) fnTouchDown.CallWithEnv(tblCurScene, x, y, touchIndex);
 }
 
 void LUNAScenes::OnTouchMoved(float x, float y, int touchIndex)
 {
-	if(fnTouchMoved != nil) fnTouchMoved.CallVoid(tblCurScene, x, y, touchIndex);
+	if(!fnTouchMoved.IsNull()) fnTouchMoved.CallWithEnv(tblCurScene, x, y, touchIndex);
 }
 
 void LUNAScenes::OnTouchUp(float x, float y, int touchIndex)
 {
-	if(fnTouchUp != nil) fnTouchUp.CallVoid(tblCurScene, x, y, touchIndex);
+	if(!fnTouchUp.IsNull()) fnTouchUp.CallWithEnv(tblCurScene, x, y, touchIndex);
 }
 
-void LUNAScenes::OnUpdate(float deltaTime)
+void LUNAScenes::OnUpdate(float dt)
 {
-	if(tblCurScene != nil) fnUpdate.CallVoid(tblCurScene, deltaTime);
+	if(!tblCurScene.IsNull()) fnUpdate.CallWithEnv(tblCurScene, dt);
 }
 
 void LUNAScenes::OnRender()
 {
-	if(tblCurScene != nil) fnRender.CallVoid(tblCurScene);
+	if(!tblCurScene.IsNull()) fnRender.CallWithEnv(tblCurScene);
 }

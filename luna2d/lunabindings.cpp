@@ -55,7 +55,6 @@ void BindLog(SqVm* sq, SqTable& tblLuna)
 	{
 		LUNAEngine::SharedLog()->InfoString(msg);
 	};
-
 	tblDelegate.NewSlot("_call", SqFunction(sq, proxy));
 	tblLog.SetDelegate(tblDelegate);
 }

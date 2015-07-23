@@ -58,6 +58,20 @@ SQObjectType SqObject::GetType() const
 	return ret;
 }
 
+std::string SqObject::ToString() const
+{
+	if(IsNull()) return "null";
+
+	HSQUIRRELVM vm = ref->GetVm();
+
+	SqStack<SqObject>::Push(vm, *this);
+	sq_tostring(vm, -1);
+	std::string ret = SqStack<std::string>::Get(vm, -1);
+	sq_pop(vm, 2); // Pop string and object from stack
+
+	return ret;
+}
+
 bool SqObject::IsNull() const
 {
 	return ref->IsNull();
