@@ -106,8 +106,31 @@ SqVm::~SqVm()
 
 void SqVm::Require(const std::string& file)
 {
-	if(loadedFiles.count(file) == 1) return;
-	if(DoFile(file)) loadedFiles.insert(file);
+	SQStackInfos info;
+	sq_stackinfos(vm, 1, &info);
+
+	// Try load file by relative path
+	if(info.source)
+	{
+		std::string relativePath = LUNAEngine::SharedFiles()->GetParentPath(info.source) + "/" + file;
+		if(loadedFiles.count(relativePath) == 1) return;
+		if(DoFile(relativePath))
+		{
+			 loadedFiles.insert(relativePath);
+			 return;
+		}
+	}
+
+	// Try load file by global path
+	std::string globalPath = SCRIPTS_PATH + file;
+	if(loadedFiles.count(globalPath) == 1) return;
+	if(DoFile(globalPath))
+	{
+		 loadedFiles.insert(globalPath);
+		 return;
+	}
+
+	LUNA_LOGE("Cannot load file \"%s\", file not found", file.c_str());
 }
 
 HSQUIRRELVM SqVm::GetVm() const
