@@ -24,12 +24,11 @@
 #pragma once
 
 #include "sqobject.h"
-#include "squtils.h"
+#include "sqfunction.h"
 
 namespace luna2d{
 
 class SqArray;
-class SqFunction;
 
 class SqTable : public SqObject
 {
@@ -39,7 +38,7 @@ public:
 	SqTable();
 	SqTable(SqVm* vm);
 	SqTable(HSQUIRRELVM vm);
-	SqTable(const SqTable& fn);
+	SqTable(const SqTable& tbl);
 
 private:
 	SqTable(const std::shared_ptr<SqRef>& ref);
@@ -67,7 +66,7 @@ public:
 	template<typename T>
 	void NewSlot(const std::string& name, const T& t, bool isStatic = false)
 	{
-		if(IsNull()) return;
+		if(IsNull() || GetType() == OT_INSTANCE) return;
 
 		HSQUIRRELVM vm = ref->GetVm();
 
@@ -106,11 +105,29 @@ public:
 
 	void RemoveSlot(const std::string& name);
 
+	template<typename Ret, typename ... Args>
+	Ret CallMethod(const std::string& name, const Args& ... args) const
+	{
+		SqFunction fn = GetFunction(name);
+		if(fn.IsNull()) return Ret();
+
+		return fn.CallWithEnv<Ret>(*this, args...);
+	}
+
+	template<typename ... Args>
+	void CallMethod(const std::string& name, const Args& ... args) const
+	{
+		SqFunction fn = GetFunction(name);
+		if(fn.IsNull()) return;
+
+		fn.CallWithEnv<void>(*this, args...);
+	}
+
 	SqTable GetDelegate() const;
 	void SetDelegate(const SqTable& delegate);
-	inline RemoveDelegate() { SetDelegate(SqTable()); }
+	inline void RemoveDelegate() { SetDelegate(SqTable()); }
 
-	SqTable& operator=(const SqTable& fn);
+	SqTable& operator=(const SqTable& tbl);
 
 	// Getters for most common used types
 	inline bool GetBool(const std::string& name) const { return GetSlot<bool>(name); }
@@ -119,7 +136,7 @@ public:
 	inline std::string GetString(const std::string& name) const { return GetSlot<std::string>(name); }
 	inline SqTable GetTable(const std::string& name) const { return GetSlot<SqTable>(name); }
 	SqArray GetArray(const std::string& name) const;
-	SqFunction GetFunction(const std::string& name) const;
+	SqFunction GetFunction(const std::string& name) const { return GetSlot<SqFunction>(name); }
 };
 
 
@@ -129,7 +146,7 @@ struct SqStack<SqTable> : public SqStack<SqObject>
 	inline static SqTable Get(HSQUIRRELVM vm, int index = -1)
 	{
 		SQObjectType type = sq_gettype(vm, index);
-		if(type != OT_TABLE && type != OT_CLASS) return SqTable();
+		if(type != OT_TABLE && type != OT_CLASS && type != OT_INSTANCE) return SqTable();
 		return SqTable(SqStack<std::shared_ptr<SqRef>>::Get(vm, index));
 	}
 };

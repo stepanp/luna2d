@@ -24,7 +24,6 @@
 #pragma once
 
 #include "sqobject.h"
-#include "squtils.h"
 
 namespace luna2d{
 
@@ -74,7 +73,7 @@ public:
 		sq_pop(vm, 1); // Pop object from stack
 	}
 
-	SqAny& operator=(const SqAny& fn);
+	SqAny& operator=(const SqAny& any);
 
 	// Getters for most common used types
 	inline bool ToBool() const { return To<bool>(); }

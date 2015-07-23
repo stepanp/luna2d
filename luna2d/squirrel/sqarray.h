@@ -39,7 +39,7 @@ public:
 	SqArray();
 	SqArray(SqVm* vm, int count = 0);
 	SqArray(HSQUIRRELVM vm, int count = 0);
-	SqArray(const SqArray& fn);
+	SqArray(const SqArray& array);
 
 private:
 	SqArray(const std::shared_ptr<SqRef>& ref);
@@ -113,7 +113,7 @@ public:
 
 	void RemoveValue(int index);
 
-	SqArray& operator=(const SqArray& fn);
+	SqArray& operator=(const SqArray& array);
 
 	// Inline getters for most common used types
 	inline bool GetBool(int index) const { return GetValue<bool>(index); }

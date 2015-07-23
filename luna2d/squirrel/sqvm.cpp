@@ -106,6 +106,7 @@ SqVm::~SqVm()
 
 void SqVm::Require(const std::string& file)
 {
+	// Get path to script file where was called "require" function
 	SQStackInfos info;
 	sq_stackinfos(vm, 1, &info);
 

@@ -39,7 +39,7 @@ SqArray::SqArray(HSQUIRRELVM vm, int count) : SqObject(vm)
 	}
 }
 
-SqArray::SqArray(const SqArray& fn) : SqObject(fn.GetRef()) {}
+SqArray::SqArray(const SqArray& array) : SqObject(array.GetRef()) {}
 SqArray::SqArray(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
 int SqArray::GetCount() const
@@ -99,9 +99,9 @@ void SqArray::RemoveValue(int index)
 	sq_pop(vm, 1); // Pop array from stack
 }
 
-SqArray& SqArray::operator=(const SqArray& fn)
+SqArray& SqArray::operator=(const SqArray& array)
 {
-	ref = fn.GetRef();
+	ref = array.GetRef();
 	return *this;
 }
 

@@ -34,9 +34,9 @@ SqAny::SqAny(HSQUIRRELVM vm) : SqObject(vm) {}
 SqAny::SqAny(const SqAny& any) : SqObject(any.GetRef()) {}
 SqAny::SqAny(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
-SqAny& SqAny::operator=(const SqAny& fn)
+SqAny& SqAny::operator=(const SqAny& any)
 {
-	ref = fn.GetRef();
+	ref = any.GetRef();
 	return *this;
 }
 

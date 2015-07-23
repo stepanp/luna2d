@@ -23,7 +23,6 @@
 
 #include "sqtable.h"
 #include "sqarray.h"
-#include "sqfunction.h"
 
 using namespace luna2d;
 
@@ -39,7 +38,7 @@ SqTable::SqTable(HSQUIRRELVM vm) : SqObject(vm)
 	}
 }
 
-SqTable::SqTable(const SqTable& fn) : SqObject(fn.GetRef()) {}
+SqTable::SqTable(const SqTable& tbl) : SqObject(tbl.GetRef()) {}
 SqTable::SqTable(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
 int SqTable::GetCount() const
@@ -57,7 +56,7 @@ int SqTable::GetCount() const
 
 void SqTable::Clear()
 {
-	if(IsNull()) return;
+	if(IsNull() || GetType() != OT_TABLE) return;
 
 	HSQUIRRELVM vm = ref->GetVm();
 
@@ -74,7 +73,7 @@ bool SqTable::HasSlot(const std::string& name) const
 
 	SqStack<SqObject>::Push(vm, *this);
 	SqStack<std::string>::Push(vm, name);
-	if(SQ_FAILED(sq_rawget(vm, -2)))
+	if(SQ_FAILED(sq_get(vm, -2)))
 	{
 		sq_pop(vm, 1); // Pop table from stack
 		return false;
@@ -86,7 +85,7 @@ bool SqTable::HasSlot(const std::string& name) const
 
 void SqTable::RemoveSlot(const std::string& name)
 {
-	if(IsNull()) return;
+	if(IsNull() || GetType() == OT_CLASS) return;
 
 	HSQUIRRELVM vm = ref->GetVm();
 
@@ -98,7 +97,7 @@ void SqTable::RemoveSlot(const std::string& name)
 
 SqTable SqTable::GetDelegate() const
 {
-	if(IsNull()) return SqTable();
+	if(IsNull() || GetType() != OT_TABLE) return SqTable();
 
 	HSQUIRRELVM vm = ref->GetVm();
 
@@ -111,7 +110,7 @@ SqTable SqTable::GetDelegate() const
 
 void SqTable::SetDelegate(const SqTable& delegate)
 {
-	if(IsNull()) return;
+	if(IsNull() || GetType() != OT_TABLE) return;
 
 	HSQUIRRELVM vm = ref->GetVm();
 
@@ -122,18 +121,13 @@ void SqTable::SetDelegate(const SqTable& delegate)
 	sq_pop(vm, 1); // Pop table from stack
 }
 
-SqTable& SqTable::operator=(const SqTable& fn)
+SqTable& SqTable::operator=(const SqTable& tbl)
 {
-	ref = fn.GetRef();
+	ref = tbl.GetRef();
 	return *this;
 }
 
 SqArray SqTable::GetArray(const std::string& name) const
 {
 	return GetSlot<SqArray>(name);
-}
-
-SqFunction SqTable::GetFunction(const std::string& name) const
-{
-	return GetSlot<SqFunction>(name);
 }
