@@ -47,6 +47,21 @@ void OnPrint(HSQUIRRELVM vm, const SQChar* str, ...)
 	LUNAEngine::SharedLog()->InfoString(buf);
 }
 
+// Default error function
+void OnPrintError(HSQUIRRELVM vm, const SQChar* str, ...)
+{
+	va_list va;
+	va_start(va, str);
+
+	int size = vsnprintf(nullptr, 0, str, va);
+	std::string buf(size + 1, '\0');
+	vsnprintf(&buf[0], size + 1, str, va);
+
+	va_end(va);
+
+	LUNAEngine::SharedLog()->ErrorString(buf);
+}
+
 // Runtime error handler
 SQInteger OnRuntimeError(HSQUIRRELVM vm)
 {
@@ -54,8 +69,8 @@ SQInteger OnRuntimeError(HSQUIRRELVM vm)
 
 	if(sq_gettop(vm) >= 1)
 	{
-		if(SQ_SUCCEEDED(sq_getstring(vm, 2, &error))) LUNA_LOG("%s", error);
-		else LUNA_LOG("Unknown runtime error");
+		if(SQ_SUCCEEDED(sq_getstring(vm, 2, &error))) LUNA_LOGE("%s", error);
+		else LUNA_LOGE("Unknown runtime error");
 
 		sqstd_printcallstack(vm);
 	}
@@ -66,7 +81,7 @@ SQInteger OnRuntimeError(HSQUIRRELVM vm)
 // Compile error handler
 void OnComplileError(HSQUIRRELVM vm, const SQChar *desc, const SQChar *source, SQInteger line, SQInteger column)
 {
-	LUNA_LOG("%s:%d:%d: %s", source, line, column, desc);
+	LUNA_LOGE("%s:%d:%d: %s", source, line, column, desc);
 }
 
 
@@ -81,7 +96,7 @@ SqVm::SqVm() :
 	sqstd_register_stringlib(vm);*/
 
 	// Set default print function
-	sq_setprintfunc(vm, &OnPrint, &OnPrint);
+	sq_setprintfunc(vm, &OnPrint, &OnPrintError);
 
 	// Set error handlers
 	sq_newclosure(vm, OnRuntimeError, 0);
