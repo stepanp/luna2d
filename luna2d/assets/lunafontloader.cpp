@@ -29,7 +29,8 @@
 using namespace luna2d;
 using namespace json11;
 
-bool LUNAFontLoader::Load(const std::string& filename)
+bool LUNAFontLoader::Load(const std::string& filename, const std::string& normalizedPath,
+	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets)
 {
 	LUNAFiles* files = LUNAEngine::SharedFiles();
 
@@ -50,20 +51,19 @@ bool LUNAFontLoader::Load(const std::string& filename)
 	LUNAFontGenerator generator;
 	if(!generator.Load(filename)) return false;
 
+	if(jsonDesc.object_items().size() == 0) return false;
+
 	// Generate bitmap fonts for each specifed size in description file
+	auto folderPath = normalizedPath + "/";
 	for(auto entry : jsonDesc.object_items())
 	{
-		fonts[entry.first] = generator.GenerateFont(entry.second.int_value());
+		auto fontPath = folderPath + entry.first;
+		loadedAssets[fontPath] = generator.GenerateFont(entry.second.int_value());
 	}
 
-	return !fonts.empty();
-}
+	// Make folder item in loaded assets
+	// for can be checked that this asset already loaded
+	loadedAssets[folderPath] = nullptr;
 
-void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
-{
-	LuaTable tblFont(LUNAEngine::SharedLua());
-	tblFont.MakeReadOnly();
-	parentTable.SetField(name, tblFont, true);
-
-	for(auto entry : fonts) tblFont.SetField(entry.first, entry.second, true);
+	return true;
 }

@@ -24,33 +24,43 @@
 #include "lunaassets.h"
 #include "lunagraphics.h"
 #include "lunasizes.h"
+#include "lunatextureloader.h"
 #include "lunatextureatlasloader.h"
 #include "lunafontloader.h"
 
 using namespace luna2d;
 
 LUNAAssets::LUNAAssets() :
-	tblAssets(LUNAEngine::SharedLua())
+	tblAssets(LUNAEngine::SharedSquirrel())
 {
-	LuaScript* lua = LUNAEngine::SharedLua();
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+	SqVm* sq = LUNAEngine::SharedSquirrel();
+	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
-	// Bind assets table to lua
-	tblLuna.SetField("assets", tblAssets);
-	tblAssets.MakeReadOnly();
+	// Bind assets table to squirrel
+	SqTable delegate(sq);
+	std::function<std::weak_ptr<LUNAAsset>(const std::string&)> getter = [&](const std::string& path)
+	{
+		auto it = loadedAssets.find(path);
+		if(it == loadedAssets.end()) return std::weak_ptr<LUNAAsset>();
+		return std::weak_ptr<LUNAAsset>(it->second);
+	};
+	delegate.NewSlot("_get", SqFunction(sq, getter));
+	tblAssets.SetDelegate(delegate);
 
-	// Bind assets manager to lua
-	LuaTable tblAssetsMgr(lua);
-	tblAssetsMgr.SetField("loadAll", LuaFunction(lua, this, &LUNAAssets::LoadAll));
-	tblAssetsMgr.SetField("loadFolder", LuaFunction(lua, this, &LUNAAssets::LoadFolder));
-	tblAssetsMgr.SetField("load", LuaFunction(lua, this, &LUNAAssets::Load));
-	tblAssetsMgr.SetField("unload", LuaFunction(lua, this, &LUNAAssets::Unload));
-	tblAssetsMgr.SetField("unloadFolder", LuaFunction(lua, this, &LUNAAssets::UnloadFolder));
-	tblAssetsMgr.SetField("unloadAll", LuaFunction(lua, this, &LUNAAssets::UnloadAll));
-	tblLuna.SetField("assetsmgr", tblAssetsMgr);
+	tblLuna.NewSlot("assets", tblAssets);
+
+	// Bind assets manager to squirrel
+	SqTable tblAssetsMgr(sq);
+	tblAssetsMgr.NewSlot("loadAll", SqFunction(sq, this, &LUNAAssets::LoadAll));
+	tblAssetsMgr.NewSlot("loadFolder", SqFunction(sq, this, &LUNAAssets::LoadFolder));
+	tblAssetsMgr.NewSlot("load", SqFunction(sq, this, &LUNAAssets::Load));
+	tblAssetsMgr.NewSlot("unload", SqFunction(sq, this, &LUNAAssets::Unload));
+	tblAssetsMgr.NewSlot("unloadFolder", SqFunction(sq, this, &LUNAAssets::UnloadFolder));
+	tblAssetsMgr.NewSlot("unloadAll", SqFunction(sq, this, &LUNAAssets::UnloadAll));
+	tblLuna.NewSlot("assetsmgr", tblAssetsMgr);
 
 	// Bind base asset type
-	LuaClass<LUNAAsset> clsAsset(lua);
+	SqClass<LUNAAsset> clsAsset(sq);
 }
 
 LUNAAssets::~LUNAAssets()
@@ -58,49 +68,10 @@ LUNAAssets::~LUNAAssets()
 	UnloadAll();
 }
 
-// Get parent table for given asset path
-// Returns nil if path not found
-// if "autoMake" is true, automatically creates non-existent tables
-LuaTable LUNAAssets::GetParentTableForPath(const std::string& path, bool autoMake)
-{
-	if(path.empty()) return tblAssets;
-
-	LuaTable ret = tblAssets;
-	size_t prevPos = 0;
-	size_t lastPos = path.rfind('/');
-
-	// Parse given path and move by the tables tree
-	while(prevPos < lastPos && ret)
-	{
-		size_t pos = path.find('/', prevPos);
-		std::string name = path.substr(prevPos, pos - prevPos);
-		LuaTable nextTable = ret.GetTable(name);
-
-		// Make table if it isn't exists
-		if(autoMake && !nextTable)
-		{
-			nextTable = LuaTable(LUNAEngine::SharedLua());
-			nextTable.MakeReadOnly();
-			ret.SetField(name, nextTable, true);
-		}
-
-		ret = nextTable;
-		prevPos = pos + 1;
-	}
-
-	return ret;
-}
-
-// Get asset/folder name for path
-std::string LUNAAssets::GetNameForPath(const std::string& path)
-{
-	return LUNAEngine::SharedFiles()->GetBasename(path);
-}
-
 // Check for given file should be ignored when loading
 bool LUNAAssets::IsIgnored(const std::string& path)
 {
-	LUNAFiles* files = LUNAEngine::SharedFiles(); 
+	LUNAFiles* files = LUNAEngine::SharedFiles();
 
 	if(path == CONFIG_FILENAME) return true; // Ignore config file
 	if(path == SCRIPTS_PATH) return true; // Ignore scripts folder
@@ -142,6 +113,12 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 
 	LUNAFiles* files = LUNAEngine::SharedFiles();
 
+	// Crop extension and "@" suffix
+	std::string normalizedPath = files->SplitSuffix(path).first;
+
+	// Don't load asset if it already exists
+	if(loadedAssets.count("normalizedPath") != 0) return;
+
 	auto loader = GetLoader(path);
 	if(!loader)
 	{
@@ -149,143 +126,100 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 		return;
 	}
 
-	LuaTable parentTable = GetParentTableForPath(path, true);
-	std::string name = files->SplitSuffix(files->GetBasename(path)).first; // Remove resolution suffix
-
-	// Don't load asset if it already exists
-	if(parentTable.HasField(name)) return;
-
-	if(!loader->Load(path))
+	if(!loader->Load(path, normalizedPath, loadedAssets))
 	{
 		LUNA_LOGE("Cannot load asset from file \"%s\"", path.c_str());
 		return;
 	}
-
-	loader->PushToLua(name, parentTable);
 }
 
-
-void LUNAAssets::DoUnloadFolder(LuaTable table)
-{
-	// Recursively remove all assets in folder
-	for(auto entry : table)
-	{
-		if(entry.second.GetType() == LUA_TTABLE) DoUnloadFolder(entry.second.ToTable());
-		else
-		{
-			auto asset = entry.second.To<std::shared_ptr<LUNAAsset>>();
-			if(asset) asset->_KillLuaRef();
-		}
-
-		table.RemoveField(entry.first.ToString(), true);
-	}
-
-	// Remove custom data if exists
-	LuaTable meta = table.GetMetatable();
-	auto customData = meta.GetField<std::shared_ptr<LUNAAsset>>(ASSET_CUSTOM_DATA_NAME);
-	if(customData) customData->_KillLuaRef();
-	meta.RemoveField(ASSET_CUSTOM_DATA_NAME);
-}
-
- // Load all assets
+// Load all assets
 void LUNAAssets::LoadAll()
 {
-	LoadFolder("", true);
+   LoadFolder("", true);
 }
 
 // Load all assets in given folder
 void LUNAAssets::LoadFolder(const std::string& path, bool recursive)
 {
-	if(IsIgnored(path)) return;
+   if(IsIgnored(path)) return;
 
-	LUNAFiles* files = LUNAEngine::SharedFiles();
+   LUNAFiles* files = LUNAEngine::SharedFiles();
 
-	if(!files->IsDirectory(path))
-	{
-		LUNA_LOGE("Cannot load folder \"%s\". Folder not found", path.c_str());
-		return;
-	}
+   if(!files->IsDirectory(path))
+   {
+	   LUNA_LOGE("Cannot load folder \"%s\". Folder not found", path.c_str());
+	   return;
+   }
 
-	for(std::string filename : files->GetFileList(path))
-	{
-		std::string fullPath = path + filename;
+   for(std::string filename : files->GetFileList(path))
+   {
+	   std::string fullPath = path + filename;
 
-		if(files->IsFile(fullPath)) DoLoadFile(fullPath);
-		else if(recursive) LoadFolder(fullPath, recursive);
-	}
+	   if(files->IsFile(fullPath)) DoLoadFile(fullPath);
+	   else if(recursive) LoadFolder(fullPath, recursive);
+   }
 }
 
 // Load specifed asset file
 void LUNAAssets::Load(const std::string& path)
 {
-	LUNAFiles* files = LUNAEngine::SharedFiles();
+   LUNAFiles* files = LUNAEngine::SharedFiles();
 
-	auto name = files->SplitSuffix(path);
-	if(!name.second.empty())
-	{
-		LUNA_LOGE("Filename must be specifed without resolution suffix");
-		return;
-	}
+   auto name = files->SplitSuffix(path);
+   if(!name.second.empty())
+   {
+	   LUNA_LOGE("Filename must be specifed without resolution suffix");
+	   return;
+   }
 
-	// Try load file without current resolution suffix
-	if(files->IsFile(path))
-	{
-		DoLoadFile(path);
-		return;
-	}
+   // Try load file without current resolution suffix
+   if(files->IsFile(path))
+   {
+	   DoLoadFile(path);
+	   return;
+   }
 
-	std::string suffixPath = files->AppendSuffix(path, LUNAEngine::SharedSizes()->GetResolutionSuffix());
-	if(!files->IsFile(suffixPath))
-	{
-		LUNA_LOGE("File \"%s\" not found", path.c_str());
-		return;
-	}
+   std::string suffixPath = files->AppendSuffix(path, LUNAEngine::SharedSizes()->GetResolutionSuffix());
+   if(!files->IsFile(suffixPath))
+   {
+	   LUNA_LOGE("File \"%s\" not found", path.c_str());
+	   return;
+   }
 
-	// Try load file with suffix
-	DoLoadFile(suffixPath);
+   // Try load file with suffix
+   DoLoadFile(suffixPath);
 }
 
 // Unload specifed asset
 void LUNAAssets::Unload(const std::string& path)
 {
-	LuaTable parentTable = GetParentTableForPath(path);
-	std::string name = GetNameForPath(path);
+	if(path.empty() || path[path.size() - 1] == '/') return; // Do not unload folders
 
-	if(parentTable && parentTable.HasField(name))
-	{
-		auto asset = parentTable.GetField<std::shared_ptr<LUNAAsset>>(name);
-		asset->_KillLuaRef();
-		parentTable.RemoveField(name, true);
-	}
+	auto it = loadedAssets.find(path);
+	if(it != loadedAssets.end()) loadedAssets.erase(it);
 }
 
 // Unload all assets in given folder
 void LUNAAssets::UnloadFolder(const std::string& path)
 {
-	if(path.empty())
+	if(path.empty() || path[path.size() - 1] != '/') return; // Unload only folders
+
+	// Remove all assets having given path in id
+	auto it = loadedAssets.begin();
+	for(; it != loadedAssets.end();)
 	{
-		DoUnloadFolder(tblAssets);
-		return;
+		if(std::equal(path.begin(), path.end(), it->first.begin())) it = loadedAssets.erase(it);
+		else ++it;
 	}
 
-	LuaTable parentTable = GetParentTableForPath(path);
-	std::string name = GetNameForPath(path);
-
-	if(parentTable && parentTable.HasField(name))
-	{
-		DoUnloadFolder(parentTable.GetTable(name));
-		parentTable.RemoveField(name);
-	}
+	// Remove folder item
+	auto folderIt = loadedAssets.find(path);
+	if(folderIt != loadedAssets.end()) loadedAssets.erase(folderIt);
 }
 
 // Unload all assets
 void LUNAAssets::UnloadAll()
 {
-	UnloadFolder("");
-}
-
-// Get root table of asset tree
-LuaTable LUNAAssets::GetRootTable()
-{
-	return tblAssets;
+	loadedAssets.clear();
 }

@@ -22,41 +22,31 @@
 //-----------------------------------------------------------------------------
 
 #include "lunatextureatlasloader.h"
+#include "lunatextureloader.h"
 
 using namespace luna2d;
 
-bool LUNATextureAtlasLoader::Load(const std::string& filename)
+bool LUNATextureAtlasLoader::Load(const std::string& filename, const std::string& normalizedPath,
+	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets)
 {
+	auto texture = LUNATextureLoader::LoadTexture(filename);
+	if(!texture) return false;
+
 	// Description file for atlas has same name as image, just with different extension
 	std::string atlasPath = LUNAEngine::SharedFiles()->ReplaceExtension(filename, "atlas");
 
-	// Load texture
-	LUNATextureLoader textureLoader;
-	if(!textureLoader.Load(filename)) return false;
-	texture = textureLoader.GetTexture();
-
 	// Load texture atlas
-	atlas = std::make_shared<LUNATextureAtlas>(texture, atlasPath);
+	auto atlas = std::make_shared<LUNATextureAtlas>(texture, atlasPath);
 	if(!atlas->IsLoaded()) return false;
 
-#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
-	// Set reload path for texture
-	texture->SetReloadPath(filename);
-#endif
+	auto folderPath = normalizedPath + "/";
+	loadedAssets[folderPath] = texture;
+
+	for(auto entry : atlas->GetRegions())
+	{
+		auto regionPath = folderPath + entry.first;
+		loadedAssets[regionPath] = entry.second;
+	}
 
 	return true;
-}
-
-void LUNATextureAtlasLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
-{
-	// Make atlas table
-	LuaTable atlasTable(LUNAEngine::SharedLua());
-	atlasTable.MakeReadOnly();
-	parentTable.SetField(name, atlasTable, true);
-
-	// Add regions to asset table
-	for(auto entry : atlas->GetRegions()) atlasTable.SetField(entry.first, entry.second, true);
-
-	// Save texture in custom data of atlas table
-	LUNAEngine::SharedAssets()->SetCustomDataToTable(atlasTable, texture);
 }

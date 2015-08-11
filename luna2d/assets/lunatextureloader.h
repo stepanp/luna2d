@@ -29,13 +29,11 @@ namespace luna2d{
 
 class LUNATextureLoader : public LUNAAssetLoader
 {
-private:
-	std::shared_ptr<LUNATexture> texture;
-
 public:
-	std::shared_ptr<LUNATexture> GetTexture();
-	virtual bool Load(const std::string& filename);
-	virtual void PushToLua(const std::string& name, LuaTable& parentTable);
+	virtual bool Load(const std::string& filename, const std::string& normalizedPath,
+		std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets);
+
+	static std::shared_ptr<LUNATexture> LoadTexture(const std::string& filename);
 };
 
 }

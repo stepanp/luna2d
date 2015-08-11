@@ -23,20 +23,15 @@
 
 #pragma once
 
-#include "lunatextureloader.h"
 #include "lunatextureatlas.h"
 
 namespace luna2d{
 
 class LUNATextureAtlasLoader : public LUNAAssetLoader
 {
-private:
-	std::shared_ptr<LUNATextureAtlas> atlas;
-	std::shared_ptr<LUNATexture> texture;
-
 public:
-	virtual bool Load(const std::string& filename);
-	virtual void PushToLua(const std::string& name, LuaTable& parentTable);
+	virtual bool Load(const std::string& filename, const std::string& normalizedPath,
+		std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets);
 };
 
 }

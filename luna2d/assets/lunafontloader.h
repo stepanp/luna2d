@@ -29,12 +29,9 @@ namespace luna2d{
 
 class LUNAFontLoader : public LUNAAssetLoader
 {
-private:
-	std::unordered_map<std::string, std::shared_ptr<LUNAFont>> fonts;
-
 public:
-	virtual bool Load(const std::string& filename);
-	virtual void PushToLua(const std::string& name, LuaTable& parentTable);
+	virtual bool Load(const std::string& filename, const std::string& normalizedPath,
+		std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets);
 };
 
 }

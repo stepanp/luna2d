@@ -24,16 +24,16 @@
 #pragma once
 
 #include "lunaengine.h"
-#include "lunalua.h"
 #include "lunafiles.h"
+#include "lunasquirrel.h"
+
+#include "lunalua.h"
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 #include "lunaimage.h"
 #endif
 
 namespace luna2d{
-
-const std::string ASSET_CUSTOM_DATA_NAME = "_customData"; // Name of field in asset table with custom data
 
 //----------------------
 // Base class for assets
@@ -51,6 +51,7 @@ public:
 #endif
 };
 
+
 //-----------------------------
 // Base class for asset loaders
 //-----------------------------
@@ -60,9 +61,10 @@ public:
 	virtual ~LUNAAssetLoader() {}
 
 public:
-	virtual bool Load(const std::string& filename) = 0;
-	virtual void PushToLua(const std::string& name, LuaTable& parentTable) = 0;
+	virtual bool Load(const std::string& filename, const std::string& normalizedPath,
+		std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets) = 0;
 };
+
 
 //---------------
 // Assets manager
@@ -74,19 +76,13 @@ public:
 	~LUNAAssets();
 
 private:
-	LuaTable tblAssets; // Root table of asset tree in lua
+	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>> loadedAssets;
+	SqTable tblAssets;
 
 private:
-	// Get parent table for given asset path
-	// Returns nil if path not found
-	// if "autoMake" is true, automatically creates non-existent tables
-	LuaTable GetParentTableForPath(const std::string& path, bool autoMake = false);
-	std::string GetNameForPath(const std::string& path); // Get asset/folder name for path
 	bool IsIgnored(const std::string& path); // Check for given file should be ignored when loading
 	std::shared_ptr<LUNAAssetLoader> GetLoader(const std::string& path); // Get loader for given file
-
 	void DoLoadFile(const std::string& path);
-	void DoUnloadFolder(LuaTable table);
 
 public:
 	void LoadAll(); // Load all assets
@@ -96,26 +92,6 @@ public:
 	void UnloadFolder(const std::string& path); // Unload all assets in given folder
 	void UnloadAll(); // Unload all assets
 
-	LuaTable GetRootTable(); // Get root table of asset tree
-
-	// Get asset by path like "folder/folder/asset"
-	// If asset not fount or isn't instance of given "AssetType" class, return nullptr
-	template<typename AssetType>
-	std::weak_ptr<AssetType> GetAssetByPath(const std::string& path)
-	{
-		LuaTable parent = GetParentTableForPath(path);
-		if(!parent) return nullptr;
-
-		return parent.GetField<std::weak_ptr<AssetType>>(GetNameForPath(path));
-	}
-
-	// Helper for set custom data to asset table
-	template<typename DataType>
-	void SetCustomDataToTable(LuaTable& table, DataType& data)
-	{
-		LuaTable meta = table.GetMetatable();
-		meta.SetField(ASSET_CUSTOM_DATA_NAME, data);
-	}
 
 // On Android application may lost OpenGL context on pause
 // In that case we need reload all assets associated with this context(textures, shaders, etc.)

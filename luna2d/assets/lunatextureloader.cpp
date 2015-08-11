@@ -25,15 +25,21 @@
 
 using namespace luna2d;
 
-std::shared_ptr<LUNATexture> LUNATextureLoader::GetTexture()
+bool LUNATextureLoader::Load(const std::string& filename, const std::string& normalizedPath,
+	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>>& loadedAssets)
 {
-	return texture;
+	auto texture = LoadTexture(filename);
+	if(!texture) return false;
+
+	loadedAssets[normalizedPath] = texture;
+
+	return true;
 }
 
-bool LUNATextureLoader::Load(const std::string& filename)
+std::shared_ptr<LUNATexture> LUNATextureLoader::LoadTexture(const std::string& filename)
 {
-	std::string ext = LUNAEngine::SharedFiles()->GetExtension(filename);
 	std::unique_ptr<LUNAImageFormat> format;
+	std::string ext = LUNAEngine::SharedFiles()->GetExtension(filename);
 
 	// Select image format to decode
 	if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
@@ -44,17 +50,12 @@ bool LUNATextureLoader::Load(const std::string& filename)
 	if(image.IsEmpty()) return false;
 
 	// Make texture from image
-	texture = std::make_shared<LUNATexture>(image);
+	auto texture = std::make_shared<LUNATexture>(image);
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 	// Set reload path for texture
 	texture->SetReloadPath(filename);
 #endif
 
-	return true;
-}
-
-void LUNATextureLoader::PushToLua(const std::string& name, LuaTable& parentTable)
-{
-	parentTable.SetField(name, texture, true);
+	return texture;
 }
