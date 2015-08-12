@@ -98,7 +98,9 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	debug = new LUNADebug();
 
 	// Run main squirrel script
-	if(!squirrel->DoFile(SCRIPTS_PATH + "main.nut")) LUNA_RETURN_ERR("\"main.nut\" not found. Stop initializing");
+	auto filename = SCRIPTS_PATH + "main.nut";
+	if(!files->IsFile(filename)) LUNA_RETURN_ERR("\"main.nut\" not found. Stop initializing");
+	if(!squirrel->DoFile(filename)) LUNA_RETURN_ERR("Error loading \"main.nut\". Stop initializing");
 
 	initialized = true;
 }
