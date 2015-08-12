@@ -27,7 +27,7 @@
 
 using namespace luna2d;
 
-LUNATexture::LUNATexture(const LUNAImage& image) :
+LUNATexture::LUNATexture(const LUNAImage& image) : LUNAAsset(LUNAAssetType::TEXTURE),
 	width(image.GetWidth()),
 	height(image.GetHeight()),
 	colorType(image.GetColorType())

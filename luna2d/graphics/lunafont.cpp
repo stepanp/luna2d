@@ -25,7 +25,7 @@
 
 using namespace luna2d;
 
-LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size) :
+LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size) : LUNAAsset(LUNAAssetType::FONT),
 	texture(texture),
 	size(size)
 {

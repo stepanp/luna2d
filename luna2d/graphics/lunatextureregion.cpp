@@ -26,6 +26,7 @@
 using namespace luna2d;
 
 LUNATextureRegion::LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2) :
+	LUNAAsset(LUNAAssetType::TEXTURE_REGION),
 	texture(texture),
 	u1(u1),
 	v1(v1),
@@ -35,6 +36,7 @@ LUNATextureRegion::LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, 
 }
 
 LUNATextureRegion::LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, int x, int y, int width, int height) :
+	LUNAAsset(LUNAAssetType::TEXTURE_REGION),
 	texture(texture)
 {
 	auto sharedTexture = texture.lock();

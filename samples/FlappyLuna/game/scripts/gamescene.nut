@@ -3,7 +3,10 @@ class GameScene
 {
 	constructor()
 	{
+		spr = luna.graphics.Sprite(luna.assets["art/items/bg"])
 	}
+
+	spr = null
 
 	function onTouchDown(x, y, touchIndex)
 	{
@@ -26,5 +29,6 @@ class GameScene
 
 	function onRender()
 	{
+		spr.render()
 	}
 }

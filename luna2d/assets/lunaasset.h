@@ -23,18 +23,54 @@
 
 #pragma once
 
-#include <memory>
+#include "lunasquirrel.h"
 
 namespace luna2d{
 
-//----------------------------------------
-// Helper to make weak_ptr from shared_ptr
-//----------------------------------------
-template<typename T>
-std::weak_ptr<T> make_weak(const std::shared_ptr<T>& shared)
+enum class LUNAAssetType
 {
-	std::weak_ptr<T> weak(shared);
-	return std::move(weak);
-}
+	TEXTURE,
+	TEXTURE_REGION,
+	FONT
+};
+
+
+//----------------------
+// Base class for assets
+//----------------------
+class LUNAAsset
+{
+public:
+	LUNAAsset(LUNAAssetType type);
+	virtual ~LUNAAsset() {}
+
+protected:
+	LUNAAssetType type;
+
+public:
+	LUNAAssetType GetType();
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	virtual void Reload() {} // Reload asset data
+#endif
+};
+
+
+// On squiirel side, assets in most cases using as weak_ptr
+// So, SqStack specialization for std::shared_ptr<LUNAAsset> is not need
+template<>
+struct SqStack<std::shared_ptr<LUNAAsset>>
+{
+	static void Push(HSQUIRRELVM vm, const std::shared_ptr<LUNAAsset>& value) = delete;
+	static std::shared_ptr<LUNAAsset> Get(HSQUIRRELVM vm, int index = -1) = delete;
+};
+
+
+template<>
+struct SqStack<std::weak_ptr<LUNAAsset>>
+{
+	static void Push(HSQUIRRELVM vm, const std::weak_ptr<LUNAAsset>& value);
+	static std::weak_ptr<LUNAAsset> Get(HSQUIRRELVM vm, int index = -1);
+};
 
 }

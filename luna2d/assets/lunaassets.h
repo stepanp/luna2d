@@ -23,32 +23,14 @@
 
 #pragma once
 
-#include "lunaengine.h"
+#include "lunaasset.h"
 #include "lunafiles.h"
-#include "lunasquirrel.h"
-
-#include "lunalua.h"
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 #include "lunaimage.h"
 #endif
 
 namespace luna2d{
-
-//----------------------
-// Base class for assets
-//----------------------
-class LUNAAsset
-{
-public:
-	virtual ~LUNAAsset() {}
-
-#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
-public:
-	virtual void Reload() {} // Reload asset data
-#endif
-};
-
 
 //-----------------------------
 // Base class for asset loaders
