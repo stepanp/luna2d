@@ -59,34 +59,6 @@ void BindLog(SqVm* sq, SqTable& tblLuna)
 	tblLog.SetDelegate(tblDelegate);
 }
 
-
-// Bind "luna.log" module
-void BindLog(LuaScript* lua, LuaTable& tblLuna)
-{
-	LuaTable tblLog(lua);
-	tblLuna.SetField("log", tblLog);
-
-	// Register "info", "warning", "error" functions in "luna.log" table
-	tblLog.SetField("info", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::InfoString));
-	tblLog.SetField("warning", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::WarningString));
-	tblLog.SetField("error", LuaFunction(lua, LUNAEngine::SharedLog(), &LUNALog::ErrorString));
-
-	// Use "__call" metamethod of "luna.log" table as alias for "info" function
-	// i.e. luna.log("message") = luna.log.info("message")
-	LuaTable metaLog(lua);
-	std::function<void(LuaNil, const std::string&)> proxy = [](LuaNil, const std::string& msg)
-	{
-		LUNAEngine::SharedLog()->InfoString(msg);
-	};
-	metaLog.SetField("__call", LuaFunction(lua, proxy));
-	tblLog.SetMetatable(metaLog);
-
-	// Register "table" function
-	// "table" function for simplicity implemented as embedded script
-	// SEE: "lua/scripts/logtable.lua.h"
-	lua->DoString(LUNA_LUA_LOG_TABLE);
-}
-
 // Bind "luna.utilss" module
 void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 {
@@ -211,9 +183,9 @@ void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.platform" module
-void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
+void BindPlatform(SqVm* vm, SqTable& tblLuna)
 {
-	tblLuna.SetField("platform", LUNA_PLATFORM_STRING);
+	tblLuna.NewSlot("platform", LUNA_PLATFORM_STRING);
 }
 
 // Bind "luna.prefs" module
@@ -318,18 +290,5 @@ void luna2d::DoBindings()
 	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
 	BindLog(sq, tblLuna);
-
-	{
-		LuaScript* lua = LUNAEngine::SharedLua();
-		LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-
-		BindLog(lua, tblLuna);
-		BindUtils(lua, tblLuna);
-		BindMath(lua, tblLuna);
-		BindIntersect(lua, tblLuna);
-		BindSplines(lua, tblLuna);
-		BindEasing(lua, tblLuna);
-		BindPlatform(lua, tblLuna);
-		BindPrefs(lua, tblLuna);
-	}
+	BindPlatform(sq, tblLuna);
 }

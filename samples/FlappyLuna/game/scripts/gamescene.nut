@@ -12,8 +12,6 @@ class GameScene
 		sprGameOver = luna.graphics.Sprite(luna.assets["art/items/gameover"])
 		sprGameOver.setOriginToCenter()
 		sprGameOver.setPos(luna.sizes.getScreenWidth() / 2, luna.sizes.getScreenHeight() / 2)
-
-		gameOver = true
 	}
 
 	bg = null
