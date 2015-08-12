@@ -29,8 +29,6 @@ namespace luna2d{
 
 class LUNATextureRegion : public LUNAAsset
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATextureRegion)
-
 public:
 	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2);
 	LUNATextureRegion(const std::weak_ptr<LUNATexture>& texture, int x, int y, int width, int height);

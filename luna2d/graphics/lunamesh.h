@@ -24,14 +24,11 @@
 #pragma once
 
 #include "lunatexture.h"
-#include "lunalua.h"
 
 namespace luna2d{
 
 class LUNAMesh
 {
-	LUNA_USERDATA(LUNAMesh)
-
 public:
 	LUNAMesh(const std::weak_ptr<LUNATexture>& texture);
 

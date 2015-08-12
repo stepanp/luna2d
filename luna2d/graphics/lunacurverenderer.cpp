@@ -26,11 +26,11 @@
 
 using namespace luna2d;
 
-LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
+LUNACurveRenderer::LUNACurveRenderer(const SqTable& params)
 {
 	if(!params) LUNA_RETURN_ERR("Attempt to create curve renderer with invalid params table");
 
-	texture = params.GetField<std::weak_ptr<LUNATexture>>("texture");
+	texture = params.GetSlot<std::weak_ptr<LUNATexture>>("texture");
 	u1 = params.GetFloat("u1");
 	v1 = params.GetFloat("v1");
 	u2 = params.GetFloat("u2");
@@ -38,8 +38,8 @@ LUNACurveRenderer::LUNACurveRenderer(const LuaTable& params)
 	verticalTexture = params.GetBool("verticalTexture");
 	width = params.GetFloat("width");
 
-	if(params.HasField("color")) color = params.GetField<LUNAColor>("color");
-	if(params.HasField("alpha")) color.a = params.GetFloat("alpha");
+	if(params.HasSlot("color")) color = params.GetSlot<LUNAColor>("color");
+	if(params.HasSlot("alpha")) color.a = params.GetFloat("alpha");
 
 	mesh = std::unique_ptr<LUNAMesh>(new LUNAMesh(texture));
 	needBuild = true;

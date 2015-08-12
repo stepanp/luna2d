@@ -220,4 +220,40 @@ public:
 };
 
 
+template<typename Class, typename ... Args>
+class SqClassProxy<void, Class, Args ...>
+{
+	typedef SqClassProxy<void, Class, Args...> Proxy;
+	typedef void (Class::*Method)(Args ...);
+
+public:
+	SqClassProxy(Method method) : method(method) {}
+
+private:
+	Method method;
+
+public:
+	static SQInteger Callback(HSQUIRRELVM vm)
+	{
+		std::weak_ptr<Class> ptr = SqStack<std::weak_ptr<Class>>::Get(vm, 1);
+		if(ptr.expired()) return sq_throwerror(vm, "Attempt to call method for invalid instance");
+
+		SQUserPointer proxyPtr = nullptr;
+		sq_getuserdata(vm, -1, &proxyPtr, nullptr);
+		if(!proxyPtr) return sq_throwerror(vm, "Attempt to call method with invalid proxy");
+
+		Proxy* proxy = *static_cast<Proxy**>(proxyPtr);
+		Call(vm, ptr.lock().get(), proxy, LUNAMakeIndexList<Args...>());
+
+		return 0;
+	}
+
+	template<size_t ... Index>
+	static void Call(HSQUIRRELVM vm, Class* obj, Proxy* proxy, LUNAIndexList<Index...>)
+	{
+		(obj->*proxy->method)(SqStack<Args>::Get(vm, Index + 2)...);
+	}
+};
+
+
 }

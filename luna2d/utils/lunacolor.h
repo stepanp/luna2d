@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include "lunasquirrel.h"
 #include "lunalua.h"
 
 namespace luna2d{
@@ -54,6 +55,31 @@ public:
 
 	// Frequently used colors
 	static LUNAColor WHITE, BLACK, GRAY, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE;
+};
+
+
+template<>
+struct SqStack<LUNAColor>
+{
+	inline static void Push(HSQUIRRELVM vm, const LUNAColor& color)
+	{
+		SqArray arrColor(vm);
+		arrColor.AppendValue<int>(color.GetR());
+		arrColor.AppendValue<int>(color.GetG());
+		arrColor.AppendValue<int>(color.GetB());
+		SqStack<SqArray>::Push(vm, arrColor);
+	}
+
+	inline static LUNAColor Get(HSQUIRRELVM vm, int index = -1)
+	{
+		SqArray arrColor = SqStack<SqArray>::Get(vm, index);
+		if(arrColor.IsNull() || arrColor.GetCount() != 3) return LUNAColor();
+
+		unsigned char r = (unsigned char)arrColor.GetInt(0);
+		unsigned char g = (unsigned char)arrColor.GetInt(1);
+		unsigned char b = (unsigned char)arrColor.GetInt(2);
+		return LUNAColor::Rgb(r, g, b);
+	}
 };
 
 

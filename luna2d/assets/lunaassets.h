@@ -40,8 +40,6 @@ namespace luna2d{
 //----------------------
 class LUNAAsset
 {
-	LUNA_USERDATA(LUNAAsset)
-
 public:
 	virtual ~LUNAAsset() {}
 
@@ -76,8 +74,8 @@ public:
 	~LUNAAssets();
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>> loadedAssets;
-	SqTable tblAssets;
+	std::unordered_map<std::string, std::shared_ptr<LUNAAsset>> loadedAssets; // Map of all loaded assets. 
+	SqTable tblAssets; // Proxy table for access to assets from squirrel
 
 private:
 	bool IsIgnored(const std::string& path); // Check for given file should be ignored when loading

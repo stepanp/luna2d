@@ -32,8 +32,6 @@ namespace luna2d{
 //----------------
 class LUNAAnimation : public LUNASprite
 {
-	LUNA_USERDATA_DERIVED(LUNASprite, LUNAAnimation)
-
 	typedef std::vector<std::weak_ptr<LUNATextureRegion>> FramesList;
 
 public:

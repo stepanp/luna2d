@@ -35,10 +35,8 @@ const float CURVE_SMOOTH_FACTOR = 0.5f;
 //-------------------------------------
 class LUNACurveRenderer
 {
-	LUNA_USERDATA(LUNACurveRenderer)
-
 public:
-	LUNACurveRenderer(const LuaTable& params);
+	LUNACurveRenderer(const SqTable& params);
 
 private:
 	std::unique_ptr<LUNAMesh> mesh;

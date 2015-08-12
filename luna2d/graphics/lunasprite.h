@@ -25,18 +25,16 @@
 
 #include "lunatextureregion.h"
 #include "lunacolor.h"
-#include "lunalua.h"
+#include "lunasquirrel.h"
 #include "lunavector2.h"
 
 namespace luna2d{
 
 class LUNASprite
 {
-	LUNA_USERDATA(LUNASprite)
-
 public:
 	LUNASprite();
-	LUNASprite(const LuaAny& asset); // Lua constructor
+	LUNASprite(const SqAny& asset); // Lua constructor
 	LUNASprite(const std::weak_ptr<LUNATexture>& texture);
 	LUNASprite(const std::weak_ptr<LUNATextureRegion>& region);
 

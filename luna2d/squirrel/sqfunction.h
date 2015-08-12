@@ -141,7 +141,7 @@ public:
 
 		PushProxy(vm, new SqClassProxy<Ret,Class,Args...>( method));
 		sq_newclosure(vm, &SqClassProxy<Ret,Class,Args...>::Callback, 1);
-		//sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
+		sq_setparamscheck(vm, sizeof...(Args) + 1, nullptr);
 
 		ref = std::make_shared<SqRef>(vm, -1);
 		sq_pop(vm, 1); // Pop function from stack

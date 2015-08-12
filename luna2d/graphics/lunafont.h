@@ -29,8 +29,6 @@ namespace luna2d{
 
 class LUNAFont : public LUNAAsset
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
-
 public:
 	LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size);
 

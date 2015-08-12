@@ -30,8 +30,6 @@ namespace luna2d{
 
 class LUNAText
 {
-	LUNA_USERDATA(LUNAText)
-
 public:
 	LUNAText(const std::weak_ptr<LUNAFont>& font);
 

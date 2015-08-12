@@ -32,8 +32,6 @@ namespace luna2d{
 
 class LUNATexture : public LUNAAsset
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATexture)
-
 public:
 	LUNATexture(const LUNAImage& image);
 	virtual ~LUNATexture();
@@ -59,6 +57,7 @@ public:
 	bool IsValid(); // Check for texture is valid. Can be invalid after loss GL context
 	void Bind();
 	void Unbind();
+
 
 // Reload texture when application lost OpenGL context
 // SEE: "lunaassets.h"
