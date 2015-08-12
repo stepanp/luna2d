@@ -136,4 +136,43 @@ struct SqStack<SqArray> : public SqStack<SqObject>
 	}
 };
 
+
+template<typename T>
+struct SqStack<std::vector<T>>
+{
+	inline static void Push(HSQUIRRELVM vm, const std::vector<T>& value)
+	{
+		sq_newarray(vm, value.size());
+
+		for(size_t i = 0; i < value.size(); i++)
+		{
+			SqStack<int>::Push(vm, i);
+			SqStack<T>::Push(vm, value[i]);
+			sq_rawset(vm, -3);
+		}
+	}
+
+	inline static std::vector<T> Get(HSQUIRRELVM vm, int index = -1)
+	{
+		if(sq_gettype(vm, index) != OT_ARRAY) return std::vector<T>();
+
+		size_t size = sq_getsize(vm, index);
+		std::vector<T> ret;
+		ret.reserve(size);
+
+		sq_push(vm, index); // Copy ref to array to top of stack
+		for(size_t i = 0; i < size; i++)
+		{
+			SqStack<int>::Push(vm, i);
+			sq_rawget(vm, -2);
+			ret.push_back(SqStack<T>::Get(vm, -1));
+			sq_pop(vm, 1); // Pop value from stack
+		}
+
+		sq_pop(vm, 1); // Pop copy of ref to array from stack
+
+		return ret;
+	}
+};
+
 }
