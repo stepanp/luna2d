@@ -81,7 +81,7 @@ public:
 	{
 		if(typeTag != 0 || cls.GetType() != OT_CLASS) return;
 
-		typeTag = (SqTypeTags::counter++) + 1; // Because 0 is invalid typeTag
+		typeTag = ++SqTypeTags::counter; // Because 0 is invalid typeTag
 		SqTypeTags::cleaners.push_back(&ResetTypeTag);
 
 		sq_pushregistrytable(*vm);
