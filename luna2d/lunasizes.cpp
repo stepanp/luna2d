@@ -23,7 +23,7 @@
 
 #include "lunasizes.h"
 #include "lunaconfig.h"
-#include "lunalua.h"
+#include "lunasquirrel.h"
 #include <cmath>
 #include <cfloat>
 
@@ -68,27 +68,27 @@ LUNASizes::LUNASizes(int screenWidth, int screenHeight, LUNAConfig* config)
 	textureScale = BASE_SIZE / (float)LUNASizes::GetHeightForResolution(resolutionSuffix);
 	BuildTransformMatrix();
 
-	LuaScript *lua = LUNAEngine::SharedLua();
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+	SqVm *sq = LUNAEngine::SharedSquirrel();
+	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
-	LuaTable tblSizes(lua);
-	LuaFunction fnGetVirtualWidth(lua, this, &LUNASizes::GetVirtualScreenWidth);
-	LuaFunction fnGetVirtualHeight(lua, this, &LUNASizes::GetVirtualScreenHeight);
+	SqTable tblSizes(sq);
+	SqFunction fnGetVirtualWidth(sq, this, &LUNASizes::GetVirtualScreenWidth);
+	SqFunction fnGetVirtualHeight(sq, this, &LUNASizes::GetVirtualScreenHeight);
 
-	tblSizes.SetField("getResolutionName", LuaFunction(lua, this, &LUNASizes::GetResolutionSuffix));
-	tblSizes.SetField("getAspectRatio", LuaFunction(lua, this, &LUNASizes::GetAspectRatio));
-	tblSizes.SetField("getPhysicalScreenWidth", LuaFunction(lua, this, &LUNASizes::GetPhysicalScreenWidth));
-	tblSizes.SetField("getPhysicalScreenHeight", LuaFunction(lua, this, &LUNASizes::GetPhysicalScreenHeight));
-	tblSizes.SetField("getVirtualScreenWidth", fnGetVirtualWidth);
-	tblSizes.SetField("getVirtualScreenHeight", fnGetVirtualHeight);
-	tblSizes.SetField("getBaseScreenWidth", LuaFunction(lua, this, &LUNASizes::GetBaseScreenWidth));
-	tblSizes.SetField("getBaseScreenHeight", LuaFunction(lua, this, &LUNASizes::GetBaseScreenHeight));
+	tblSizes.NewSlot("getResolutionName", SqFunction(sq, this, &LUNASizes::GetResolutionSuffix));
+	tblSizes.NewSlot("getAspectRatio", SqFunction(sq, this, &LUNASizes::GetAspectRatio));
+	tblSizes.NewSlot("getPhysicalScreenWidth", SqFunction(sq, this, &LUNASizes::GetPhysicalScreenWidth));
+	tblSizes.NewSlot("getPhysicalScreenHeight", SqFunction(sq, this, &LUNASizes::GetPhysicalScreenHeight));
+	tblSizes.NewSlot("getVirtualScreenWidth", fnGetVirtualWidth);
+	tblSizes.NewSlot("getVirtualScreenHeight", fnGetVirtualHeight);
+	tblSizes.NewSlot("getBaseScreenWidth", SqFunction(sq, this, &LUNASizes::GetBaseScreenWidth));
+	tblSizes.NewSlot("getBaseScreenHeight", SqFunction(sq, this, &LUNASizes::GetBaseScreenHeight));
 
 	// getScreenWidth/getScreenHeight is aliases for getVirtualScreenWidth/getVirtualScreenHeight
-	tblSizes.SetField("getScreenWidth", fnGetVirtualWidth);
-	tblSizes.SetField("getScreenHeight", fnGetVirtualHeight);
+	tblSizes.NewSlot("getScreenWidth", fnGetVirtualWidth);
+	tblSizes.NewSlot("getScreenHeight", fnGetVirtualHeight);
 
-	tblLuna.SetField("sizes", tblSizes);
+	tblLuna.NewSlot("sizes", tblSizes);
 }
 
 void LUNASizes::SelectResolution(LUNAConfig *config)

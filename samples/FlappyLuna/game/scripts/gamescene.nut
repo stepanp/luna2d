@@ -1,15 +1,35 @@
 
+require("background")
+require("bird")
+
 class GameScene
 {
 	constructor()
 	{
-		spr = luna.graphics.Sprite(luna.assets["art/items/bg"])
+		bg = Background()
+		bird = Bird()
+
+		sprGameOver = luna.graphics.Sprite(luna.assets["art/items/gameover"])
+		sprGameOver.setOriginToCenter()
+		sprGameOver.setPos(luna.sizes.getScreenWidth() / 2, luna.sizes.getScreenHeight() / 2)
+
+		gameOver = true
 	}
 
-	spr = null
+	bg = null
+	bird = null
+	sprGameOver = null
+	gameOver = false
 
 	function onTouchDown(x, y, touchIndex)
 	{
+		if(touchIndex > 0) return;
+
+		if(gameOver) 
+		{
+			luna.scenes.setScene(GameScene())
+			return;
+		}
 
 	}
 
@@ -29,6 +49,9 @@ class GameScene
 
 	function onRender()
 	{
-		spr.render()
+		bg.render()
+		bird.render()
+
+		if(gameOver) sprGameOver.render()
 	}
 }
