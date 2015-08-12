@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include "lunamodule.h"
 #include "lunavector2.h"
 
 //-----------------

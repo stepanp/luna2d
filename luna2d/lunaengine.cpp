@@ -37,11 +37,9 @@
 #include "lunamath.h"
 #include "lunabindings.h"
 
-#include "modules/lunamoduleslist.h"
-
 using namespace luna2d;
 
-LUNAEngine::LUNAEngine() : modules(modulesList)
+LUNAEngine::LUNAEngine()
 {
 }
 
@@ -85,10 +83,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	SqTable tblLuna(squirrel);
 	squirrel->GetRootTable().NewSlot("luna", tblLuna);
 	
-	math::InitializeRandom();
-	RunEmbeddedScripts();
 	DoBindings();
-	LoadModules();
 
 	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
 	assets = new LUNAAssets();
@@ -107,8 +102,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 
 void LUNAEngine::Deinitialize()
 {
-	UnloadModules();
-
 	config.reset();
 
 	delete assets;
@@ -147,23 +140,6 @@ std::shared_ptr<LUNAConfig> LUNAEngine::GetConfig()
 std::string LUNAEngine::GetGameName()
 {
 	return config->gameName;
-}
-
-void LUNAEngine::LoadModules()
-{
-	// Load all modules
-	for(auto& module : modules) module.second->Load(lua);
-}
-
-void LUNAEngine::UnloadModules()
-{
-	for(auto& module : modules) module.second->Unload();
-}
-
-void LUNAEngine::RunEmbeddedScripts()
-{
-	lua->DoString(LUNA_LUA_OOP_SUPPORT);
-	lua->DoString(LUNA_LUA_USERDATA_PAIRS);
 }
 
 bool LUNAEngine::IsInitialized()

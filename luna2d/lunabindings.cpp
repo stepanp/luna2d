@@ -101,6 +101,8 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 // Bind extension for standard lua "math" module
 void BindMath(LuaScript* lua, LuaTable& tblLuna)
 {
+	math::InitializeRandom();
+
 	// Register additional math functions in standard lua "math" module
 	LuaTable tblMath = lua->GetGlobalTable().GetTable("math");
 

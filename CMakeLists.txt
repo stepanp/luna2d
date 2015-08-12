@@ -43,10 +43,9 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}/assets
 	${LUNA2D_DIR}/graphics
 	${LUNA2D_DIR}/graphics/shaders
-	${LUNA2D_DIR}/modules
-	${LUNA2D_DIR}/physics
-	${LUNA2D_DIR}/physics/shapes
-	${LUNA2D_DIR}/physics/joints
+	#${LUNA2D_DIR}/physics
+	#${LUNA2D_DIR}/physics/shapes
+	#${LUNA2D_DIR}/physics/joints
 	${LUNA2D_DIR}/platform
 	${LUNA2D_DIR}/utils
 	${LUNA2D_DIR}/utils/math
