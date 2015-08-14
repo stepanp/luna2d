@@ -24,7 +24,7 @@
 #pragma once
 
 #include "lunamesh.h"
-#include "lunavector2.h"
+#include "lunavec2.h"
 
 namespace luna2d{
 

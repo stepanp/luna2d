@@ -26,7 +26,7 @@
 #include "lunatextureregion.h"
 #include "lunacolor.h"
 #include "lunasquirrel.h"
-#include "lunavector2.h"
+#include "lunavec2.h"
 
 namespace luna2d{
 

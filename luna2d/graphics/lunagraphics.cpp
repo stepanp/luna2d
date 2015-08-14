@@ -63,7 +63,7 @@ LUNAGraphics::LUNAGraphics()
 	clsSprite.BindMethod("getY", &LUNASprite::GetY);
 	clsSprite.BindMethod("setX", &LUNASprite::SetX);
 	clsSprite.BindMethod("setY", &LUNASprite::SetY);
-	//clsSprite.BindMethod("getPos", &LUNASprite::GetPos);
+	clsSprite.BindMethod("getPos", &LUNASprite::GetPos);
 	clsSprite.BindMethod("setPos", &LUNASprite::SetPos);
 	clsSprite.BindMethod("getWidth", &LUNASprite::GetWidth);
 	clsSprite.BindMethod("getHeight", &LUNASprite::GetHeight);
@@ -92,10 +92,10 @@ LUNAGraphics::LUNAGraphics()
 
 	// Register animation
 	SqClass<LUNAAnimation, LUNASprite> clsAnimation(sq);
-	//clsAnimation.BindConstructor<const std::vector<std::weak_ptr<LUNATextureRegion>>&, float>();
+	clsAnimation.BindConstructor<const std::vector<std::weak_ptr<LUNATextureRegion>>&, float>();
 	clsAnimation.BindMethod("getFramesCount", &LUNAAnimation::GetFramesCount);
-	//clsAnimation.BindMethod("getFrames", &LUNAAnimation::GetFrames);
-	//clsAnimation.BindMethod("setFrames", &LUNAAnimation::SetFrames);
+	clsAnimation.BindMethod("getFrames", &LUNAAnimation::GetFrames);
+	clsAnimation.BindMethod("setFrames", &LUNAAnimation::SetFrames);
 	clsAnimation.BindMethod("getFrameTime", &LUNAAnimation::GetFrameTime);
 	clsAnimation.BindMethod("setFrameTime", &LUNAAnimation::SetFrameTime);
 	clsAnimation.BindMethod("getCurFrame", &LUNAAnimation::GetCurFrame);
@@ -124,7 +124,7 @@ LUNAGraphics::LUNAGraphics()
 	clsText.BindMethod("getY", &LUNAText::GetY);
 	clsText.BindMethod("setX", &LUNAText::SetX);
 	clsText.BindMethod("setY", &LUNAText::SetY);
-	//clsText.BindMethod("getPos", &LUNAText::GetPos);
+	clsText.BindMethod("getPos", &LUNAText::GetPos);
 	clsText.BindMethod("setPos", &LUNAText::SetPos);
 	clsText.BindMethod("setColor", &LUNAText::SetColor);
 	clsText.BindMethod("getColor", &LUNAText::GetColor);
@@ -143,7 +143,7 @@ LUNAGraphics::LUNAGraphics()
 	clsCurveRenderer.BindMethod("addKnot", &LUNACurveRenderer::AddKnot);
 	clsCurveRenderer.BindMethod("removeKnot", &LUNACurveRenderer::RemoveKnot);
 	clsCurveRenderer.BindMethod("setKnot", &LUNACurveRenderer::SetKnot);
-	//clsCurveRenderer.BindMethod("setKnots", &LUNACurveRenderer::SetKnots);
+	clsCurveRenderer.BindMethod("setKnots", &LUNACurveRenderer::SetKnots);
 	clsCurveRenderer.BindMethod("getColor", &LUNACurveRenderer::GetColor);
 	clsCurveRenderer.BindMethod("setColor", &LUNACurveRenderer::SetColor);
 	clsCurveRenderer.BindMethod("getAlpha", &LUNACurveRenderer::GetAlpha);
