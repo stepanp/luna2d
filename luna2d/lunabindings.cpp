@@ -29,6 +29,7 @@
 #include "lunatimer.h"
 #include "lunaanimator.h"
 #include "math/lunamath.h"
+#include "math/lunavec2.h"
 #include "math/lunavector2.h"
 #include "math/lunarect.h"
 #include "math/lunaintersect.h"
@@ -98,47 +99,21 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	tblUtils.SetField("Animator", clsAnimator);
 }
 
-// Bind extension for standard lua "math" module
-void BindMath(LuaScript* lua, LuaTable& tblLuna)
+// Bind "luna.math" module
+void BindMath(SqVm* sq, SqTable& tblLuna)
 {
 	math::InitializeRandom();
 
-	// Register additional math functions in standard lua "math" module
-	LuaTable tblMath = lua->GetGlobalTable().GetTable("math");
+	SqTable tblMath(sq);
+	tblLuna.NewSlot("math", tblMath);
 
-	tblMath.SetField("frandom", LuaFunction(lua, &math::RandomFloat));
-	tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
-	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
+	//tblMath.SetField("frandom", LuaFunction(lua, &math::RandomFloat));
+	//tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
+	//tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 
-	// Register metatable for "Vector2"
-	luaL_newmetatable(*lua, VECTOR2_METATABLE_NAME.c_str());
-	LuaTable tblVector2(*lua, luaL_ref(*lua, LUA_REGISTRYINDEX));
-	tblVector2.SetField("__index", tblVector2);
-	tblVector2.SetField("add", &LuaVector2::Add);
-	tblVector2.SetField("sub", &LuaVector2::Sub);
-	tblVector2.SetField("scale", &LuaVector2::Scale);
-	tblVector2.SetField("rotate", &LuaVector2::Rotate);
-	tblVector2.SetField("nor", &LuaVector2::Nor);
-	tblVector2.SetField("perp", &LuaVector2::Perp);
-	tblVector2.SetField("angle", &LuaVector2::Angle);
-	tblVector2.SetField("len", &LuaVector2::Len);
-	tblVector2.SetField("lenSqr", &LuaVector2::LenSqr);
-	tblVector2.SetField("dist", &LuaVector2::Dist);
-	tblVector2.SetField("distSqr", &LuaVector2::DistSqr);
-	tblVector2.SetField("cross", &LuaVector2::Cross);
-	tblVector2.SetField("dot", &LuaVector2::Dot);
-	tblVector2.SetField("copy", &LuaVector2::Copy);
-	tblMath.SetField("Vector2", tblVector2);
-
-	LuaTable metaVector2(lua);
-	metaVector2.SetField("__call", &LuaVector2::Construct);
-	tblVector2.SetMetatable(metaVector2);
-
-	// Register constructor for "Rect"
-	tblMath.SetField("Rect", LUNARect::LuaConstruct);
-
-	// Set "luna.math" as alias for standard "math" module
-	tblLuna.SetField("math", tblMath);
+	// Bind math primitives
+	BindVec2(sq, tblMath);
+	//BindRect(sq, tblMath);
 }
 
 // Bind "luna.intersect" module
@@ -292,5 +267,6 @@ void luna2d::DoBindings()
 	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
 	BindLog(sq, tblLuna);
+	BindMath(sq, tblLuna);
 	BindPlatform(sq, tblLuna);
 }
