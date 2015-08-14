@@ -58,6 +58,8 @@ public:
 		Bind<Ret,Class,Args...>(obj, method);
 	}
 
+	SqFunction(SqVm* vm, SQFUNCTION func, int nparams = -1);
+
 private:
 	SqFunction(const std::shared_ptr<SqRef>& ref);
 
@@ -102,6 +104,7 @@ public:
 	void Bind(const std::function<Ret(Args ...)>& func)
 	{
 		HSQUIRRELVM vm = ref->GetVm();
+		if(!vm) return;
 
 		PushProxy(vm, new SqFunctionProxy<Ret,Args...>(func));
 		sq_newclosure(vm, &SqFunctionProxy<Ret,Args...>::Callback, 1);
@@ -115,6 +118,8 @@ public:
 	template<typename Ret, typename ... Args>
 	void Bind(Ret(*ptr)(Args ...))
 	{
+		if(!ref->GetVm()) return;
+
 		std::function<Ret(Args...)> func = ptr;
 		Bind(func);
 	}
@@ -124,6 +129,7 @@ public:
 	void Bind(Class* obj, Ret (Class::*method)(Args ...))
 	{
 		HSQUIRRELVM vm = ref->GetVm();
+		if(!vm) return;
 
 		PushProxy(vm, new SqMethodProxy<Ret,Class,Args...>(obj, method));
 		sq_newclosure(vm, &SqMethodProxy<Ret,Class,Args...>::Callback, 1);
@@ -138,6 +144,7 @@ public:
 	void Bind(Ret (Class::*method)(Args ...))
 	{
 		HSQUIRRELVM vm = ref->GetVm();
+		if(!vm) return;
 
 		PushProxy(vm, new SqClassProxy<Ret,Class,Args...>( method));
 		sq_newclosure(vm, &SqClassProxy<Ret,Class,Args...>::Callback, 1);
@@ -147,10 +154,15 @@ public:
 		sq_pop(vm, 1); // Pop function from stack
 	}
 
+	// Bind native squirrel closure
+	void Bind(SQFUNCTION func, int nparams = -1);
+
 	// Call function and get return value
 	template<typename Ret, typename ... Args>
 	Ret Call(const Args& ... args) const
 	{
+		if(IsNull()) return Ret();
+
 		return CallWithEnv<Ret>(nullptr, args...);
 	}
 
@@ -158,6 +170,8 @@ public:
 	template<typename ... Args>
 	void Call(const Args& ... args) const
 	{
+		if(IsNull()) return;
+
 		CallWithEnv(nullptr, args...);
 	}
 

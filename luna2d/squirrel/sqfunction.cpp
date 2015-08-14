@@ -31,6 +31,24 @@ SqFunction::SqFunction(HSQUIRRELVM vm) : SqObject(vm) {}
 SqFunction::SqFunction(const SqFunction& fn) : SqObject(fn.GetRef()) {}
 SqFunction::SqFunction(const std::shared_ptr<SqRef>& ref) : SqObject(ref) {}
 
+SqFunction::SqFunction(SqVm* vm, SQFUNCTION func, int nparams) : SqFunction(vm)
+{
+	Bind(func, nparams);
+}
+
+// Bind native squirrel closure
+void SqFunction::Bind(SQFUNCTION func, int nparams)
+{
+	HSQUIRRELVM vm = ref->GetVm();
+	if(!vm) return;
+
+	sq_newclosure(vm, func, 0);
+	if(nparams != 0) sq_setparamscheck(vm, nparams, nullptr);
+
+	ref = std::make_shared<SqRef>(vm, -1);
+	sq_pop(vm, 1); // Pop function from stack
+}
+
 SqFunction& SqFunction::operator=(const SqFunction& fn)
 {
 	ref = fn.GetRef();

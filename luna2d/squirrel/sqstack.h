@@ -77,21 +77,10 @@ struct SqStack<SQFloat>
 
 	inline static SQFloat Get(HSQUIRRELVM vm, int index = -1)
 	{
-		if(sq_gettype(vm, index) == OT_FLOAT)
-		{
-			SQFloat ret;
-			sq_getfloat(vm, index, &ret);
-			return ret;
-		}
+		SQFloat ret = 0;
+		sq_getfloat(vm, index, &ret);
 
-		else if(sq_gettype(vm, index) == OT_INTEGER)
-		{
-			SQInteger ret;
-			sq_getinteger(vm, index, &ret);
-			return static_cast<SQFloat>(ret);
-		}
-
-		return 0;
+		return ret;
 	}
 };
 
@@ -160,6 +149,15 @@ struct SqStack<std::nullptr_t>
 	inline static std::nullptr_t Get(HSQUIRRELVM vm, int index = -1)
 	{
 		return std::nullptr_t();
+	}
+};
+
+template<>
+struct SqStack<SQFUNCTION>
+{
+	inline static void Push(HSQUIRRELVM vm, SQFUNCTION value)
+	{
+		sq_newclosure(vm, value, 0);
 	}
 };
 
