@@ -25,9 +25,9 @@
 
 using namespace luna2d;
 
-int Constructor(HSQUIRRELVM vm)
+static int Constructor(HSQUIRRELVM vm)
 {
-	int argsCount = sq_gettop(vm);
+	static int argsCount = sq_gettop(vm);
 
 	// Make empty vector
 	if(argsCount == 1) SqStack<glm::vec2>::Push(vm, glm::vec2());
@@ -49,7 +49,7 @@ int Constructor(HSQUIRRELVM vm)
 }
 
 // Add given vector to this vector
-int Add(HSQUIRRELVM vm)
+static int Add(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -60,7 +60,7 @@ int Add(HSQUIRRELVM vm)
 }
 
 // Substract given vector from this vector
-int Sub(HSQUIRRELVM vm)
+static int Sub(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -71,7 +71,7 @@ int Sub(HSQUIRRELVM vm)
 }
 
 // Multiple this vector to scalar
-int Scale(HSQUIRRELVM vm)
+static int Scale(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	float scale = SqStack<float>::Get(vm, 2);
@@ -82,7 +82,7 @@ int Scale(HSQUIRRELVM vm)
 }
 
 // Rotate this vector to given angle (in degrees)
-int Rotate(HSQUIRRELVM vm)
+static int Rotate(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	float angle = SqStack<float>::Get(vm, 2);
@@ -93,7 +93,7 @@ int Rotate(HSQUIRRELVM vm)
 }
 
 // Rotate this vector to given angle (in radians)
-int Rotater(HSQUIRRELVM vm)
+static int Rotater(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	float angle = SqStack<float>::Get(vm, 2);
@@ -104,7 +104,7 @@ int Rotater(HSQUIRRELVM vm)
 }
 
 // Normalize this vector
-int Nor(HSQUIRRELVM vm)
+static int Nor(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	SqStack<glm::vec2>::Set(vm, glm::normalize(vec), 1);
@@ -113,7 +113,7 @@ int Nor(HSQUIRRELVM vm)
 }
 
 // Make perpendicular of this vector
-int Perp(HSQUIRRELVM vm)
+static int Perp(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	SqStack<glm::vec2>::Set(vm, glm::vec2(-vec.y, vec.x), 1);
@@ -122,7 +122,7 @@ int Perp(HSQUIRRELVM vm)
 }
 
 // Get angle of this vector (in degrees)
-int Angle(HSQUIRRELVM vm)
+static int Angle(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 
@@ -136,7 +136,7 @@ int Angle(HSQUIRRELVM vm)
 }
 
 // Get angle of this vector (in radians)
-int Angler(HSQUIRRELVM vm)
+static int Angler(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 
@@ -150,7 +150,7 @@ int Angler(HSQUIRRELVM vm)
 }
 
 // Get lenght of this vector
-int Len(HSQUIRRELVM vm)
+static int Len(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	SqStack<float>::Push(vm, glm::length(vec));
@@ -158,7 +158,7 @@ int Len(HSQUIRRELVM vm)
 }
 
 // Get squared lenght of this vector
-int LenSqr(HSQUIRRELVM vm)
+static int LenSqr(HSQUIRRELVM vm)
 {
 	glm::vec2 vec = SqStack<glm::vec2>::Get(vm, 1);
 	SqStack<float>::Push(vm, glm::length2(vec));
@@ -166,7 +166,7 @@ int LenSqr(HSQUIRRELVM vm)
 }
 
 // Get distance between this and given vectors
-int Dist(HSQUIRRELVM vm)
+static int Dist(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -176,7 +176,7 @@ int Dist(HSQUIRRELVM vm)
 }
 
 // Get squared distance between this and given vectors
-int DistSqr(HSQUIRRELVM vm)
+static int DistSqr(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -186,7 +186,7 @@ int DistSqr(HSQUIRRELVM vm)
 }
 
 // Get cross prodict between this and given vectors
-int Cross(HSQUIRRELVM vm)
+static int Cross(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -196,7 +196,7 @@ int Cross(HSQUIRRELVM vm)
 }
 
 // Get dot prodict between this and given vectors
-int Dot(HSQUIRRELVM vm)
+static int Dot(HSQUIRRELVM vm)
 {
 	glm::vec2 vec1 = SqStack<glm::vec2>::Get(vm, 1);
 	glm::vec2 vec2 = SqStack<glm::vec2>::Get(vm, 2);
@@ -206,7 +206,7 @@ int Dot(HSQUIRRELVM vm)
 }
 
 // Make copy of this vector
-int Copy(HSQUIRRELVM vm)
+static int Copy(HSQUIRRELVM vm)
 {
 	SqStack<glm::vec2>::Push(vm, SqStack<glm::vec2>::Get(vm, 1));
 	return 1;

@@ -113,7 +113,7 @@ void BindMath(SqVm* sq, SqTable& tblLuna)
 
 	// Bind math primitives
 	BindVec2(sq, tblMath);
-	//BindRect(sq, tblMath);
+	BindRect(sq, tblMath);
 }
 
 // Bind "luna.intersect" module

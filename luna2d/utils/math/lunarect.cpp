@@ -57,3 +57,33 @@ int LUNARect::LuaConstruct(lua_State* luaVm)
 
 	return 1;
 }
+
+static int Constructor(HSQUIRRELVM vm)
+{
+	int argsCount = sq_gettop(vm);
+
+	// Make empty rect
+	if(argsCount == 1) SqStack<LUNARect>::Push(vm, LUNARect());
+
+	// Make copy of given rect
+	else if(argsCount == 2) SqStack<LUNARect>::Push(vm, SqStack<LUNARect>::Get(vm, 2));
+
+	// Make rect from given params
+	else if(argsCount == 5)
+	{
+		float x = SqStack<float>::Get(vm, 2);
+		float y = SqStack<float>::Get(vm, 3);
+		float width = SqStack<float>::Get(vm, 4);
+		float height = SqStack<float>::Get(vm, 5);
+		SqStack<LUNARect>::Push(vm, LUNARect(x, y, width, height));
+	}
+
+	else return sq_throwerror(vm, "wrong number of parameters");
+
+	return 1;
+}
+
+void luna2d::BindRect(SqVm *vm, SqTable& tblMath)
+{
+	tblMath.NewSlot("Rect", &Constructor);
+}

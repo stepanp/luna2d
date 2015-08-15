@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include "lunasquirrel.h"
 #include "lunalua.h"
 
 namespace luna2d{
@@ -37,6 +38,69 @@ public:
 public:
 	float x, y, width, height;
 };
+
+void BindRect(SqVm* vm, SqTable& tblMath);
+
+template<>
+struct SqStack<LUNARect>
+{
+	inline static void Push(HSQUIRRELVM vm, const LUNARect& rect)
+	{
+		sq_newtableex(vm, 4);
+		sq_pushstring(vm, "x", 1);
+		sq_pushfloat(vm, rect.x);
+		sq_rawset(vm, -3);
+		sq_pushstring(vm, "y", 1);
+		sq_pushfloat(vm, rect.y);
+		sq_rawset(vm, -3);
+		sq_pushstring(vm, "width", 5);
+		sq_pushfloat(vm, rect.width);
+		sq_rawset(vm, -3);
+		sq_pushstring(vm, "height", 6);
+		sq_pushfloat(vm, rect.height);
+		sq_rawset(vm, -3);
+	}
+
+	inline static LUNARect Get(HSQUIRRELVM vm, int index = -1)
+	{
+		if(sq_gettype(vm, index) != OT_TABLE) return LUNARect();
+
+		LUNARect ret;
+
+		LUNA_SQ_PRINT_STACK(vm);
+
+		sq_pushstring(vm, "x", 1);
+		if(SQ_SUCCEEDED(sq_rawget(vm, index)))
+		{
+			sq_getfloat(vm, -1, &ret.x);
+			sq_pop(vm, 1);
+		}
+
+		sq_pushstring(vm, "y", 1);
+		if(SQ_SUCCEEDED(sq_rawget(vm, index)))
+		{
+			sq_getfloat(vm, -1, &ret.y);
+			sq_pop(vm, 1);
+		}
+
+		sq_pushstring(vm, "width", 5);
+		if(SQ_SUCCEEDED(sq_rawget(vm, index)))
+		{
+			sq_getfloat(vm, -1, &ret.width);
+			sq_pop(vm, 1);
+		}
+
+		sq_pushstring(vm, "height", 6);
+		if(SQ_SUCCEEDED(sq_rawget(vm, index)))
+		{
+			sq_getfloat(vm, -1, &ret.height);
+			sq_pop(vm, 1);
+		}
+
+		return ret;
+	}
+};
+
 
 template<>
 struct LuaStack<LUNARect>
