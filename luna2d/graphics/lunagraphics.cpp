@@ -173,6 +173,28 @@ LUNAGraphics::LUNAGraphics()
 
 	SqClass<LUNAFont, LUNAAsset> clsFont(sq);
 	clsFont.BindMethod("getSize", &LUNAFont::GetSize);
+
+	// Register color class constructor
+	tblGraphics.NewSlot("Color", SqFunction(sq, [](HSQUIRRELVM vm) -> int
+	{
+		int argsCount = sq_gettop(vm);
+
+		// Make copy of given color
+		if(argsCount == 2) SqStack<LUNAColor>::Push(vm, SqStack<LUNAColor>::Get(vm, 2));
+
+		// Make rect from given params
+		else if(argsCount == 4)
+		{
+			int r = SqStack<int>::Get(vm, 2);
+			int g = SqStack<int>::Get(vm, 3);
+			int b = SqStack<int>::Get(vm, 4);
+			SqStack<LUNAColor>::Push(vm, LUNAColor::Rgb(r, g, b));
+		}
+
+		else return sq_throwerror(vm, "wrong number of parameters");
+
+		return 1;
+	}));
 }
 
 LUNAGraphics::~LUNAGraphics()

@@ -58,7 +58,7 @@ public:
 		Bind<Ret,Class,Args...>(obj, method);
 	}
 
-	SqFunction(SqVm* vm, SQFUNCTION func, int nparams = -1);
+	SqFunction(SqVm* vm, SQFUNCTION func, int checkParams = 0);
 
 private:
 	SqFunction(const std::shared_ptr<SqRef>& ref);
@@ -155,7 +155,7 @@ public:
 	}
 
 	// Bind native squirrel closure
-	void Bind(SQFUNCTION func, int nparams = -1);
+	void Bind(SQFUNCTION func, int checkParams = 0);
 
 	// Call function and get return value
 	template<typename Ret, typename ... Args>

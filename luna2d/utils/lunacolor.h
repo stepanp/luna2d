@@ -63,21 +63,24 @@ struct SqStack<LUNAColor>
 {
 	inline static void Push(HSQUIRRELVM vm, const LUNAColor& color)
 	{
-		SqArray arrColor(vm);
-		arrColor.AppendValue<int>(color.GetR());
-		arrColor.AppendValue<int>(color.GetG());
-		arrColor.AppendValue<int>(color.GetB());
-		SqStack<SqArray>::Push(vm, arrColor);
+		SqTable tblColor(vm);
+
+		tblColor.NewSlot<int>("r", color.GetR());
+		tblColor.NewSlot<int>("g", color.GetG());
+		tblColor.NewSlot<int>("b", color.GetB());
+
+		SqStack<SqArray>::Push(vm, tblColor);
 	}
 
 	inline static LUNAColor Get(HSQUIRRELVM vm, int index = -1)
 	{
-		SqArray arrColor = SqStack<SqArray>::Get(vm, index);
-		if(arrColor.IsNull() || arrColor.GetCount() != 3) return LUNAColor();
+		SqTable tblColor = SqStack<SqTable>::Get(vm, index);
+		if(tblColor.IsNull()) return LUNAColor();
 
-		unsigned char r = (unsigned char)arrColor.GetInt(0);
-		unsigned char g = (unsigned char)arrColor.GetInt(1);
-		unsigned char b = (unsigned char)arrColor.GetInt(2);
+		unsigned char r = static_cast<unsigned char>(tblColor.GetInt("r"));
+		unsigned char g = static_cast<unsigned char>(tblColor.GetInt("g"));
+		unsigned char b = static_cast<unsigned char>(tblColor.GetInt("b"));
+
 		return LUNAColor::Rgb(r, g, b);
 	}
 };
