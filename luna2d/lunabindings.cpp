@@ -61,42 +61,42 @@ void BindLog(SqVm* sq, SqTable& tblLuna)
 }
 
 // Bind "luna.utilss" module
-void BindUtils(LuaScript* lua, LuaTable& tblLuna)
+void BindUtils(SqVm* sq, SqTable& tblLuna)
 {
-	LuaTable tblUtils(lua);
-	tblLuna.SetField("utils", tblUtils);
+	SqTable tblUtils(sq);
+	tblLuna.NewSlot("utils", tblUtils);
 
 	// Register "ChanceTable" class
-	lua->DoString(LUNA_CHANCE_TABLE);
+	//lua->DoString(LUNA_CHANCE_TABLE);
 
 	// Register timer
-	LuaClass<LUNATimer> clsTimer(lua);
-	clsTimer.SetConstructor<float, const LuaFunction&, bool>();
-	clsTimer.SetMethod("isLoop", &LUNATimer::IsLoop);
-	clsTimer.SetMethod("setLoop", &LUNATimer::SetLoop);
-	clsTimer.SetMethod("getTotalTime", &LUNATimer::GetTotalTime);
-	clsTimer.SetMethod("getRemainingTime", &LUNATimer::GetRemainingTime);
-	clsTimer.SetMethod("setTime", &LUNATimer::SetTime);
-	clsTimer.SetMethod("getCallback", &LUNATimer::GetCallback);
-	clsTimer.SetMethod("setCallback", &LUNATimer::SetCallback);
-	clsTimer.SetMethod("isRunning", &LUNATimer::IsRunning);
-	clsTimer.SetMethod("start", &LUNATimer::Start);
-	clsTimer.SetMethod("pause", &LUNATimer::Pause);
-	clsTimer.SetMethod("stop", &LUNATimer::Stop);
-	clsTimer.SetMethod("update", &LUNATimer::Update);
-	tblUtils.SetField("Timer", clsTimer);
+	SqClass<LUNATimer> clsTimer(sq);
+	//clsTimer.BindConstructor<float, const LuaFunction&, bool>();
+	clsTimer.BindMethod("isLoop", &LUNATimer::IsLoop);
+	clsTimer.BindMethod("setLoop", &LUNATimer::SetLoop);
+	clsTimer.BindMethod("getTotalTime", &LUNATimer::GetTotalTime);
+	clsTimer.BindMethod("getRemainingTime", &LUNATimer::GetRemainingTime);
+	clsTimer.BindMethod("setTime", &LUNATimer::SetTime);
+	//clsTimer.BindMethod("getCallback", &LUNATimer::GetCallback);
+	//clsTimer.BindMethod("setCallback", &LUNATimer::SetCallback);
+	clsTimer.BindMethod("isRunning", &LUNATimer::IsRunning);
+	clsTimer.BindMethod("start", &LUNATimer::Start);
+	clsTimer.BindMethod("pause", &LUNATimer::Pause);
+	clsTimer.BindMethod("stop", &LUNATimer::Stop);
+	clsTimer.BindMethod("update", &LUNATimer::Update);
+	tblUtils.NewSlot("Timer", clsTimer);
 
 	// Register animator
-	LuaClass<LUNAAnimator> clsAnimator(lua);
-	clsAnimator.SetConstructor<const LuaAny&>();
-	clsAnimator.SetMethod("isLoop", &LUNAAnimator::IsLoop);
-	clsAnimator.SetMethod("setLoop", &LUNAAnimator::SetLoop);
-	clsAnimator.SetMethod("isRunning", &LUNAAnimator::IsRunning);
-	clsAnimator.SetMethod("start", &LUNAAnimator::Start);
-	clsAnimator.SetMethod("pause", &LUNAAnimator::Pause);
-	clsAnimator.SetMethod("stop", &LUNAAnimator::Stop);
-	clsAnimator.SetMethod("update", &LUNAAnimator::Update);
-	tblUtils.SetField("Animator", clsAnimator);
+	SqClass<LUNAAnimator> clsAnimator(sq);
+	//clsAnimator.BindConstructor<const LuaAny&>();
+	clsAnimator.BindMethod("isLoop", &LUNAAnimator::IsLoop);
+	clsAnimator.BindMethod("setLoop", &LUNAAnimator::SetLoop);
+	clsAnimator.BindMethod("isRunning", &LUNAAnimator::IsRunning);
+	clsAnimator.BindMethod("start", &LUNAAnimator::Start);
+	clsAnimator.BindMethod("pause", &LUNAAnimator::Pause);
+	clsAnimator.BindMethod("stop", &LUNAAnimator::Stop);
+	clsAnimator.BindMethod("update", &LUNAAnimator::Update);
+	tblUtils.NewSlot("Animator", clsAnimator);
 }
 
 // Bind "luna.math" module
@@ -258,6 +258,7 @@ void luna2d::DoBindings()
 	SqTable tblLuna = sq->GetRootTable().GetTable("luna");
 
 	BindLog(sq, tblLuna);
+	BindUtils(sq, tblLuna);
 	BindMath(sq, tblLuna);
 	BindIntersect(sq, tblLuna);
 	BindSplines(sq, tblLuna);
