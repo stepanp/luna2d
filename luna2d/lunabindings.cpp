@@ -138,19 +138,19 @@ void BindIntersect(SqVm* sq, SqTable& tblLuna)
 }
 
 // Bind "luna.splines" module
-void BindSplines(LuaScript* lua, LuaTable& tblLuna)
+void BindSplines(SqVm* sq, SqTable& tblLuna)
 {
-	LuaTable tblSplines(lua);
-	tblLuna.SetField("splines", tblSplines);
+	SqTable tblSplines(sq);
+	tblLuna.NewSlot("splines", tblSplines);
 
-	tblSplines.SetField("quadraticBSpline", LuaFunction(lua, &splines::QuadraticBSpline));
+	tblSplines.NewSlot("quadraticBSpline", SqFunction(sq, &splines::QuadraticBSpline));
 }
 
 // Bind "luna.easing" module
-void BindEasing(LuaScript* lua, LuaTable& tblLuna)
+void BindEasing(SqVm* sq, SqTable& tblLuna)
 {
-	LuaTable tblEasing(lua);
-	tblLuna.SetField("easing", tblEasing);
+	SqTable tblEasing(sq);
+	tblLuna.NewSlot("easing", tblEasing);
 
 	// Bind all easing functions to lua as interpolation functions like: function(a, b, t)
 	// Each function interpolate value between "a" and "b" by time "t" using own easing. "t" must be in range[0,1]
@@ -161,27 +161,27 @@ void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 		{
 			return math::EaseLerp(a, b, t, easing);
 		};
-		tblEasing.SetField(entry.first, LuaFunction(lua, easingFunc));
+		tblEasing.NewSlot(entry.first, SqFunction(sq, easingFunc));
 	}
 }
 
 // Bind "luna.platform" module
-void BindPlatform(SqVm* vm, SqTable& tblLuna)
+void BindPlatform(SqVm* sq, SqTable& tblLuna)
 {
 	tblLuna.NewSlot("platform", LUNA_PLATFORM_STRING);
 }
 
 // Bind "luna.prefs" module
-void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
+void BindPrefs(SqVm* sq, SqTable& tblLuna)
 {
 	// "__index" metamethod handler
 	// calls whenever acess to "luna.prefs" table like: "local value = luna.prefs.key"
 	// Gets value from preferences
 	// Type of value automaticaly depends by stored pref type
-	std::function<LuaAny(LuaNil, const std::string&)> index =
-		[lua](LuaNil, const std::string& name) -> LuaAny
+	std::function<SqAny(std::nullptr_t, const std::string&)> get =
+		[sq](std::nullptr_t, const std::string& name) -> SqAny
 	{
-		if(name.empty()) return nil; // Ignore all keys except valid strings
+		if(name.empty()) return nullptr; // Ignore all keys except valid strings
 
 		LUNAPrefs* prefs = LUNAEngine::SharedPrefs();
 		LUNAPrefType type = prefs->GetPrefType(name);
@@ -189,64 +189,49 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 		switch(type)
 		{
 		case LUNAPrefType::NONE:
-			return nil;
+			return nullptr;
 		case LUNAPrefType::STRING:
-			return LuaAny(lua, prefs->GetString(name));
+			return SqAny(sq, prefs->GetString(name));
 		case LUNAPrefType::INT:
-			return LuaAny(lua, prefs->GetInt(name));
+			return SqAny(sq, prefs->GetInt(name));
 		case LUNAPrefType::FLOAT:
-			return LuaAny(lua, prefs->GetFloat(name));
+			return SqAny(sq, prefs->GetFloat(name));
 		case LUNAPrefType::BOOL:
-			return LuaAny(lua, prefs->GetBool(name));
+			return SqAny(sq, prefs->GetBool(name));
 		}
 
-		return nil;
+		return nullptr;
 	};
 
 	// "__newindex" metamethod handler
 	// calls whenever acsess to "luna.prefs" table like: "luna.prefs.key = value"
 	// Puts value to preferences subsytem and save pref type for automatic getting in "__index" method
-	std::function<void(LuaNil, const std::string&, const LuaAny&)> newIndex =
-		[](LuaNil, const std::string& name, const LuaAny& value)
+	std::function<void(std::nullptr_t, const std::string&, const SqAny&)> set =
+		[](std::nullptr_t, const std::string& name, const SqAny& value)
 	{
 		if(name.empty()) return; // Ignore all keys except valid strings
 
 		LUNAPrefs* prefs = LUNAEngine::SharedPrefs();
-		int luaType = value.GetType();
 
-		switch(luaType)
+		switch(value.GetType())
 		{
-		case LUA_TNIL:
+		case OT_NULL:
 			prefs->RemoveValue(name);
 			prefs->RemovePrefType(name);
 			break;
-		case LUA_TSTRING:
+		case OT_STRING:
 			prefs->SetString(name, value.ToString());
 			prefs->SetPrefType(name, LUNAPrefType::STRING);
 			break;
-
-		// All numbers in lua stored as floats
-		// But for preferences in several cases (e.g. in Windows registry) it's not useful
-		// So, check and store integer numbers as integers
-		case LUA_TNUMBER:
-		{
-			float fValue = value.ToFloat();
-			int iValue = (int)fValue;
-
-			if(fValue == iValue)
-			{
-				prefs->SetInt(name, iValue);
-				prefs->SetPrefType(name, LUNAPrefType::INT);
-			}
-			else
-			{
-				prefs->SetFloat(name, fValue);
-				prefs->SetPrefType(name, LUNAPrefType::FLOAT);
-			}
-
+		case OT_INTEGER:
+			prefs->SetInt(name, value.ToInt());
+			prefs->SetPrefType(name, LUNAPrefType::INT);
 			break;
-		}
-		case LUA_TBOOLEAN:
+		case OT_FLOAT:
+			prefs->SetInt(name, value.ToFloat());
+			prefs->SetPrefType(name, LUNAPrefType::FLOAT);
+			break;
+		case OT_BOOL:
 			prefs->SetBool(name, value.ToBool());
 			prefs->SetPrefType(name, LUNAPrefType::BOOL);
 			break;
@@ -255,13 +240,13 @@ void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 		}
 	};
 
-	LuaTable tblPrefs(lua);
-	tblLuna.SetField("prefs", tblPrefs);
+	SqTable tblPrefs(sq);
+	tblLuna.NewSlot("prefs", tblPrefs);
 
-	LuaTable meta(lua);
-	meta.SetField("__index", LuaFunction(lua, index));
-	meta.SetField("__newindex", LuaFunction(lua, newIndex));
-	tblPrefs.SetMetatable(meta);
+	SqTable delegate(sq);
+	delegate.NewSlot("_get", SqFunction(sq, get));
+	delegate.NewSlot("_set", SqFunction(sq, set));
+	tblPrefs.SetDelegate(delegate);
 }
 
 // Bind common classes and functions to lua
@@ -274,6 +259,9 @@ void luna2d::DoBindings()
 
 	BindLog(sq, tblLuna);
 	BindMath(sq, tblLuna);
-	BindPlatform(sq, tblLuna);
 	BindIntersect(sq, tblLuna);
+	BindSplines(sq, tblLuna);
+	BindEasing(sq, tblLuna);
+	BindPlatform(sq, tblLuna);
+	BindPrefs(sq, tblLuna);
 }
