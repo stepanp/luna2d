@@ -107,6 +107,12 @@ void BindMath(SqVm* sq, SqTable& tblLuna)
 	SqTable tblMath(sq);
 	tblLuna.NewSlot("math", tblMath);
 
+	// Squirrel standard library hasn't "min" and "max" functions
+	std::function<float(float,float)> fnMax = [](float a, float b) -> float { return std::max(a, b); };
+	std::function<float(float,float)> fnMin = [](float a, float b) -> float { return std::max(a, b); };
+	tblMath.NewSlot("max", SqFunction(sq, fnMax));
+	tblMath.NewSlot("min", SqFunction(sq, fnMin));
+
 	//tblMath.SetField("frandom", LuaFunction(lua, &math::RandomFloat));
 	//tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
 	//tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
