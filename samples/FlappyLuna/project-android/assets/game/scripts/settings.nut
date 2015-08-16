@@ -1,5 +1,5 @@
 
-settings =
+settings <-
 {
 	bgVelocity = 80,
 	bgBuildingsMultipler = 1.1,
@@ -14,5 +14,5 @@ settings =
 	birdMinAngle = 45,
 	birdMaxAngle = -80,
 	birdFlapTime = 0.2,
-	gravity = 10,
+	gravity = 10
 }
