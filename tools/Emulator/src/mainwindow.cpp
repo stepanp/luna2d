@@ -130,7 +130,7 @@ QString MainWindow::CheckGameDirectory(const QString &path)
 	if(!dir.exists("scripts/")) return "directory \"scripts\" not found";
 
 	dir.cd("scripts/");
-	if(!dir.exists("main.lua")) return "\"main.lua\" not found";
+	if(!dir.exists("main.nut")) return "\"main.nut\" not found";
 
 	return QString::Null();
 }
