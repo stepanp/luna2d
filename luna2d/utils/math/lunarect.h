@@ -67,8 +67,6 @@ struct SqStack<LUNARect>
 
 		LUNARect ret;
 
-		LUNA_SQ_PRINT_STACK(vm);
-
 		sq_pushstring(vm, "x", 1);
 		if(SQ_SUCCEEDED(sq_rawget(vm, index)))
 		{

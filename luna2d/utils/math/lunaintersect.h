@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "lunavector2.h"
+#include "lunavec2.h"
 #include "lunarect.h"
 
 //--------------------------------------------------
@@ -35,8 +35,8 @@ bool PointInRectangle(const glm::vec2& point, const LUNARect& rect); // Check fo
 bool PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r); // Check for point insinde in cirle
 bool PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon); // Check for point inside polygon
 bool Rectangles(const LUNARect& rect1, const LUNARect& rect2); // Check intersection between two rectangles
-bool Lines(const LuaTable& line1, const LuaTable& line2); // Check intersection between two lines
-bool LineCircle(const LuaTable& line, const glm::vec2& point, float r); // Check intersection between line and circle
-LuaTable PointBetweenLines(const LuaTable& line1, const LuaTable& line2); // Get intersection point between two lines
+bool Lines(const SqTable& line1, const SqTable& line2); // Check intersection between two lines
+bool LineCircle(const SqTable& line, const glm::vec2& point, float r); // Check intersection between line and circle
+SqAny PointBetweenLines(const SqTable& line1, const SqTable& line2); // Get intersection point between two lines
 
 }}

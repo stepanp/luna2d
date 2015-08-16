@@ -113,9 +113,9 @@ void BindMath(SqVm* sq, SqTable& tblLuna)
 	tblMath.NewSlot("max", SqFunction(sq, fnMax));
 	tblMath.NewSlot("min", SqFunction(sq, fnMin));
 
-	//tblMath.SetField("frandom", LuaFunction(lua, &math::RandomFloat));
-	//tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
-	//tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
+	tblMath.NewSlot("random", SqFunction(sq, &math::RandomFloat));
+	tblMath.NewSlot("avg", SqFunction(sq, &math::Avg));
+	tblMath.NewSlot("lerp", SqFunction(sq, &math::Lerp));
 
 	// Bind math primitives
 	BindVec2(sq, tblMath);
@@ -123,18 +123,18 @@ void BindMath(SqVm* sq, SqTable& tblLuna)
 }
 
 // Bind "luna.intersect" module
-void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
+void BindIntersect(SqVm* sq, SqTable& tblLuna)
 {
-	LuaTable tblIntersect(lua);
-	tblLuna.SetField("intersect", tblIntersect);
+	SqTable tblIntersect(sq);
+	tblLuna.NewSlot("intersect", tblIntersect);
 
-	tblIntersect.SetField("pointInRectangle", LuaFunction(lua, &intersect::PointInRectangle));
-	tblIntersect.SetField("pointInCircle", LuaFunction(lua, &intersect::PointInCircle));
-	tblIntersect.SetField("pointInPolygon", LuaFunction(lua, &intersect::PointInPolygon));
-	tblIntersect.SetField("rectangles", LuaFunction(lua, &intersect::Rectangles));
-	tblIntersect.SetField("lines", LuaFunction(lua, &intersect::Lines));
-	tblIntersect.SetField("lineCircle", LuaFunction(lua, &intersect::LineCircle));
-	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, &intersect::PointBetweenLines));
+	tblIntersect.NewSlot("pointInRectangle", SqFunction(sq, &intersect::PointInRectangle));
+	tblIntersect.NewSlot("pointInCircle", SqFunction(sq, &intersect::PointInCircle));
+	tblIntersect.NewSlot("pointInPolygon", SqFunction(sq, &intersect::PointInPolygon));
+	tblIntersect.NewSlot("rectangles", SqFunction(sq, &intersect::Rectangles));
+	tblIntersect.NewSlot("lines", SqFunction(sq, &intersect::Lines));
+	tblIntersect.NewSlot("lineCircle", SqFunction(sq, &intersect::LineCircle));
+	tblIntersect.NewSlot("pointBetweenLines", SqFunction(sq, &intersect::PointBetweenLines));
 }
 
 // Bind "luna.splines" module
@@ -275,4 +275,5 @@ void luna2d::DoBindings()
 	BindLog(sq, tblLuna);
 	BindMath(sq, tblLuna);
 	BindPlatform(sq, tblLuna);
+	BindIntersect(sq, tblLuna);
 }

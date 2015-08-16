@@ -37,6 +37,7 @@ class SqAny : public SqObject
 
 public:
 	SqAny();
+	SqAny(const std::nullptr_t&);
 	SqAny(SqVm* vm);
 	SqAny(HSQUIRRELVM vm);
 	SqAny(const SqAny& any);

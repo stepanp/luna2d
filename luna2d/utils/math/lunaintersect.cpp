@@ -62,7 +62,7 @@ bool luna2d::intersect::Rectangles(const LUNARect& rect1, const LUNARect& rect2)
 }
 
 // Check intersection between two lines
-bool luna2d::intersect::Lines(const LuaTable& line1, const LuaTable& line2)
+bool luna2d::intersect::Lines(const SqTable& line1, const SqTable& line2)
 {
 	float x1 = line1.GetFloat("x1");
 	float y1 = line1.GetFloat("y1");
@@ -89,7 +89,7 @@ bool luna2d::intersect::Lines(const LuaTable& line1, const LuaTable& line2)
 }
 
 // Check intersection between line and circle
-bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point, float r)
+bool luna2d::intersect::LineCircle(const SqTable& line, const glm::vec2& point, float r)
 {
 	float x1 = line.GetFloat("x1");
 	float y1 = line.GetFloat("y1");
@@ -117,7 +117,7 @@ bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point,
 }
 
 // Get intersection point between two lines
-LuaTable luna2d::intersect::PointBetweenLines(const LuaTable& line1, const LuaTable& line2)
+SqAny luna2d::intersect::PointBetweenLines(const SqTable& line1, const SqTable& line2)
 {
 	float x1 = line1.GetFloat("x1");
 	float y1 = line1.GetFloat("y1");
@@ -130,21 +130,18 @@ LuaTable luna2d::intersect::PointBetweenLines(const LuaTable& line1, const LuaTa
 	float y4 = line2.GetFloat("y2");
 
 	float d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-	if(d == 0) return nil;
+	if(d == 0) return nullptr;
 
 	float yd = y1 - y3;
 	float xd = x1 - x3;
 	float ua = ((x4 - x3) * yd  - (y4 - y3) * xd) / d;
-	if(ua < 0 || ua > 1) return nil;
+	if(ua < 0 || ua > 1) return nullptr;
 
 	float ub = ((x2 - x1) * yd  - (y2 - y1) * xd) / d;
-	if(ub < 0 || ub > 1) return nil;
+	if(ub < 0 || ub > 1) return nullptr;
 
 	float x = x1 + ua * (x2 - x1);
 	float y = y1 + ua * (y2 - y1);
 
-	LuaTable tblRet(LUNAEngine::SharedLua());
-	tblRet.SetField("x", x);
-	tblRet.SetField("y", y);
-	return std::move(tblRet);
+	return SqAny(LUNAEngine::SharedSquirrel(), glm::vec2(x, y));
 }

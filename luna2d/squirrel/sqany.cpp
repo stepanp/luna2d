@@ -29,6 +29,7 @@
 using namespace luna2d;
 
 SqAny::SqAny() : SqObject() {}
+SqAny::SqAny(const std::nullptr_t&) : SqObject() {}
 SqAny::SqAny(SqVm* vm) : SqObject(*vm) {}
 SqAny::SqAny(HSQUIRRELVM vm) : SqObject(vm) {}
 SqAny::SqAny(const SqAny& any) : SqObject(any.GetRef()) {}
