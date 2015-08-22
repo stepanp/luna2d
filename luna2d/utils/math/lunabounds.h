@@ -113,7 +113,7 @@ public:
 
 private:
 	std::vector<glm::vec2> vertexes, transformedVertexes;
-	float angle;
+	float angle = 0;
 
 private:
 	void UpdateVertexes();
