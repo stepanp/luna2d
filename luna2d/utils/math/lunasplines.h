@@ -38,4 +38,7 @@ namespace luna2d{ namespace splines{
 // "t" - time from 0.0 to 1.0
 glm::vec2 QuadraticBSpline(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, float t);
 
+// Cubic Bezier function
+glm::vec2 CubicBezier(const glm::vec2& p0, const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p3, float t);
+
 }}

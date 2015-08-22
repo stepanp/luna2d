@@ -209,6 +209,7 @@ void BindSplines(LuaScript* lua, LuaTable& tblLuna)
 	tblLuna.SetField("splines", tblSplines);
 
 	tblSplines.SetField("quadraticBSpline", LuaFunction(lua, &splines::QuadraticBSpline));
+	tblSplines.SetField("cubicBezier", LuaFunction(lua, &splines::CubicBezier));
 }
 
 // Bind "luna.easing" module
@@ -228,6 +229,14 @@ void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 		};
 		tblEasing.SetField(entry.first, LuaFunction(lua, easingFunc));
 	}
+
+	// Function like "cubic-bezier" in CSS for useful making custom easings
+	std::function<float(float,float,float,float,float)> fnCubicBezier =
+	[](float p1x, float p1y, float p2x, float p2y, float t) -> float
+	{
+		return splines::CubicBezier(glm::vec2(0, 0), glm::vec2(p1x, p1y), glm::vec2(p2x, p2y), glm::vec2(1, 1), t).y;
+	};
+	tblEasing.SetField("cubicBezier", LuaFunction(lua, fnCubicBezier));
 }
 
 // Bind "luna.platform" module

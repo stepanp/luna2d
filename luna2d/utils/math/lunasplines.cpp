@@ -47,3 +47,20 @@ glm::vec2 luna2d::splines::QuadraticBSpline(const glm::vec2& p0, const glm::vec2
 	return glm::vec2(x, y);
 }
 
+// Cubic Bezier function
+glm::vec2 luna2d::splines::CubicBezier(const glm::vec2& p0, const glm::vec2& p1,
+	const glm::vec2& p2, const glm::vec2& p3, float t)
+{
+	float x0 = p3.x + 3 * (p1.x - p2.x) - p0.x;
+	float x1 = p0.x - 2 * p1.x + p2.x;
+	float x2 = p1.x - p0.x;
+
+	float y0 = p3.y + 3 * (p1.y - p2.y) - p0.y;
+	float y1 = p0.y - 2 * p1.y + p2.y;
+	float y2 = p1.y - p0.y;
+
+	float x = t * t * t * x0 + 3 * t * t * x1 + 3 * t * x2 + p0.x;
+	float y = t * t * t * y0 + 3 * t * t * y1 + 3 * t * y2 + p0.y;
+
+	return glm::vec2(x, y);
+}
