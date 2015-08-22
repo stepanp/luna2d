@@ -39,7 +39,7 @@ protected:
 
 protected:
 	LuaInstance obj;
-	LUNAEasingFunc easing = &easing::Linear;
+	std::function<float(float)> easing = &easing::Linear;
 
 protected:
 	// If given value isn't specifed in params table, try get current value from object

@@ -50,6 +50,8 @@ float RadiansToDegrees(float radians); // Conver radians to degrees
 int NearestPowerOfTwo(int value); // Get nearest power of two size to given value
 bool IsPowerOfTwo(int value); // Check value for power of two
 float Lerp(float a, float b, float t); // Interpolation between "a" and "b" by time "t". "t" must be in range[0,1]
-float EaseLerp(float a, float b, float t, LUNAEasingFunc easing); // Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
+
+// Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
+float EaseLerp(float a, float b, float t, const std::function<float(float)>& easing);
 
 }}

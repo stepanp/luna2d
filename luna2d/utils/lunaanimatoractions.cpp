@@ -35,8 +35,21 @@ LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 	if(!obj) LUNA_LOGE("Object for animator action \"%s\" must be not nil", params.GetString("action").c_str());
 
 	// Get easing function if specifed. Default easing is linear
-	std::string easingName = params.GetString("easing");
-	if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
+	LuaAny luaEasing = params.GetField<LuaAny>("easing");
+
+	// Get easing function by name
+	if(luaEasing.GetType() == LUA_TSTRING)
+	{
+		std::string easingName = luaEasing.ToString();
+		if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
+	}
+
+	// Or use custom easing function
+	else if(luaEasing.GetType() == LUA_TFUNCTION)
+	{
+		LuaFunction customEasing = luaEasing.ToFunction();
+		easing = [customEasing](float t) -> float { return customEasing.Call<float>(t); };
+	}
 }
 
 //-----------------------

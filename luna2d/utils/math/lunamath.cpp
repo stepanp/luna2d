@@ -79,7 +79,7 @@ float luna2d::math::Lerp(float a, float b, float t)
 }
 
 // Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
-float luna2d::math::EaseLerp(float a, float b, float t, LUNAEasingFunc easing)
+float luna2d::math::EaseLerp(float a, float b, float t, const std::function<float(float)>& easing)
 {
 	return a + (b - a) * easing(t);
 }
