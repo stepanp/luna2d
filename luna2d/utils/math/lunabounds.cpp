@@ -38,13 +38,13 @@ LUNABoundsType LUNABounds::GetType()
 
 const LUNARect& LUNABounds::GetBoundingBox()
 {
-	if(needUpdateBBox)
+	if(needUpdateCache)
 	{
 		UpdateBoudingBox();
-		needUpdateBBox = false;
+		needUpdateCache = false;
 	}
 
-	return bbox;
+	return cachedBBox;
 }
 
 float LUNABounds::GetX()
@@ -60,13 +60,13 @@ float LUNABounds::GetY()
 void LUNABounds::SetX(float x)
 {
 	pos.x = x;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 void LUNABounds::SetY(float y)
 {
 	pos.y = y;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 glm::vec2 LUNABounds::GetPos()
@@ -78,7 +78,7 @@ void LUNABounds::SetPos(float x, float y)
 {
 	pos.x = x;
 	pos.y = y;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 float LUNABounds::GetOriginX()
@@ -110,13 +110,42 @@ void LUNABounds::SetOrigin(float originX, float originY)
 {
 	origin.x = originX;
 	origin.y = originY;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 void LUNABounds::SetOriginToCenter()
 {
 	const LUNARect& bbox = GetBoundingBox();
 	SetOrigin(-bbox.width / 2.0f, -bbox.height / 2.0f);
+}
+
+float LUNABounds::GetScaleX()
+{
+	return scale.x;
+}
+
+float LUNABounds::GetScaleY()
+{
+	return scale.y;
+}
+
+void LUNABounds::SetScaleX(float x)
+{
+	scale.x = x;
+	needUpdateCache = true;
+}
+
+void LUNABounds::SetScaleY(float y)
+{
+	scale.y = y;
+	needUpdateCache = true;
+}
+
+void LUNABounds::SetScale(float scale)
+{
+	this->scale.x = scale;
+	this->scale.y = scale;
+	needUpdateCache = true;
 }
 
 
@@ -128,10 +157,10 @@ LUNAAABBBounds::LUNAAABBBounds(float width, float height) :
 
 void LUNAAABBBounds::UpdateBoudingBox()
 {
-	bbox.x = pos.x + origin.x;
-	bbox.y = pos.y + origin.y;
-	bbox.width = width;
-	bbox.height = height;
+	cachedBBox.x = pos.x + origin.x * scale.x;
+	cachedBBox.y = pos.y + origin.y * scale.y;
+	cachedBBox.width = width * scale.x;
+	cachedBBox.height = height * scale.y;
 }
 
 float LUNAAABBBounds::GetWidth()
@@ -147,20 +176,20 @@ float LUNAAABBBounds::GetHeight()
 void LUNAAABBBounds::SetWidth(float width)
 {
 	this->width = width;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 float LUNAAABBBounds::SetHeight(float height)
 {
 	this->height = height;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 void LUNAAABBBounds::SetSize(float width, float height)
 {
 	this->width = width;
 	this->height = height;
-	needUpdateBBox = true;
+	needUpdateCache = true;
 }
 
 bool LUNAAABBBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
@@ -183,4 +212,87 @@ bool LUNAAABBBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	}
 
 	return false;
+}
+
+
+LUNAPolygonBounds::LUNAPolygonBounds(const std::vector<glm::vec2>& vertexes) :
+	LUNABounds(LUNABoundsType::POLYGON)
+{
+	SetVertexes(vertexes);
+}
+
+void LUNAPolygonBounds::UpdateVertexes()
+{
+	if(!needUpdateCache) return;
+
+	for(size_t i = 0; i < vertexes.size(); i++)
+	{
+		transformedVertexes[i].x = pos.x + (origin.x + vertexes[i].x) * scale.x;
+		transformedVertexes[i].y = pos.y + (origin.y + vertexes[i].y) * scale.y;
+	}
+}
+
+void LUNAPolygonBounds::UpdateBoudingBox()
+{
+	UpdateVertexes();
+
+	float left = transformedVertexes[0].x, top = 0, right = 0, bottom = transformedVertexes[0].y;
+	for(const glm::vec2& vert : transformedVertexes)
+	{
+		left = std::min(left, vert.x);
+		top = std::max(top, vert.y);
+		right = std::max(right, vert.x);
+		bottom = std::min(bottom, vert.y);
+	}
+
+	cachedBBox.x = left;
+	cachedBBox.y = bottom;
+	cachedBBox.width = right - left;
+	cachedBBox.height = top - bottom;
+}
+
+const std::vector<glm::vec2>&LUNAPolygonBounds::GetVertexes()
+{
+	UpdateVertexes();
+	return transformedVertexes;
+}
+
+void LUNAPolygonBounds::SetVertexes(const std::vector<glm::vec2>& vertexes)
+{
+	this->vertexes = vertexes;
+	this->transformedVertexes.resize(vertexes.size());
+
+	needUpdateCache = true;
+	UpdateVertexes();
+}
+
+float LUNAPolygonBounds::GetAngle()
+{
+	return angle;
+}
+
+void LUNAPolygonBounds::SetAngle(float angle)
+{
+	this->angle = angle;
+	needUpdateCache = true;
+}
+
+bool LUNAPolygonBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
+{
+	if(!bounds)
+	{
+		LUNA_LOGE("Attemt check intersection with invalid bounds");
+		return false;
+	}
+
+	bool bboxIntersects = intersect::Rectangles(GetBoundingBox(), bounds->GetBoundingBox());
+	if(!bboxIntersects) return false;
+
+	switch(bounds->GetType())
+	{
+		case LUNABoundsType::AABB:
+			return false;
+		case LUNABoundsType::POLYGON:
+			return false;
+	}
 }

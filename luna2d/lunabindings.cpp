@@ -157,17 +157,31 @@ void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	clsBounds.SetMethod("getOrigin", &LUNABounds::GetOrigin);
 	clsBounds.SetMethod("setOrigin", &LUNABounds::SetOrigin);
 	clsBounds.SetMethod("setOriginToCenter", &LUNABounds::SetOriginToCenter);
+	clsBounds.SetMethod("getScaleX", &LUNABounds::GetScaleX);
+	clsBounds.SetMethod("getScaleY", &LUNABounds::GetScaleY);
+	clsBounds.SetMethod("setScaleX", &LUNABounds::SetScaleX);
+	clsBounds.SetMethod("setScaleY", &LUNABounds::SetScaleY);
+	clsBounds.SetMethod("setScale", &LUNABounds::SetScale);
 
-	// Bind AABBBounds(RectBounds)
+	// Bind AABB bounds
 	LuaClass<LUNAAABBBounds> clsAABBBounds(lua);
 	clsAABBBounds.SetConstructor<float, float>();
 	clsAABBBounds.SetMethod("getWidth", &LUNAAABBBounds::GetWidth);
 	clsAABBBounds.SetMethod("getHeight", &LUNAAABBBounds::GetHeight);
 	clsAABBBounds.SetMethod("setWidth", &LUNAAABBBounds::SetWidth);
 	clsAABBBounds.SetMethod("setHeight", &LUNAAABBBounds::SetHeight);
-	clsAABBBounds.SetMethod("seSize", &LUNAAABBBounds::SetSize);
+	clsAABBBounds.SetMethod("setSize", &LUNAAABBBounds::SetSize);
 	tblMath.SetField("AABBBounds", clsAABBBounds);
 	tblMath.SetField("RectBounds", clsAABBBounds); // RectBounds is alias for AABBBounds
+
+	// Bind polygon bounds
+	LuaClass<LUNAPolygonBounds> clsPolygonBounds(lua);
+	clsPolygonBounds.SetConstructor<const std::vector<glm::vec2>&>();
+	clsPolygonBounds.SetMethod("getVertexes", &LUNAPolygonBounds::GetVertexes);
+	clsPolygonBounds.SetMethod("setVertexes", &LUNAPolygonBounds::SetVertexes);
+	clsPolygonBounds.SetMethod("getAngle", &LUNAPolygonBounds::GetAngle);
+	clsPolygonBounds.SetMethod("setAngle", &LUNAPolygonBounds::SetAngle);
+	tblMath.SetField("PolygonBounds", clsPolygonBounds);
 
 	// Set "luna.math" as alias for standard "math" module
 	tblLuna.SetField("math", tblMath);

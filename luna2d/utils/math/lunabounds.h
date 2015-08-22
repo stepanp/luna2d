@@ -46,8 +46,9 @@ protected:
 	LUNABoundsType type;
 	glm::vec2 pos;
 	glm::vec2 origin;
-	LUNARect bbox;
-	bool needUpdateBBox = true;
+	glm::vec2 scale = glm::vec2(1.0f, 1.0f);
+	LUNARect cachedBBox;
+	bool needUpdateCache = true;
 
 protected:
 	virtual void UpdateBoudingBox() = 0;
@@ -68,6 +69,11 @@ public:
 	glm::vec2 GetOrigin();
 	void SetOrigin(float originX, float originY);
 	void SetOriginToCenter();
+	float GetScaleX();
+	float GetScaleY();
+	void SetScaleX(float x);
+	void SetScaleY(float y);
+	void SetScale(float scale);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds) = 0;
 };
@@ -84,7 +90,7 @@ private:
 	float width;
 	float height;
 
-protected:
+private:
 	virtual void UpdateBoudingBox();
 
 public:
@@ -97,5 +103,29 @@ public:
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
 };
 
+
+class LUNAPolygonBounds : public LUNABounds
+{
+	LUNA_USERDATA_DERIVED(LUNABounds, LUNAPolygonBounds)
+
+public:
+	LUNAPolygonBounds(const std::vector<glm::vec2>& vertexes);
+
+private:
+	std::vector<glm::vec2> vertexes, transformedVertexes;
+	float angle;
+
+private:
+	void UpdateVertexes();
+	virtual void UpdateBoudingBox();
+
+public:
+	const std::vector<glm::vec2>& GetVertexes();
+	void SetVertexes(const std::vector<glm::vec2>& vertexes);
+	float GetAngle();
+	void SetAngle(float angle);
+
+	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+};
 
 }
