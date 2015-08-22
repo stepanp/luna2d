@@ -30,6 +30,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
+#include <functional>
 #include <type_traits>
 #include <algorithm>
 
