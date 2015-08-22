@@ -1,0 +1,101 @@
+//-----------------------------------------------------------------------------
+// luna2d engine
+// Copyright 2014-2015 Stepan Prokofjev
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
+
+#pragma once
+
+#include "lunavector2.h"
+#include "lunarect.h"
+
+namespace luna2d{
+
+enum class LUNABoundsType
+{
+	AABB,
+	POLYGON
+};
+
+
+class LUNABounds
+{
+	LUNA_USERDATA(LUNABounds)
+
+protected:
+	LUNABounds(LUNABoundsType type);
+
+protected:
+	LUNABoundsType type;
+	glm::vec2 pos;
+	glm::vec2 origin;
+	LUNARect bbox;
+	bool needUpdateBBox = true;
+
+protected:
+	virtual void UpdateBoudingBox() = 0;
+
+public:
+	LUNABoundsType GetType();
+	const LUNARect& GetBoundingBox();
+	float GetX();
+	float GetY();
+	void SetX(float x);
+	void SetY(float y);
+	glm::vec2 GetPos();
+	void SetPos(float x, float y);
+	float GetOriginX();
+	float GetOriginY();
+	void SetOriginX(float originX);
+	void SetOriginY(float originY);
+	glm::vec2 GetOrigin();
+	void SetOrigin(float originX, float originY);
+	void SetOriginToCenter();
+
+	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds) = 0;
+};
+
+
+class LUNAAABBBounds : public LUNABounds
+{
+	LUNA_USERDATA_DERIVED(LUNABounds, LUNAAABBBounds)
+
+public:
+	LUNAAABBBounds(float width, float height);
+
+private:
+	float width;
+	float height;
+
+protected:
+	virtual void UpdateBoudingBox();
+
+public:
+	float GetWidth();
+	float GetHeight();
+	void SetWidth(float width);
+	float SetHeight(float height);
+	void SetSize(float width, float height);
+
+	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+};
+
+
+}

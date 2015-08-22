@@ -33,6 +33,7 @@
 #include "math/lunaintersect.h"
 #include "math/lunasplines.h"
 #include "math/lunaeasing.h"
+#include "math/lunabounds.h"
 
 using namespace luna2d;
 
@@ -138,6 +139,35 @@ void BindMath(LuaScript* lua, LuaTable& tblLuna)
 
 	// Register constructor for "Rect"
 	tblMath.SetField("Rect", LUNARect::LuaConstruct);
+
+	// Bind base bounds
+	LuaClass<LUNABounds> clsBounds(lua);
+	clsBounds.SetMethod("getX", &LUNABounds::GetX);
+	clsBounds.SetMethod("getY", &LUNABounds::GetY);
+	clsBounds.SetMethod("setX", &LUNABounds::SetX);
+	clsBounds.SetMethod("setY", &LUNABounds::SetY);
+	clsBounds.SetMethod("getPos", &LUNABounds::GetPos);
+	clsBounds.SetMethod("setPos", &LUNABounds::SetPos);
+	clsBounds.SetMethod("getBoundingBox", &LUNABounds::GetBoundingBox);
+	clsBounds.SetMethod("isIntersect", &LUNABounds::IsIntersect);
+	clsBounds.SetMethod("getOriginX", &LUNABounds::GetOriginX);
+	clsBounds.SetMethod("getOriginY", &LUNABounds::GetOriginY);
+	clsBounds.SetMethod("setOriginX", &LUNABounds::SetOriginX);
+	clsBounds.SetMethod("setOriginY", &LUNABounds::SetOriginY);
+	clsBounds.SetMethod("getOrigin", &LUNABounds::GetOrigin);
+	clsBounds.SetMethod("setOrigin", &LUNABounds::SetOrigin);
+	clsBounds.SetMethod("setOriginToCenter", &LUNABounds::SetOriginToCenter);
+
+	// Bind AABBBounds(RectBounds)
+	LuaClass<LUNAAABBBounds> clsAABBBounds(lua);
+	clsAABBBounds.SetConstructor<float, float>();
+	clsAABBBounds.SetMethod("getWidth", &LUNAAABBBounds::GetWidth);
+	clsAABBBounds.SetMethod("getHeight", &LUNAAABBBounds::GetHeight);
+	clsAABBBounds.SetMethod("setWidth", &LUNAAABBBounds::SetWidth);
+	clsAABBBounds.SetMethod("setHeight", &LUNAAABBBounds::SetHeight);
+	clsAABBBounds.SetMethod("seSize", &LUNAAABBBounds::SetSize);
+	tblMath.SetField("AABBBounds", clsAABBBounds);
+	tblMath.SetField("RectBounds", clsAABBBounds); // RectBounds is alias for AABBBounds
 
 	// Set "luna.math" as alias for standard "math" module
 	tblLuna.SetField("math", tblMath);
