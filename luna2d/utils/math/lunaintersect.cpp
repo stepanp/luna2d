@@ -148,3 +148,37 @@ LuaTable luna2d::intersect::PointBetweenLines(const LuaTable& line1, const LuaTa
 	tblRet.SetField("y", y);
 	return std::move(tblRet);
 }
+
+static std::vector<glm::vec2> rectPolygonCache =
+{
+	glm::vec2(),
+	glm::vec2(),
+	glm::vec2(),
+	glm::vec2()
+};
+
+ // Check intersection between rect and polygion
+bool luna2d::intersect::RectPolygion(const LUNARect rect, const std::vector<glm::vec2>& polygon)
+{
+	// Convert rect to polygoon with four vertexes
+	// To avoid create new vertex array on heap, cache it to variable
+	rectPolygonCache[0].x = rect.x;
+	rectPolygonCache[0].y = rect.y;
+	rectPolygonCache[1].x = rect.x;
+	rectPolygonCache[1].y = rect.y + rect.height;
+	rectPolygonCache[2].x = rect.x + rect.width;
+	rectPolygonCache[2].y = rect.y + rect.height;
+	rectPolygonCache[3].x = rect.x + rect.width;
+	rectPolygonCache[3].y = rect.y;
+
+	return Polygions(rectPolygonCache, polygon);
+}
+
+// Check intersection between two polygions
+bool luna2d::intersect::Polygions(const std::vector<glm::vec2>& polygon1, const std::vector<glm::vec2>& polygon2)
+{
+	for(const auto& vec : polygon1) if(PointInPolygon(vec, polygon2)) return true;
+	for(const auto& vec : polygon2) if(PointInPolygon(vec, polygon1)) return true;
+
+	return false;
+}

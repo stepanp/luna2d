@@ -35,6 +35,8 @@ bool PointInRectangle(const glm::vec2& point, const LUNARect& rect); // Check fo
 bool PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r); // Check for point insinde in cirle
 bool PointInPolygon(const glm::vec2& point, const std::vector<glm::vec2>& polygon); // Check for point inside polygon
 bool Rectangles(const LUNARect& rect1, const LUNARect& rect2); // Check intersection between two rectangles
+bool RectPolygion(const LUNARect rect, const std::vector<glm::vec2>& polygon); // Check intersection between rect and polygion
+bool Polygions(const std::vector<glm::vec2>& polygon1, const std::vector<glm::vec2>& polygon2); // Check intersection between two polygions
 bool Lines(const LuaTable& line1, const LuaTable& line2); // Check intersection between two lines
 bool LineCircle(const LuaTable& line, const glm::vec2& point, float r); // Check intersection between line and circle
 LuaTable PointBetweenLines(const LuaTable& line1, const LuaTable& line2); // Get intersection point between two lines

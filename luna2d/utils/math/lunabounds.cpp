@@ -208,7 +208,8 @@ bool LUNAAABBBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 		case LUNABoundsType::AABB:
 			return bboxIntersects;
 		case LUNABoundsType::POLYGON:
-			return false;
+			auto polygonBounds = std::static_pointer_cast<LUNAPolygonBounds>(bounds);
+			return intersect::RectPolygion(GetBoundingBox(), polygonBounds->GetVertexes());
 	}
 
 	return false;
@@ -291,8 +292,9 @@ bool LUNAPolygonBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	switch(bounds->GetType())
 	{
 		case LUNABoundsType::AABB:
-			return false;
+			return intersect::RectPolygion(bounds->GetBoundingBox(), GetVertexes());
 		case LUNABoundsType::POLYGON:
-			return false;
+			auto polygonBounds = std::static_pointer_cast<LUNAPolygonBounds>(bounds);
+			return intersect::Polygions(GetVertexes(), polygonBounds->GetVertexes());
 	}
 }
