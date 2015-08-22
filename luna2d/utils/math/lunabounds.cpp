@@ -179,7 +179,7 @@ void LUNAAABBBounds::SetWidth(float width)
 	needUpdateCache = true;
 }
 
-float LUNAAABBBounds::SetHeight(float height)
+void LUNAAABBBounds::SetHeight(float height)
 {
 	this->height = height;
 	needUpdateCache = true;

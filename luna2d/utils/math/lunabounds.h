@@ -97,7 +97,7 @@ public:
 	float GetWidth();
 	float GetHeight();
 	void SetWidth(float width);
-	float SetHeight(float height);
+	void SetHeight(float height);
 	void SetSize(float width, float height);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
