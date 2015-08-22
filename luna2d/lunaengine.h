@@ -31,6 +31,7 @@
 #include <unordered_set>
 #include <memory>
 #include <type_traits>
+#include <algorithm>
 
 namespace luna2d{
 
