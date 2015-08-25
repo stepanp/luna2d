@@ -42,6 +42,7 @@ LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 	{
 		std::string easingName = luaEasing.ToString();
 		if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
+		else LUNA_LOGE("Easing with name \"%s\" not found. Using default \"linear\" easing", easingName.c_str());
 	}
 
 	// Or use custom easing function
