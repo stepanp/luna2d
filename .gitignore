@@ -14,11 +14,13 @@ projects/ios-xcode/build/*
 tools/Emulator/build*
 tools/Emulator/Emulator.exe
 tools/Emulator/Emulatord.exe
+tools/Emulator/Emulator.app/*
 tools/Emulator/src/Emulator.pro.user
 
 tools/Pipeline/build*
 tools/Pipeline/Pipeline.exe
 tools/Pipeline/Pipelined.exe
+tools/Emulator/Pipeline.app/*
 tools/Pipeline/src/Pipeline.pro.user
 
 samples/FlappyLuna/project-android/bin/*
