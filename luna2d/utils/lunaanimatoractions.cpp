@@ -58,19 +58,57 @@ LUNAObjectAction::LUNAObjectAction(const LuaTable& params) : LUNAAction(params)
 //-----------------------
 LUNAActionMove::LUNAActionMove(const LuaTable& params) : LUNAObjectAction(params)
 {
-	begin = TryGetCurrentValue<glm::vec2>(params, "beginValue", "getPos");
-	end = params.GetField<glm::vec2>("endValue");
+	if(params.HasField("endValueX") && !params.HasField("endValueY")) mode = MoveMode::AXIS_X;
+	else if(!params.HasField("endValueX") && params.HasField("endValueY")) mode = MoveMode::AXIS_Y;
+	else mode = MoveMode::AXIS_BOTH;
 
-	if(obj && !obj.HasField("setPos")) LUNA_LOGE("Object for action \"move\" must have \"setPos\" method");
+	if(mode == MoveMode::AXIS_X)
+	{
+		begin.x = TryGetCurrentValue<float>(params, "beginValueX", "getX");
+		end.x = params.GetFloat("endValueX");
+
+		if(obj && !obj.HasField("setX")) LUNA_LOGE("Object for action \"move\" must have \"setX\" method");
+	}
+
+	if(mode == MoveMode::AXIS_Y)
+	{
+		begin.y = TryGetCurrentValue<float>(params, "beginValueY", "getY");
+		end.y = params.GetFloat("endValueY");
+
+		if(obj && !obj.HasField("setY")) LUNA_LOGE("Object for action \"move\" must have \"setY\" method");
+	}
+
+	if(mode == MoveMode::AXIS_BOTH)
+	{
+		if(params.HasField("endValue"))
+		{
+			begin = TryGetCurrentValue<glm::vec2>(params, "beginValue", "getPos");
+			end = params.GetField<glm::vec2>("endValue");
+		}
+		else
+		{
+			begin.x = TryGetCurrentValue<float>(params, "beginValueX", "getX");
+			end.x = params.GetFloat("endValueX");
+			begin.y = TryGetCurrentValue<float>(params, "beginValueY", "getY");
+			end.y = params.GetFloat("endValueY");
+		}
+
+		if(obj && !obj.HasField("setPos")) LUNA_LOGE("Object for action \"move\" must have \"setPos\" method");
+	}
 }
 
 void luna2d::LUNAActionMove::OnUpdate()
 {
 	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
 
-	float x = math::EaseLerp(begin.x, end.x, GetPercent(), easing);
-	float y = math::EaseLerp(begin.y, end.y, GetPercent(), easing);
-	obj.CallMethodVoid("setPos", x, y);
+	if(mode == MoveMode::AXIS_X) obj.CallMethodVoid("setX", math::EaseLerp(begin.x, end.x, GetPercent(), easing));
+	else if(mode == MoveMode::AXIS_Y) obj.CallMethodVoid("setY", math::EaseLerp(begin.y, end.y, GetPercent(), easing));
+	else
+	{
+		float x = math::EaseLerp(begin.x, end.x, GetPercent(), easing);
+		float y = math::EaseLerp(begin.y, end.y, GetPercent(), easing);
+		obj.CallMethodVoid("setPos", x, y);
+	}
 }
 
 

@@ -58,10 +58,18 @@ protected:
 //-----------------------
 class LUNAActionMove : public LUNAObjectAction
 {
+	enum class MoveMode
+	{
+		AXIS_X, // Move only by x-axis
+		AXIS_Y, // Move only by y-axis
+		AXIS_BOTH, // Move by both x and y axises
+	};
+
 public:
 	LUNAActionMove(const LuaTable& params);
 
 private:
+	MoveMode mode;
 	glm::vec2 begin;
 	glm::vec2 end;
 
