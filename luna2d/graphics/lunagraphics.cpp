@@ -28,6 +28,7 @@
 #include "lunaanimation.h"
 #include "lunamesh.h"
 #include "lunatext.h"
+#include "lunaparticlesystem.h"
 #include "lunacurverenderer.h"
 
 using namespace luna2d;
@@ -42,7 +43,7 @@ LUNAGraphics::LUNAGraphics()
 	lastFrames = 0;
 	deltaTime = 0;
 
-	// Register "luna.graphics" module
+	// Bind "luna.graphics" module
 	LuaScript *lua = LUNAEngine::SharedLua();
 	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
 	LuaTable tblGraphics(lua);
@@ -54,7 +55,7 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
 
-	// Register sprite
+	// Bind sprite
 	LuaClass<LUNASprite> clsSprite(lua);
 	clsSprite.SetConstructor<const LuaAny&>();
 	clsSprite.SetMethod("setTexture", &LUNASprite::SetTexture);
@@ -90,7 +91,7 @@ LUNAGraphics::LUNAGraphics()
 	clsSprite.SetMethod("render", &LUNASprite::Render);
 	tblGraphics.SetField("Sprite", clsSprite);
 
-	// Register animation
+	// Bind animation
 	LuaClass<LUNAAnimation> clsAnimation(lua);
 	clsAnimation.SetConstructor<const std::vector<std::weak_ptr<LUNATextureRegion>>&, float>();
 	clsAnimation.SetMethod("getFramesCount", &LUNAAnimation::GetFramesCount);
@@ -108,7 +109,7 @@ LUNAGraphics::LUNAGraphics()
 	clsAnimation.SetMethod("update", &LUNAAnimation::Update);
 	tblGraphics.SetField("Animation", clsAnimation);
 
-	// Register mesh
+	// Bind mesh
 	LuaClass<LUNAMesh> clsMesh(lua);
 	clsMesh.SetConstructor<const std::weak_ptr<LUNATexture>&>();
 	clsMesh.SetMethod("clear", &LUNAMesh::Clear);
@@ -117,7 +118,7 @@ LUNAGraphics::LUNAGraphics()
 	clsMesh.SetMethod("render", &LUNAMesh::Render);
 	tblGraphics.SetField("Mesh", clsMesh);
 
-	// Register text renderer
+	// Bind text renderer
 	LuaClass<LUNAText> clsText(lua);
 	clsText.SetConstructor<const std::weak_ptr<LUNAFont>&>();
 	clsText.SetMethod("getX", &LUNAText::GetX);
@@ -135,7 +136,14 @@ LUNAGraphics::LUNAGraphics()
 	clsText.SetMethod("render", &LUNAText::Render);
 	tblGraphics.SetField("Text", clsText);
 
-	// Register curve renderer
+	// Bind particle system
+	LuaClass<LUNAParticleSystem> clsParticleSystem(lua);
+	clsParticleSystem.SetConstructor<const LuaTable&>();
+	clsParticleSystem.SetMethod("update", &LUNAParticleSystem::Update);
+	clsParticleSystem.SetMethod("render", &LUNAParticleSystem::Render);
+	tblGraphics.SetField("ParticleSystem", clsParticleSystem);
+
+	// Bind curve renderer
 	LuaClass<LUNACurveRenderer> clsCurveRenderer(lua);
 	clsCurveRenderer.SetConstructor<const LuaTable&>();
 	clsCurveRenderer.SetMethod("getKnotsCount", &LUNACurveRenderer::GetKnotsCount);
@@ -154,7 +162,7 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.MakeReadOnly();
 	tblLuna.SetField("graphics", tblGraphics);
 
-	// Register graphics asset types
+	// Bind graphics asset types
 	LuaClass<LUNATexture> clsTexture(lua);
 	clsTexture.SetMethod("getWidth", &LUNATexture::GetWidth);
 	clsTexture.SetMethod("getHeight", &LUNATexture::GetHeight);
