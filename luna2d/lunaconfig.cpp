@@ -102,13 +102,8 @@ bool LUNAConfig::Read()
 	if(jsonConfig["scaleMode"] != nullptr)
 	{
 		std::string scaleModeStr = jsonConfig["scaleMode"].string_value();
-		if(scaleModeStr == "fitToHeightLeft") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
-		else if(scaleModeStr == "fitToHeightRight") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_RIGHT;
-		else if(scaleModeStr == "fitToHeightCenter") scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_CENTER;
-		else if(scaleModeStr == "fitToWidthTop") scaleMode = LUNAScaleMode::FIT_TO_WIDTH_TOP;
-		else if(scaleModeStr == "fitToWidthBottom") scaleMode = LUNAScaleMode::FIT_TO_WIDTH_BOTTOM;
-		else if(scaleModeStr == "fitToWidthCenter") scaleMode = LUNAScaleMode::FIT_TO_WIDTH_CENTER;
-		else LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
+		if(!SCALE_MODE.HasKey(scaleModeStr)) LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
+		else scaleMode = SCALE_MODE.FromString(scaleModeStr);
 	}
 
 	if(jsonConfig["baseWidth"] != nullptr)

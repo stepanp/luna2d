@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunaengine.h"
+#include "utils/lunastringenum.h"
 
 namespace luna2d{
 
@@ -41,6 +42,16 @@ enum class LUNAScaleMode
 	FIT_TO_WIDTH_TOP,
 	FIT_TO_WIDTH_BOTTOM,
 	FIT_TO_WIDTH_CENTER,
+};
+
+const LUNAStringEnum<LUNAScaleMode> SCALE_MODE =
+{
+	"fitToHeightLeft",
+	"fitToHeightRight",
+	"fitToHeightCenter",
+	"fitToWidthTop",
+	"fitToWidthBottom",
+	"fitToWidthCenter",
 };
 
 class LUNAConfig
