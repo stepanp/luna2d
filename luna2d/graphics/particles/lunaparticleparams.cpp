@@ -27,6 +27,51 @@ using namespace luna2d;
 
 LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 {
+	if(luaParams.HasField("spawnAreaMode"))
+	{
+		std::string spawnAreaModeStr = luaParams.GetString("spawnAreaMode");
+		if(SPAWN_AREA_MODE.HasKey(spawnAreaModeStr))
+		{
+			spawnAreaMode = SPAWN_AREA_MODE.FromString(spawnAreaModeStr);
+			if(spawnAreaMode == LUNASpawnAreaMode::RECT) spawnRect = luaParams.GetField<LUNARect>("spawnRect");
+			else if(spawnAreaMode == LUNASpawnAreaMode::CIRCLE) spawnCircleR = luaParams.GetField<float>("spawnCircleR");
+		}
+		else LUNA_LOGE("Unsupported spawn area mode: \"%s\"", spawnAreaModeStr.c_str());
+	}
 
+	if(luaParams.HasField("textureSelectionMode"))
+	{
+		std::string textureSelectionModeStr = luaParams.GetString("textureSelectionMode");
+		if(TEXTURE_SELECTION_MODE.HasKey(textureSelectionModeStr))
+		{
+			textureSelectionMode = TEXTURE_SELECTION_MODE.FromString(textureSelectionModeStr);
+		}
+		else LUNA_LOGE("Unsupported texture selection mode: \"%s\"", textureSelectionModeStr.c_str());
+	}
 
+	textures = luaParams.GetField<std::vector<std::string>>("textures");
+	if(textures.empty()) LUNA_LOGE("Particle emitter must have at least one texture or texture region");
+
+	attached = luaParams.GetBool("attached");
+	duration = luaParams.GetFloat("duration");
+	spawnCount = luaParams.GetInt("spawnCount");
+	spawnDelay = luaParams.GetFloat("spawnDelay");
+	lifetimeMin = luaParams.GetFloat("lifetimeMin");
+	lifetimeMax = luaParams.GetFloat("lifetimeMax");
+	directionMin = luaParams.GetFloat("directionMin");
+	directionMax = luaParams.GetFloat("directionMax");
+	speedMin = luaParams.GetFloat("speedMin");
+	speedMax = luaParams.GetFloat("speedMax");
+	initAngleMin = luaParams.GetFloat("initAngleMin");
+	initAngleMax = luaParams.GetFloat("initAngleMax");
+	rotateMin = luaParams.GetFloat("rotateMin");
+	rotateMax = luaParams.GetFloat("rotateMax");
+	scaleBeginMin = luaParams.GetFloat("scaleBeginMin");
+	scaleBeginMax = luaParams.GetFloat("scaleBeginMax");
+	scaleEndMin = luaParams.GetFloat("scaleEndMin");
+	scaleEndMax = luaParams.GetFloat("scaleEndMax");
+	alphaBeginMin = luaParams.GetFloat("alphaBeginMin");
+	alphaBeginMax = luaParams.GetFloat("alphaBeginMax");
+	alphaEndMin = luaParams.GetFloat("alphaEndMin");
+	alphaEndMax = luaParams.GetFloat("alphaEndMax");
 }

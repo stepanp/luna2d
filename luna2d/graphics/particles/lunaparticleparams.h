@@ -74,7 +74,7 @@ public:
 	LUNARect spawnRect;
 
 	// Radius for "LUNASpawnAreaMode::CIRCLE" spawn area mode
-	float spawnRectR = 0.0f;
+	float spawnCircleR = 0.0f;
 
 	// List of textures or texture regions using to create particles
 	// Stored as paths to asset in asset manager. Asset object gets from asset manager when emmiter created
@@ -100,8 +100,8 @@ public:
 	float lifetimeMax = 0.0f;
 
 	// Particle direction range
-	float dirMin = 0.0f;
-	float dirMax = 0.0f;
+	float directionMin = 0.0f;
+	float directionMax = 0.0f;
 
 	// Particle speed range
 	float speedMin = 1.0f;
