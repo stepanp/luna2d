@@ -25,6 +25,7 @@
 
 #include "lunaparticleparams.h"
 #include "lunaparticle.h"
+#include "lunasprite.h"
 
 namespace luna2d{
 
@@ -35,6 +36,8 @@ public:
 
 private:
 	std::shared_ptr<LUNAParticleParams> params;
+	std::vector<std::shared_ptr<LUNASprite>> sprites;
+	std::vector<std::shared_ptr<LUNAParticle>> particles;
 
 public:
 	void Update(float dt);

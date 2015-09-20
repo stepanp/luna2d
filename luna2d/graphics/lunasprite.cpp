@@ -56,6 +56,25 @@ LUNASprite::LUNASprite(const std::weak_ptr<LUNATextureRegion>& region)
 	if(!InitFromRegion(region)) LUNA_LOGE("Attempt to create sprite from invalid texture region");
 }
 
+LUNASprite::LUNASprite(const LUNASprite& spr)
+{
+	texture = spr.texture;
+	x = spr.x;
+	y = spr.y;
+	originX = spr.originX;
+	originY = spr.originY;
+	width = spr.width;
+	height = spr.height;
+	scaleX = spr.scaleX;
+	scaleY = spr.scaleY;
+	angle = spr.angle;
+	u1 = spr.u1;
+	v1 = spr.v1;
+	u2 = spr.u2;
+	v2 = spr.v2;
+	color = spr.color;
+}
+
 bool LUNASprite::InitFromTexture(const std::weak_ptr<LUNATexture>& texture)
 {
 	if(texture.expired()) return false;

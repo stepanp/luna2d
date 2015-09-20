@@ -22,13 +22,33 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaparticleemitter.h"
+#include "lunaassets.h"
 
 using namespace luna2d;
 
 LUNAParticleEmitter::LUNAParticleEmitter(const std::shared_ptr<LUNAParticleParams>& params) :
 	params(params)
 {
+	LUNAAssets* assets = LUNAEngine::SharedAssets();
 
+	for(const auto& path : params->textures)
+	{
+		auto region = assets->GetAssetByPath<LUNATextureRegion>(path);
+		if(!region.expired())
+		{
+			sprites.push_back(std::make_shared<LUNASprite>(region));
+			continue;
+		}
+
+		auto texture = assets->GetAssetByPath<LUNATexture>(path);
+		if(!texture.expired())
+		{
+			sprites.push_back(std::make_shared<LUNASprite>(texture));
+			continue;
+		}
+
+		LUNA_LOGE("Invalid texture or texture region \"%s\"", path.c_str());
+	}
 }
 
 void LUNAParticleEmitter::Update(float dt)

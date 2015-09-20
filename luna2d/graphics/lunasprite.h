@@ -39,6 +39,7 @@ public:
 	LUNASprite(const LuaAny& asset); // Lua constructor
 	LUNASprite(const std::weak_ptr<LUNATexture>& texture);
 	LUNASprite(const std::weak_ptr<LUNATextureRegion>& region);
+	LUNASprite(const LUNASprite& spr);
 
 protected:
 	std::weak_ptr<LUNATexture> texture;

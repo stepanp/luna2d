@@ -36,10 +36,10 @@ LUNAParticleSystem::LUNAParticleSystem(const LuaTable& luaParams)
 
 void LUNAParticleSystem::Update(float dt)
 {
-
+	for(auto& emitter : emitters) emitter->Update(dt);
 }
 
 void LUNAParticleSystem::Render()
 {
-
+	for(auto& emitter : emitters) emitter->Render();
 }

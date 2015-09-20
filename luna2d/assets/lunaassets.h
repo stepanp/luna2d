@@ -104,7 +104,7 @@ public:
 	std::weak_ptr<AssetType> GetAssetByPath(const std::string& path)
 	{
 		LuaTable parent = GetParentTableForPath(path);
-		if(!parent) return nullptr;
+		if(!parent) return std::weak_ptr<AssetType>();
 
 		return parent.GetField<std::weak_ptr<AssetType>>(GetNameForPath(path));
 	}
