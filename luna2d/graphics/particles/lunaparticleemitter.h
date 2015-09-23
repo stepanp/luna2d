@@ -36,10 +36,13 @@ public:
 
 private:
 	std::shared_ptr<LUNAParticleParams> params;
-	std::vector<std::shared_ptr<LUNASprite>> sprites;
+	std::vector<std::shared_ptr<LUNASprite>> sourceSprites;
 	std::vector<std::shared_ptr<LUNAParticle>> particles;
+	glm::vec2 pos;
 
 public:
+	glm::vec2 GetPos();
+	void SetPos(const glm::vec2& pos);
 	void Update(float dt);
 	void Render();
 };

@@ -34,6 +34,39 @@ LUNAParticleSystem::LUNAParticleSystem(const LuaTable& luaParams)
 	}
 }
 
+float LUNAParticleSystem::GetX()
+{
+	return pos.x;
+}
+
+float LUNAParticleSystem::GetY()
+{
+	return pos.y;
+}
+
+void LUNAParticleSystem::SetX(float x)
+{
+	SetPos(x, pos.y);
+}
+
+void LUNAParticleSystem::SetY(float y)
+{
+	SetPos(pos.x, y);
+}
+
+glm::vec2 LUNAParticleSystem::GetPos()
+{
+	return pos;
+}
+
+void LUNAParticleSystem::SetPos(float x, float y)
+{
+	pos.x = x;
+	pos.y = y;
+
+	for(auto& emitter : emitters) emitter->SetPos(pos);
+}
+
 void LUNAParticleSystem::Update(float dt)
 {
 	for(auto& emitter : emitters) emitter->Update(dt);

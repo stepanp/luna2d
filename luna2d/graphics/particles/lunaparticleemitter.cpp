@@ -36,27 +36,39 @@ LUNAParticleEmitter::LUNAParticleEmitter(const std::shared_ptr<LUNAParticleParam
 		auto region = assets->GetAssetByPath<LUNATextureRegion>(path);
 		if(!region.expired())
 		{
-			sprites.push_back(std::make_shared<LUNASprite>(region));
+			sourceSprites.push_back(std::make_shared<LUNASprite>(region));
 			continue;
 		}
 
 		auto texture = assets->GetAssetByPath<LUNATexture>(path);
 		if(!texture.expired())
 		{
-			sprites.push_back(std::make_shared<LUNASprite>(texture));
+			sourceSprites.push_back(std::make_shared<LUNASprite>(texture));
 			continue;
 		}
 
 		LUNA_LOGE("Invalid texture or texture region \"%s\"", path.c_str());
 	}
+
+	particles.push_back(std::make_shared<LUNAParticle>(sourceSprites[0], params));
+}
+
+glm::vec2 LUNAParticleEmitter::GetPos()
+{
+	return pos;
+}
+
+void LUNAParticleEmitter::SetPos(const glm::vec2& pos)
+{
+	this->pos = pos + params->emitterPos;
 }
 
 void LUNAParticleEmitter::Update(float dt)
 {
-
+	for(auto& particle : particles) particle->Update(dt);
 }
 
 void LUNAParticleEmitter::Render()
 {
-
+	for(auto& particle : particles) particle->Render();
 }

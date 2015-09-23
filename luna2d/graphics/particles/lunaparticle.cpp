@@ -25,12 +25,13 @@
 
 using namespace luna2d;
 
-void LUNAParticle::Update(float dt)
+LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params) :
+	LUNASprite(*sprite),
+	params(params)
 {
-
 }
 
-void LUNAParticle::Render()
+void LUNAParticle::Update(float dt)
 {
 
 }

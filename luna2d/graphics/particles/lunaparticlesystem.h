@@ -36,9 +36,16 @@ public:
 	LUNAParticleSystem(const LuaTable& luaParams);
 
 private:
+	glm::vec2 pos;
 	std::vector<std::shared_ptr<LUNAParticleEmitter>> emitters;
 
 public:
+	float GetX();
+	float GetY();
+	void SetX(float x);
+	void SetY(float y);
+	glm::vec2 GetPos();
+	void SetPos(float x, float y);
 	void Update(float dt);
 	void Render();
 };

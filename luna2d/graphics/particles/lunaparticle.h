@@ -23,15 +23,21 @@
 
 #pragma once
 
-#include "lunaparticle.h"
+#include "lunaparticleparams.h"
+#include "lunasprite.h"
 
 namespace luna2d{
 
-class LUNAParticle
+class LUNAParticle : public LUNASprite
 {
 public:
+	LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params);
+
+private:
+	std::shared_ptr<LUNAParticleParams> params;
+
+public:
 	void Update(float dt);
-	void Render();
 };
 
 }

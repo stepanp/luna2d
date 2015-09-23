@@ -83,6 +83,9 @@ public:
 	// Mode of selection texture from textures list for each new particle
 	LUNATextureSelectionMode textureSelectionMode = LUNATextureSelectionMode::SHUFFLE;
 
+	// Emitter position relative particle system
+	glm::vec2 emitterPos;
+
 	// Move particles with emmitter or not
 	bool attached = false;
 
