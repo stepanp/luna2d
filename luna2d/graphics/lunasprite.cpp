@@ -79,6 +79,8 @@ bool LUNASprite::InitFromTexture(const std::weak_ptr<LUNATexture>& texture)
 {
 	if(texture.expired()) return false;
 
+	this->texture = texture;
+
 	u1 = 0;
 	v1 = 0;
 	u2 = 1;
