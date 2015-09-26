@@ -221,6 +221,8 @@ void LUNAGraphics::OnUpdate()
 	deltaTime = curTime - lastTime;
 	lastTime = curTime;
 
+	if(deltaTime > MAX_DELTA) deltaTime = MAX_DELTA;
+
 	// Calculate FPS
 	fpsTime += deltaTime;
 	framesCount++;

@@ -27,6 +27,8 @@
 
 namespace luna2d{
 
+const float MAX_DELTA = 1.0f / 10.0f; // 10 FPS
+
 class LUNAGraphics
 {
 public:
