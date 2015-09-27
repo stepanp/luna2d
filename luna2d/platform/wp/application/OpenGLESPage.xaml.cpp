@@ -16,14 +16,14 @@ using namespace Windows::UI::ViewManagement;
 using namespace luna2d;
 
 OpenGLESPage::OpenGLESPage() :
-    mOpenGLES(&gles),
-    mRenderSurface(EGL_NO_SURFACE),
-    mCustomRenderSurfaceSize(0,0),
-    mUseCustomRenderSurfaceSize(false)
+	mOpenGLES(&gles),
+	mRenderSurface(EGL_NO_SURFACE),
+	mCustomRenderSurfaceSize(0,0),
+	mUseCustomRenderSurfaceSize(false)
 {
-    InitializeComponent();
+	InitializeComponent();
 
-    Windows::UI::Core::CoreWindow^ window = Windows::UI::Xaml::Window::Current->CoreWindow;
+	Windows::UI::Core::CoreWindow^ window = Windows::UI::Xaml::Window::Current->CoreWindow;
 
 	// Set fullscreen mode on Windows Phone
 #if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
@@ -32,21 +32,21 @@ OpenGLESPage::OpenGLESPage() :
 	ApplicationView::GetForCurrentView()->SetDesiredBoundsMode(ApplicationViewBoundsMode::UseCoreWindow); // Disable stretching layout by navigation bar
 #endif	
 
-    window->VisibilityChanged +=
-        ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::VisibilityChangedEventArgs^>(this, &OpenGLESPage::OnVisibilityChanged);
+	window->VisibilityChanged +=
+		ref new Windows::Foundation::TypedEventHandler<Windows::UI::Core::CoreWindow^, Windows::UI::Core::VisibilityChangedEventArgs^>(this, &OpenGLESPage::OnVisibilityChanged);
 
-    swapChainPanel->SizeChanged +=
-        ref new Windows::UI::Xaml::SizeChangedEventHandler(this, &OpenGLESPage::OnSwapChainPanelSizeChanged);
+	swapChainPanel->SizeChanged +=
+		ref new Windows::UI::Xaml::SizeChangedEventHandler(this, &OpenGLESPage::OnSwapChainPanelSizeChanged);
 
-    this->Loaded +=
-        ref new Windows::UI::Xaml::RoutedEventHandler(this, &OpenGLESPage::OnPageLoaded);
+	this->Loaded +=
+		ref new Windows::UI::Xaml::RoutedEventHandler(this, &OpenGLESPage::OnPageLoaded);
 
 #if !(WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-    // Disable all pointer visual feedback for better performance when touching.
-    // This is not supported on Windows Phone applications.
-    auto pointerVisualizationSettings = Windows::UI::Input::PointerVisualizationSettings::GetForCurrentView();
-    pointerVisualizationSettings->IsContactFeedbackEnabled = false;
-    pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
+	// Disable all pointer visual feedback for better performance when touching.
+	// This is not supported on Windows Phone applications.
+	auto pointerVisualizationSettings = Windows::UI::Input::PointerVisualizationSettings::GetForCurrentView();
+	pointerVisualizationSettings->IsContactFeedbackEnabled = false;
+	pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
 #endif
 
 	// Register our SwapChainPanel to get independent input pointer events
@@ -69,70 +69,70 @@ OpenGLESPage::OpenGLESPage() :
 
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
-    mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };
+	mSwapChainPanelSize = { swapChainPanel->RenderSize.Width, swapChainPanel->RenderSize.Height };
 }
 
 OpenGLESPage::~OpenGLESPage()
 {
-    StopRenderLoop();
-    DestroyRenderSurface();
+	StopRenderLoop();
+	DestroyRenderSurface();
 }
 
 void OpenGLESPage::OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-    // The SwapChainPanel has been created and arranged in the page layout, so EGL can be initialized.
-    CreateRenderSurface();
-    StartRenderLoop();
+	// The SwapChainPanel has been created and arranged in the page layout, so EGL can be initialized.
+	CreateRenderSurface();
+	StartRenderLoop();
 }
 
 void OpenGLESPage::OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args)
 {
-    if (args->Visible && mRenderSurface != EGL_NO_SURFACE)
-    {
-        StartRenderLoop();
-    }
-    else
-    {
-        StopRenderLoop();
-    }
+	if (args->Visible && mRenderSurface != EGL_NO_SURFACE)
+	{
+		StartRenderLoop();
+	}
+	else
+	{
+		StopRenderLoop();
+	}
 }
 
 void OpenGLESPage::OnSwapChainPanelSizeChanged(Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e)
 {
-    // Size change events occur outside of the render thread.  A lock is required when updating
-    // the swapchainpanel size
-    critical_section::scoped_lock lock(mSwapChainPanelSizeCriticalSection);
-    mSwapChainPanelSize = { e->NewSize.Width, e->NewSize.Height };
+	// Size change events occur outside of the render thread.  A lock is required when updating
+	// the swapchainpanel size
+	critical_section::scoped_lock lock(mSwapChainPanelSizeCriticalSection);
+	mSwapChainPanelSize = { e->NewSize.Width, e->NewSize.Height };
 }
 
 void OpenGLESPage::GetSwapChainPanelSize(GLsizei* width, GLsizei* height)
 {
-    critical_section::scoped_lock lock(mSwapChainPanelSizeCriticalSection);
-    // If a custom render surface size is specified, return its size instead of
-    // the swapchain panel size.
-    if (mUseCustomRenderSurfaceSize)
-    {
-        *width = static_cast<GLsizei>(mCustomRenderSurfaceSize.Width);
-        *height = static_cast<GLsizei>(mCustomRenderSurfaceSize.Height);
-    }
-    else
-    {
-        *width = static_cast<GLsizei>(mSwapChainPanelSize.Width);
-        *height = static_cast<GLsizei>(mSwapChainPanelSize.Height);
-    }
+	critical_section::scoped_lock lock(mSwapChainPanelSizeCriticalSection);
+	// If a custom render surface size is specified, return its size instead of
+	// the swapchain panel size.
+	if (mUseCustomRenderSurfaceSize)
+	{
+		*width = static_cast<GLsizei>(mCustomRenderSurfaceSize.Width);
+		*height = static_cast<GLsizei>(mCustomRenderSurfaceSize.Height);
+	}
+	else
+	{
+		*width = static_cast<GLsizei>(mSwapChainPanelSize.Width);
+		*height = static_cast<GLsizei>(mSwapChainPanelSize.Height);
+	}
 }
 
 void OpenGLESPage::CreateRenderSurface()
 {
-    if (mOpenGLES)
-    {
-        //
-        // A Custom render surface size can be specified by uncommenting the following lines.
-        // The render surface will be automatically scaled to fit the entire window.  Using a
-        // smaller sized render surface can result in a performance gain.
-        //
-        //mCustomRenderSurfaceSize = Size(800, 600);
-        //mUseCustomRenderSurfaceSize = true;
+	if (mOpenGLES)
+	{
+		//
+		// A Custom render surface size can be specified by uncommenting the following lines.
+		// The render surface will be automatically scaled to fit the entire window.  Using a
+		// smaller sized render surface can result in a performance gain.
+		//
+		//mCustomRenderSurfaceSize = Size(800, 600);
+		//mUseCustomRenderSurfaceSize = true;
 
 		// Create custom render surface with screen size
 		// To avoid incorrect swap chain panel size in Windows Phone
@@ -143,96 +143,96 @@ void OpenGLESPage::CreateRenderSurface()
 		mCustomRenderSurfaceSize = Size(bounds.Width * scaleFactor, bounds.Height * scaleFactor);
 		mUseCustomRenderSurfaceSize = true;
 
-        mRenderSurface = mOpenGLES->CreateSurface(swapChainPanel, mUseCustomRenderSurfaceSize ? &mCustomRenderSurfaceSize : nullptr);
-    }
+		mRenderSurface = mOpenGLES->CreateSurface(swapChainPanel, mUseCustomRenderSurfaceSize ? &mCustomRenderSurfaceSize : nullptr);
+	}
 }
 
 void OpenGLESPage::DestroyRenderSurface()
 {
-    if (mOpenGLES)
-    {
-        mOpenGLES->DestroySurface(mRenderSurface);
-    }
-    mRenderSurface = EGL_NO_SURFACE;
+	if (mOpenGLES)
+	{
+		mOpenGLES->DestroySurface(mRenderSurface);
+	}
+	mRenderSurface = EGL_NO_SURFACE;
 }
 
 void OpenGLESPage::RecoverFromLostDevice()
 {
-    // Stop the render loop, reset OpenGLES, recreate the render surface
-    // and start the render loop again to recover from a lost device.
+	// Stop the render loop, reset OpenGLES, recreate the render surface
+	// and start the render loop again to recover from a lost device.
 
-    StopRenderLoop();
+	StopRenderLoop();
 
-    {
-        critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
+	{
+		critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
 
-        DestroyRenderSurface();
-        mOpenGLES->Reset();
-        CreateRenderSurface();
-    }
+		DestroyRenderSurface();
+		mOpenGLES->Reset();
+		CreateRenderSurface();
+	}
 
-    StartRenderLoop();
+	StartRenderLoop();
 }
 
 void OpenGLESPage::StartRenderLoop()
 {
-    // If the render loop is already running then do not start another thread.
-    if (mRenderLoopWorker != nullptr && mRenderLoopWorker->Status == Windows::Foundation::AsyncStatus::Started)
-    {
-        return;
-    }
+	// If the render loop is already running then do not start another thread.
+	if (mRenderLoopWorker != nullptr && mRenderLoopWorker->Status == Windows::Foundation::AsyncStatus::Started)
+	{
+		return;
+	}
 
-    // Create a task for rendering that will be run on a background thread.
-    auto workItemHandler = ref new Windows::System::Threading::WorkItemHandler([this](Windows::Foundation::IAsyncAction ^ action)
-    {
-        critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
+	// Create a task for rendering that will be run on a background thread.
+	auto workItemHandler = ref new Windows::System::Threading::WorkItemHandler([this](Windows::Foundation::IAsyncAction ^ action)
+	{
+		critical_section::scoped_lock lock(mRenderSurfaceCriticalSection);
 
-        mOpenGLES->MakeCurrent(mRenderSurface);
+		mOpenGLES->MakeCurrent(mRenderSurface);
 
-        while(action->Status == Windows::Foundation::AsyncStatus::Started)
-        {
+		while(action->Status == Windows::Foundation::AsyncStatus::Started)
+		{
 			ProcessPointers();
 
-            GLsizei panelWidth = 0;
-            GLsizei panelHeight = 0;
-            GetSwapChainPanelSize(&panelWidth, &panelHeight);
+			GLsizei panelWidth = 0;
+			GLsizei panelHeight = 0;
+			GetSwapChainPanelSize(&panelWidth, &panelHeight);
 
-            if(!LUNAEngine::Shared()->IsInitialized())
-            {
-                LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
+			if(!LUNAEngine::Shared()->IsInitialized())
+			{
+				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
 				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
-            }
-            else LUNAEngine::Shared()->MainLoop();
+			}
+			else LUNAEngine::Shared()->MainLoop();
 
-            // The call to eglSwapBuffers might not be successful (i.e. due to Device Lost)
-            // If the call fails, then we must reinitialize EGL and the GL resources.
-            if (mOpenGLES->SwapBuffers(mRenderSurface) != GL_TRUE)
-            {
-                // XAML objects like the SwapChainPanel must only be manipulated on the UI thread.
-                swapChainPanel->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([=]()
-                {
-                    RecoverFromLostDevice();
-                }, CallbackContext::Any));
+			// The call to eglSwapBuffers might not be successful (i.e. due to Device Lost)
+			// If the call fails, then we must reinitialize EGL and the GL resources.
+			if (mOpenGLES->SwapBuffers(mRenderSurface) != GL_TRUE)
+			{
+				// XAML objects like the SwapChainPanel must only be manipulated on the UI thread.
+				swapChainPanel->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::High, ref new Windows::UI::Core::DispatchedHandler([=]()
+				{
+					RecoverFromLostDevice();
+				}, CallbackContext::Any));
 
-                return;
-            }
-        }
-    });
+				return;
+			}
+		}
+	});
 
 	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnResume();
 
-    // Run task on a dedicated high priority background thread.
-    mRenderLoopWorker = Windows::System::Threading::ThreadPool::RunAsync(workItemHandler, Windows::System::Threading::WorkItemPriority::High, Windows::System::Threading::WorkItemOptions::TimeSliced);
+	// Run task on a dedicated high priority background thread.
+	mRenderLoopWorker = Windows::System::Threading::ThreadPool::RunAsync(workItemHandler, Windows::System::Threading::WorkItemPriority::High, Windows::System::Threading::WorkItemOptions::TimeSliced);
 }
 
 void OpenGLESPage::StopRenderLoop()
 {
-    if (mRenderLoopWorker)
-    {
-        mRenderLoopWorker->Cancel();
-        mRenderLoopWorker = nullptr;
+	if (mRenderLoopWorker)
+	{
+		mRenderLoopWorker->Cancel();
+		mRenderLoopWorker = nullptr;
 		if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnPause();
-    }
+	}
 }
 
 void OpenGLESPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
