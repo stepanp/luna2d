@@ -32,16 +32,14 @@
 using namespace luna2d;
 
 LUNAQtWidget::LUNAQtWidget(QWidget* parent) :
-	QOpenGLWidget(parent),
-	paintDevice(nullptr),
-	placeholderColor(Qt::white),
-	placeholderImage(nullptr),
-	mouseDown(false)
+	QOpenGLWidget(parent)
 {
+	QApplication::instance()->installEventFilter(this);
 }
 
 LUNAQtWidget::~LUNAQtWidget()
 {
+	QApplication::instance()->removeEventFilter(this);
 	if(IsEngineInitialized()) DeinitializeEngine();
 	delete paintDevice;
 }
@@ -148,6 +146,33 @@ void LUNAQtWidget::mouseReleaseEvent(QMouseEvent *event)
 	LUNAEngine::Shared()->OnTouchUp(TranslateMouseX(event->x()), TranslateMouseY(event->y()), 0);
 }
 
+bool LUNAQtWidget::eventFilter(QObject* target, QEvent* event)
+{
+	// Pause engine when all windows of this application are deactivated
+	if(event->type() == QEvent::WindowDeactivate)
+	{
+		if(qobject_cast<QMainWindow*>(target) || qobject_cast<QDialog*>(target))
+		{
+			if(!QApplication::activeWindow())
+			{
+				if(IsEngineInitialized()) PauseEngine();
+			}
+		}
+	}
+
+	// Resume engine when user was switched to this application from another application
+	// and not between windows of this application
+	else if(event->type() == QEvent::WindowActivate)
+	{
+		if(qobject_cast<QMainWindow*>(target) || qobject_cast<QDialog*>(target))
+		{
+			if(IsEnginePaused()) ResumeEngine();
+		}
+	}
+
+	return QObject::eventFilter(target, event);
+}
+
 bool LUNAQtWidget::IsEngineInitialized()
 {
 	return LUNAEngine::Shared()->IsInitialized();
@@ -175,6 +200,22 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath)
 void LUNAQtWidget::DeinitializeEngine()
 {
 	LUNAEngine::Shared()->Deinitialize();
+}
+
+void LUNAQtWidget::PauseEngine()
+{
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnPause();
+}
+
+void LUNAQtWidget::ResumeEngine()
+{
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnResume();
+}
+
+bool LUNAQtWidget::IsEnginePaused()
+{
+	if(!LUNAEngine::Shared()->IsInitialized()) return false;
+	return LUNAEngine::SharedGraphics()->IsPaused();
 }
 
 LUNAEngine* LUNAQtWidget::GetEngine()

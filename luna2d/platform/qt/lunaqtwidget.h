@@ -41,10 +41,11 @@ public:
 	virtual ~LUNAQtWidget();
 
 private:
-	QOpenGLPaintDevice* paintDevice;
-	QColor placeholderColor;
+	QOpenGLPaintDevice* paintDevice = nullptr;
+	QColor placeholderColor = Qt::white;
 	QImage placeholderImage;
-	bool mouseDown;
+	bool mouseDown = false;
+	bool autoPause = true;
 
 private:
 	float TranslateMouseX(int x);
@@ -55,6 +56,7 @@ protected:
 	virtual void paintGL();
 	virtual void mousePressEvent(QMouseEvent* event);
 	virtual void mouseReleaseEvent(QMouseEvent* event);
+	virtual bool eventFilter(QObject* target, QEvent* event);
 
 signals:
 	void engineInitialized(); // Emits when engine was initialized
@@ -71,6 +73,9 @@ public:
 	void InitializeEngine(const QString& gamePath, int width, int height);
 	void InitializeEngine(const QString& gamePath);
 	void DeinitializeEngine();
+	void PauseEngine();
+	void ResumeEngine();
+	bool IsEnginePaused();
 	LUNAEngine* GetEngine();
 	void SetPlaceholderColor(const QColor& color);
 	void SetPlaceholderImage(const QImage& image);
