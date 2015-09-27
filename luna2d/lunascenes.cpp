@@ -74,11 +74,23 @@ void LUNAScenes::SetScene(const LuaTable& tblScene)
 	tblCurScene = tblScene;
 
 	// Cache refs to scene methods
+	fnPause = tblCurScene.GetFunction("onPause");
+	fnResume = tblCurScene.GetFunction("onResume");
 	fnUpdate = tblCurScene.GetFunction("onUpdate");
 	fnRender = tblCurScene.GetFunction("onRender");
 	fnTouchDown = tblCurScene.GetFunction("onTouchDown");
 	fnTouchMoved = tblCurScene.GetFunction("onTouchMoved");
 	fnTouchUp = tblCurScene.GetFunction("onTouchUp");
+}
+
+void LUNAScenes::OnPause()
+{
+	if(fnPause != nil) fnPause.CallVoid(tblCurScene);
+}
+
+void LUNAScenes::OnResume()
+{
+	if(fnResume != nil) fnResume.CallVoid(tblCurScene);
 }
 
 void LUNAScenes::OnTouchDown(float x, float y, int touchIndex)

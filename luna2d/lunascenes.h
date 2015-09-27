@@ -35,12 +35,15 @@ public:
 
 private:
 	LuaTable tblCurScene;
+	LuaFunction fnPause, fnResume;
 	LuaFunction fnUpdate, fnRender;
 	LuaFunction fnTouchDown, fnTouchMoved, fnTouchUp;
 
 public:
 	LuaTable GetCurrrentScene();
 	void SetScene(const LuaTable& tblScene);
+	void OnPause();
+	void OnResume();
 	void OnTouchDown(float x, float y, int touchIndex);
 	void OnTouchMoved(float x, float y, int touchIndex);
 	void OnTouchUp(float x, float y, int touchIndex);

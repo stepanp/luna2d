@@ -89,6 +89,8 @@ public:
 	bool IsInitialized();
 
 	void MainLoop();
+	void OnPause();
+	void OnResume();
 	void OnTouchDown(float x, float y, int touchIndex);
 	void OnTouchMoved(float x, float y, int touchIndex);
 	void OnTouchUp(float x, float y, int touchIndex);

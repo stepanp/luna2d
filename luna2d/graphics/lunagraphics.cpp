@@ -214,8 +214,28 @@ void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 	renderer->SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
 }
 
+bool LUNAGraphics::IsPaused()
+{
+	return paused;
+}
+
+void LUNAGraphics::OnPause()
+{
+	paused = true;
+	LUNAEngine::SharedScenes()->OnPause();
+}
+
+void LUNAGraphics::OnResume()
+{
+	paused = false;
+	lastTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
+	LUNAEngine::SharedScenes()->OnResume();
+}
+
 void LUNAGraphics::OnUpdate()
 {
+	if(paused) return;
+
 	// Calculate delta time
 	double curTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
 	deltaTime = curTime - lastTime;

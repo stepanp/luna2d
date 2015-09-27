@@ -42,6 +42,7 @@ private:
 	double lastTime, fpsTime, deltaTime;
 	int framesCount, lastFrames;
 	LUNAColor backColor; // Background color
+	bool paused = false;
 
 public:
 	LUNARenderer* GetRenderer();
@@ -49,6 +50,9 @@ public:
 	float GetDeltaTime();
 	int GetRenderCalls();
 	void SetBackgroundColor(float r, float g, float b);
+	bool IsPaused();
+	void OnPause();
+	void OnResume();
 	void OnUpdate();
 };
 

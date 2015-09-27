@@ -171,6 +171,16 @@ void LUNAEngine::MainLoop()
 	graphics->OnUpdate();
 }
 
+void LUNAEngine::OnPause()
+{
+	graphics->OnPause();
+}
+
+void LUNAEngine::OnResume()
+{
+	graphics->OnResume();
+}
+
 void LUNAEngine::OnTouchDown(float x, float y, int touchIndex)
 {
 	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
