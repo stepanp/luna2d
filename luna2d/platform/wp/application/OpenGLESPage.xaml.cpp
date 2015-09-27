@@ -219,6 +219,8 @@ void OpenGLESPage::StartRenderLoop()
         }
     });
 
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnResume();
+
     // Run task on a dedicated high priority background thread.
     mRenderLoopWorker = Windows::System::Threading::ThreadPool::RunAsync(workItemHandler, Windows::System::Threading::WorkItemPriority::High, Windows::System::Threading::WorkItemOptions::TimeSliced);
 }
@@ -229,6 +231,7 @@ void OpenGLESPage::StopRenderLoop()
     {
         mRenderLoopWorker->Cancel();
         mRenderLoopWorker = nullptr;
+		if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnPause();
     }
 }
 
