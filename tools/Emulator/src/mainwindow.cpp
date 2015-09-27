@@ -156,6 +156,13 @@ void MainWindow::OpenGame(const QString &gamePath)
 	ui->actionRestart_game->setEnabled(true);
 	ui->actionClose_game->setEnabled(true);
 
+	// Clear log
+	if(Settings::clearLogOnStart)
+	{
+		logStorage->Clear();
+		if(logDlg) logDlg->Clear();
+	}
+
 	// Launch game
 	auto& resolution = Settings::resolutions.at(Settings::curResolution);
 	ui->centralWidget->DeinitializeEngine();

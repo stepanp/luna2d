@@ -46,8 +46,14 @@ private:
 private:
 	void ShowLogMessage(LogType type, const QString& message);
 
+private slots:
+	void OnStartClearChecked(bool checked);
+
 public slots:
 	void OnLogInfo(const QString& message);
 	void OnLogWarning(const QString& message);
 	void OnLogError(const QString& message);
+
+public:
+	void Clear();
 };

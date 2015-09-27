@@ -33,6 +33,7 @@ QVector<Resolution> Settings::resolutions = QVector<Resolution>();
 int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
 bool Settings::openLogWhenError = true;
+bool Settings::clearLogOnStart = true;
 bool Settings::showFps = true;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 
@@ -44,6 +45,7 @@ void Settings::Load()
 	gameWasOpened = settings.value("gameWasOpened", gameWasOpened).toBool();
 	curResolution = settings.value("curResolution", curResolution).toInt();
 	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
+	clearLogOnStart = settings.value("clearLogOnStart", clearLogOnStart).toBool();
 	showFps = settings.value("showFps", showFps).toBool();
 
 	// Load recent games
@@ -98,6 +100,7 @@ void Settings::Save()
 	settings.setValue("gameWasOpened", gameWasOpened);
 	settings.setValue("curResolution", curResolution);
 	settings.setValue("openLogWhenError", openLogWhenError);
+	settings.setValue("clearLogOnStart", clearLogOnStart);
 	settings.setValue("showFps", showFps);
 
 	// Save recent games

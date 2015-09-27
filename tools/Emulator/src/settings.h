@@ -43,6 +43,7 @@ public:
 	static int curResolution; // Index of current resolution in "resolutions" vector
 	static int bullitinCount; // Count of bullit-in resolutions
 	static bool openLogWhenError; // Open log window when occurs log message with error
+	static bool clearLogOnStart; // Clear log when game stated
 	static bool showFps; // Show FPS in window caption
 	static QHash<QString,QString> pipelineProjects; // Pipeline projects attachet to game name
 

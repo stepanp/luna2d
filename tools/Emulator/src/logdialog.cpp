@@ -24,6 +24,7 @@
 
 #include "logdialog.h"
 #include "ui_logdialog.h"
+#include "settings.h"
 
 LogDialog::LogDialog(LogStorage* logStorage, QWidget *parent) :
 	QDialog(parent),
@@ -37,6 +38,9 @@ LogDialog::LogDialog(LogStorage* logStorage, QWidget *parent) :
 
 	connect(ui->btnClear, &QPushButton::pressed, ui->listLog, &QListWidget::clear);
 	connect(ui->btnClear, &QPushButton::pressed, logStorage, &LogStorage::Clear);
+
+	ui->checkClearOnStart->setChecked(Settings::clearLogOnStart);
+	connect(ui->checkClearOnStart, &QCheckBox::toggled, this, &LogDialog::OnStartClearChecked);
 
 	// Show all log messages from log storage
 	for(LogMessage msg: logStorage->GetLogMessages()) ShowLogMessage(msg.first, msg.second);
@@ -57,6 +61,11 @@ void LogDialog::ShowLogMessage(LogType type, const QString& message)
 	ui->listLog->addItem(item);
 }
 
+void LogDialog::OnStartClearChecked(bool checked)
+{
+	Settings::clearLogOnStart = checked;
+}
+
 void LogDialog::OnLogInfo(const QString& message)
 {
 	ShowLogMessage(LogType::LOG_INFO, message);
@@ -70,4 +79,9 @@ void LogDialog::OnLogWarning(const QString& message)
 void LogDialog::OnLogError(const QString& message)
 {
 	ShowLogMessage(LogType::LOG_ERROR, message);
+}
+
+void LogDialog::Clear()
+{
+	ui->listLog->clear();
 }
