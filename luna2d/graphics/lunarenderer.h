@@ -57,6 +57,7 @@ private:
 
 	// Stats
 	int renderCalls; // Count of render calls on current frame
+	int renderedVertexes; // Count of rendered vertexes on current frame
 	bool inProgress;
 	bool debugRender;
 
@@ -66,6 +67,7 @@ private:
 public:
 	bool IsInProgress();
 	int GetRenderCalls();
+	int GetRenderedVertexes();
 
 	void SetBackgroundColor(const LUNAColor& backColor);
 

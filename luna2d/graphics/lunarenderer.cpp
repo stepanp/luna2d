@@ -59,6 +59,11 @@ int LUNARenderer::GetRenderCalls()
 	return renderCalls;
 }
 
+int LUNARenderer::GetRenderedVertexes()
+{
+	return renderedVertexes;
+}
+
 void LUNARenderer::SetBackgroundColor(const LUNAColor& backColor)
 {
 	this->backColor = backColor;
@@ -95,7 +100,6 @@ bool LUNARenderer::IsInProgress()
 {
 	return inProgress;
 }
-
 
 void LUNARenderer::RenderQuad(LUNATexture *texture,
 	float x1, float y1, float u1, float v1,
@@ -196,6 +200,7 @@ void LUNARenderer::Render()
 	curTexture->Unbind();
 
 	// Reset vertex array
+	renderedVertexes += vertexBatch.size();
 	vertexBatch.clear();
 	renderCalls++;
 
@@ -207,6 +212,7 @@ void LUNARenderer::Begin()
 	inProgress = true;
 	vertexBatch.clear();
 	renderCalls = 0;
+	renderedVertexes = 0;
 
 	// Clear screen
 	glClearColor(backColor.r, backColor.g, backColor.b, backColor.a);

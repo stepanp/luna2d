@@ -49,6 +49,7 @@ public:
 	int GetFps();
 	float GetDeltaTime();
 	int GetRenderCalls();
+	int GetRenderedVertexes();
 	void SetBackgroundColor(float r, float g, float b);
 	bool IsPaused();
 	void OnPause();
