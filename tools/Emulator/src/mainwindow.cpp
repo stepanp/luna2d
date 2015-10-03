@@ -388,7 +388,7 @@ void MainWindow::OnRunPipelineProject()
 	QString pipelinePath = QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
 	QProcess pipeline;
 
-	pipeline.start(pipelinePath, { projectPath, "-s" });
+	pipeline.start(pipelinePath, { projectPath, "-u" });
 	pipeline.waitForFinished();
 }
 

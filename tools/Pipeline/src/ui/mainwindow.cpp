@@ -506,10 +506,10 @@ void MainWindow::OnRunProject()
 {
 	if(!pipeline.IsProjectOpened()) return;
 
-	QString errors = pipeline.RunProject();
-	if(errors != QString::null)
+	QStringList errors = pipeline.RunProject();
+	if(!errors.empty())
 	{
-		QMessageBox::critical(this, "Cannot run project", errors);
+		QMessageBox::critical(this, "Errors", errors.join("\n"));
 	}
 }
 

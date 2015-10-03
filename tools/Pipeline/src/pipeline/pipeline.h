@@ -29,6 +29,9 @@
 #include "atlasbuilder.h"
 #include <QStringList>
 
+const QString ERROR_MASK = "In task \"%1\" : %2";
+const QString ERROR_SAVE_MASK = "Cannot save file \"%1\"";
+
 class Pipeline
 {
 public:
@@ -39,6 +42,7 @@ private:
 	Project* project;
 	Resizer resizer;
 	AtlasBuilder atlasBuilder;
+	QStringList errors;
 
 private:
 	QString CheckTask(Task* task); // Check task params for errors
@@ -54,5 +58,5 @@ public:
 	bool OpenProject(const QString& path);
 	bool SaveProject(const QString& path);
 	void CloseProject();
-	QString RunProject();
+	QStringList RunProject();
 };

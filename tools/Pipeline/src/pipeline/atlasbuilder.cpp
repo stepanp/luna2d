@@ -32,6 +32,8 @@ using namespace rbp;
 
 QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, const AtlasParams &params)
 {
+	errors.clear();
+
 	QImage atlas(params.maxWidth, params.maxHeight, QImage::Format_ARGB32);
 	atlas.fill(Qt::transparent);
 
@@ -90,10 +92,7 @@ QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, const AtlasParams 
 			jsonRegion["height"] = image.height();
 			jsonAtlas[entry.first] = jsonRegion;
 		}
-		else
-		{
-			qDebug() << "Image" << entry.first << "isn't packed";
-		}
+		else errors.push_back(QString("Image \"%1\" isn't packed").arg(entry.first));
 	}
 	painter.end();
 
@@ -101,4 +100,9 @@ QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, const AtlasParams 
 	QImage croppedAtals = atlas.copy(0, 0, MathUtils::NearestPowerOfTwo(maxRight), MathUtils::NearestPowerOfTwo(maxBottom));
 
 	return QPair<QImage,QJsonObject>(croppedAtals, jsonAtlas);
+}
+
+QStringList AtlasBuilder::GetErrors()
+{
+	return errors;
 }

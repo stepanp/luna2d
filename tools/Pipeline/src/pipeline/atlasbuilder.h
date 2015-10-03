@@ -28,6 +28,7 @@
 #include <QImage>
 #include <QPair>
 #include <QJsonObject>
+#include <QStringList>
 
 const int MIN_ATLAS_SIZE = 16;
 const int MAX_ATLAS_SIZE = 4096;
@@ -46,6 +47,10 @@ typedef QList<QPair<QImage,QJsonObject>> AtlasList;
 
 class AtlasBuilder
 {
+private:
+	QStringList errors;
+
 public:
 	QPair<QImage,QJsonObject> Run(ImageList images, const AtlasParams& params);
+	QStringList GetErrors();
 };

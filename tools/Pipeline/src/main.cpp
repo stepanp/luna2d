@@ -57,6 +57,19 @@ void ParseCommandLine(QString& projectPath, LaunchMode& launchMode)
 	else launchMode = LaunchMode::OPEN_UI;
 }
 
+void RunProjectUi(const QString& projectPath)
+{
+	Pipeline pipeline;
+	if(pipeline.OpenProject(projectPath))
+	{
+		QStringList errors = pipeline.RunProject();
+		if(!errors.empty())
+		{
+			QMessageBox::critical(nullptr, "Errors", errors.join("\n"));
+		}
+	}
+}
+
 void RunProjectSilent(const QString& projectPath)
 {
 	Pipeline pipeline;
@@ -83,6 +96,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Run project with specifed mode
+	else if(launchMode == LaunchMode::RUN_UI) RunProjectUi(projectPath);
 	else if(launchMode == LaunchMode::RUN_SILENT) RunProjectSilent(projectPath);
 
 	return 0;

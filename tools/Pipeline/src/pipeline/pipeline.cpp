@@ -36,10 +36,10 @@ static QString MakeFilename(const QString& name, const QString& resolution, cons
 	else return QString("%1@%2.%3").arg(name).arg(resolution).arg(extension);
 }
 
-static void SaveImage(const QImage& image, const QString& directory, const QString& filename)
+static bool SaveImage(const QImage& image, const QString& directory, const QString& filename)
 {
 	QDir outputDir(directory);
-	image.save(outputDir.absoluteFilePath(filename), "PNG");
+	return image.save(outputDir.absoluteFilePath(filename), "PNG");
 }
 
 
@@ -115,7 +115,11 @@ void Pipeline::ResizeStage(ImageList images, Task* task)
 		{
 			for(auto entry : imagesByRes[resolution])
 			{
-				SaveImage(entry.second, task->outputDir, MakeFilename(entry.first, resolution, "png"));
+				QString filename = MakeFilename(entry.first, resolution, "png");
+				if(!SaveImage(entry.second, task->outputDir, filename))
+				{
+					errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(filename)));
+				}
 			}
 		}
 	}
@@ -128,16 +132,35 @@ void Pipeline::BuildAtlasStage(QHash<QString,ImageList> images, Task* task)
 		QPair<QImage,QJsonObject> atlas = atlasBuilder.Run(images[resolution], task->atlasParams);
 
 		// Save atlas image
-		SaveImage(atlas.first, task->outputDir, MakeFilename(task->atlasParams.name, resolution, "png"));
+		QString imageFilename = MakeFilename(task->atlasParams.name, resolution, "png");
+		if(!SaveImage(atlas.first, task->outputDir, imageFilename))
+		{
+			errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(imageFilename)));
+			return;
+		}
 
 		// Save atlas json description
 		QDir outputDir(task->outputDir);
 		QString filename = MakeFilename(task->atlasParams.name, resolution, "atlas");
 		QFile file(outputDir.absoluteFilePath(filename));
-		if(!file.open(QIODevice::WriteOnly)) return;
+		if(!file.open(QIODevice::WriteOnly))
+		{
+			errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(filename)));
+			return;
+		}
 
 		QJsonDocument doc(atlas.second);
 		file.write(doc.toJson());
+
+		auto atlasErrors = atlasBuilder.GetErrors();
+		if(!atlasErrors.empty())
+		{
+			for(auto& error : atlasErrors)
+			{
+				QString resError = QString("%1 for \"%2\" resolution").arg(error).arg(resolution);
+				errors.push_back(ERROR_MASK.arg(task->name).arg(resError));
+			}
+		}
 	}
 }
 
@@ -198,25 +221,24 @@ bool Pipeline::SaveProject(const QString& path)
 
 void Pipeline::CloseProject()
 {
+	errors.clear();
 	delete project;
 	project = nullptr;
 }
 
-QString Pipeline::RunProject()
+QStringList Pipeline::RunProject()
 {
-	if(!IsProjectOpened()) return QString::null;
+	errors.clear();
 
-	// Check task params for errors
+	if(!IsProjectOpened()) return errors;
+
 	for(Task* task : project->GetTasks())
 	{
 		QString error = CheckTask(task);
-		if(error != QString::null)
-		{
-			return QString("Errors in task \"%1\":\n%2").arg(task->name).arg(error);
-		}
+
+		if(error.isNull()) RunTask(task);
+		else errors.push_back(ERROR_MASK.arg(task->name).arg(error));
 	}
 
-	for(Task* task : project->GetTasks()) RunTask(task);
-
-	return QString::null;
+	return errors;
 }
