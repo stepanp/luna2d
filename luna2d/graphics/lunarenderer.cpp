@@ -187,8 +187,8 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 
 void LUNARenderer::Render()
 {
-	int triangleCount = vertexBatch.size() / LUNA_ELEMENT_PER_VERTEX;
-	if(triangleCount == 0) return;
+	int vertexCount = vertexBatch.size() / LUNA_ELEMENT_PER_VERTEX;
+	if(vertexCount == 0) return;
 
 	shader->SetPositionAttribute(vertexBatch.data());
 	shader->SetColorAttribute(vertexBatch.data());
@@ -196,11 +196,11 @@ void LUNARenderer::Render()
 	shader->SetTransformMatrix(matrix);
 	shader->SetTextureUniform(curTexture);
 
-	glDrawArrays(GL_TRIANGLES, 0, triangleCount);
+	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 	curTexture->Unbind();
 
 	// Reset vertex array
-	renderedVertexes += vertexBatch.size();
+	renderedVertexes += vertexCount;
 	vertexBatch.clear();
 	renderCalls++;
 
