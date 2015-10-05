@@ -22,9 +22,10 @@
 //-----------------------------------------------------------------------------
 
 #include "lunagraphics.h"
-#include "lunaengine.h"
 #include "lunaplatformutils.h"
 #include "lunascenes.h"
+#include "lunasizes.h"
+#include "lunarenderer.h"
 #include "lunaanimation.h"
 #include "lunamesh.h"
 #include "lunatext.h"
@@ -35,7 +36,13 @@ using namespace luna2d;
 
 LUNAGraphics::LUNAGraphics()
 {
-	renderer = new LUNARenderer();
+	LUNASizes* sizes = LUNAEngine::SharedSizes();
+
+	renderer = new LUNARenderer();	
+
+	camera = std::make_shared<LUNACamera>(sizes->GetVirtualScreenWidth(), sizes->GetVirtualScreenHeight());
+	camera->SetPos(sizes->GetBaseScreenWidth() / 2.0f, sizes->GetBaseScreenHeight() / 2.0f);
+	renderer->SetCamera(camera);
 
 	lastTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
 	fpsTime = 0;
@@ -52,9 +59,19 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("getDeltaTime", LuaFunction(lua, this, &LUNAGraphics::GetDeltaTime));
 	tblGraphics.SetField("getRenderCalls", LuaFunction(lua, this, &LUNAGraphics::GetRenderCalls));
 	tblGraphics.SetField("getRenderedVertexes", LuaFunction(lua, this, &LUNAGraphics::GetRenderedVertexes));
+	tblGraphics.SetField("getCamera", LuaFunction(lua, this, &LUNAGraphics::GetCamera));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
+
+	// Bind camera
+	LuaClass<LUNACamera> clsCamera(lua);
+	clsCamera.SetMethod("getX", &LUNACamera::GetX);
+	clsCamera.SetMethod("getY", &LUNACamera::GetY);
+	clsCamera.SetMethod("setX", &LUNACamera::SetX);
+	clsCamera.SetMethod("setY", &LUNACamera::SetY);
+	clsCamera.SetMethod("getPos", &LUNACamera::GetPos);
+	clsCamera.SetMethod("setPos", &LUNACamera::SetPos);
 
 	// Bind sprite
 	LuaClass<LUNASprite> clsSprite(lua);
@@ -193,6 +210,11 @@ LUNAGraphics::~LUNAGraphics()
 LUNARenderer* LUNAGraphics::GetRenderer()
 {
 	return renderer;
+}
+
+std::shared_ptr<LUNACamera> LUNAGraphics::GetCamera()
+{
+	return camera;
 }
 
 int LUNAGraphics::GetFps()

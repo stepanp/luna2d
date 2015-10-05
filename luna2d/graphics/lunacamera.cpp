@@ -21,42 +21,63 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunacamera.h"
 
-#include "lunarenderer.h"
+using namespace luna2d;
 
-namespace luna2d{
-
-const float MAX_DELTA = 1.0f / 10.0f; // 10 FPS
-
-class LUNAGraphics
+LUNACamera::LUNACamera(float width, int height) :
+	width(width),
+	height(height)
 {
-public:
-	LUNAGraphics();
-	~LUNAGraphics();
+	UpdateMatrix();
+}
 
-private:
-	LUNARenderer* renderer;
-	std::shared_ptr<LUNACamera> camera;
+void LUNACamera::UpdateMatrix()
+{
+	float halfWidth = width / 2.0f;
+	float halfHeight = height / 2.0f;
 
-	// For calculating delta time and FPS
-	double lastTime, fpsTime, deltaTime;
-	int framesCount, lastFrames;
-	LUNAColor backColor; // Background color
-	bool paused = false;
+	matrix = glm::ortho(pos.x - halfWidth, pos.x + halfWidth, pos.y - halfHeight, pos.y + halfHeight);
+}
 
-public:
-	LUNARenderer* GetRenderer();
-	std::shared_ptr<LUNACamera> GetCamera();
-	int GetFps();
-	float GetDeltaTime();
-	int GetRenderCalls();
-	int GetRenderedVertexes();
-	void SetBackgroundColor(float r, float g, float b);
-	bool IsPaused();
-	void OnPause();
-	void OnResume();
-	void OnUpdate();
-};
+float LUNACamera::GetX()
+{
+	return pos.x;
+}
 
+float LUNACamera::GetY()
+{
+	return pos.y;
+}
+
+void LUNACamera::SetX(float x)
+{
+	pos.x = x;
+
+	UpdateMatrix();
+}
+
+void LUNACamera::SetY(float y)
+{
+	pos.y = y;
+
+	UpdateMatrix();
+}
+
+const glm::vec2& LUNACamera::GetPos()
+{
+	return pos;
+}
+
+void LUNACamera::SetPos(float x, float y)
+{
+	pos.x = x;
+	pos.y = y;
+
+	UpdateMatrix();
+}
+
+const glm::mat4&LUNACamera::GetMatrix()
+{
+	return matrix;
 }

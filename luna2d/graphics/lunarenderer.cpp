@@ -29,7 +29,6 @@
 using namespace luna2d;
 
 LUNARenderer::LUNARenderer() :
-	matrix(LUNAEngine::SharedSizes()->GetTransformMatrix()),
 	inProgress(false),
 	debugRender(false)
 {
@@ -62,6 +61,11 @@ int LUNARenderer::GetRenderCalls()
 int LUNARenderer::GetRenderedVertexes()
 {
 	return renderedVertexes;
+}
+
+void LUNARenderer::SetCamera(std::shared_ptr<LUNACamera> camera)
+{
+	this->camera = camera;
 }
 
 void LUNARenderer::SetBackgroundColor(const LUNAColor& backColor)
@@ -179,7 +183,7 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 
 	primitivesShader->SetPositionAttribute(vertexes);
 	primitivesShader->SetColorAttribute(vertexes);
-	primitivesShader->SetTransformMatrix(matrix);
+	primitivesShader->SetTransformMatrix(camera->GetMatrix());
 	glDrawArrays(GL_LINES, 0, 2);
 
 	shader->Bind();
@@ -193,7 +197,7 @@ void LUNARenderer::Render()
 	shader->SetPositionAttribute(vertexBatch.data());
 	shader->SetColorAttribute(vertexBatch.data());
 	shader->SetTexCoordsAttribute(vertexBatch.data());
-	shader->SetTransformMatrix(matrix);
+	shader->SetTransformMatrix(camera->GetMatrix());
 	shader->SetTextureUniform(curTexture);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount);

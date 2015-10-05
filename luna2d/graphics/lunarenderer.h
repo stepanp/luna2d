@@ -27,7 +27,7 @@
 #include "lunatextureregion.h"
 #include "lunacolor.h"
 #include "lunalua.h"
-#include <vector>
+#include "lunacamera.h"
 
 // Default shaders
 #include "shaders/default.vert.h"
@@ -48,12 +48,12 @@ public:
 
 private:
 	std::vector<float> vertexBatch; // Vertex array for batching
-	glm::mat4 matrix; // Transformation matrix
 
 	LUNAColor backColor; // Background color
 	LUNAShader *shader;
 	LUNAShader* primitivesShader;
 	LUNATexture *curTexture; // Texture program for current render call
+	std::shared_ptr<LUNACamera> camera;
 
 	// Stats
 	int renderCalls; // Count of render calls on current frame
@@ -69,6 +69,7 @@ public:
 	int GetRenderCalls();
 	int GetRenderedVertexes();
 
+	void SetCamera(std::shared_ptr<LUNACamera> camera);
 	void SetBackgroundColor(const LUNAColor& backColor);
 
 	bool IsEnabledDebugRender();

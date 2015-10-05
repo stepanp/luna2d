@@ -23,40 +23,37 @@
 
 #pragma once
 
-#include "lunarenderer.h"
+#include "lunaglm.h"
+#include "lunalua.h"
 
 namespace luna2d{
 
-const float MAX_DELTA = 1.0f / 10.0f; // 10 FPS
-
-class LUNAGraphics
+//--------------------
+// Orthographic camera
+//--------------------
+class LUNACamera
 {
+	LUNA_USERDATA(LUNACamera)
+
 public:
-	LUNAGraphics();
-	~LUNAGraphics();
+	LUNACamera(float width, int height);
 
 private:
-	LUNARenderer* renderer;
-	std::shared_ptr<LUNACamera> camera;
+	float width, height;
+	glm::vec2 pos;
+	glm::mat4 matrix;
 
-	// For calculating delta time and FPS
-	double lastTime, fpsTime, deltaTime;
-	int framesCount, lastFrames;
-	LUNAColor backColor; // Background color
-	bool paused = false;
+private:
+	void UpdateMatrix();
 
 public:
-	LUNARenderer* GetRenderer();
-	std::shared_ptr<LUNACamera> GetCamera();
-	int GetFps();
-	float GetDeltaTime();
-	int GetRenderCalls();
-	int GetRenderedVertexes();
-	void SetBackgroundColor(float r, float g, float b);
-	bool IsPaused();
-	void OnPause();
-	void OnResume();
-	void OnUpdate();
+	float GetX();
+	float GetY();
+	void SetX(float x);
+	void SetY(float y);
+	const glm::vec2& GetPos();
+	void SetPos(float x, float y);
+	const glm::mat4& GetMatrix();
 };
 
 }
