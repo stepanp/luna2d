@@ -142,6 +142,19 @@ void LuaWeakRef::Release()
 	}
 }
 
+// Check and release ref if referenced object already deleted
+void LuaWeakRef::Validate()
+{
+	if(ref == LUA_NOREF) return;
+
+	lua_rawgeti(luaVm, LUA_REGISTRYINDEX, LuaScript::FromLuaVm(luaVm)->GetWeakRegistryRef());
+	lua_rawgeti(luaVm, -1, ref);
+
+	if(lua_isnil(luaVm, -1)) ref = LUA_NOREF;
+
+	lua_pop(luaVm, 2); // Remove value and weak registry table from stack 
+}
+
 int LuaWeakRef::GetRef() const
 {
 	return ref;

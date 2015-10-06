@@ -74,6 +74,7 @@ protected:
 public:
 	void Hold(lua_State* luaVm); // Hold value from top of lua stack
 	void Release();
+	void Validate(); // Check and release ref if referenced object already deleted
 	int GetRef() const;
 	lua_State* GetLuaVm() const;
 	bool operator==(const LuaNil&) const;
