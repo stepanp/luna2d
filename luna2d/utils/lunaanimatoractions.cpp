@@ -251,6 +251,50 @@ void LUNAActionColor::OnUpdate()
 }
 
 
+//------------------------
+// Shaking animator action
+//------------------------
+LUNAActionShake::LUNAActionShake(const LuaTable& params) : LUNAObjectAction(params)
+{
+	pos = obj.CallMethod<glm::vec2>("getPos");
+
+	beginAmp = ReadValue("beginAmp", params);
+	endAmp = ReadValue("endAmp", params);
+	beginFreq = ReadValue("beginFreq", params);
+	endFreq = ReadValue("endFreq", params);
+
+	if(obj && (!obj.HasField("getPos") || !obj.HasField("setPos"))) LUNA_LOGE("Object for action \"shake\" must have \"getPos\" and \"setPos\" methods");
+}
+
+glm::vec2 LUNAActionShake::ReadValue(const std::string& name, const LuaTable& params)
+{
+	if(params.HasField(name))
+	{
+		float value = params.GetFloat(name);
+		return glm::vec2(value, value);
+	}
+	else
+	{
+		return glm::vec2(params.GetFloat(name + "X"), params.GetFloat(name + "Y"));
+	}
+}
+
+void LUNAActionShake::OnUpdate()
+{
+	if(!obj) LUNA_RETURN_ERR("Attempt to update invalid animator action");
+
+	float ampX = math::EaseLerp(beginAmp.x, endAmp.x, GetPercent(), easing);
+	float ampY = math::EaseLerp(beginAmp.y, endAmp.y, GetPercent(), easing);
+	float freqX = math::EaseLerp(beginFreq.x, endFreq.x, GetPercent(), easing);
+	float freqY = math::EaseLerp(beginFreq.y, endFreq.y, GetPercent(), easing);
+
+	float dx = ampX * std::sin(GetTime() * freqX);
+	float dy = ampY * std::sin(GetTime() * freqY);
+
+	obj.CallMethodVoid("setPos", pos.x + dx, pos.y + dy);
+}
+
+
 //-----------------------
 // Custom animator action
 //-----------------------

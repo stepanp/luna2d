@@ -43,6 +43,7 @@ protected:
 
 public:
 	float GetPercent();
+	float GetTime();
 	bool IsDone();
 	void Reset(); // Reset action to initial position
 	float Update(float deltaTime);

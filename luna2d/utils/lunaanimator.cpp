@@ -62,6 +62,7 @@ std::shared_ptr<LUNAAction> CreateAction(const LuaAny& params)
 	else if(name == "scale") return std::make_shared<LUNAActionScale>(tblParams);
 	else if(name == "rotate") return std::make_shared<LUNAActionRotate>(tblParams);
 	else if(name == "color") return std::make_shared<LUNAActionColor>(tblParams);
+	else if(name == "shake") return std::make_shared<LUNAActionShake>(tblParams);
 	else if(name == "wait") return std::make_shared<LUNAActionWait>(tblParams);
 	else if(name == "custom") return std::make_shared<LUNAActionCustom>(tblParams);
 
@@ -104,6 +105,11 @@ LUNAAction::LUNAAction(float time) :
 float LUNAAction::GetPercent()
 {
 	return time / totalTime;
+}
+
+float LUNAAction::GetTime()
+{
+	return time;
 }
 
 bool LUNAAction::IsDone()

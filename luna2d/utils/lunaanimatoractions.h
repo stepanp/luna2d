@@ -156,6 +156,27 @@ public:
 
 
 //------------------------
+// Shaking animator action
+//------------------------
+class LUNAActionShake : public LUNAObjectAction
+{
+public:
+	LUNAActionShake(const LuaTable& params);
+
+private:
+	glm::vec2 beginAmp, endAmp;
+	glm::vec2 beginFreq, endFreq;
+	glm::vec2 pos;
+
+private:
+	glm::vec2 ReadValue(const std::string& name, const LuaTable& params);
+
+public:
+	virtual void OnUpdate();
+};
+
+
+//------------------------
 // Waiting animator action
 //------------------------
 class LUNAActionWait : public LUNAAction
