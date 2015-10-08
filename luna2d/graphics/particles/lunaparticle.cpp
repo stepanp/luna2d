@@ -22,16 +22,45 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaparticle.h"
+#include "lunamath.h"
+#include "lunaeasing.h"
 
 using namespace luna2d;
 
 LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params) :
-	LUNASprite(*sprite),
-	params(params)
+	LUNASprite(*sprite)
 {
+	lifetime = math::RandomFloat(params->lifetimeMin, params->lifetimeMax);
+	lifetimeTotal = lifetime;
+
+	alphaBegin = math::RandomFloat(params->alphaBeginMin, params->alphaBeginMax);
+	alphaEnd = math::RandomFloat(params->alphaEndMin, params->alphaEndMax);
+	speed = math::RandomFloat(params->speedMin, params->speedMax);
+
+	float dirAngle = math::RandomFloat(params->directionMin, params->directionMax);
+	dir = glm::rotate(glm::vec2(1.0f, 0), glm::radians(dirAngle));
+}
+
+bool LUNAParticle::IsDeleted()
+{
+	return deleted;
 }
 
 void LUNAParticle::Update(float dt)
 {
+	if(deleted) return;
 
+	lifetime -= dt;
+	if(lifetime <= 0)
+	{
+		deleted = true;
+		lifetime = 0;
+	}
+
+	float percent = 1.0f - (lifetime / lifetimeTotal);
+
+	SetAlpha(math::EaseLerp(alphaBegin, alphaEnd, percent, easing::Linear));
+
+	glm::vec2 newPos = GetPos() + (dir * (speed * dt));
+	SetPos(newPos.x, newPos.y);
 }

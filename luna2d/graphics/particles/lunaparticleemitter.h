@@ -39,6 +39,13 @@ private:
 	std::vector<std::shared_ptr<LUNASprite>> sourceSprites;
 	std::vector<std::shared_ptr<LUNAParticle>> particles;
 	glm::vec2 pos;
+	float emitTime = 0;
+
+private:
+	glm::vec2 GetSpawnPos();
+	void Emit();
+	void UpdateEmit(float dt);
+	void UpdateParticles(float dt);
 
 public:
 	glm::vec2 GetPos();

@@ -106,6 +106,10 @@ public:
 	float directionMin = 0.0f;
 	float directionMax = 0.0f;
 
+	// Set angle between initial particle pos and emitter pos as direction
+	// "directionMin" / "directionMax"
+	bool dirFromEmitter = false;
+
 	// Particle speed range
 	float speedMin = 1.0f;
 	float speedMax = 1.0f;

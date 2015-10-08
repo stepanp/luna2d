@@ -157,6 +157,12 @@ LUNAGraphics::LUNAGraphics()
 	// Bind particle system
 	LuaClass<LUNAParticleSystem> clsParticleSystem(lua);
 	clsParticleSystem.SetConstructor<const LuaTable&>();
+	clsParticleSystem.SetMethod("getX", &LUNAParticleSystem::GetX);
+	clsParticleSystem.SetMethod("getY", &LUNAParticleSystem::GetY);
+	clsParticleSystem.SetMethod("setX", &LUNAParticleSystem::SetX);
+	clsParticleSystem.SetMethod("setY", &LUNAParticleSystem::SetY);
+	clsParticleSystem.SetMethod("getPos", &LUNAParticleSystem::GetPos);
+	clsParticleSystem.SetMethod("setPos", &LUNAParticleSystem::SetPos);
 	clsParticleSystem.SetMethod("update", &LUNAParticleSystem::Update);
 	clsParticleSystem.SetMethod("render", &LUNAParticleSystem::Render);
 	tblGraphics.SetField("ParticleSystem", clsParticleSystem);

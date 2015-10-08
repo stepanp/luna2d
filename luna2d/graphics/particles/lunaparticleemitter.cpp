@@ -23,6 +23,7 @@
 
 #include "lunaparticleemitter.h"
 #include "lunaassets.h"
+#include "lunamath.h"
 
 using namespace luna2d;
 
@@ -49,8 +50,73 @@ LUNAParticleEmitter::LUNAParticleEmitter(const std::shared_ptr<LUNAParticleParam
 
 		LUNA_LOGE("Invalid texture or texture region \"%s\"", path.c_str());
 	}
+}
 
-	particles.push_back(std::make_shared<LUNAParticle>(sourceSprites[0], params));
+glm::vec2 LUNAParticleEmitter::GetSpawnPos()
+{
+	switch(params->spawnAreaMode)
+	{
+		case LUNASpawnAreaMode::POINT:
+			return pos;
+		case LUNASpawnAreaMode::RECT:
+			{
+				LUNARect& rect = params->spawnRect;
+				glm::vec2 ret;
+
+				ret.x = pos.x + math::RandomFloat(rect.x, rect.width);
+				ret.y = pos.y + math::RandomFloat(rect.y, rect.height);
+
+				return ret;
+			}
+		case LUNASpawnAreaMode::CIRCLE:
+			float r = math::RandomFloat(0, params->spawnCircleR);
+			float angle = math::RandomFloat(0.0f, 360.0f);
+			glm::vec2 radius = glm::rotate(glm::vec2(r, 0), glm::radians(angle));
+
+			return radius + pos;
+	}
+
+	return pos;
+}
+
+void LUNAParticleEmitter::Emit()
+{
+	for(int i = 0; i < params->spawnCount; i++)
+	{
+		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], params);
+		auto pos = GetSpawnPos();
+
+		particle->SetPos(pos.x, pos.y);
+		particle->SetOriginToCenter();
+
+		particles.push_back(particle);
+	}
+}
+
+void LUNAParticleEmitter::UpdateEmit(float dt)
+{
+	emitTime -= dt;
+
+	if(emitTime <= 0)
+	{
+		Emit();
+		emitTime = params->spawnDelay;
+	}
+}
+
+void LUNAParticleEmitter::UpdateParticles(float dt)
+{
+	size_t count = particles.size();
+	for(size_t i = 0; i < count; i++)
+	{
+		particles[i]->Update(dt);
+		if(particles[i]->IsDeleted())
+		{
+			particles.erase(particles.begin() + i);
+			count = particles.size();
+			i--;
+		}
+	}
 }
 
 glm::vec2 LUNAParticleEmitter::GetPos()
@@ -65,7 +131,8 @@ void LUNAParticleEmitter::SetPos(const glm::vec2& pos)
 
 void LUNAParticleEmitter::Update(float dt)
 {
-	for(auto& particle : particles) particle->Update(dt);
+	UpdateEmit(dt);
+	UpdateParticles(dt);
 }
 
 void LUNAParticleEmitter::Render()

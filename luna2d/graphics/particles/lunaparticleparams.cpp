@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaparticleparams.h"
+#include "lunavector2.h"
 
 using namespace luna2d;
 
@@ -52,6 +53,7 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	textures = luaParams.GetField<std::vector<std::string>>("textures");
 	if(textures.empty()) LUNA_LOGE("Particle emitter must have at least one texture or texture region");
 
+	emitterPos = luaParams.GetField<glm::vec2>("emitterPos");
 	attached = luaParams.GetBool("attached");
 	duration = luaParams.GetFloat("duration");
 	spawnCount = luaParams.GetInt("spawnCount");
