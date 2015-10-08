@@ -42,7 +42,7 @@
 	lua_pushnil(luaVm); \
 	while(lua_next(luaVm, -2) != 0){ \
 		if(lua_type(luaVm, -2) == LUA_TSTRING) LUNA_LOGE("[%s] = %s", lua_tostring(luaVm, -2), lua_typename(luaVm, lua_type(luaVm, -1))); \
-		else if(lua_type(luaVm, -12) == LUA_TNUMBER) LUNA_LOGE("[%d] = %s", lua_tointeger(luaVm, -2), lua_typename(luaVm, lua_type(luaVm, -1))); \
+		else if(lua_type(luaVm, -2) == LUA_TNUMBER) LUNA_LOGE("[%d] = %s", lua_tointeger(luaVm, -2), lua_typename(luaVm, lua_type(luaVm, -1))); \
 		lua_pop(luaVm, 1);} \
 	lua_pop(luaVm, 1);}
 
