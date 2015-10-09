@@ -40,6 +40,12 @@ float luna2d::math::RandomFloat(float a, float b)
 	return a + (b - a) * percent;
 }
 
+// Generate random integer in range [a,b]
+int luna2d::math::RandomInt(int a, int b)
+{
+	return a + rand() % (b - a);
+}
+
 // Calculate average value of given vector
 float luna2d::math::Avg(const std::vector<float>& values)
 {

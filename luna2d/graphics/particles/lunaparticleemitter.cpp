@@ -83,12 +83,7 @@ void LUNAParticleEmitter::Emit()
 {
 	for(int i = 0; i < params->spawnCount; i++)
 	{
-		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], params);
-		auto pos = GetSpawnPos();
-
-		particle->SetPos(pos.x, pos.y);
-		particle->SetOriginToCenter();
-
+		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], GetSpawnPos(), params);
 		particles.push_back(particle);
 	}
 }

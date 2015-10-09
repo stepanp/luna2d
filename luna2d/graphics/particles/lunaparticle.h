@@ -25,19 +25,36 @@
 
 #include "lunaparticleparams.h"
 #include "lunasprite.h"
+#include "lunaeasing.h"
 
 namespace luna2d{
+
+class LUNAParticleValue
+{
+public:
+	LUNAParticleValue(const LUNARangeFloat& begin, const LUNARangeFloat& end, LUNAEasingFunc easing = easing::Linear);
+
+private:
+	float begin, end;
+	LUNAEasingFunc easing;
+
+public:
+	float GetValue(float percent);
+};
+
 
 class LUNAParticle : public LUNASprite
 {
 public:
-	LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params);
+	LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const glm::vec2& pos, const std::shared_ptr<LUNAParticleParams>& params);
 
 private:
 	float lifetime, lifetimeTotal;
-	float alphaBegin, alphaEnd;
-	float speed;
 	glm::vec2 dir;
+	LUNAParticleValue speed,
+		rotate,
+		alpha,
+		scale;
 	bool deleted = false;
 
 public:

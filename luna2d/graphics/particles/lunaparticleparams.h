@@ -26,7 +26,8 @@
 #include "lunalua.h"
 #include "lunagraphics.h"
 #include "lunarect.h"
-#include "utils/lunastringenum.h"
+#include "lunarange.h"
+#include "lunastringenum.h"
 
 namespace luna2d{
 
@@ -71,9 +72,11 @@ public:
 
 	// Rectangle for "LUNASpawnAreaMode::RECT" spawn area mode
 	// "x" and "y" of this rect are offset from emiiter position
+	// For another spawn area modes will be ignored
 	LUNARect spawnRect;
 
 	// Radius for "LUNASpawnAreaMode::CIRCLE" spawn area mode
+	// For another spawn area modes will be ignored
 	float spawnCircleR = 0.0f;
 
 	// List of textures or texture regions using to create particles
@@ -98,45 +101,31 @@ public:
 	// Delay between spawning
 	float spawnDelay = 0.0f;
 
-	// Lifetime range of particle
-	float lifetimeMin = 0.0f;
-	float lifetimeMax = 0.0f;
+	// Particle lifetime
+	LUNARangeFloat lifetime;
 
-	// Particle direction range
-	float directionMin = 0.0f;
-	float directionMax = 0.0f;
+	// Particle direction
+	LUNARangeFloat direction;
 
 	// Set angle between initial particle pos and emitter pos as direction
 	// "directionMin" / "directionMax"
 	bool dirFromEmitter = false;
 
-	// Particle speed range
-	float speedMin = 1.0f;
-	float speedMax = 1.0f;
+	// Particle speed
+	LUNARangeFloat speedBegin = LUNARangeFloat(1.0f);
+	LUNARangeFloat speedEnd = LUNARangeFloat(1.0f);
 
-	// Initial rotation angle of particle range
-	float initAngleMin = 0.0f;
-	float initAngleMax = 0.0f;
+	// Initial rotation angle of particle
+	LUNARangeFloat initAngle;
 
-	// Particle rotation angle per second range
-	float rotateMin = 0.0f;
-	float rotateMax = 0.0f;
+	// Particle rotation speed (in degrees per second)
+	LUNARangeFloat rotateBegin, rotateEnd;
 
-	// Particle scale range on begin lifetime
-	float scaleBeginMin = 0.0f;
-	float scaleBeginMax = 0.0f;
+	// Particle scale
+	LUNARangeFloat scaleBegin, scaleEnd;
 
-	// Particle scale range on end lifetime
-	float scaleEndMin = 0.0f;
-	float scaleEndMax = 0.0f;
-
-	// Particle alpha range on begin lifetime
-	float alphaBeginMin = 1.0f;
-	float alphaBeginMax = 1.0f;
-
-	// Particle alpha range on end lifetime
-	float alphaEndMin = 1.0f;
-	float alphaEndMax = 1.0f;
+	// Particle alpha
+	LUNARangeFloat alphaBegin, alphaEnd;
 };
 
 }

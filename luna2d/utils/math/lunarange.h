@@ -23,36 +23,55 @@
 
 #pragma once
 
-#include "lunaengine.h"
-#include "lunaeasing.h"
-#include <cmath>
+#include "lunalua.h"
+#include "lunamath.h"
 
-// On some compilers, M_PI constant isn't defined
-#ifndef M_PI
-	#define M_PI 3.14159265358979323846f
-	#define M_PI_2 1.57079632679489661923f
-#endif
+namespace luna2d{
+
+template<typename T>
+class LUNARange
+{
+public:
+	LUNARange() : LUNARange(T()) {}
+	LUNARange(T value) : LUNARange(value, value) {}
+	LUNARange(T min, T max) : min(min), max(max) {}
+
+public:
+	T min, max;
+};
+
+typedef LUNARange<float> LUNARangeFloat;
+typedef LUNARange<int> LUNARangeInt;
 
 
-//-----------
-// Math utils
-//-----------
-namespace luna2d{ namespace math{
+template<typename T>
+struct LuaStack<LUNARange<T>>
+{
+	inline static void Push(lua_State* luaVm, const LUNARange<T>& range)
+	{
+		LuaTable tblRange(luaVm);
 
-const float DEGREES_TO_RADIANS = M_PI / 180.0f;
-const float RADIANS_TO_DEGREES = 180.0f / M_PI;
+		tblRange.SetArrayField(1, range.min);
+		tblRange.SetArrayField(2, range.max);
 
-void InitializeRandom();
-float RandomFloat(float a, float b);  // Generate random float number in range [a,b]
-int RandomInt(int a, int b); // Generate random integer in range [a,b]
-float Avg(const std::vector<float>& values); // Calculate average value of given vector
-float DegreesToRadians(float degrees); // Conver degrees to radians
-float RadiansToDegrees(float radians); // Conver radians to degrees
-int NearestPowerOfTwo(int value); // Get nearest power of two size to given value
-bool IsPowerOfTwo(int value); // Check value for power of two
-float Lerp(float a, float b, float t); // Interpolation between "a" and "b" by time "t". "t" must be in range[0,1]
+		LuaStack<LuaTable>::Push(luaVm, tblRange);
+	}
 
-// Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
-float EaseLerp(float a, float b, float t, const std::function<float(float)>& easing);
+	inline static LUNARange<T> Pop(lua_State* luaVm, int index = -1)
+	{
+		if(lua_istable(luaVm, index))
+		{
+			LuaTable tblRange = LuaStack<LuaTable>::Pop(luaVm, index);
+			return LUNARange<T>(tblRange.GetArrayField<T>(1), tblRange.GetArrayField<T>(2));
+		}
 
-}}
+		else if(lua_isnumber(luaVm, index))
+		{
+			return LUNARange<T>(LuaStack<T>::Pop(luaVm, index));
+		}
+
+		return LUNARange<T>();
+	}
+};
+
+}

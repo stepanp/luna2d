@@ -27,17 +27,32 @@
 
 using namespace luna2d;
 
-LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params) :
-	LUNASprite(*sprite)
+LUNAParticleValue::LUNAParticleValue(const LUNARangeFloat& begin, const LUNARangeFloat& end, LUNAEasingFunc easing) :
+	begin(math::RandomFloat(begin.min, begin.max)),
+	end(math::RandomFloat(end.min, end.max)),
+	easing(easing)
 {
-	lifetime = math::RandomFloat(params->lifetimeMin, params->lifetimeMax);
-	lifetimeTotal = lifetime;
+}
 
-	alphaBegin = math::RandomFloat(params->alphaBeginMin, params->alphaBeginMax);
-	alphaEnd = math::RandomFloat(params->alphaEndMin, params->alphaEndMax);
-	speed = math::RandomFloat(params->speedMin, params->speedMax);
+float LUNAParticleValue::GetValue(float percent)
+{
+	return math::EaseLerp(begin, end, percent, easing);
+}
 
-	float dirAngle = math::RandomFloat(params->directionMin, params->directionMax);
+
+LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const glm::vec2& pos, const std::shared_ptr<LUNAParticleParams>& params) :
+	LUNASprite(*sprite),
+	lifetime(math::RandomFloat(params->lifetime.min, params->lifetime.max)),
+	lifetimeTotal(lifetime),
+	speed(params->speedBegin, params->speedEnd),
+	rotate(params->rotateBegin, params->rotateEnd),
+	alpha(params->alphaBegin, params->alphaEnd),
+	scale(params->scaleBegin, params->scaleEnd)
+{
+	SetOriginToCenter();
+	SetPos(pos.x, pos.y);
+
+	float dirAngle = math::RandomFloat(params->direction.min, params->direction.max);
 	dir = glm::rotate(glm::vec2(1.0f, 0), glm::radians(dirAngle));
 }
 
@@ -59,8 +74,10 @@ void LUNAParticle::Update(float dt)
 
 	float percent = 1.0f - (lifetime / lifetimeTotal);
 
-	SetAlpha(math::EaseLerp(alphaBegin, alphaEnd, percent, easing::Linear));
+	SetAlpha(alpha.GetValue(percent));
+	SetScale(scale.GetValue(percent));
+	SetAngle(GetAngle() + (rotate.GetValue(percent) * dt));
 
-	glm::vec2 newPos = GetPos() + (dir * (speed * dt));
+	glm::vec2 newPos = GetPos() + (dir * (speed.GetValue(percent) * dt));
 	SetPos(newPos.x, newPos.y);
 }
