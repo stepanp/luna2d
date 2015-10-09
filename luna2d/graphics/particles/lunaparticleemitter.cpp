@@ -50,6 +50,32 @@ LUNAParticleEmitter::LUNAParticleEmitter(const std::shared_ptr<LUNAParticleParam
 
 		LUNA_LOGE("Invalid texture or texture region \"%s\"", path.c_str());
 	}
+
+	if(params->textureSelectionMode == LUNATextureSelectionMode::SHUFFLE && !sourceSprites.empty())
+	{
+		std::random_shuffle(sourceSprites.begin(), sourceSprites.end());
+	}
+}
+
+std::shared_ptr<LUNASprite> LUNAParticleEmitter::GetNextSprite()
+{
+	switch(params->textureSelectionMode)
+	{
+		case LUNATextureSelectionMode::SERIAL:
+		case LUNATextureSelectionMode::SHUFFLE:
+		{
+			auto ret = sourceSprites[spriteIndex];
+
+			spriteIndex++;
+			if(spriteIndex >= sourceSprites.size()) spriteIndex = 0;
+
+			return ret;
+		}
+		case LUNATextureSelectionMode::RANDOM:
+			return sourceSprites[math::RandomInt(0, sourceSprites.size() - 1)];
+	}
+
+	return sourceSprites[0];
 }
 
 glm::vec2 LUNAParticleEmitter::GetSpawnPos()
@@ -83,8 +109,9 @@ void LUNAParticleEmitter::Emit()
 {
 	for(int i = 0; i < params->spawnCount; i++)
 	{
-		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], params);
+		auto sprite = GetNextSprite();
 		auto spawnPos = GetSpawnPos();
+		auto particle = std::make_shared<LUNAParticle>(sprite, params);
 
 		particle->SetPos(spawnPos.x, spawnPos.y);
 		if(params->dirFromEmitter && params->spawnAreaMode != LUNASpawnAreaMode::POINT)
@@ -101,6 +128,8 @@ void LUNAParticleEmitter::Emit()
 
 void LUNAParticleEmitter::UpdateEmit(float dt)
 {
+	if(sourceSprites.empty()) return;
+
 	emitTime -= dt;
 
 	if(emitTime <= 0)
