@@ -36,14 +36,14 @@ void luna2d::math::InitializeRandom()
 // Generate random float number in range [a,b]
 float luna2d::math::RandomFloat(float a, float b)
 {
-	float percent = (float)(rand() % 100) / 100;
+	float percent = (float)(rand() % 101) / 100;
 	return a + (b - a) * percent;
 }
 
 // Generate random integer in range [a,b]
 int luna2d::math::RandomInt(int a, int b)
 {
-	return a + rand() % (b - a);
+	return a + rand() % ((b + 1) - a);
 }
 
 // Calculate average value of given vector
