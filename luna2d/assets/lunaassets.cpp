@@ -26,6 +26,7 @@
 #include "lunasizes.h"
 #include "lunatextureatlasloader.h"
 #include "lunafontloader.h"
+#include "lunajsonloader.h"
 
 using namespace luna2d;
 
@@ -132,6 +133,7 @@ std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
 		else return std::make_shared<LUNATextureLoader>();
 	}
 	else if(ext == "ttf") return std::make_shared<LUNAFontLoader>();
+	else if(ext == "json") return std::make_shared<LUNAJsonLoader>();
 
 	return nullptr;
 }
@@ -167,6 +169,8 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 
 void LUNAAssets::DoUnloadFolder(LuaTable table)
 {
+	if(table.GetMetatable()) return; // This table is not asset folder
+
 	// Recursively remove all assets in folder
 	for(auto entry : table)
 	{
