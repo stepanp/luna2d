@@ -83,7 +83,18 @@ void LUNAParticleEmitter::Emit()
 {
 	for(int i = 0; i < params->spawnCount; i++)
 	{
-		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], GetSpawnPos(), params);
+		auto particle = std::make_shared<LUNAParticle>(sourceSprites[0], params);
+		auto spawnPos = GetSpawnPos();
+
+		particle->SetPos(spawnPos.x, spawnPos.y);
+		if(params->dirFromEmitter && params->spawnAreaMode != LUNASpawnAreaMode::POINT)
+		{
+			glm::vec2 relativePos = spawnPos - pos;
+			float angle = glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(relativePos));
+
+			particle->SetDirection(glm::degrees(angle));
+		}
+
 		particles.push_back(particle);
 	}
 }
@@ -121,7 +132,18 @@ glm::vec2 LUNAParticleEmitter::GetPos()
 
 void LUNAParticleEmitter::SetPos(const glm::vec2& pos)
 {
-	this->pos = pos + params->emitterPos;
+	glm::vec2 newPos = pos + params->emitterPos;
+
+	if(params->attached)
+	{
+		for(auto& particle : particles)
+		{
+			glm::vec2 relativePos = particle->GetPos() - this->pos;
+			particle->SetPos(relativePos.x + newPos.x, relativePos.y + newPos.y);
+		}
+	}
+
+	this->pos = newPos;
 }
 
 void LUNAParticleEmitter::Update(float dt)

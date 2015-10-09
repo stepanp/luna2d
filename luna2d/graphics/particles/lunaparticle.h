@@ -46,19 +46,20 @@ public:
 class LUNAParticle : public LUNASprite
 {
 public:
-	LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const glm::vec2& pos, const std::shared_ptr<LUNAParticleParams>& params);
+	LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params);
 
 private:
 	float lifetime, lifetimeTotal;
 	glm::vec2 dir;
-	LUNAParticleValue speed,
-		rotate,
-		alpha,
-		scale;
+	LUNAParticleValue speed;
+	LUNAParticleValue rotate;
+	LUNAParticleValue alpha;
+	LUNAParticleValue scale;
 	bool deleted = false;
 
 public:
 	bool IsDeleted();
+	void SetDirection(float angle);
 	void Update(float dt);
 };
 

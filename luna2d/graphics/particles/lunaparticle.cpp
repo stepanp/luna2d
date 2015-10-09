@@ -40,7 +40,7 @@ float LUNAParticleValue::GetValue(float percent)
 }
 
 
-LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const glm::vec2& pos, const std::shared_ptr<LUNAParticleParams>& params) :
+LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std::shared_ptr<LUNAParticleParams>& params) :
 	LUNASprite(*sprite),
 	lifetime(math::RandomFloat(params->lifetime.min, params->lifetime.max)),
 	lifetimeTotal(lifetime),
@@ -50,15 +50,18 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const glm:
 	scale(params->scaleBegin, params->scaleEnd)
 {
 	SetOriginToCenter();
-	SetPos(pos.x, pos.y);
-
-	float dirAngle = math::RandomFloat(params->direction.min, params->direction.max);
-	dir = glm::rotate(glm::vec2(1.0f, 0), glm::radians(dirAngle));
+	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
+	SetDirection(math::RandomFloat(params->direction.min, params->direction.max));
 }
 
 bool LUNAParticle::IsDeleted()
 {
 	return deleted;
+}
+
+void LUNAParticle::SetDirection(float angle)
+{
+	dir = glm::rotate(glm::vec2(1.0f, 0), glm::radians(angle));
 }
 
 void LUNAParticle::Update(float dt)

@@ -108,7 +108,8 @@ public:
 	LUNARangeFloat direction;
 
 	// Set angle between initial particle pos and emitter pos as direction
-	// "directionMin" / "directionMax"
+	// "direction" value will be ignored.
+	// Supports only on "LUNASpawnAreaMode::RECT" and "LUNASpawnAreaMode::CIRCLE" spawn area modes
 	bool dirFromEmitter = false;
 
 	// Particle speed

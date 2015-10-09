@@ -60,6 +60,7 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	spawnDelay = luaParams.GetFloat("spawnDelay");
 	lifetime = luaParams.GetField<LUNARangeFloat>("lifetime");
 	direction = luaParams.GetField<LUNARangeFloat>("direction");
+	dirFromEmitter = luaParams.GetBool("dirFromEmitter");
 	speedBegin = luaParams.GetField<LUNARangeFloat>("speedBegin");
 	speedEnd = luaParams.GetField<LUNARangeFloat>("speedEnd");
 	initAngle = luaParams.GetField<LUNARangeFloat>("initAngle");
