@@ -39,19 +39,27 @@ private:
 	std::vector<std::shared_ptr<LUNASprite>> sourceSprites;
 	std::vector<std::shared_ptr<LUNAParticle>> particles;
 	glm::vec2 pos;
+	float durationTime = 0;
 	float emitTime = 0;
 	int spriteIndex = 0;
+	bool running = true;
 
 private:
 	std::shared_ptr<LUNASprite> GetNextSprite();
 	glm::vec2 GetSpawnPos();
 	void Emit();
+	void UpdateDuration(float dt);
 	void UpdateEmit(float dt);
 	void UpdateParticles(float dt);
 
 public:
+	bool IsFinished();
 	glm::vec2 GetPos();
 	void SetPos(const glm::vec2& pos);
+	bool IsRunning();
+	void Start(); // Start or resume emitting
+	void Pause(); // Stop emitting without reset duration
+	void Stop(); // Stop emitting
 	void Update(float dt);
 	void Render();
 };

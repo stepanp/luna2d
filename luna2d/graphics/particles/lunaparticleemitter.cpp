@@ -126,9 +126,17 @@ void LUNAParticleEmitter::Emit()
 	}
 }
 
+void LUNAParticleEmitter::UpdateDuration(float dt)
+{
+	if(params->duration == 0 || !running) return;
+
+	durationTime += dt;
+	if(durationTime >= params->duration) running = false;
+}
+
 void LUNAParticleEmitter::UpdateEmit(float dt)
 {
-	if(sourceSprites.empty()) return;
+	if(sourceSprites.empty() || !running) return;
 
 	emitTime -= dt;
 
@@ -154,6 +162,11 @@ void LUNAParticleEmitter::UpdateParticles(float dt)
 	}
 }
 
+bool LUNAParticleEmitter::IsFinished()
+{
+	return params->duration > 0 && durationTime >= params->duration;
+}
+
 glm::vec2 LUNAParticleEmitter::GetPos()
 {
 	return pos;
@@ -175,8 +188,33 @@ void LUNAParticleEmitter::SetPos(const glm::vec2& pos)
 	this->pos = newPos;
 }
 
+bool LUNAParticleEmitter::IsRunning()
+{
+	return running;
+}
+
+// Start or resume emitting
+void LUNAParticleEmitter::Start()
+{
+	running = true;
+}
+
+// Stop emitting without reset duration
+void LUNAParticleEmitter::Pause()
+{
+	running = false;
+}
+
+// Stop emitting
+void LUNAParticleEmitter::Stop()
+{
+	running = false;
+	durationTime = 0;
+}
+
 void LUNAParticleEmitter::Update(float dt)
 {
+	UpdateDuration(dt);
 	UpdateEmit(dt);
 	UpdateParticles(dt);
 }

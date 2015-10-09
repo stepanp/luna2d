@@ -119,6 +119,7 @@ LUNAGraphics::LUNAGraphics()
 	clsAnimation.SetMethod("setFrameTime", &LUNAAnimation::SetFrameTime);
 	clsAnimation.SetMethod("getCurFrame", &LUNAAnimation::GetCurFrame);
 	clsAnimation.SetMethod("setCurFrame", &LUNAAnimation::SetCurFrame);
+	clsAnimation.SetMethod("isLoop", &LUNAAnimation::IsLoop);
 	clsAnimation.SetMethod("setLoop", &LUNAAnimation::SetLoop);
 	clsAnimation.SetMethod("isRunning", &LUNAAnimation::IsRunning);
 	clsAnimation.SetMethod("start", &LUNAAnimation::Start);
@@ -163,6 +164,12 @@ LUNAGraphics::LUNAGraphics()
 	clsParticleSystem.SetMethod("setY", &LUNAParticleSystem::SetY);
 	clsParticleSystem.SetMethod("getPos", &LUNAParticleSystem::GetPos);
 	clsParticleSystem.SetMethod("setPos", &LUNAParticleSystem::SetPos);
+	clsParticleSystem.SetMethod("isLoop", &LUNAParticleSystem::IsLoop);
+	clsParticleSystem.SetMethod("setLoop", &LUNAParticleSystem::SetLoop);
+	clsParticleSystem.SetMethod("isRunning", &LUNAParticleSystem::IsRunning);
+	clsParticleSystem.SetMethod("start", &LUNAParticleSystem::Start);
+	clsParticleSystem.SetMethod("pause", &LUNAParticleSystem::Pause);
+	clsParticleSystem.SetMethod("stop", &LUNAParticleSystem::Stop);
 	clsParticleSystem.SetMethod("update", &LUNAParticleSystem::Update);
 	clsParticleSystem.SetMethod("render", &LUNAParticleSystem::Render);
 	tblGraphics.SetField("ParticleSystem", clsParticleSystem);

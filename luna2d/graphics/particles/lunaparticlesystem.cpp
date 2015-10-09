@@ -67,9 +67,69 @@ void LUNAParticleSystem::SetPos(float x, float y)
 	for(auto& emitter : emitters) emitter->SetPos(pos);
 }
 
+bool LUNAParticleSystem::IsLoop()
+{
+	return loop;
+}
+
+void LUNAParticleSystem::SetLoop(bool loop)
+{
+	this->loop = loop;
+}
+
+bool LUNAParticleSystem::IsRunning()
+{
+	return running;
+}
+
+// Start or resume emitting
+void LUNAParticleSystem::Start()
+{
+	for(auto& emitter : emitters)
+	{
+		if(!emitter->IsFinished())
+		{
+			emitter->Start();
+			running = true;
+		}
+	}
+}
+
+// Stop emitting without reset duration
+void LUNAParticleSystem::Pause()
+{
+	for(auto& emitter : emitters) emitter->Pause();
+	running = false;
+}
+
+// Stop emitting
+void LUNAParticleSystem::Stop()
+{
+	for(auto& emitter : emitters) emitter->Stop();
+	running = false;
+}
+
 void LUNAParticleSystem::Update(float dt)
 {
-	for(auto& emitter : emitters) emitter->Update(dt);
+	bool allFinished = false;
+
+	for(auto& emitter : emitters)
+	{
+		emitter->Update(dt);
+		if(!emitter->IsFinished()) allFinished = true;
+	}
+
+	if(allFinished && running)
+	{
+		running = false;
+
+		// Restart all emitters if loop is enabled
+		if(loop)
+		{
+			Stop();
+			Start();
+		}
+	}
 }
 
 void LUNAParticleSystem::Render()

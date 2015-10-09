@@ -37,6 +37,8 @@ public:
 
 private:
 	glm::vec2 pos;
+	bool loop = false;
+	bool running = true;
 	std::vector<std::shared_ptr<LUNAParticleEmitter>> emitters;
 
 public:
@@ -46,6 +48,12 @@ public:
 	void SetY(float y);
 	glm::vec2 GetPos();
 	void SetPos(float x, float y);
+	bool IsLoop();
+	void SetLoop(bool loop);
+	bool IsRunning();
+	void Start(); // Start or resume emitting
+	void Pause(); // Stop emitting without reset duration
+	void Stop(); // Stop emitting
 	void Update(float dt);
 	void Render();
 };
