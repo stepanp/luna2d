@@ -33,6 +33,7 @@ class LUNAParticleValue
 {
 public:
 	LUNAParticleValue(const LUNARangeFloat& begin, const LUNARangeFloat& end, LUNAEasingFunc easing = easing::Linear);
+	LUNAParticleValue(float begin, float end, LUNAEasingFunc easing = easing::Linear);
 
 private:
 	float begin, end;
@@ -55,10 +56,12 @@ private:
 	LUNAParticleValue rotate;
 	LUNAParticleValue alpha;
 	LUNAParticleValue scale;
+	LUNAColor colorBegin, colorEnd;
 	bool deleted = false;
 
 public:
 	bool IsDeleted();
+	void SetColor(float r, float g, float b);
 	void SetDirection(float angle);
 	void Update(float dt);
 };

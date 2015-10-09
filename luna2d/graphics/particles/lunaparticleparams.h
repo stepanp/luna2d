@@ -28,6 +28,7 @@
 #include "lunarect.h"
 #include "lunarange.h"
 #include "lunastringenum.h"
+#include "lunacolor.h"
 
 namespace luna2d{
 
@@ -127,6 +128,9 @@ public:
 
 	// Particle alpha
 	LUNARangeFloat alphaBegin, alphaEnd;
+
+	// Particle color
+	LUNAColor colorBegin, colorEnd;
 };
 
 }

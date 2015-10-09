@@ -70,4 +70,6 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	scaleEnd = luaParams.GetField<LUNARangeFloat>("scaleEnd");
 	alphaBegin = luaParams.GetField<LUNARangeFloat>("alphaBegin");
 	alphaEnd = luaParams.GetField<LUNARangeFloat>("alphaEnd");
+	colorBegin = luaParams.GetField<LUNAColor>("colorBegin");
+	colorEnd = luaParams.GetField<LUNAColor>("colorEnd");
 }

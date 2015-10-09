@@ -34,6 +34,13 @@ LUNAParticleValue::LUNAParticleValue(const LUNARangeFloat& begin, const LUNARang
 {
 }
 
+LUNAParticleValue::LUNAParticleValue(float begin, float end, LUNAEasingFunc easing) :
+	begin(begin),
+	end(end),
+	easing(easing)
+{
+}
+
 float LUNAParticleValue::GetValue(float percent)
 {
 	return math::EaseLerp(begin, end, percent, easing);
@@ -47,7 +54,9 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	speed(params->speedBegin, params->speedEnd),
 	rotate(params->rotateBegin, params->rotateEnd),
 	alpha(params->alphaBegin, params->alphaEnd),
-	scale(params->scaleBegin, params->scaleEnd)
+	scale(params->scaleBegin, params->scaleEnd),
+	colorBegin(params->colorBegin),
+	colorEnd(params->colorEnd)
 {
 	SetOriginToCenter();
 	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
@@ -57,6 +66,13 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 bool LUNAParticle::IsDeleted()
 {
 	return deleted;
+}
+
+void LUNAParticle::SetColor(float r, float g, float b)
+{
+	color.r = r;
+	color.g = g;
+	color.b = b;
 }
 
 void LUNAParticle::SetDirection(float angle)
@@ -80,6 +96,11 @@ void LUNAParticle::Update(float dt)
 	SetAlpha(alpha.GetValue(percent));
 	SetScale(scale.GetValue(percent));
 	SetAngle(GetAngle() + (rotate.GetValue(percent) * dt));
+
+	float r = math::EaseLerp(colorBegin.r, colorEnd.r, percent, easing::Linear);
+	float g = math::EaseLerp(colorBegin.g, colorEnd.g, percent, easing::Linear);
+	float b = math::EaseLerp(colorBegin.b, colorEnd.b, percent, easing::Linear);
+	SetColor(r, g, b);
 
 	glm::vec2 newPos = GetPos() + (dir * (speed.GetValue(percent) * dt));
 	SetPos(newPos.x, newPos.y);
