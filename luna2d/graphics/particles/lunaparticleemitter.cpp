@@ -61,8 +61,8 @@ std::shared_ptr<LUNASprite> LUNAParticleEmitter::GetNextSprite()
 {
 	switch(params->textureSelectionMode)
 	{
-		case LUNATextureSelectionMode::SERIAL:
-		case LUNATextureSelectionMode::SHUFFLE:
+	case LUNATextureSelectionMode::SERIAL:
+	case LUNATextureSelectionMode::SHUFFLE:
 		{
 			auto ret = sourceSprites[spriteIndex];
 
@@ -71,8 +71,8 @@ std::shared_ptr<LUNASprite> LUNAParticleEmitter::GetNextSprite()
 
 			return ret;
 		}
-		case LUNATextureSelectionMode::RANDOM:
-			return sourceSprites[math::RandomInt(0, sourceSprites.size() - 1)];
+	case LUNATextureSelectionMode::RANDOM:
+		return sourceSprites[math::RandomInt(0, sourceSprites.size() - 1)];
 	}
 
 	return sourceSprites[0];
@@ -82,24 +82,24 @@ glm::vec2 LUNAParticleEmitter::GetSpawnPos()
 {
 	switch(params->spawnAreaMode)
 	{
-		case LUNASpawnAreaMode::POINT:
-			return pos;
-		case LUNASpawnAreaMode::RECT:
-			{
-				LUNARect& rect = params->spawnRect;
-				glm::vec2 ret;
+	case LUNASpawnAreaMode::POINT:
+		return pos;
+	case LUNASpawnAreaMode::RECT:
+		{
+			LUNARect& rect = params->spawnRect;
+			glm::vec2 ret;
 
-				ret.x = pos.x + math::RandomFloat(rect.x, rect.width);
-				ret.y = pos.y + math::RandomFloat(rect.y, rect.height);
+			ret.x = pos.x + math::RandomFloat(rect.x, rect.width);
+			ret.y = pos.y + math::RandomFloat(rect.y, rect.height);
 
-				return ret;
-			}
-		case LUNASpawnAreaMode::CIRCLE:
-			float r = math::RandomFloat(0, params->spawnCircleR);
-			float angle = math::RandomFloat(0.0f, 360.0f);
-			glm::vec2 radius = glm::rotate(glm::vec2(r, 0), glm::radians(angle));
+			return ret;
+		}
+	case LUNASpawnAreaMode::CIRCLE:
+		float r = math::RandomFloat(0, params->spawnCircleR);
+		float angle = math::RandomFloat(0.0f, 360.0f);
+		glm::vec2 radius = glm::rotate(glm::vec2(r, 0), glm::radians(angle));
 
-			return radius + pos;
+		return radius + pos;
 	}
 
 	return pos;
