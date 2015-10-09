@@ -89,8 +89,8 @@ glm::vec2 LUNAParticleEmitter::GetSpawnPos()
 			LUNARect& rect = params->spawnRect;
 			glm::vec2 ret;
 
-			ret.x = pos.x + math::RandomFloat(rect.x, rect.width);
-			ret.y = pos.y + math::RandomFloat(rect.y, rect.height);
+			ret.x = pos.x + rect.x + math::RandomFloat(0.0f, rect.width);
+			ret.y = pos.y + rect.y + math::RandomFloat(0.0f, rect.height);
 
 			return ret;
 		}
@@ -210,6 +210,7 @@ void LUNAParticleEmitter::Stop()
 {
 	running = false;
 	durationTime = 0;
+	emitTime = 0;
 }
 
 void LUNAParticleEmitter::Update(float dt)
