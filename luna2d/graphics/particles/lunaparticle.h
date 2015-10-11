@@ -52,11 +52,14 @@ public:
 private:
 	float lifetime, lifetimeTotal;
 	glm::vec2 dir;
+
 	LUNAParticleValue speed;
 	LUNAParticleValue rotate;
 	LUNAParticleValue alpha;
 	LUNAParticleValue scale;
 	LUNAColor colorBegin, colorEnd;
+	LUNAEasingFunc colorEasing;
+
 	bool deleted = false;
 
 public:

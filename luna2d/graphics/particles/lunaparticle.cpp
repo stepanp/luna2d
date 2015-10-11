@@ -51,12 +51,13 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	LUNASprite(*sprite),
 	lifetime(math::RandomFloat(params->lifetime.min, params->lifetime.max)),
 	lifetimeTotal(lifetime),
-	speed(params->speedBegin, params->speedEnd),
-	rotate(params->rotateBegin, params->rotateEnd),
-	alpha(params->alphaBegin, params->alphaEnd),
-	scale(params->scaleBegin, params->scaleEnd),
+	speed(params->speedBegin, params->speedEnd, params->speedEasing),
+	rotate(params->rotateBegin, params->rotateEnd, params->rotateEasing),
+	alpha(params->alphaBegin, params->alphaEnd, params->alphaEasing),
+	scale(params->scaleBegin, params->scaleEnd, params->scaleEasing),
 	colorBegin(params->colorBegin),
-	colorEnd(params->colorEnd)
+	colorEnd(params->colorEnd),
+	colorEasing(params->colorEasing)
 {
 	SetOriginToCenter();
 	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
@@ -97,9 +98,9 @@ void LUNAParticle::Update(float dt)
 	SetScale(scale.GetValue(percent));
 	SetAngle(GetAngle() + (rotate.GetValue(percent) * dt));
 
-	float r = math::EaseLerp(colorBegin.r, colorEnd.r, percent, easing::Linear);
-	float g = math::EaseLerp(colorBegin.g, colorEnd.g, percent, easing::Linear);
-	float b = math::EaseLerp(colorBegin.b, colorEnd.b, percent, easing::Linear);
+	float r = math::EaseLerp(colorBegin.r, colorEnd.r, percent, colorEasing);
+	float g = math::EaseLerp(colorBegin.g, colorEnd.g, percent, colorEasing);
+	float b = math::EaseLerp(colorBegin.b, colorEnd.b, percent, colorEasing);
 	SetColor(r, g, b);
 
 	glm::vec2 newPos = GetPos() + (dir * (speed.GetValue(percent) * dt));

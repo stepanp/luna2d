@@ -116,21 +116,26 @@ public:
 	// Particle speed
 	LUNARangeFloat speedBegin = LUNARangeFloat(1.0f);
 	LUNARangeFloat speedEnd = LUNARangeFloat(1.0f);
+	LUNAEasingFunc speedEasing = easing::Linear;
 
 	// Initial rotation angle of particle
 	LUNARangeFloat initAngle;
 
 	// Particle rotation speed (in degrees per second)
 	LUNARangeFloat rotateBegin, rotateEnd;
+	LUNAEasingFunc rotateEasing = easing::Linear;
 
 	// Particle scale
 	LUNARangeFloat scaleBegin, scaleEnd;
+	LUNAEasingFunc scaleEasing = easing::Linear;
 
 	// Particle alpha
 	LUNARangeFloat alphaBegin, alphaEnd;
+	LUNAEasingFunc alphaEasing = easing::Linear;
 
 	// Particle color
 	LUNAColor colorBegin, colorEnd;
+	LUNAEasingFunc colorEasing = easing::Linear;
 };
 
 }

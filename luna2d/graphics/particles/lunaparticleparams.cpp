@@ -26,6 +26,13 @@
 
 using namespace luna2d;
 
+static LUNAEasingFunc GetEasing(const LuaTable& luaParams, const std::string& name)
+{
+	auto it = EASINGS_MAP.find(luaParams.GetString(name));
+	if(it != EASINGS_MAP.end()) return it->second;
+	return easing::Linear;
+}
+
 LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 {
 	if(luaParams.HasField("spawnAreaMode"))
@@ -72,4 +79,10 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	alphaEnd = luaParams.GetField<LUNARangeFloat>("alphaEnd");
 	colorBegin = luaParams.GetField<LUNAColor>("colorBegin");
 	colorEnd = luaParams.GetField<LUNAColor>("colorEnd");
+
+	speedEasing = GetEasing(luaParams, "speedEasing");
+	rotateEasing = GetEasing(luaParams, "rotateEasing");
+	scaleEasing = GetEasing(luaParams, "scaleEasing");
+	alphaEasing = GetEasing(luaParams, "alphaEasing");
+	colorEasing = GetEasing(luaParams, "colorEasing");
 }
