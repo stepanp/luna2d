@@ -28,13 +28,11 @@ DESTDIR = $$PWD/../
 
 INCLUDEPATH += ../../../luna2d \
 		../../../luna2d/common/ \
-        ../../../luna2d/graphics/ \
-        ../../../luna2d/lua/ \
-        ../../../luna2d/modules/ \
+		../../../luna2d/lua/ \
         ../../../luna2d/platform/ \
-        ../../../luna2d/platform/qt/ \
+		../../../luna2d/platform/qt/ \
 		../../../thirdparty/lua/ \
-        ../../../luna2d/utils/
+		../../../luna2d/utils/
 
 CONFIG(debug, debug|release) {
 	LIBS += -L$$PWD/../../../lib/qt/ -lluna2dd
