@@ -28,27 +28,22 @@
 
 namespace luna2d{
 
-class LUNASoundSource : public LUNAAsset
+class LUNAAudioSource : public LUNAAsset
 {
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNASoundSource)
+	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAAudioSource)
 
 public:
-	virtual ~LUNASoundSource();
+	LUNAAudioSource(std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount);
+	virtual ~LUNAAudioSource();
 
 private:
-	std::vector<unsigned char> data;
+	size_t bufferId = 0;
 	int sampleRate = 0;
 	int sampleSize = 0;
 	int channelsCount = 0;
 
 public:
-	// Set data with swapping instead of copying buffer
-	void SwapData(std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount);
-
-	// Set data with copying buffer
-	void SetData(const std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount);
-
-	const std::vector<unsigned char>& GetData();
+	size_t GetBufferId();
 	int GetSampleRate();
 	int GetSampleSize();
 	int GetChannelsCount();

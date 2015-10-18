@@ -24,9 +24,32 @@
 #pragma once
 
 #include "lunaengine.h"
-#include "lunasoundsource.h"
+#include "lunaaudiosource.h"
 
 namespace luna2d{
+
+//------------------------------
+// Helper audio player interface
+//------------------------------
+class LUNAAudioPlayer
+{
+public:
+	virtual ~LUNAAudioPlayer() {}
+
+public:
+	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source) = 0;
+
+	virtual void Play() = 0;
+
+	virtual void Pause() = 0;
+
+	virtual void Stop() = 0;
+
+	virtual void SetVolume(float volume) = 0;
+
+	virtual void SetMute(bool mute) = 0;
+};
+
 
 //----------------
 // Audio interface
@@ -36,13 +59,20 @@ class LUNAAudio
 public:
 	virtual ~LUNAAudio() {}
 
-public:
-	// Play sound from given source
-	virtual void PlaySound(const std::weak_ptr<LUNASoundSource>& source) = 0;
+protected:
+	std::vector<std::shared_ptr<LUNAAudioPlayer>> players;
 
-	// Notify that given source was unloaded from asset manager.
-	// All players using given source must be stopped
-	virtual void SourceUnloaded(LUNASoundSource* source) = 0;
+public:
+	// Create audio buffer from given audio data
+	// In case of success return id of created buffer, else return 0
+	virtual size_t CreateBuffer(const std::vector<unsigned char>& data) = 0;
+
+	// Release buffer with given id
+	// All plyers using same buffer should be stopped
+	virtual void ReleaseBuffer(size_t bufferId) = 0;
+
+	// Play sound from given source
+	virtual void PlaySound(const std::weak_ptr<LUNAAudioSource>& source) = 0;
 };
 
 }

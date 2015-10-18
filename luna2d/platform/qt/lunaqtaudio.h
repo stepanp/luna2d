@@ -25,8 +25,31 @@
 
 #include "lunaaudio.h"
 #include <QAudioOutput>
+#include <QBuffer>
 
 namespace luna2d{
+
+//------------------------------------------
+// Helper audio player implementation for Qt
+//------------------------------------------
+class LUNAQtAudioPlayer : public QObject, public LUNAAudioPlayer
+{
+	Q_OBJECT
+
+public:
+	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source);
+
+	virtual void Play();
+
+	virtual void Pause();
+
+	virtual void Stop();
+
+	virtual void SetVolume(float volume);
+
+	virtual void SetMute(bool mute);
+};
+
 
 //----------------------------
 // Audio implementation for Qt
@@ -34,15 +57,20 @@ namespace luna2d{
 class LUNAQtAudio : public LUNAAudio
 {
 private:
-
+	std::unordered_map<size_t, std::shared_ptr<QBuffer>> buffers;
+	size_t uniqueBufferId;
 
 public:
-	// Play sound from given source
-	virtual void PlaySound(const std::weak_ptr<LUNASoundSource>& source);
+	// Create audio buffer from given audio data
+	// In case of success return id of created buffer, else return 0
+	virtual size_t CreateBuffer(const std::vector<unsigned char>& data);
 
-	// Notify that given source was unloaded from asset manager.
-	// All players using given source must be stopped
-	virtual void SourceUnloaded(LUNASoundSource* source);
+	// Release buffer with given id
+	// All plyers using same buffer should be stopped
+	virtual void ReleaseBuffer(size_t bufferId);
+
+	// Play sound from given source
+	virtual void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
 };
 
 }

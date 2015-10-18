@@ -21,52 +21,40 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunasoundsource.h"
+#include "lunaaudiosource.h"
 #include "lunaaudio.h"
 
 using namespace luna2d;
 
-LUNASoundSource::~LUNASoundSource()
+LUNAAudioSource::LUNAAudioSource(std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount) :
+	sampleRate(sampleRate),
+	sampleSize(sampleSize),
+	channelsCount(channelsCount)
 {
-	// Notify audio subsytem about sound source unloading
-	// to prevert playing from deleted buffer
-	LUNAEngine::SharedAudio()->SourceUnloaded(this);
+	bufferId = LUNAEngine::SharedAudio()->CreateBuffer(data);
 }
 
-// Set data with swapping instead of copying buffer
-void LUNASoundSource::SwapData(std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount)
+LUNAAudioSource::~LUNAAudioSource()
 {
-	this->data.swap(data);
-	this->sampleRate = sampleRate;
-	this->sampleSize = sampleSize;
-	this->channelsCount = channelsCount;
+	LUNAEngine::SharedAudio()->ReleaseBuffer(bufferId);
 }
 
-// Set data with copying buffer
-void LUNASoundSource::SetData(const std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount)
+size_t LUNAAudioSource::GetBufferId()
 {
-	this->data = data;
-	this->sampleRate = sampleRate;
-	this->sampleSize = sampleSize;
-	this->channelsCount = channelsCount;
+	return bufferId;
 }
 
-const std::vector<unsigned char>&LUNASoundSource::GetData()
-{
-	return data;
-}
-
-int LUNASoundSource::GetSampleRate()
+int LUNAAudioSource::GetSampleRate()
 {
 	return sampleRate;
 }
 
-int LUNASoundSource::GetSampleSize()
+int LUNAAudioSource::GetSampleSize()
 {
 	return sampleSize;
 }
 
-int LUNASoundSource::GetChannelsCount()
+int LUNAAudioSource::GetChannelsCount()
 {
 	return channelsCount;
 }
