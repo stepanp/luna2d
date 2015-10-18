@@ -36,6 +36,10 @@ class LUNAQtAudioPlayer : public QObject, public LUNAAudioPlayer
 {
 	Q_OBJECT
 
+private:
+	std::shared_ptr<QAudioOutput> output;
+	std::shared_ptr<QBuffer> buffer;
+
 public:
 	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source);
 
@@ -61,6 +65,9 @@ private:
 	size_t uniqueBufferId;
 
 public:
+	// Get buffer by given buffer id
+	virtual std::shared_ptr<QBuffer> GetBuffer(size_t bufferId);
+
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
 	virtual size_t CreateBuffer(const std::vector<unsigned char>& data);

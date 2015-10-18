@@ -36,7 +36,12 @@ class LUNAAudioPlayer
 public:
 	virtual ~LUNAAudioPlayer() {}
 
+protected:
+	size_t bufferId = 0;
+
 public:
+	virtual size_t GetBufferId();
+
 	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source) = 0;
 
 	virtual void Play() = 0;

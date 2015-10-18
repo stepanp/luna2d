@@ -22,22 +22,47 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaqtaudio.h"
+#include <QApplication>
 
 using namespace luna2d;
 
 void LUNAQtAudioPlayer::SetSource(const std::weak_ptr<LUNAAudioSource>& source)
 {
+	auto sharedSource = source.lock();
 
+	bufferId = sharedSource->GetBufferId();
+	buffer = (static_cast<LUNAQtAudio*>(LUNAEngine::SharedAudio()))->GetBuffer(bufferId);
+	buffer->open(QIODevice::ReadWrite);
+
+	QAudioFormat format;
+	format.setSampleRate(sharedSource->GetSampleRate());
+	format.setSampleSize(sharedSource->GetSampleSize());
+	format.setChannelCount(sharedSource->GetChannelsCount());
+	format.setCodec("audio/pcm");
+	format.setByteOrder(QAudioFormat::LittleEndian);
+	format.setSampleType(QAudioFormat::UnSignedInt);
+
+	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+	if(!info.isFormatSupported(format))
+	{
+		LUNA_LOGE("PCM audio format with sample rate:\"%d\", sample size:\"d\" and channels count:\"d\" not supported",
+			sharedSource->GetSampleRate(), sharedSource->GetSampleSize(), sharedSource->GetChannelsCount());
+		return;
+	}
+
+	output = std::make_shared<QAudioOutput>(format, QApplication::instance());
+	output->start(buffer.get());
+	output->suspend();
 }
 
 void LUNAQtAudioPlayer::Play()
 {
-
+	output->resume();
 }
 
 void LUNAQtAudioPlayer::Pause()
 {
-
+	output->suspend();
 }
 
 void LUNAQtAudioPlayer::Stop()
@@ -47,7 +72,7 @@ void LUNAQtAudioPlayer::Stop()
 
 void LUNAQtAudioPlayer::SetVolume(float volume)
 {
-
+	output->setVolume(volume);
 }
 
 void LUNAQtAudioPlayer::SetMute(bool mute)
@@ -57,6 +82,13 @@ void LUNAQtAudioPlayer::SetMute(bool mute)
 
 // Create audio buffer from given audio data
 // In case of success return id of created buffer, else return 0
+std::shared_ptr<QBuffer> LUNAQtAudio::GetBuffer(size_t bufferId)
+{
+	auto it = buffers.find(bufferId);
+	if(it == buffers.end()) return nullptr;
+	return it->second;
+}
+
 size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data)
 {
 	auto buffer = std::make_shared<QBuffer>();
@@ -71,8 +103,14 @@ size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data)
 // All plyers using same buffer should be stopped
 void LUNAQtAudio::ReleaseBuffer(size_t bufferId)
 {
-	auto bufferIt = buffers.find(bufferId);
-	if(bufferIt == buffers.end()) return;
+	auto it = buffers.find(bufferId);
+	if(it == buffers.end()) return;
+
+	// Stop players with given buffer id
+	for(auto& player : players)
+	{
+		if(player->GetBufferId() == bufferId) player->Stop();
+	}
 
 	buffers.erase(bufferId);
 }

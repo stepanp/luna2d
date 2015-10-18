@@ -24,3 +24,8 @@
 #include "lunaaudio.h"
 
 using namespace luna2d;
+
+size_t LUNAAudioPlayer::GetBufferId()
+{
+	return bufferId;
+}
