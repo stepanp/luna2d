@@ -78,6 +78,8 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/utf8cpp
 	${THIRDPARTY_DIR}/libzip
 	${THIRDPARTY_DIR}/zlib
+	${THIRDPARTY_DIR}/ogg
+	${THIRDPARTY_DIR}/vorbis
 )
 
 include_directories(${THIRDPARTY_DIRS})
@@ -108,6 +110,12 @@ aux_source_directory(${THIRDPARTY_DIR}/json11 THIRDPARTY_SOURCES)
 
 # zlib
 aux_source_directory(${THIRDPARTY_DIR}/zlib THIRDPARTY_SOURCES)
+
+# libogg
+aux_source_directory(${THIRDPARTY_DIR}/ogg THIRDPARTY_SOURCES)
+
+# libvorbis
+aux_source_directory(${THIRDPARTY_DIR}/vorbis THIRDPARTY_SOURCES)
 
 
 # Build Qt static library
