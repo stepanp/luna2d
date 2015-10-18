@@ -25,7 +25,6 @@
 #include "lunafiles.h"
 #include "lunatextureatlas.h"
 #include "lunalog.h"
-#include "lunamakeweak.h"
 #include <json11.hpp>
 
 using namespace luna2d;
@@ -50,7 +49,7 @@ void LUNATextureAtlas::Load(const std::shared_ptr<LUNATexture>& texture, const s
 		return;
 	}
 
-	auto weakTexture = make_weak(texture);
+	std::weak_ptr<LUNATexture> weakTexture = texture;
 	for(auto entry : jsonAtlas.object_items())
 	{
 		const std::string& name = entry.first;

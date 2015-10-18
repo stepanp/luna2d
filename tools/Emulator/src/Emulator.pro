@@ -27,6 +27,7 @@ QMAKE_CXXFLAGS_WARN_ON += -Werror=return-type
 DESTDIR = $$PWD/../
 
 INCLUDEPATH += ../../../luna2d \
+		../../../luna2d/common/ \
         ../../../luna2d/graphics/ \
         ../../../luna2d/lua/ \
         ../../../luna2d/modules/ \

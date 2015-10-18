@@ -38,21 +38,22 @@ endif()
 set(LUNA2D_DIR ${PROJECT_SOURCE_DIR}/luna2d)
 
 set(LUNA2D_DIRS
-	${LUNA2D_DIR}
-	${LUNA2D_DIR}/lua
-	${LUNA2D_DIR}/lua/scripts
-	${LUNA2D_DIR}/audio
+	${LUNA2D_DIR}	
 	${LUNA2D_DIR}/assets
+	${LUNA2D_DIR}/audio
+	${LUNA2D_DIR}/common
 	${LUNA2D_DIR}/graphics
 	${LUNA2D_DIR}/graphics/shaders
 	${LUNA2D_DIR}/graphics/particles
+	${LUNA2D_DIR}/lua
+	${LUNA2D_DIR}/lua/scripts
+	${LUNA2D_DIR}/math
 	${LUNA2D_DIR}/modules
 	${LUNA2D_DIR}/physics
 	${LUNA2D_DIR}/physics/shapes
 	${LUNA2D_DIR}/physics/joints
 	${LUNA2D_DIR}/platform
 	${LUNA2D_DIR}/utils
-	${LUNA2D_DIR}/utils/math
 )
 
 foreach(DIR ${LUNA2D_DIRS})
