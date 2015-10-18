@@ -42,7 +42,11 @@ protected:
 public:
 	virtual size_t GetBufferId();
 
-	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source) = 0;
+	virtual bool IsUsing() = 0;
+
+	virtual void SetSource(const std::shared_ptr<LUNAAudioSource>& source) = 0;
+
+	virtual void SetLoop(bool loop) = 0;
 
 	virtual void Play() = 0;
 
@@ -67,6 +71,9 @@ public:
 protected:
 	std::vector<std::shared_ptr<LUNAAudioPlayer>> players;
 
+protected:
+	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source);
+
 public:
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
@@ -77,7 +84,7 @@ public:
 	virtual void ReleaseBuffer(size_t bufferId) = 0;
 
 	// Play sound from given source
-	virtual void PlaySound(const std::weak_ptr<LUNAAudioSource>& source) = 0;
+	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
 };
 
 }

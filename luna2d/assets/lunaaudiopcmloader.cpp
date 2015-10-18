@@ -21,34 +21,20 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaaudio.h"
+#include "lunaaudiopcmloader.h"
 
 using namespace luna2d;
 
-size_t LUNAAudioPlayer::GetBufferId()
+bool LUNAAudioPcmLoader::Load(const std::string& filename)
 {
-	return bufferId;
+	auto fileData =  LUNAEngine::SharedFiles()->ReadFile(filename);
+
+	source = std::make_shared<LUNAAudioSource>(fileData, 44100, 16, 1);
+
+	return true;
 }
 
-
-std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source)
+void LUNAAudioPcmLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
 {
-	auto it = std::find_if(players.begin(), players.end(),
-		[](const std::shared_ptr<LUNAAudioPlayer>& player) { return !player->IsUsing(); });
-	if(it == players.end()) return nullptr;
-	return *it;
-}
-
-// Play sound from given source
-void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
-{
-	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
-
-	auto sharedSource = source.lock();
-
-	auto player = FindFreePlayer(sharedSource);
-	if(!player) LUNA_RETURN_ERR("Cannot play audio source. All audio players are used");
-
-	player->SetSource(sharedSource);
-	player->Play();
+	parentTable.SetField(name, source, true);
 }

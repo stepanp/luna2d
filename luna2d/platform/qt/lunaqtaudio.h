@@ -25,9 +25,12 @@
 
 #include "lunaaudio.h"
 #include <QAudioOutput>
+#include <QByteArray>
 #include <QBuffer>
 
 namespace luna2d{
+
+const int AUDIO_PLAYERS_COUNT_QT = 15;
 
 //------------------------------------------
 // Helper audio player implementation for Qt
@@ -36,12 +39,24 @@ class LUNAQtAudioPlayer : public QObject, public LUNAAudioPlayer
 {
 	Q_OBJECT
 
+public:
+	LUNAQtAudioPlayer();
+
 private:
 	std::shared_ptr<QAudioOutput> output;
 	std::shared_ptr<QBuffer> buffer;
+	QAudioFormat format;
+	bool used = false;
 
-public:
-	virtual void SetSource(const std::weak_ptr<LUNAAudioSource>& source);
+private slots:
+	void OnStateChanged(QAudio::State state);
+
+public:	
+	virtual bool IsUsing();
+
+	virtual void SetSource(const std::shared_ptr<LUNAAudioSource>& source);
+
+	virtual void SetLoop(bool loop);
 
 	virtual void Play();
 
@@ -60,13 +75,16 @@ public:
 //----------------------------
 class LUNAQtAudio : public LUNAAudio
 {
+public:
+	LUNAQtAudio();
+
 private:
-	std::unordered_map<size_t, std::shared_ptr<QBuffer>> buffers;
+	std::unordered_map<size_t, std::shared_ptr<QByteArray>> buffers;
 	size_t uniqueBufferId;
 
 public:
-	// Get buffer by given buffer id
-	virtual std::shared_ptr<QBuffer> GetBuffer(size_t bufferId);
+	// Get buffer data by given buffer id
+	virtual std::shared_ptr<QByteArray> GetBuffer(size_t bufferId);
 
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
@@ -75,9 +93,6 @@ public:
 	// Release buffer with given id
 	// All plyers using same buffer should be stopped
 	virtual void ReleaseBuffer(size_t bufferId);
-
-	// Play sound from given source
-	virtual void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
 };
 
 }

@@ -26,38 +26,79 @@
 
 using namespace luna2d;
 
-void LUNAQtAudioPlayer::SetSource(const std::weak_ptr<LUNAAudioSource>& source)
+LUNAQtAudioPlayer::LUNAQtAudioPlayer() :
+	buffer(std::make_shared<QBuffer>())
 {
-	auto sharedSource = source.lock();
-
-	bufferId = sharedSource->GetBufferId();
-	buffer = (static_cast<LUNAQtAudio*>(LUNAEngine::SharedAudio()))->GetBuffer(bufferId);
-	buffer->open(QIODevice::ReadWrite);
-
-	QAudioFormat format;
-	format.setSampleRate(sharedSource->GetSampleRate());
-	format.setSampleSize(sharedSource->GetSampleSize());
-	format.setChannelCount(sharedSource->GetChannelsCount());
+	format.setSampleRate(0);
+	format.setSampleSize(0);
+	format.setChannelCount(0);
 	format.setCodec("audio/pcm");
 	format.setByteOrder(QAudioFormat::LittleEndian);
 	format.setSampleType(QAudioFormat::UnSignedInt);
+}
 
-	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-	if(!info.isFormatSupported(format))
+void LUNAQtAudioPlayer::OnStateChanged(QAudio::State state)
+{
+	switch(state)
 	{
-		LUNA_LOGE("PCM audio format with sample rate:\"%d\", sample size:\"d\" and channels count:\"d\" not supported",
-			sharedSource->GetSampleRate(), sharedSource->GetSampleSize(), sharedSource->GetChannelsCount());
-		return;
+	case QAudio::IdleState:
+		output->stop();
+		buffer->close();
+		used = false;
+	}
+}
+
+bool LUNAQtAudioPlayer::IsUsing()
+{
+	return used;
+}
+
+void LUNAQtAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& source)
+{
+	LUNAQtAudio* audio = static_cast<LUNAQtAudio*>(LUNAEngine::SharedAudio());
+
+	bufferId = source->GetBufferId();
+
+	auto bufferData = audio->GetBuffer(bufferId);
+	buffer->setBuffer(bufferData.get());
+	buffer->open(QIODevice::ReadOnly);
+
+	int sampleRate = source->GetSampleRate();
+	int sampleSize = source->GetSampleSize();
+	int channelsCount = source->GetChannelsCount();
+
+	if(format.sampleRate() != sampleRate || format.sampleSize() != sampleSize || format.channelCount() != channelsCount)
+	{
+		format.setSampleRate(sampleRate);
+		format.setSampleSize(sampleSize);
+		format.setChannelCount(channelsCount);
+
+		QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+		if(!info.isFormatSupported(format))
+		{
+			LUNA_LOGE("Audio format with sample rate:\"%d\", sample size:\"%d\" and channels count:\"%d\" not supported",
+				sampleRate, sampleSize, channelsCount);
+			return;
+		}
+
+		output = std::make_shared<QAudioOutput>(format, QApplication::instance());
+		connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
 	}
 
-	output = std::make_shared<QAudioOutput>(format, QApplication::instance());
 	output->start(buffer.get());
-	output->suspend();
+	//output->suspend();
+
+	used = true;
+}
+
+void LUNAQtAudioPlayer::SetLoop(bool loop)
+{
+
 }
 
 void LUNAQtAudioPlayer::Play()
 {
-	output->resume();
+	//output->resume();
 }
 
 void LUNAQtAudioPlayer::Pause()
@@ -80,22 +121,26 @@ void LUNAQtAudioPlayer::SetMute(bool mute)
 
 }
 
-// Create audio buffer from given audio data
-// In case of success return id of created buffer, else return 0
-std::shared_ptr<QBuffer> LUNAQtAudio::GetBuffer(size_t bufferId)
+
+LUNAQtAudio::LUNAQtAudio()
+{
+	for(int i = 0; i < AUDIO_PLAYERS_COUNT_QT; i++) players.push_back(std::make_shared<LUNAQtAudioPlayer>());
+}
+
+// Get buffer data by given buffer id
+std::shared_ptr<QByteArray> LUNAQtAudio::GetBuffer(size_t bufferId)
 {
 	auto it = buffers.find(bufferId);
 	if(it == buffers.end()) return nullptr;
 	return it->second;
 }
 
+// Create audio buffer from given audio data
+// In case of success return id of created buffer, else return 0
 size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data)
 {
-	auto buffer = std::make_shared<QBuffer>();
-	buffer->setData(reinterpret_cast<const char*>(data.data()), data.size());
-
-	buffers[uniqueBufferId++] = buffer;
-
+	auto bufferData = std::make_shared<QByteArray>(reinterpret_cast<const char*>(data.data()), data.size());
+	buffers[++uniqueBufferId] = bufferData;
 	return uniqueBufferId;
 }
 
@@ -113,16 +158,4 @@ void LUNAQtAudio::ReleaseBuffer(size_t bufferId)
 	}
 
 	buffers.erase(bufferId);
-}
-
-// Play sound from given source
-void LUNAQtAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
-{
-	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
-
-	auto player = std::make_shared<LUNAQtAudioPlayer>();
-	player->SetSource(source);
-	player->Play();
-
-	players.push_back(player);
 }

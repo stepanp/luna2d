@@ -24,6 +24,7 @@
 #include "lunabindings.h"
 #include "lunaengine.h"
 #include "lunalua.h"
+#include "lunaaudio.h"
 #include "lunaprefs.h"
 #include "lunatimer.h"
 #include "lunaanimator.h"
@@ -38,7 +39,7 @@
 using namespace luna2d;
 
 // Bind "luna.log" module
-void BindLog(LuaScript* lua, LuaTable& tblLuna)
+static void BindLog(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblLog(lua);
 	tblLuna.SetField("log", tblLog);
@@ -65,7 +66,7 @@ void BindLog(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.utilss" module
-void BindUtils(LuaScript* lua, LuaTable& tblLuna)
+static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblUtils(lua);
 	tblLuna.SetField("utils", tblUtils);
@@ -104,7 +105,7 @@ void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind extension for standard lua "math" module
-void BindMath(LuaScript* lua, LuaTable& tblLuna)
+static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 {
 	// Register additional math functions in standard lua "math" module
 	LuaTable tblMath = lua->GetGlobalTable().GetTable("math");
@@ -188,7 +189,7 @@ void BindMath(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.intersect" module
-void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
+static void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblIntersect(lua);
 	tblLuna.SetField("intersect", tblIntersect);
@@ -203,7 +204,7 @@ void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.splines" module
-void BindSplines(LuaScript* lua, LuaTable& tblLuna)
+static void BindSplines(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblSplines(lua);
 	tblLuna.SetField("splines", tblSplines);
@@ -213,7 +214,7 @@ void BindSplines(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.easing" module
-void BindEasing(LuaScript* lua, LuaTable& tblLuna)
+static void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblEasing(lua);
 	tblLuna.SetField("easing", tblEasing);
@@ -240,13 +241,25 @@ void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 }
 
 // Bind "luna.platform" module
-void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
+static void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 {
 	tblLuna.SetField("platform", LUNA_PLATFORM_STRING);
 }
 
+// Bind "luna.audio" module
+static void BindAudio(LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblAudio(lua);
+	tblLuna.SetField("audio", tblAudio);
+
+	tblAudio.SetField("playSound", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::PlaySound));
+
+	// Bind audio source
+	LuaClass<LUNAAudioSource> clsAudioSource(lua);
+}
+
 // Bind "luna.prefs" module
-void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
+static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 {
 	// "__index" metamethod handler
 	// calls whenever acess to "luna.prefs" table like: "local value = luna.prefs.key"
@@ -353,5 +366,6 @@ void luna2d::DoBindings()
 	BindSplines(lua, tblLuna);
 	BindEasing(lua, tblLuna);
 	BindPlatform(lua, tblLuna);
+	BindAudio(lua, tblLuna);
 	BindPrefs(lua, tblLuna);
 }

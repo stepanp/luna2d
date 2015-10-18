@@ -27,6 +27,7 @@
 #include "lunatextureatlasloader.h"
 #include "lunafontloader.h"
 #include "lunajsonloader.h"
+#include "lunaaudiopcmloader.h"
 
 using namespace luna2d;
 
@@ -134,6 +135,7 @@ std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
 	}
 	else if(ext == "ttf") return std::make_shared<LUNAFontLoader>();
 	else if(ext == "json") return std::make_shared<LUNAJsonLoader>();
+	else if(ext == "wav") return std::make_shared<LUNAAudioPcmLoader>();
 
 	return nullptr;
 }
