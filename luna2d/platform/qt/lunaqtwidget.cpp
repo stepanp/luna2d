@@ -27,6 +27,7 @@
 #include "lunaqtfiles.h"
 #include "lunaqtlog.h"
 #include "lunaqtutils.h"
+#include "lunaqtaudio.h"
 #include "lunaqtprefs.h"
 
 using namespace luna2d;
@@ -185,7 +186,8 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int heig
 	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
 	connect(log, &LUNAQtLog::logError, this, &LUNAQtWidget::logError);
 
-	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(), new LUNAQtPrefs());
+	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(),
+		new LUNAQtAudio(), new LUNAQtPrefs());
 	LUNAEngine::Shared()->Initialize(width, height);
 
 	emit engineInitialized();
