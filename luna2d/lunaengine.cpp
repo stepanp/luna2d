@@ -78,17 +78,17 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	LuaTable tblLuna(lua);
 	tblGlobal.SetField("luna", tblLuna);
 
-	math::InitializeRandom();
-	RunEmbeddedScripts();
-	DoBindings();
-	LoadModules();
-
 	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
 	assets = new LUNAAssets();
 	graphics = new LUNAGraphics();
 	scenes = new LUNAScenes();
 	strings = new LUNAStrings();
 	debug = new LUNADebug();
+
+	math::InitializeRandom();
+	RunEmbeddedScripts();
+	DoBindings();
+	LoadModules();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))

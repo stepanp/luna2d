@@ -69,7 +69,8 @@ public:
 
 			if(lua_isnil(luaVm, -1))
 			{
-				LUNA_LOGE("Metatable for base class \"%s\" must be initialized before metatable for derived class \"%s\"",  Class::_GetTypeName(), baseTypeName);
+				LUNA_LOGE("Metatable for base class \"%s\" must be initialized before metatable for derived class \"%s\"",
+					baseTypeName, Class::_GetTypeName());
 				lua_pop(luaVm, 1); // Remove nil from stack
 			}
 			else
