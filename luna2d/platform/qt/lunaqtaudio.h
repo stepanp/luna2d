@@ -84,7 +84,7 @@ private:
 
 public:
 	// Get buffer data by given buffer id
-	virtual std::shared_ptr<QByteArray> GetBuffer(size_t bufferId);
+	std::shared_ptr<QByteArray> GetBuffer(size_t bufferId);
 
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
