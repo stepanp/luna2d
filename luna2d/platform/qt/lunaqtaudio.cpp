@@ -29,12 +29,7 @@ using namespace luna2d;
 LUNAQtAudioPlayer::LUNAQtAudioPlayer() :
 	buffer(std::make_shared<QBuffer>())
 {
-	format.setSampleRate(0);
-	format.setSampleSize(0);
-	format.setChannelCount(0);
-	format.setCodec("audio/pcm");
-	format.setByteOrder(QAudioFormat::LittleEndian);
-	format.setSampleType(QAudioFormat::UnSignedInt);
+	InitAudioOutput(DEFAULT_SAMPLE_RATE, DEFAULT_SAMPLE_SIZE, DEFAULT_CHANNELS_COUNT);
 }
 
 void LUNAQtAudioPlayer::OnStateChanged(QAudio::State state)
@@ -42,10 +37,30 @@ void LUNAQtAudioPlayer::OnStateChanged(QAudio::State state)
 	switch(state)
 	{
 	case QAudio::IdleState:
-		output->stop();
-		buffer->close();
-		used = false;
+		Stop();
 	}
+}
+
+void LUNAQtAudioPlayer::InitAudioOutput(int sampleRate, int sampleSize, int channelsCount)
+{
+	format.setSampleRate(sampleRate);
+	format.setSampleSize(sampleSize);
+	format.setChannelCount(channelsCount);
+	format.setCodec("audio/pcm");
+	format.setByteOrder(QAudioFormat::LittleEndian);
+	format.setSampleType(sampleSize == 8 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
+
+	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+	if(!info.isFormatSupported(format))
+	{
+		LUNA_LOGE("Audio format with sample rate:\"%d\", sample size:\"%d\" and channels count:\"%d\" not supported",
+			sampleRate, sampleSize, channelsCount);
+		output = nullptr;
+		return;
+	}
+
+	output = std::make_shared<QAudioOutput>(format, QApplication::instance());
+	connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
 }
 
 bool LUNAQtAudioPlayer::IsUsing()
@@ -69,26 +84,10 @@ void LUNAQtAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& source
 
 	if(format.sampleRate() != sampleRate || format.sampleSize() != sampleSize || format.channelCount() != channelsCount)
 	{
-		format.setSampleRate(sampleRate);
-		format.setSampleSize(sampleSize);
-		format.setChannelCount(channelsCount);
-
-		QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-		if(!info.isFormatSupported(format))
-		{
-			LUNA_LOGE("Audio format with sample rate:\"%d\", sample size:\"%d\" and channels count:\"%d\" not supported",
-				sampleRate, sampleSize, channelsCount);
-			return;
-		}
-
-		output = std::make_shared<QAudioOutput>(format, QApplication::instance());
-		connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
+		InitAudioOutput(sampleRate, sampleSize, channelsCount);
 	}
 
-	output->start(buffer.get());
-	//output->suspend();
-
-	used = true;
+	used = (output != nullptr);
 }
 
 void LUNAQtAudioPlayer::SetLoop(bool loop)
@@ -98,26 +97,46 @@ void LUNAQtAudioPlayer::SetLoop(bool loop)
 
 void LUNAQtAudioPlayer::Play()
 {
-	//output->resume();
+	if(!output || !used) return;
+
+	//if(output->state() == QAudio::SuspendedState) output->resume();
+	//else
+		output->start(buffer.get());
 }
 
 void LUNAQtAudioPlayer::Pause()
 {
+	if(!output || !used) return;
+
 	output->suspend();
 }
 
 void LUNAQtAudioPlayer::Stop()
 {
+	if(!output || !used) return;
 
+	output->stop();
+	buffer->close();
+	used = false;
+}
+
+void LUNAQtAudioPlayer::Rewind()
+{
+	if(!output || !used) return;
+
+	buffer->seek(0);
 }
 
 void LUNAQtAudioPlayer::SetVolume(float volume)
 {
+	if(!output || !used) return;
+
 	output->setVolume(volume);
 }
 
 void LUNAQtAudioPlayer::SetMute(bool mute)
 {
+	if(!output || !used) return;
 
 }
 

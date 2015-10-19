@@ -28,6 +28,12 @@
 
 namespace luna2d{
 
+// Default audio buffer format
+const int DEFAULT_SAMPLE_RATE = 44100;
+const int DEFAULT_SAMPLE_SIZE = 16;
+const int DEFAULT_CHANNELS_COUNT = 2;
+
+
 //------------------------------
 // Helper audio player interface
 //------------------------------
@@ -53,6 +59,8 @@ public:
 	virtual void Pause() = 0;
 
 	virtual void Stop() = 0;
+
+	virtual void Rewind() = 0;
 
 	virtual void SetVolume(float volume) = 0;
 

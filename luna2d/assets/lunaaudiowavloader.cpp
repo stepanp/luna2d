@@ -21,20 +21,49 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaaudiopcmloader.h"
+#include "lunaaudiowavloader.h"
 
 using namespace luna2d;
 
-bool LUNAAudioPcmLoader::Load(const std::string& filename)
+struct LUNAWaveHeader
 {
-	auto fileData =  LUNAEngine::SharedFiles()->ReadFile(filename);
+	uint8_t riff[4];
+	uint32_t riffSize;
+	uint8_t wave[4];
+	uint8_t fmt[4];
+	uint32_t fmtSize;
+	uint16_t format;
+	uint16_t channels;
+	uint32_t samplesPerSec;
+	uint32_t bytesPerSec;
+	uint16_t blockAlign;
+	uint16_t bitsPerSample;
+	uint8_t data[4];
+	uint32_t dataSize;
+};
 
-	source = std::make_shared<LUNAAudioSource>(fileData, 44100, 16, 1);
+bool LUNAAudioWavLoader::Load(const std::string& filename)
+{
+	auto fileData = LUNAEngine::SharedFiles()->ReadFile(filename);
+
+	LUNAWaveHeader header;
+	memcpy(&header, fileData.data(), sizeof(LUNAWaveHeader));
+
+	if(memcmp("RIFF", header.riff, 4) || memcmp("WAVE", header.wave, 4) ||
+		memcmp("fmt ", header.fmt, 4) || memcmp("data", header.data, 4))
+	{
+		return false;
+	}
+
+	fileData.erase(fileData.begin(), fileData.begin() + sizeof(LUNAWaveHeader)); // Remove header from PCM data
+	source = std::make_shared<LUNAAudioSource>(fileData, header.samplesPerSec, header.bitsPerSample, header.channels);
+
+	LUNA_LOG("%d %d", fileData.size(), header.dataSize);
 
 	return true;
 }
 
-void LUNAAudioPcmLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNAAudioWavLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
 {
 	parentTable.SetField(name, source, true);
 }

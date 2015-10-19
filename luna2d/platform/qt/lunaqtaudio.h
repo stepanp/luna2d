@@ -51,6 +51,9 @@ private:
 private slots:
 	void OnStateChanged(QAudio::State state);
 
+private:
+	void InitAudioOutput(int sampleRate, int sampleSize, int channelsCount);
+
 public:	
 	virtual bool IsUsing();
 
@@ -63,6 +66,8 @@ public:
 	virtual void Pause();
 
 	virtual void Stop();
+
+	virtual void Rewind();
 
 	virtual void SetVolume(float volume);
 

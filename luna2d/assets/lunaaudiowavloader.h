@@ -30,7 +30,7 @@ namespace luna2d{
 //--------------------------
 // Load WAV(PCM) audio files
 //--------------------------
-class LUNAAudioPcmLoader : public LUNAAssetLoader
+class LUNAAudioWavLoader : public LUNAAssetLoader
 {
 private:
 	std::shared_ptr<LUNAAudioSource> source;
