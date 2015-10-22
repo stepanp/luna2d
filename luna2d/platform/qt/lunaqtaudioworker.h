@@ -29,43 +29,38 @@
 
 namespace luna2d{
 
-class LUNAQtAudioThread : public QThread
+//-------------------------------------------
+// Helpers to playing audio in separate thead
+//-------------------------------------------
+
+class LUNAQtWorkerManager : public QObject
 {
 	Q_OBJECT
 
-public:
-	LUNAQtAudioThread(LUNAQtAudio* audio);
-
-private:
-	LUNAQtAudio* audio;
-	std::queue<LUNAQtAudioPlayer*> wrappers;
-	QObject* playersHolder;
-
-protected:
-	virtual void run();
-
 signals:
-	void playersStopped(size_t bufferId);
+	void workersStopped(size_t bufferId);
 
 public slots:
-	// Stop all players with given id
-	// After stopping players, emit "playersStopped" signal
-	void StopPlayers(size_t bufferId);
+	// Create worker player in audio thread
+	// and connect it to given audio player interface
+	void RequestWorker(LUNAQtAudioPlayer* player);
 
-public:
-	void AttachPlayer(LUNAQtAudioPlayer* player);
+	// Stop all workers using buffer with given id
+	// After stopping workers, emit "workersStopped" signal
+	void StopWorkers(size_t bufferId);
 };
 
 
-class LUNAQtThreadPlayer : public QObject
+class LUNAQtWorkerPlayer : public QObject
 {
 	Q_OBJECT
 
 public:
-	LUNAQtThreadPlayer(QObject* parent);
-	~LUNAQtThreadPlayer();
+	LUNAQtWorkerPlayer(QObject* parent);
+	~LUNAQtWorkerPlayer();
 
 private:
+	size_t bufferId = 0;
 	std::unique_ptr<QBuffer> buffer;
 	std::unique_ptr<QAudioOutput> output;
 	QAudioFormat format;
@@ -73,22 +68,25 @@ private:
 
 signals:
 	void usingChanged(bool inUse);
-	void playerStopped();
 
 public slots:
 	void OnStateChanged(QAudio::State state);
-	void OnSetSource(QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount);
-	void OnSetLoop(bool loop);
-	void OnPlay();
-	void OnPause();
-	void OnStop();
-	void OnRewind();
-	void OnSetVolume(float volume);
-	void OnSetMute(bool mute);
+	void SetSource(size_t bufferId, QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount);
+	void SetLoop(bool loop);
+	void Play();
+	void Pause();
+	void Stop();
+	void Rewind();
+	void SetVolume(float volume);
+	void SetMute(bool mute);
 
 private:
 	void InitAudioOutput(int sampleRate, int sampleSize, int channelsCount);
 	void SetUsing(bool inUse);
+
+public:
+	size_t GetBufferId();
+	bool IsUsing();
 };
 
 }

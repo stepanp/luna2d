@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaqtaudio.h"
-#include "lunaqtaudiothread.h"
+#include "lunaqtaudioworker.h"
 
 using namespace luna2d;
 
@@ -33,11 +33,6 @@ LUNAQtAudioPlayer::LUNAQtAudioPlayer()
 void LUNAQtAudioPlayer::OnUsingChanged(bool inUse)
 {
 	this->inUse = inUse;
-}
-
-void LUNAQtAudioPlayer::OnPlayerStopped()
-{
-	emit playerStopped();
 }
 
 bool LUNAQtAudioPlayer::IsUsing()
@@ -52,69 +47,85 @@ void LUNAQtAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& source
 	auto bufferData = audio->GetBuffer(bufferId);
 
 	inUse = true;
-	emit setSource(bufferData.get(), source->GetSampleRate(), source->GetSampleSize(), source->GetChannelsCount());
+	emit workerSetSource(bufferId, bufferData.get(),
+		source->GetSampleRate(), source->GetSampleSize(), source->GetChannelsCount());
 }
 
 void LUNAQtAudioPlayer::SetLoop(bool loop)
 {
-	emit setLoop(loop);
+	emit workerSetLoop(loop);
 }
 
 void LUNAQtAudioPlayer::Play()
 {
-	emit play();
+	emit workerPlay();
 }
 
 void LUNAQtAudioPlayer::Pause()
 {
-	emit pause();
+	emit workerPause();
 }
 
 void LUNAQtAudioPlayer::Stop()
 {
-	emit stop();
+	emit workerStop();
 }
 
 void LUNAQtAudioPlayer::Rewind()
 {
-	emit rewind();
+	emit workerRewind();
 }
 
 void LUNAQtAudioPlayer::SetVolume(float volume)
 {
-	emit setVolume(volume);
+	emit workerSetVolume(volume);
 }
 
 void LUNAQtAudioPlayer::SetMute(bool mute)
 {
-	emit setMute(mute);
+	emit workerSetMute(mute);
 }
 
 
 LUNAQtAudio::LUNAQtAudio()
 {
-	audioThread = new LUNAQtAudioThread(this);
-	connect(audioThread, &LUNAQtAudioThread::finished, audioThread, &LUNAQtAudioThread::deleteLater);
+	qRegisterMetaType<size_t>("size_t");
+
+	audioThread = new QThread();
+	auto workerMgr = new LUNAQtWorkerManager();
+
+	workerMgr->moveToThread(audioThread);
+
+	connect(audioThread, &QThread::finished, workerMgr, &QThread::deleteLater);
+	connect(audioThread, &QThread::finished, audioThread, &QThread::deleteLater);
+	connect(this, &LUNAQtAudio::requestWorker, workerMgr, &LUNAQtWorkerManager::RequestWorker, Qt::BlockingQueuedConnection);
+	connect(this, &LUNAQtAudio::stopWorkers, workerMgr, &LUNAQtWorkerManager::StopWorkers);
+
+	workersStoppedConn = std::make_shared<QMetaObject::Connection>();
+	*workersStoppedConn = connect(workerMgr, &LUNAQtWorkerManager::workersStopped,
+		[this](size_t bufferId)
+		{
+			auto it = buffers.find(bufferId);
+			if(it != buffers.end()) buffers.erase(bufferId);
+		});
+
+	audioThread->start();
 
 	for(int i = 0; i < AUDIO_PLAYERS_COUNT_QT; i++)
 	{
 		auto player = std::make_shared<LUNAQtAudioPlayer>();
-		audioThread->AttachPlayer(player.get());
+		emit requestWorker(player.get());
 		players.push_back(player);
 	}
-
-	audioThread->start();
 }
 
 LUNAQtAudio::~LUNAQtAudio()
 {
-	audioThread->quit();
-}
+	// Disconnect "workersStopped" signal to avoid
+	// attemts to releasing buffers after destroying "LUNAQtAudio" object
+	disconnect(*workersStoppedConn);
 
-void LUNAQtAudio::OnPlayersStopped(size_t bufferId)
-{
-	auto it = buffers.find(bufferId);
-	if(it != buffers.end()) buffers.erase(bufferId);
+	audioThread->quit();
 }
 
 // Get buffer data by given buffer id
@@ -141,6 +152,7 @@ void LUNAQtAudio::ReleaseBuffer(size_t bufferId)
 	if(buffers.count(bufferId) == 0) return;
 
 	// Stop players using given buffer
-	// Buffer will be released after stopping players in audio thread
-	emit stopPlayers(bufferId);
+	// Buffer will be released after stopping players in audio thread in "workersStopped" signal handler
+	// SEE: "LUNAQtAudio" constructor
+	emit stopWorkers(bufferId);
 }

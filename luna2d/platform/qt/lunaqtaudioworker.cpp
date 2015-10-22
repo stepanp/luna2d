@@ -21,87 +21,73 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaqtaudiothread.h"
+#include "lunaqtaudioworker.h"
 
 using namespace luna2d;
 
-LUNAQtAudioThread::LUNAQtAudioThread(LUNAQtAudio* audio) :
-	audio(audio)
+// Create worker player in audio thread
+// and connect it to given audio player interface
+void LUNAQtWorkerManager::RequestWorker(LUNAQtAudioPlayer* player)
 {
+	// This manager is parent for worker
+	// So, worker will be safety deleted with deleting manager
+	LUNAQtWorkerPlayer* worker = new LUNAQtWorkerPlayer(this);
+
+	connect(worker, &LUNAQtWorkerPlayer::usingChanged, player, &LUNAQtAudioPlayer::OnUsingChanged);
+
+	connect(player, &LUNAQtAudioPlayer::workerSetSource, worker, &LUNAQtWorkerPlayer::SetSource);
+	connect(player, &LUNAQtAudioPlayer::workerSetLoop, worker, &LUNAQtWorkerPlayer::SetLoop);
+	connect(player, &LUNAQtAudioPlayer::workerPlay, worker, &LUNAQtWorkerPlayer::Play);
+	connect(player, &LUNAQtAudioPlayer::workerPause, worker, &LUNAQtWorkerPlayer::Pause);
+	connect(player, &LUNAQtAudioPlayer::workerStop, worker, &LUNAQtWorkerPlayer::Stop);
+	connect(player, &LUNAQtAudioPlayer::workerRewind, worker, &LUNAQtWorkerPlayer::Rewind);
+	connect(player, &LUNAQtAudioPlayer::workerSetVolume, worker, &LUNAQtWorkerPlayer::SetVolume);
+	connect(player, &LUNAQtAudioPlayer::workerSetMute, worker, &LUNAQtWorkerPlayer::SetMute);
 }
 
-void LUNAQtAudioThread::run()
+// Stop all workers using buffer with given id
+// After stopping workers, emit "workersStopped" signal
+void LUNAQtWorkerManager::StopWorkers(size_t bufferId)
 {
-	QObject scopedHolder;
-	playersHolder = &scopedHolder;
+	QThread* thread = QThread::currentThread();
 
-	while(!wrappers.empty())
+	auto workers = this->children();
+	for(QObject* child : workers)
 	{
-		LUNAQtThreadPlayer* player = new LUNAQtThreadPlayer(&scopedHolder);
-		LUNAQtAudioPlayer* wrapper = wrappers.front();
-		wrappers.pop();
-
-		connect(player, &LUNAQtThreadPlayer::usingChanged, wrapper, &LUNAQtAudioPlayer::OnUsingChanged);
-		connect(player, &LUNAQtThreadPlayer::playerStopped, wrapper, &LUNAQtAudioPlayer::OnPlayerStopped);
-
-		connect(wrapper, &LUNAQtAudioPlayer::setSource, player, &LUNAQtThreadPlayer::OnSetSource);
-		connect(wrapper, &LUNAQtAudioPlayer::setLoop, player, &LUNAQtThreadPlayer::OnSetLoop);
-		connect(wrapper, &LUNAQtAudioPlayer::play, player, &LUNAQtThreadPlayer::OnPlay);
-		connect(wrapper, &LUNAQtAudioPlayer::pause, player, &LUNAQtThreadPlayer::OnPause);
-		connect(wrapper, &LUNAQtAudioPlayer::stop, player, &LUNAQtThreadPlayer::OnStop);
-		connect(wrapper, &LUNAQtAudioPlayer::rewind, player, &LUNAQtThreadPlayer::OnRewind);
-		connect(wrapper, &LUNAQtAudioPlayer::setVolume, player, &LUNAQtThreadPlayer::OnSetVolume);
-		connect(wrapper, &LUNAQtAudioPlayer::setMute, player, &LUNAQtThreadPlayer::OnSetMute);
+		LUNAQtWorkerPlayer* worker = qobject_cast<LUNAQtWorkerPlayer*>(child);
+		if(worker->IsUsing() && worker->GetBufferId() == bufferId) worker->Stop();
 	}
 
-	connect(audio, &LUNAQtAudio::stopPlayers, this, &LUNAQtAudioThread::StopPlayers);
-	connect(this, &LUNAQtAudioThread::playersStopped, audio, &LUNAQtAudio::OnPlayersStopped);
-
-	exec();
-}
-
-// Stop all players with given id
-// After stopping players, emit "playersStopped" signal
-void LUNAQtAudioThread::StopPlayers(size_t bufferId)
-{
-	auto players = playersHolder->children();
-	for(QObject* player : players)
-	{
-		(static_cast<LUNAQtThreadPlayer*>(player))->OnStop();
-	}
-
-	emit playersStopped(bufferId);
-}
-
-void LUNAQtAudioThread::AttachPlayer(LUNAQtAudioPlayer* player)
-{
-	wrappers.push(player);
+	emit workersStopped(bufferId);
 }
 
 
-LUNAQtThreadPlayer::LUNAQtThreadPlayer(QObject* parent) :
+LUNAQtWorkerPlayer::LUNAQtWorkerPlayer(QObject* parent) :
 	QObject(parent),
 	buffer(std::unique_ptr<QBuffer>(new QBuffer()))
 {
 	InitAudioOutput(DEFAULT_SAMPLE_RATE, DEFAULT_SAMPLE_SIZE, DEFAULT_CHANNELS_COUNT);
 }
 
-LUNAQtThreadPlayer::~LUNAQtThreadPlayer()
+LUNAQtWorkerPlayer::~LUNAQtWorkerPlayer()
 {
-	OnStop();
+	Stop();
 }
 
-void LUNAQtThreadPlayer::OnStateChanged(QAudio::State state)
+void LUNAQtWorkerPlayer::OnStateChanged(QAudio::State state)
 {
 	switch(state)
 	{
 	case QAudio::IdleState:
-		OnStop();
+		Stop();
+		break;
 	}
 }
 
-void LUNAQtThreadPlayer::OnSetSource(QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount)
+void LUNAQtWorkerPlayer::SetSource(size_t bufferId, QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount)
 {
+	this->bufferId = bufferId;
+
 	buffer->setBuffer(bufferData);
 	buffer->open(QIODevice::ReadOnly);
 
@@ -113,12 +99,12 @@ void LUNAQtThreadPlayer::OnSetSource(QByteArray* bufferData, int sampleRate, int
 	SetUsing(output != nullptr);
 }
 
-void LUNAQtThreadPlayer::OnSetLoop(bool loop)
+void LUNAQtWorkerPlayer::SetLoop(bool loop)
 {
 
 }
 
-void LUNAQtThreadPlayer::OnPlay()
+void LUNAQtWorkerPlayer::Play()
 {
 	if(!output || !inUse) return;
 
@@ -126,44 +112,43 @@ void LUNAQtThreadPlayer::OnPlay()
 	else output->start(buffer.get());
 }
 
-void LUNAQtThreadPlayer::OnPause()
+void LUNAQtWorkerPlayer::Pause()
 {
 	if(!output || !inUse) return;
 
 	output->suspend();
 }
 
-void LUNAQtThreadPlayer::OnStop()
+void LUNAQtWorkerPlayer::Stop()
 {
 	if(!output || !inUse) return;
 
 	output->stop();
 	buffer->close();
-	SetUsing(false);
 
-	emit playerStopped();
+	SetUsing(false);
 }
 
-void LUNAQtThreadPlayer::OnRewind()
+void LUNAQtWorkerPlayer::Rewind()
 {
 	if(!output || !inUse) return;
 
 	buffer->seek(0);
 }
 
-void LUNAQtThreadPlayer::OnSetVolume(float volume)
+void LUNAQtWorkerPlayer::SetVolume(float volume)
 {
 	if(!output || !inUse) return;
 
 	output->setVolume(volume);
 }
 
-void LUNAQtThreadPlayer::OnSetMute(bool mute)
+void LUNAQtWorkerPlayer::SetMute(bool mute)
 {
 
 }
 
-void LUNAQtThreadPlayer::InitAudioOutput(int sampleRate, int sampleSize, int channelsCount)
+void LUNAQtWorkerPlayer::InitAudioOutput(int sampleRate, int sampleSize, int channelsCount)
 {
 	format.setSampleRate(sampleRate);
 	format.setSampleSize(sampleSize);
@@ -185,8 +170,18 @@ void LUNAQtThreadPlayer::InitAudioOutput(int sampleRate, int sampleSize, int cha
 	connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
 }
 
-void LUNAQtThreadPlayer::SetUsing(bool inUse)
+void LUNAQtWorkerPlayer::SetUsing(bool inUse)
 {
 	this->inUse = inUse;
 	emit usingChanged(inUse);
+}
+
+size_t LUNAQtWorkerPlayer::GetBufferId()
+{
+	return bufferId;
+}
+
+bool LUNAQtWorkerPlayer::IsUsing()
+{
+	return inUse;
 }

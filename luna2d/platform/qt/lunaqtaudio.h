@@ -31,11 +31,12 @@ namespace luna2d{
 
 const int AUDIO_PLAYERS_COUNT_QT = 15;
 
-class LUNAQtAudioThread;
-
-//------------------------------------------
+//--------------------------------------------------
 // Helper audio player implementation for Qt
-//------------------------------------------
+// It's wrapper for "LUNAQtWorkerPlayer" class
+// Implements common interface "LUNAAudioPlayer" and
+// controls worker player from main thread
+//--------------------------------------------------
 class LUNAQtAudioPlayer : public QObject, public LUNAAudioPlayer
 {
 	Q_OBJECT
@@ -47,20 +48,17 @@ private:
 	bool inUse = false;
 
 signals:
-	void requestPlayer(LUNAQtAudioPlayer* wrapper);
-	void playerStopped();
-	void setSource(QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount);
-	void setLoop(bool loop);
-	void play();
-	void pause();
-	void stop();
-	void rewind();
-	void setVolume(float volume);
-	void setMute(bool mute);
+	void workerSetSource(size_t bufferId, QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount);
+	void workerSetLoop(bool loop);
+	void workerPlay();
+	void workerPause();
+	void workerStop();
+	void workerRewind();
+	void workerSetVolume(float volume);
+	void workerSetMute(bool mute);
 
 public slots:
 	void OnUsingChanged(bool inUse);
-	void OnPlayerStopped();
 
 public:	
 	virtual bool IsUsing();
@@ -95,15 +93,14 @@ public:
 	~LUNAQtAudio();
 
 private:
-	LUNAQtAudioThread* audioThread;
+	QThread* audioThread;
 	std::unordered_map<size_t, std::shared_ptr<QByteArray>> buffers;
 	size_t uniqueBufferId = 0;
+	std::shared_ptr<QMetaObject::Connection> workersStoppedConn;
 
 signals:
-	void stopPlayers(size_t bufferId);
-
-public slots:
-	void OnPlayersStopped(size_t bufferId);
+	void requestWorker(LUNAQtAudioPlayer* player);
+	void stopWorkers(size_t bufferId);
 
 public:	
 	// Get buffer data by given buffer id
