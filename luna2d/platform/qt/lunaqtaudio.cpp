@@ -22,128 +22,99 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaqtaudio.h"
-#include <QApplication>
+#include "lunaqtaudiothread.h"
 
 using namespace luna2d;
 
-LUNAQtAudioPlayer::LUNAQtAudioPlayer() :
-	buffer(std::make_shared<QBuffer>())
+LUNAQtAudioPlayer::LUNAQtAudioPlayer()
 {
-	InitAudioOutput(DEFAULT_SAMPLE_RATE, DEFAULT_SAMPLE_SIZE, DEFAULT_CHANNELS_COUNT);
 }
 
-void LUNAQtAudioPlayer::OnStateChanged(QAudio::State state)
+void LUNAQtAudioPlayer::OnUsingChanged(bool inUse)
 {
-	switch(state)
-	{
-	case QAudio::IdleState:
-		Stop();
-	}
+	this->inUse = inUse;
 }
 
-void LUNAQtAudioPlayer::InitAudioOutput(int sampleRate, int sampleSize, int channelsCount)
+void LUNAQtAudioPlayer::OnPlayerStopped()
 {
-	format.setSampleRate(sampleRate);
-	format.setSampleSize(sampleSize);
-	format.setChannelCount(channelsCount);
-	format.setCodec("audio/pcm");
-	format.setByteOrder(QAudioFormat::LittleEndian);
-	format.setSampleType(sampleSize == 8 ? QAudioFormat::UnSignedInt : QAudioFormat::SignedInt);
-
-	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-	if(!info.isFormatSupported(format))
-	{
-		LUNA_LOGE("Audio format with sample rate:\"%d\", sample size:\"%d\" and channels count:\"%d\" not supported",
-			sampleRate, sampleSize, channelsCount);
-		output = nullptr;
-		return;
-	}
-
-	output = std::make_shared<QAudioOutput>(format, QApplication::instance());
-	connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
+	emit playerStopped();
 }
 
 bool LUNAQtAudioPlayer::IsUsing()
 {
-	return used;
+	return inUse;
 }
 
 void LUNAQtAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& source)
 {
 	LUNAQtAudio* audio = static_cast<LUNAQtAudio*>(LUNAEngine::SharedAudio());
-
 	bufferId = source->GetBufferId();
-
 	auto bufferData = audio->GetBuffer(bufferId);
-	buffer->setBuffer(bufferData.get());
-	buffer->open(QIODevice::ReadOnly);
 
-	int sampleRate = source->GetSampleRate();
-	int sampleSize = source->GetSampleSize();
-	int channelsCount = source->GetChannelsCount();
-
-	if(format.sampleRate() != sampleRate || format.sampleSize() != sampleSize || format.channelCount() != channelsCount)
-	{
-		InitAudioOutput(sampleRate, sampleSize, channelsCount);
-	}
-
-	used = (output != nullptr);
+	inUse = true;
+	emit setSource(bufferData.get(), source->GetSampleRate(), source->GetSampleSize(), source->GetChannelsCount());
 }
 
 void LUNAQtAudioPlayer::SetLoop(bool loop)
 {
-
+	emit setLoop(loop);
 }
 
 void LUNAQtAudioPlayer::Play()
 {
-	if(!output || !used) return;
-
-	//if(output->state() == QAudio::SuspendedState) output->resume();
-	//else
-		output->start(buffer.get());
+	emit play();
 }
 
 void LUNAQtAudioPlayer::Pause()
 {
-	if(!output || !used) return;
-
-	output->suspend();
+	emit pause();
 }
 
 void LUNAQtAudioPlayer::Stop()
 {
-	if(!output || !used) return;
-
-	output->stop();
-	buffer->close();
-	used = false;
+	emit stop();
 }
 
 void LUNAQtAudioPlayer::Rewind()
 {
-	if(!output || !used) return;
-
-	buffer->seek(0);
+	emit rewind();
 }
 
 void LUNAQtAudioPlayer::SetVolume(float volume)
 {
-	if(!output || !used) return;
-
-	output->setVolume(volume);
+	emit setVolume(volume);
 }
 
 void LUNAQtAudioPlayer::SetMute(bool mute)
 {
-	if(!output || !used) return;
-
+	emit setMute(mute);
 }
 
 
 LUNAQtAudio::LUNAQtAudio()
 {
-	for(int i = 0; i < AUDIO_PLAYERS_COUNT_QT; i++) players.push_back(std::make_shared<LUNAQtAudioPlayer>());
+	audioThread = new LUNAQtAudioThread(this);
+	connect(audioThread, &LUNAQtAudioThread::finished, audioThread, &LUNAQtAudioThread::deleteLater);
+
+	for(int i = 0; i < AUDIO_PLAYERS_COUNT_QT; i++)
+	{
+		auto player = std::make_shared<LUNAQtAudioPlayer>();
+		audioThread->AttachPlayer(player.get());
+		players.push_back(player);
+	}
+
+	audioThread->start();
+}
+
+LUNAQtAudio::~LUNAQtAudio()
+{
+	audioThread->quit();
+}
+
+void LUNAQtAudio::OnPlayersStopped(size_t bufferId)
+{
+	auto it = buffers.find(bufferId);
+	if(it != buffers.end()) buffers.erase(bufferId);
 }
 
 // Get buffer data by given buffer id
@@ -167,14 +138,9 @@ size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data)
 // All plyers using same buffer should be stopped
 void LUNAQtAudio::ReleaseBuffer(size_t bufferId)
 {
-	auto it = buffers.find(bufferId);
-	if(it == buffers.end()) return;
+	if(buffers.count(bufferId) == 0) return;
 
-	// Stop players with given buffer id
-	for(auto& player : players)
-	{
-		if(player->GetBufferId() == bufferId) player->Stop();
-	}
-
-	buffers.erase(bufferId);
+	// Stop players using given buffer
+	// Buffer will be released after stopping players in audio thread
+	emit stopPlayers(bufferId);
 }

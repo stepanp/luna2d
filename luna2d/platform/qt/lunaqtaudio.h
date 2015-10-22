@@ -24,13 +24,14 @@
 #pragma once
 
 #include "lunaaudio.h"
-#include <QAudioOutput>
 #include <QByteArray>
 #include <QBuffer>
 
 namespace luna2d{
 
 const int AUDIO_PLAYERS_COUNT_QT = 15;
+
+class LUNAQtAudioThread;
 
 //------------------------------------------
 // Helper audio player implementation for Qt
@@ -43,16 +44,23 @@ public:
 	LUNAQtAudioPlayer();
 
 private:
-	std::shared_ptr<QAudioOutput> output;
-	std::shared_ptr<QBuffer> buffer;
-	QAudioFormat format;
-	bool used = false;
+	bool inUse = false;
 
-private slots:
-	void OnStateChanged(QAudio::State state);
+signals:
+	void requestPlayer(LUNAQtAudioPlayer* wrapper);
+	void playerStopped();
+	void setSource(QByteArray* bufferData, int sampleRate, int sampleSize, int channelsCount);
+	void setLoop(bool loop);
+	void play();
+	void pause();
+	void stop();
+	void rewind();
+	void setVolume(float volume);
+	void setMute(bool mute);
 
-private:
-	void InitAudioOutput(int sampleRate, int sampleSize, int channelsCount);
+public slots:
+	void OnUsingChanged(bool inUse);
+	void OnPlayerStopped();
 
 public:	
 	virtual bool IsUsing();
@@ -78,16 +86,26 @@ public:
 //----------------------------
 // Audio implementation for Qt
 //----------------------------
-class LUNAQtAudio : public LUNAAudio
+class LUNAQtAudio : public QObject, public LUNAAudio
 {
+	Q_OBJECT
+
 public:
 	LUNAQtAudio();
+	~LUNAQtAudio();
 
 private:
+	LUNAQtAudioThread* audioThread;
 	std::unordered_map<size_t, std::shared_ptr<QByteArray>> buffers;
-	size_t uniqueBufferId;
+	size_t uniqueBufferId = 0;
 
-public:
+signals:
+	void stopPlayers(size_t bufferId);
+
+public slots:
+	void OnPlayersStopped(size_t bufferId);
+
+public:	
 	// Get buffer data by given buffer id
 	std::shared_ptr<QByteArray> GetBuffer(size_t bufferId);
 

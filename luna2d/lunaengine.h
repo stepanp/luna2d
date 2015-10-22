@@ -29,6 +29,8 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <queue>
+#include <stack>
 #include <memory>
 #include <functional>
 #include <type_traits>

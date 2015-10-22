@@ -58,8 +58,6 @@ bool LUNAAudioWavLoader::Load(const std::string& filename)
 	fileData.erase(fileData.begin(), fileData.begin() + sizeof(LUNAWaveHeader)); // Remove header from PCM data
 	source = std::make_shared<LUNAAudioSource>(fileData, header.samplesPerSec, header.bitsPerSample, header.channels);
 
-	LUNA_LOG("%d %d", fileData.size(), header.dataSize);
-
 	return true;
 }
 
