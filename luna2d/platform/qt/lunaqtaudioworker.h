@@ -64,6 +64,7 @@ private:
 	std::unique_ptr<QBuffer> buffer;
 	std::unique_ptr<QAudioOutput> output;
 	QAudioFormat format;
+	bool loop = false;
 	bool inUse = false;
 
 signals:

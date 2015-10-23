@@ -111,12 +111,14 @@ LUNAQtAudio::LUNAQtAudio()
 
 	audioThread->start();
 
-	for(int i = 0; i < AUDIO_PLAYERS_COUNT_QT; i++)
+	for(int i = 0; i < SOUND_PLAYERS_COUNT_QT; i++)
 	{
 		auto player = std::make_shared<LUNAQtAudioPlayer>();
 		emit requestWorker(player.get());
 		players.push_back(player);
 	}
+
+	musicPlayer = CreateMusicPlayer();
 }
 
 LUNAQtAudio::~LUNAQtAudio()
@@ -126,6 +128,15 @@ LUNAQtAudio::~LUNAQtAudio()
 	disconnect(*workersStoppedConn);
 
 	audioThread->quit();
+}
+
+std::shared_ptr<LUNAQtAudioPlayer> LUNAQtAudio::CreateMusicPlayer()
+{
+	auto player = std::make_shared<LUNAQtAudioPlayer>();
+	emit requestWorker(player.get());
+	player->SetLoop(true);
+
+	return player;
 }
 
 // Get buffer data by given buffer id

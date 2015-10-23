@@ -79,7 +79,12 @@ void LUNAQtWorkerPlayer::OnStateChanged(QAudio::State state)
 	switch(state)
 	{
 	case QAudio::IdleState:
-		Stop();
+		if(loop)
+		{
+			Rewind();
+			Play();
+		}
+		else Stop();
 		break;
 	}
 }
@@ -101,7 +106,7 @@ void LUNAQtWorkerPlayer::SetSource(size_t bufferId, QByteArray* bufferData, int 
 
 void LUNAQtWorkerPlayer::SetLoop(bool loop)
 {
-
+	this->loop = loop;
 }
 
 void LUNAQtWorkerPlayer::Play()

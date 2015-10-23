@@ -29,7 +29,7 @@
 
 namespace luna2d{
 
-const int AUDIO_PLAYERS_COUNT_QT = 15;
+const int SOUND_PLAYERS_COUNT_QT = 15;
 
 //--------------------------------------------------
 // Helper audio player implementation for Qt
@@ -101,6 +101,9 @@ private:
 signals:
 	void requestWorker(LUNAQtAudioPlayer* player);
 	void stopWorkers(size_t bufferId);
+
+private:
+	std::shared_ptr<LUNAQtAudioPlayer> CreateMusicPlayer();
 
 public:	
 	// Get buffer data by given buffer id

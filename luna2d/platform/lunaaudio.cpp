@@ -39,6 +39,16 @@ std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer(const std::shared_ptr
 	return *it;
 }
 
+// Play background music from given audio source
+void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
+{
+	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
+
+	musicPlayer->Stop();
+	musicPlayer->SetSource(source.lock());
+	musicPlayer->Play();
+}
+
 // Play sound from given source
 void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
 {
@@ -51,4 +61,10 @@ void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
 
 	player->SetSource(sharedSource);
 	player->Play();
+}
+
+// Stop all currently playing sounds
+void LUNAAudio::StopAllSounds()
+{
+	for(auto& player : players) player->Stop();
 }

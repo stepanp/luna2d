@@ -78,6 +78,7 @@ public:
 
 protected:
 	std::vector<std::shared_ptr<LUNAAudioPlayer>> players;
+	std::shared_ptr<LUNAAudioPlayer> musicPlayer;
 
 protected:
 	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source);
@@ -91,8 +92,14 @@ public:
 	// All plyers using same buffer should be stopped
 	virtual void ReleaseBuffer(size_t bufferId) = 0;
 
-	// Play sound from given source
+	// Play background music from given audio source
+	void PlayMusic(const std::weak_ptr<LUNAAudioSource>& source);
+
+	// Play sound from given audio source
 	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
+
+	// Stop all currently playing sounds
+	void StopAllSounds();
 };
 
 }
