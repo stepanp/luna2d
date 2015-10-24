@@ -79,6 +79,8 @@ public:
 protected:
 	std::vector<std::shared_ptr<LUNAAudioPlayer>> players;
 	std::shared_ptr<LUNAAudioPlayer> musicPlayer;
+	float musicVolume = 1.0f;
+	float soundVolume = 1.0f;
 
 protected:
 	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source);
@@ -95,11 +97,28 @@ public:
 	// Play background music from given audio source
 	void PlayMusic(const std::weak_ptr<LUNAAudioSource>& source);
 
+	// Stop background music
+	void StopMusic();
+
 	// Play sound from given audio source
 	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
 
 	// Stop all currently playing sounds
 	void StopAllSounds();
+
+	// Get master volume for music
+	float GetMusicVolume();
+
+	// Set master volume for music
+	// "volume" should be in range [0.0f, 1.0f]
+	void SetMusicVolume(float volume);
+
+	// Get master volume for sounds
+	float GetSoundVolume();
+
+	// Set master volume for sounds
+	// "volume" should be in range [0.0f, 1.0f]
+	void SetSoundVolume(float volume);
 };
 
 }

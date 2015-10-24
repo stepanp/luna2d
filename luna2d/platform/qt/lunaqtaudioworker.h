@@ -66,6 +66,7 @@ private:
 	QAudioFormat format;
 	bool loop = false;
 	bool inUse = false;
+	float volume = 1.0f;
 
 signals:
 	void usingChanged(bool inUse);

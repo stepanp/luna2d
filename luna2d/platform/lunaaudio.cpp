@@ -49,6 +49,12 @@ void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
 	musicPlayer->Play();
 }
 
+// Stop background music
+void LUNAAudio::StopMusic()
+{
+	musicPlayer->Stop();
+}
+
 // Play sound from given source
 void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
 {
@@ -67,4 +73,36 @@ void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
 void LUNAAudio::StopAllSounds()
 {
 	for(auto& player : players) player->Stop();
+}
+
+// Get master volume for music
+float LUNAAudio::GetMusicVolume()
+{
+	return musicVolume;
+}
+
+// Set master volume for music
+// "volume" should be in range [0.0f, 1.0f]
+void LUNAAudio::SetMusicVolume(float volume)
+{
+	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
+
+	musicVolume = volume;
+	musicPlayer->SetVolume(volume);
+}
+
+// Get master volume for sounds
+float LUNAAudio::GetSoundVolume()
+{
+	return soundVolume;
+}
+
+// Set master volume for sounds
+// "volume" should be in range [0.0f, 1.0f]
+void LUNAAudio::SetSoundVolume(float volume)
+{
+	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
+
+	soundVolume = volume;
+	for(auto& player : players) player->SetVolume(volume);
 }

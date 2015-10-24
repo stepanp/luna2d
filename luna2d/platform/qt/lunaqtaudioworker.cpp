@@ -143,6 +143,8 @@ void LUNAQtWorkerPlayer::Rewind()
 
 void LUNAQtWorkerPlayer::SetVolume(float volume)
 {
+	this->volume = volume;
+
 	if(!output || !inUse) return;
 
 	output->setVolume(volume);
@@ -172,6 +174,7 @@ void LUNAQtWorkerPlayer::InitAudioOutput(int sampleRate, int sampleSize, int cha
 	}
 
 	output = std::unique_ptr<QAudioOutput>(new QAudioOutput(format, this));
+	output->setVolume(volume);
 	connect(output.get(), SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
 }
 

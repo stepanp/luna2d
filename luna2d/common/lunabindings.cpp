@@ -253,8 +253,13 @@ static void BindAudio(LuaScript* lua, LuaTable& tblLuna)
 	tblLuna.SetField("audio", tblAudio);
 
 	tblAudio.SetField("playMusic", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::PlayMusic));
+	tblAudio.SetField("stopMusic", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::StopMusic));
 	tblAudio.SetField("playSound", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::PlaySound));
 	tblAudio.SetField("stopAllSounds", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::StopAllSounds));
+	tblAudio.SetField("getMusicVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::GetMusicVolume));
+	tblAudio.SetField("setMusicVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::SetMusicVolume));
+	tblAudio.SetField("getSoundVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::GetSoundVolume));
+	tblAudio.SetField("setSoundVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::SetSoundVolume));
 
 	// Bind audio source
 	LuaClass<LUNAAudioSource> clsAudioSource(lua);
