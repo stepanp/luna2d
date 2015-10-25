@@ -44,6 +44,11 @@ CONFIG(release, debug|release) {
 	PRE_TARGETDEPS += $$PWD/../../../lib/qt/libluna2d.a
 }
 
+win32 {
+	LIBS += -L$$PWD/../../../thirdparty/OpenAL/prebuilt/win32/ -lOpenAL32
+	PRE_TARGETDEPS += $$PWD/../../../thirdparty/OpenAL/prebuilt/win32/OpenAL32.a
+}
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     settings.cpp \

@@ -24,6 +24,8 @@
 #pragma once
 
 #include "lunaaudio.h"
+#include <al.h>
+#include <alc.h>
 
 namespace luna2d{
 
@@ -37,6 +39,9 @@ class LUNAOpenAlAudioPlayer : public LUNAAudioPlayer
 public:
 	LUNAOpenAlAudioPlayer();
 	~LUNAOpenAlAudioPlayer();
+
+private:
+	ALuint soundId;
 
 public:	
 	virtual bool IsUsing();
@@ -69,11 +74,14 @@ public:
 	~LUNAOpenAlAudio();
 
 private:
+	ALCdevice* device;
+	ALCcontext* context;
 
 public:	
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
-	virtual size_t CreateBuffer(const std::vector<unsigned char>& data);
+	virtual size_t CreateBuffer(const std::vector<unsigned char>& data,
+		int sampleRate, int sampleSize, int channelsCount);
 
 	// Release buffer with given id
 	// All plyers using same buffer should be stopped

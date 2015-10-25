@@ -44,11 +44,12 @@ public:
 
 protected:
 	size_t bufferId = 0;
+	bool isUsing = false;
 
 public:
 	virtual size_t GetBufferId();
 
-	virtual bool IsUsing() = 0;
+	virtual bool IsUsing();
 
 	virtual void SetSource(const std::shared_ptr<LUNAAudioSource>& source) = 0;
 
@@ -88,7 +89,8 @@ protected:
 public:
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
-	virtual size_t CreateBuffer(const std::vector<unsigned char>& data) = 0;
+	virtual size_t CreateBuffer(const std::vector<unsigned char>& data,
+		int sampleRate, int sampleSize, int channelsCount) = 0;
 
 	// Release buffer with given id
 	// All plyers using same buffer should be stopped

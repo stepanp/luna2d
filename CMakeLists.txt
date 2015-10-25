@@ -78,6 +78,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/utf8cpp
 	${THIRDPARTY_DIR}/libzip
 	${THIRDPARTY_DIR}/zlib
+	${THIRDPARTY_DIR}/OpenAL
 	${THIRDPARTY_DIR}/ogg
 	${THIRDPARTY_DIR}/vorbis
 )
@@ -110,6 +111,9 @@ aux_source_directory(${THIRDPARTY_DIR}/json11 THIRDPARTY_SOURCES)
 
 # zlib
 aux_source_directory(${THIRDPARTY_DIR}/zlib THIRDPARTY_SOURCES)
+
+# OpenAL
+include_directories(${THIRDPARTY_DIR}/OpenAL/include)
 
 # libogg
 aux_source_directory(${THIRDPARTY_DIR}/ogg THIRDPARTY_SOURCES)

@@ -31,7 +31,7 @@ LUNAAudioSource::LUNAAudioSource(std::vector<unsigned char>& data, int sampleRat
 	sampleSize(sampleSize),
 	channelsCount(channelsCount)
 {
-	bufferId = LUNAEngine::SharedAudio()->CreateBuffer(data);
+	bufferId = LUNAEngine::SharedAudio()->CreateBuffer(data, sampleRate, sampleSize, channelsCount);
 }
 
 LUNAAudioSource::~LUNAAudioSource()

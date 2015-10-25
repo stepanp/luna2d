@@ -61,8 +61,6 @@ public slots:
 	void OnUsingChanged(bool inUse);
 
 public:	
-	virtual bool IsUsing();
-
 	virtual void SetSource(const std::shared_ptr<LUNAAudioSource>& source);
 
 	virtual void SetLoop(bool loop);
@@ -111,7 +109,8 @@ public:
 
 	// Create audio buffer from given audio data
 	// In case of success return id of created buffer, else return 0
-	virtual size_t CreateBuffer(const std::vector<unsigned char>& data);
+	virtual size_t CreateBuffer(const std::vector<unsigned char>& data,
+		int sampleRate, int sampleSize, int channelsCount);
 
 	// Release buffer with given id
 	// All plyers using same buffer should be stopped

@@ -30,6 +30,11 @@ size_t LUNAAudioPlayer::GetBufferId()
 	return bufferId;
 }
 
+bool LUNAAudioPlayer::IsUsing()
+{
+	return isUsing;
+}
+
 
 std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source)
 {

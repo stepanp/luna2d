@@ -35,11 +35,6 @@ void LUNAQtAudioPlayer::OnUsingChanged(bool inUse)
 	this->inUse = inUse;
 }
 
-bool LUNAQtAudioPlayer::IsUsing()
-{
-	return inUse;
-}
-
 void LUNAQtAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& source)
 {
 	LUNAQtAudio* audio = static_cast<LUNAQtAudio*>(LUNAEngine::SharedAudio());
@@ -149,7 +144,8 @@ std::shared_ptr<QByteArray> LUNAQtAudio::GetBuffer(size_t bufferId)
 
 // Create audio buffer from given audio data
 // In case of success return id of created buffer, else return 0
-size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data)
+size_t LUNAQtAudio::CreateBuffer(const std::vector<unsigned char>& data,
+	int sampleRate, int sampleSize, int channelsCount)
 {
 	auto bufferData = std::make_shared<QByteArray>(reinterpret_cast<const char*>(data.data()), data.size());
 	buffers[++uniqueBufferId] = bufferData;
