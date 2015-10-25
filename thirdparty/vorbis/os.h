@@ -117,10 +117,13 @@ static inline int vorbis_ftoi(double f){  /* yes, double!  Otherwise,
 }
 #endif /* Special i386 GCC implementation */
 
+#if defined(WINAPI_FAMILY) && WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP
+#define VORBIS_WIN_RT
+#endif
 
 /* MSVC inline assembly. 32 bit only; inline ASM isn't implemented in the
  * 64 bit compiler */
-#if defined(_MSC_VER) && !defined(_WIN64) && !defined(_WIN32_WCE) && !defined(DF3D_WINDOWS_PHONE)
+#if defined(_MSC_VER) && !defined(_WIN64) && !defined(_WIN32_WCE) && !defined(VORBIS_WIN_RT)
 #  define VORBIS_FPU_CONTROL
 
 typedef ogg_int16_t vorbis_fpu_control;

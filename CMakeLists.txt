@@ -185,6 +185,7 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	set(ANGLE_PATH ${THIRDPARTY_DIR}/angle)
 	set(ANGLE_INCLUDE_PATH ${ANGLE_PATH}/include)
 	set(ANGLE_LIB_PATH ${ANGLE_PATH}/prebuilt/wp/arm)
+	set(OPENAL_LIB_PATH ${THIRDPARTY_DIR}/OpenAL/prebuilt/wp/arm)
 
 	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -241,6 +242,7 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	# Link angle static libs
 	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libEGL.lib)
 	target_link_libraries(${LIB_NAME} ${ANGLE_LIB_PATH}/libGLESv2.lib)
+	target_link_libraries(${LIB_NAME} ${OPENAL_LIB_PATH}/OpenAL.wp8.lib)
 
 	set_property(TARGET ${LIB_NAME} PROPERTY VS_GLOBAL_ROOTNAMESPACE "luna2d")
 
