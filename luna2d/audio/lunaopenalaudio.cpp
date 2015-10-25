@@ -58,7 +58,7 @@ void LUNAOpenAlAudioPlayer::SetSource(const std::shared_ptr<LUNAAudioSource>& so
 
 void LUNAOpenAlAudioPlayer::SetLoop(bool loop)
 {
-	 alSourcei(soundId, AL_LOOPING, loop ? 1 : 0);
+     alSourcei(soundId, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
 }
 
 void LUNAOpenAlAudioPlayer::Play()
@@ -104,7 +104,9 @@ LUNAOpenAlAudio::LUNAOpenAlAudio()
 	alcMakeContextCurrent(context);
 
 	for(int i = 0; i < SOUND_PLAYERS_COUNT_AL; i++) players.push_back(std::make_shared<LUNAOpenAlAudioPlayer>());
+
 	musicPlayer = std::make_shared<LUNAOpenAlAudioPlayer>();
+    musicPlayer->SetLoop(true);
 }
 
 LUNAOpenAlAudio::~LUNAOpenAlAudio()
