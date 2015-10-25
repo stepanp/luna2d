@@ -49,6 +49,10 @@ win32 {
 	PRE_TARGETDEPS += $$PWD/../../../thirdparty/OpenAL/prebuilt/win32/OpenAL32.a
 }
 
+macx {
+	LIBS += -framework OpenAL
+}
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     settings.cpp \
