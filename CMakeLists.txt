@@ -160,6 +160,9 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 	# libzip
 	aux_source_directory(${THIRDPARTY_DIR}/libzip THIRDPARTY_SOURCES)
 
+	# OpenAL
+	set(OPENAL_LIB ${THIRDPARTY_DIR}/OpenAL/prebuilt/android/${ANDROID_ABI}/libopenal.so)
+
 	# Add JNI includes
 	include_directories(${JNI_INCLUDE_DIRS})
 
@@ -167,7 +170,7 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 	set(LUNA2D_ANDROID_DIR ${LUNA2D_DIR}/platform/android)
 	include_directories(${LUNA2D_ANDROID_DIR})
 	aux_source_directory(${LUNA2D_ANDROID_DIR} LUNA2D_SOURCES)
-	file (GLOB LUNA2D_ANDROID_HEADERS "${LUNA2D_ANDROID_DIR}/*.h")
+	file(GLOB LUNA2D_ANDROID_HEADERS "${LUNA2D_ANDROID_DIR}/*.h")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_ANDROID_HEADERS})
 	list(APPEND LUNA2D_SOURCES ${LUNA2D_ANDROID_DIR}/jni/lunajnibridge.cpp)
 
@@ -175,7 +178,7 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 
 	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
-	target_link_libraries(${LIB_NAME} GLESv2 log android)
+	target_link_libraries(${LIB_NAME} GLESv2 log android OpenSLES ${OPENAL_LIB})
 
 
 # Build Windows Phone shared library

@@ -27,6 +27,7 @@ public class LunaNative
 {
 	static
 	{
+		System.loadLibrary("openal");
 		System.loadLibrary("luna2d");
 	}
 	

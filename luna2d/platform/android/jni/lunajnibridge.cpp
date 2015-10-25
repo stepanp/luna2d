@@ -27,6 +27,7 @@
 #include "lunaandroidfiles.h"
 #include "lunaandroidlog.h"
 #include "lunaandroidutils.h"
+#include "lunaopenalaudio.h"
 #include "lunaandroidprefs.h"
 #include "lunaandroidjni.h"
 
@@ -48,7 +49,7 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screen
 	LUNAAndroidPrefs* prefs = new LUNAAndroidPrefs();
 
 	// Initialize engine
-	LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
+	LUNAEngine::Shared()->Assemble(files, log, platformUtils, new LUNAOpenAlAudio(), prefs);
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
 }
 
