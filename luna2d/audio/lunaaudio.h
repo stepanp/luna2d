@@ -28,74 +28,51 @@
 
 namespace luna2d{
 
-// Default audio buffer format
-const int DEFAULT_SAMPLE_RATE = 44100;
-const int DEFAULT_SAMPLE_SIZE = 16;
-const int DEFAULT_CHANNELS_COUNT = 2;
+const int SOUND_PLAYERS_COUNT = 15;
 
-
-//------------------------------
-// Helper audio player interface
-//------------------------------
 class LUNAAudioPlayer
 {
 public:
-	virtual ~LUNAAudioPlayer() {}
+	LUNAAudioPlayer();
+	~LUNAAudioPlayer();
 
 protected:
-	size_t bufferId = 0;
+	ALuint soundId;
+	ALuint sourceId;
 	bool isUsing = false;
 
 public:
-	virtual size_t GetBufferId();
-
-	virtual bool IsUsing();
-
-	virtual void SetSource(const std::shared_ptr<LUNAAudioSource>& source) = 0;
-
-	virtual void SetLoop(bool loop) = 0;
-
-	virtual void Play() = 0;
-
-	virtual void Pause() = 0;
-
-	virtual void Stop() = 0;
-
-	virtual void Rewind() = 0;
-
-	virtual void SetVolume(float volume) = 0;
-
-	virtual void SetMute(bool mute) = 0;
+	ALuint GetSourceId();
+	bool IsUsing();
+	void SetSource(ALuint sourceId);
+	void SetLoop(bool loop);
+	void Play();
+	void Pause();
+	void Stop();
+	void Rewind();
+	void SetVolume(float volume);
+	void SetMute(bool mute);
 };
 
 
-//----------------
-// Audio interface
-//----------------
 class LUNAAudio
 {
 public:
-	virtual ~LUNAAudio() {}
+	LUNAAudio();
+	~LUNAAudio();
 
-protected:
+private:
+	ALCdevice* device;
+	ALCcontext* context;
 	std::vector<std::shared_ptr<LUNAAudioPlayer>> players;
 	std::shared_ptr<LUNAAudioPlayer> musicPlayer;
 	float musicVolume = 1.0f;
 	float soundVolume = 1.0f;
 
 protected:
-	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source);
+	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer();
 
 public:
-	// Create audio buffer from given audio data
-	// In case of success return id of created buffer, else return 0
-	virtual size_t CreateBuffer(const std::vector<unsigned char>& data,
-		int sampleRate, int sampleSize, int channelsCount) = 0;
-
-	// Release buffer with given id
-	// All plyers using same buffer should be stopped
-	virtual void ReleaseBuffer(size_t bufferId) = 0;
-
 	// Play background music from given audio source
 	void PlayMusic(const std::weak_ptr<LUNAAudioSource>& source);
 
@@ -121,6 +98,9 @@ public:
 	// Set master volume for sounds
 	// "volume" should be in range [0.0f, 1.0f]
 	void SetSoundVolume(float volume);
+
+	// Stop all players with given source id
+	void StopPlayersWithSource(ALuint sourceId);
 };
 
 }

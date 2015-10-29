@@ -25,18 +25,103 @@
 
 using namespace luna2d;
 
-size_t LUNAAudioPlayer::GetBufferId()
+LUNAAudioPlayer::LUNAAudioPlayer()
 {
-	return bufferId;
+	alGenSources(1, &soundId);
+}
+
+LUNAAudioPlayer::~LUNAAudioPlayer()
+{
+	Stop();
+	if(alIsSource(soundId)) alDeleteSources(1, &soundId);
+}
+
+ALuint LUNAAudioPlayer::GetSourceId()
+{
+	return soundId;
 }
 
 bool LUNAAudioPlayer::IsUsing()
 {
+	if(isUsing)
+	{
+		ALint state;
+		alGetSourcei(soundId, AL_SOURCE_STATE, &state);
+		return state == AL_PLAYING;
+	}
+
 	return isUsing;
 }
 
+void LUNAAudioPlayer::SetSource(ALuint sourceId)
+{
+	this->sourceId = sourceId;
+	isUsing = true;
 
-std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer(const std::shared_ptr<LUNAAudioSource>& source)
+	alSourcei(soundId, AL_BUFFER, sourceId);
+}
+
+void LUNAAudioPlayer::SetLoop(bool loop)
+{
+	 alSourcei(soundId, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+}
+
+void LUNAAudioPlayer::Play()
+{
+	alSourcePlay(soundId);
+}
+
+void LUNAAudioPlayer::Pause()
+{
+	alSourcePause(soundId);
+}
+
+void LUNAAudioPlayer::Stop()
+{
+	alSourceStop(soundId);
+	isUsing = false;
+}
+
+void LUNAAudioPlayer::Rewind()
+{
+	alSourceRewind(soundId);
+}
+
+void LUNAAudioPlayer::SetVolume(float volume)
+{
+	alSourcef(soundId, AL_GAIN, volume);
+}
+
+void LUNAAudioPlayer::SetMute(bool mute)
+{
+
+}
+
+
+LUNAAudio::LUNAAudio()
+{
+	device = alcOpenDevice(nullptr);
+	if(!device) LUNA_RETURN_ERR("Cannot open OpenAL audio device");
+
+	context = alcCreateContext(device, nullptr);
+	if(!context) LUNA_RETURN_ERR("Cannot open OpenAL audio context");
+
+	alcMakeContextCurrent(context);
+
+	for(int i = 0; i < SOUND_PLAYERS_COUNT; i++) players.push_back(std::make_shared<LUNAAudioPlayer>());
+
+	musicPlayer = std::make_shared<LUNAAudioPlayer>();
+	musicPlayer->SetLoop(true);
+}
+
+LUNAAudio::~LUNAAudio()
+{
+	alcMakeContextCurrent(nullptr);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
+}
+
+std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer()
 {
 	auto it = std::find_if(players.begin(), players.end(),
 		[](const std::shared_ptr<LUNAAudioPlayer>& player) { return !player->IsUsing(); });
@@ -50,7 +135,7 @@ void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
 	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
 
 	musicPlayer->Stop();
-	musicPlayer->SetSource(source.lock());
+	musicPlayer->SetSource(source.lock()->GetId());
 	musicPlayer->Play();
 }
 
@@ -65,12 +150,10 @@ void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
 {
 	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
 
-	auto sharedSource = source.lock();
-
-	auto player = FindFreePlayer(sharedSource);
+	auto player = FindFreePlayer();
 	if(!player) LUNA_RETURN_ERR("Cannot play audio source. All audio players are used");
 
-	player->SetSource(sharedSource);
+	player->SetSource(source.lock()->GetId());
 	player->Play();
 }
 
@@ -110,4 +193,15 @@ void LUNAAudio::SetSoundVolume(float volume)
 
 	soundVolume = volume;
 	for(auto& player : players) player->SetVolume(volume);
+}
+
+// Stop all players with given source id
+void LUNAAudio::StopPlayersWithSource(ALuint sourceId)
+{
+	if(musicPlayer->GetSourceId() == sourceId) musicPlayer->Stop();
+
+	for(auto& player : players)
+	{
+		if(player->GetSourceId() == sourceId) player->Stop();
+	}
 }

@@ -31,17 +31,27 @@ LUNAAudioSource::LUNAAudioSource(std::vector<unsigned char>& data, int sampleRat
 	sampleSize(sampleSize),
 	channelsCount(channelsCount)
 {
-	bufferId = LUNAEngine::SharedAudio()->CreateBuffer(data, sampleRate, sampleSize, channelsCount);
+	alGenBuffers(1, &id);
+
+	ALenum format;
+	if(channelsCount == 1 && sampleSize == 8) format = AL_FORMAT_MONO8;
+	else if(channelsCount == 1 && sampleSize == 16) format = AL_FORMAT_MONO16;
+	else if(channelsCount == 2 && sampleSize == 8) format = AL_FORMAT_STEREO8;
+	else if(channelsCount == 2 && sampleSize == 16) format = AL_FORMAT_STEREO16;
+
+	alBufferData(id, format, data.data(), data.size(), sampleRate);
 }
 
 LUNAAudioSource::~LUNAAudioSource()
 {
-	LUNAEngine::SharedAudio()->ReleaseBuffer(bufferId);
+	LUNAEngine::SharedAudio()->StopPlayersWithSource(id);
+
+	alDeleteBuffers(1, &id);
 }
 
-size_t LUNAAudioSource::GetBufferId()
+ALuint LUNAAudioSource::GetId()
 {
-	return bufferId;
+	return id;
 }
 
 int LUNAAudioSource::GetSampleRate()

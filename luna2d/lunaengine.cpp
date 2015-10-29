@@ -26,9 +26,9 @@
 #include "lunafiles.h"
 #include "lunalog.h"
 #include "lunaplatformutils.h"
-#include "lunaaudio.h"
 #include "lunaassets.h"
 #include "lunagraphics.h"
+#include "lunaaudio.h"
 #include "lunascenes.h"
 #include "lunasizes.h"
 #include "lunastrings.h"
@@ -51,13 +51,11 @@ LUNAEngine::~LUNAEngine()
 }
 
 // Assemble engine with platform-specific modules. Must be called before "Iznitialize" method
-void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils,
-	LUNAAudio* audio, LUNAPrefs* prefs)
+void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils, LUNAPrefs* prefs)
 {
 	this->files = files;
 	this->log = log;
 	this->platformUtils = platformUtils;
-	this->audio = audio;
 	this->prefs = prefs;
 }
 
@@ -81,6 +79,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
 	assets = new LUNAAssets();
 	graphics = new LUNAGraphics();
+	audio = new LUNAAudio();
 	scenes = new LUNAScenes();
 	strings = new LUNAStrings();
 	debug = new LUNADebug();
@@ -113,11 +112,11 @@ void LUNAEngine::Deinitialize()
 	delete assets;
 	delete graphics;
 	delete scenes;
+	delete audio;
 	delete sizes;
 	delete strings;
 	delete debug;
 	delete lua;
-	delete audio;
 	delete files;
 	delete platformUtils;
 	delete log;
@@ -125,13 +124,13 @@ void LUNAEngine::Deinitialize()
 	assets = nullptr;
 	graphics = nullptr;
 	scenes = nullptr;
+	audio = nullptr;
 	sizes = nullptr;
 	strings = nullptr;
 	debug = nullptr;
 	lua = nullptr;
 	files = nullptr;
 	platformUtils = nullptr;
-	audio = nullptr;
 	log = nullptr;
 
 	initialized = false;

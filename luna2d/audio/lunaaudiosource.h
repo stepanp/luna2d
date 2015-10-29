@@ -25,6 +25,8 @@
 
 #include "lunaassets.h"
 #include "lunalua.h"
+#include <al.h>
+#include <alc.h>
 
 namespace luna2d{
 
@@ -37,13 +39,13 @@ public:
 	virtual ~LUNAAudioSource();
 
 private:
-	size_t bufferId = 0;
+	ALuint id = 0;
 	int sampleRate = 0;
 	int sampleSize = 0;
 	int channelsCount = 0;
 
 public:
-	size_t GetBufferId();
+	ALuint GetId();
 	int GetSampleRate();
 	int GetSampleSize();
 	int GetChannelsCount();
