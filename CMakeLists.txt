@@ -129,7 +129,6 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	find_package(Qt5Widgets REQUIRED)
 	find_package(Qt5OpenGL REQUIRED)
-	find_package(Qt5Multimedia REQUIRED)
 
 	# luna2d Qt source
 	set(LUNA2D_QT_DIR ${LUNA2D_DIR}/platform/qt)
@@ -144,7 +143,6 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
-	qt5_use_modules(${LIB_NAME} Multimedia)
 
 
 # Build Android shared library
