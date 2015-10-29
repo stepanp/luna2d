@@ -4,7 +4,6 @@
 #include "lunawpfiles.h"
 #include "lunawplog.h"
 #include "lunawputils.h"
-#include "lunaopenalaudio.h"
 #include "lunawpprefs.h"
 #include "lunasizes.h"
 
@@ -200,8 +199,7 @@ void OpenGLESPage::StartRenderLoop()
 
 			if(!LUNAEngine::Shared()->IsInitialized())
 			{
-				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), 
-					new LUNAOpenAlAudio(), new LUNAWpPrefs());
+				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
 				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
 			}
 			else LUNAEngine::Shared()->MainLoop();
