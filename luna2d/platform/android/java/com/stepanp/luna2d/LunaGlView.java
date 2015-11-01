@@ -159,14 +159,14 @@ public class LunaGlView extends GLSurfaceView
 				
 				// Get application label
 				ApplicationInfo appInfo = activity.getApplicationInfo();
-		        String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
-		        
-		        // Get path to this .apk file		
-		        String apkPath = activity.getPackageCodePath();  
-		        
-		        // Get path to application folder in "data/data/"
-		        String appFolderPath = activity.getFilesDir().getAbsolutePath();
-		        
+				String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
+				
+				// Get path to this .apk file		
+				String apkPath = activity.getPackageCodePath();  
+				
+				// Get path to application folder in "data/data/"
+				String appFolderPath = activity.getFilesDir().getAbsolutePath();
+				
 				LunaNative.initialize(width, height, appName, apkPath, appFolderPath);
 			}
 			
