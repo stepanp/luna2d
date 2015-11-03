@@ -77,8 +77,11 @@ public class LunaGlView extends GLSurfaceView
 		super(activity);
 		
 		setEGLContextClientVersion(2); // Enable OpenGL ES 2.0
-		setRenderer(new GlRenderer(activity));
+		renderer = new GlRenderer(activity);
+		setRenderer(renderer);
 	}
+	
+	private GlRenderer renderer;
 	
 	// Handle touch event in renderer thread
 	private void queueTouchEvent(TouchType type, float x, float y, int touchIndex)
@@ -133,8 +136,15 @@ public class LunaGlView extends GLSurfaceView
 			break;
 		}
 		
-		return true;		
+		return true;
 	}
+	
+	@Override
+    protected void onSizeChanged(int newWidth, int newHeight, int oldWidth, int oldHeight)
+    {
+		if(!LunaNative.isInitialized()) renderer.setScreenSize(newWidth, newHeight);
+    }
+	
 	
 	private static class GlRenderer implements GLSurfaceView.Renderer
 	{
@@ -144,19 +154,21 @@ public class LunaGlView extends GLSurfaceView
 		}
 		
 		private Activity activity;
+		private int screenWidth;
+		private int screenHeight;
+		
+		public void setScreenSize(int width, int height)
+		{
+			screenWidth = width;
+			screenHeight = height;
+		}
 		
 		@Override
 		public void onSurfaceCreated(GL10 unused, EGLConfig config)
 		{
 			// Initialize engine at first creating of surface
 			if(!LunaNative.isInitialized())
-			{
-				// Get screen sizes
-				DisplayMetrics metrics = new DisplayMetrics();
-				activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				int width = metrics.widthPixels;
-				int height = metrics.heightPixels;
-				
+			{			
 				// Get application label
 				ApplicationInfo appInfo = activity.getApplicationInfo();
 				String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
@@ -167,7 +179,7 @@ public class LunaGlView extends GLSurfaceView
 				// Get path to application folder in "data/data/"
 				String appFolderPath = activity.getFilesDir().getAbsolutePath();
 				
-				LunaNative.initialize(width, height, appName, apkPath, appFolderPath);
+				LunaNative.initialize(screenWidth, screenHeight, appName, apkPath, appFolderPath);
 			}
 			
 			// When surface was rectreated, we need reload some assets: textures, shaders, etc.
@@ -175,7 +187,7 @@ public class LunaGlView extends GLSurfaceView
 			{
 				LunaNative.reloadAssets();
 			}
-		}
+		}	    
 
 		@Override
 		public void onSurfaceChanged(GL10 unused, int width, int height)

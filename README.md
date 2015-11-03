@@ -4,9 +4,9 @@ Cross-platform game engine for mobile platforms. Engine is aimed to write all ga
 
 ## Supported platforms
 * Desktop Qt platforms
-* Android 2.3+
+* Android 4.0+
 * iOS 6.0+
-* Windows Phone\RT 8.1 (In progress)
+* Windows Phone\RT 8.1
 
 ## Build requirements
 * Destkop Windows: Qt 5.4+, compiler with support C++11 (e.g. MinGW 4.8)
