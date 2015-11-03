@@ -37,7 +37,7 @@ public class LunaGlView extends GLSurfaceView
 	{
 		DOWN,
 		MOVED,
-		UP,	
+		UP,
 	}
 	
 	private static class TouchEvent implements Runnable
@@ -69,7 +69,7 @@ public class LunaGlView extends GLSurfaceView
 				LunaNative.onTouchUp(x, y, touchIndex);
 				break;
 			}
-		}		
+		}
 	}
 	
 	public LunaGlView(Activity activity)
@@ -140,10 +140,10 @@ public class LunaGlView extends GLSurfaceView
 	}
 	
 	@Override
-    protected void onSizeChanged(int newWidth, int newHeight, int oldWidth, int oldHeight)
-    {
+	protected void onSizeChanged(int newWidth, int newHeight, int oldWidth, int oldHeight)
+	{
 		if(!LunaNative.isInitialized()) renderer.setScreenSize(newWidth, newHeight);
-    }
+	}
 	
 	
 	private static class GlRenderer implements GLSurfaceView.Renderer
@@ -187,7 +187,7 @@ public class LunaGlView extends GLSurfaceView
 			{
 				LunaNative.reloadAssets();
 			}
-		}	    
+		}
 
 		@Override
 		public void onSurfaceChanged(GL10 unused, int width, int height)
@@ -198,6 +198,6 @@ public class LunaGlView extends GLSurfaceView
 		public void onDrawFrame(GL10 unused)
 		{
 			LunaNative.mainLoop();
-		}		
+		}
 	}
 }

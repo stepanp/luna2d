@@ -61,9 +61,9 @@ public class LunaActivity extends Activity
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
-		 super.onWindowFocusChanged(hasFocus);
-		 
-		 if(hasFocus) enableFullscreen();
+		super.onWindowFocusChanged(hasFocus);
+		
+		if(hasFocus) enableFullscreen();
 	}
 	
 	private void enableFullscreen()
