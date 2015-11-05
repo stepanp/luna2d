@@ -310,7 +310,7 @@ LUNAActionCustom::LUNAActionCustom(const LuaTable& params) : LUNAAction(params)
 void LUNAActionCustom::OnUpdate()
 {
 	if(!fnHandler) LUNA_RETURN_ERR("Attempt to update invalid animator action");
-	fnHandler.CallVoid(easing(GetPercent()), totalTime);
+	fnHandler.CallVoid(easing(GetPercent()), GetTime());
 }
 
 
