@@ -102,6 +102,9 @@ public:
 	// Delay between spawning
 	float spawnDelay = 0.0f;
 
+	// Delay between first spawning
+	float initSpawnDelay = 0.0f;
+
 	// Particle lifetime
 	LUNARangeFloat lifetime;
 

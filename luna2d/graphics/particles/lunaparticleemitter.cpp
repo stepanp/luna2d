@@ -28,7 +28,8 @@
 using namespace luna2d;
 
 LUNAParticleEmitter::LUNAParticleEmitter(const std::shared_ptr<LUNAParticleParams>& params) :
-	params(params)
+	params(params),
+	emitTime(params->initSpawnDelay)
 {
 	LUNAAssets* assets = LUNAEngine::SharedAssets();
 

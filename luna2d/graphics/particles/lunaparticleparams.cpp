@@ -35,6 +35,8 @@ static LUNAEasingFunc GetEasing(const LuaTable& luaParams, const std::string& na
 
 LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 {
+	if(luaParams == nil) LUNA_RETURN_ERR("Particle params must be a table");
+
 	if(luaParams.HasField("spawnAreaMode"))
 	{
 		std::string spawnAreaModeStr = luaParams.GetString("spawnAreaMode");
@@ -65,6 +67,7 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	duration = luaParams.GetFloat("duration");
 	spawnCount = luaParams.GetInt("spawnCount");
 	spawnDelay = luaParams.GetFloat("spawnDelay");
+	initSpawnDelay = luaParams.GetFloat("initSpawnDelay");
 	lifetime = luaParams.GetField<LUNARangeFloat>("lifetime");
 	direction = luaParams.GetField<LUNARangeFloat>("direction");
 	dirFromEmitter = luaParams.GetBool("dirFromEmitter");
