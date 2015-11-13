@@ -173,7 +173,7 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 
 void LUNAAssets::DoUnloadFolder(LuaTable table)
 {
-	if(table.GetMetatable()) return; // This table is not asset folder
+	if(table.GetMetatable() == nil) return; // This table is not asset folder
 
 	// Recursively remove all assets in folder
 	for(auto entry : table)

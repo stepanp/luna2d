@@ -180,6 +180,8 @@ bool LUNAQtWidget::IsEngineInitialized()
 
 void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int height)
 {
+	if(LUNAEngine::Shared()->IsInitialized()) return;
+
 	LUNAQtLog* log = new LUNAQtLog();
 	connect(log, &LUNAQtLog::logInfo, this, &LUNAQtWidget::logInfo);
 	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
@@ -199,7 +201,7 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath)
 
 void LUNAQtWidget::DeinitializeEngine()
 {
-	LUNAEngine::Shared()->Deinitialize();
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->Deinitialize();
 }
 
 void LUNAQtWidget::PauseEngine()
