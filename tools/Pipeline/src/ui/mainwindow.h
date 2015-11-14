@@ -26,7 +26,7 @@
 
 #include "pipeline/pipeline.h"
 #include "project/project.h"
-#include "projecttreedata.h"
+#include "ui/projecttreedata.h"
 #include "settings.h"
 #include <QTreeWidget>
 #include <QComboBox>
@@ -51,6 +51,7 @@ const int ATLAS_SIZE_ADVANCED_HEIGHT = 250;
 
 const QString WINDOW_TITLE = "luna2d Pipeline";
 const QString WINDOW_TITLE_PATTERN = "%2 - %1";
+const Qt::WindowFlags TOOL_WINDOW = Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint;
 
 class MainWindow : public QMainWindow
 {

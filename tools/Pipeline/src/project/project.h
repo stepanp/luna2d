@@ -48,6 +48,10 @@ public:
 	bool IsUseRelativePath();
 	void SetUseRelativePath(bool value);
 
+	// Get count of stages for displaying progress perentage
+	// Every stage is action of resizing one texture or packing one atlas
+	int GetStagesCount();
+
 	QList<Task*>& GetTasks();
 	void AddTask(Task* task);
 	void RemoveTask(Task* task);

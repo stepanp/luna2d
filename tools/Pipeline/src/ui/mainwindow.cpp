@@ -27,7 +27,7 @@
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QMessageBox>
-#include <QDebug>
+#include <QProgressDialog>
 
 MainWindow::MainWindow(const QString& projectPath) :
 	QMainWindow(0),
@@ -506,9 +506,22 @@ void MainWindow::OnRunProject()
 {
 	if(!pipeline.IsProjectOpened()) return;
 
+	QProgressDialog dlg("Processing project...", QString::null, 0, 100, this, TOOL_WINDOW);
+	dlg.setMinimumDuration(0);
+	dlg.setWindowModality(Qt::WindowModal);
+	dlg.setFixedSize(400, dlg.size().height());
+
+	connect(&pipeline, &Pipeline::progressUpdated,
+		[this, &dlg](float progress)
+		{
+			dlg.setValue(progress * 100);
+			QApplication::processEvents();
+		});
+
 	QStringList errors = pipeline.RunProject();
 	if(!errors.empty())
 	{
+		dlg.cancel();
 		QMessageBox::critical(this, "Errors", errors.join("\n"));
 	}
 }

@@ -78,6 +78,25 @@ void Project::SetUseRelativePath(bool value)
 	useRelativePath = value;
 }
 
+// Get count of stages for displaying progress perentage
+// Every stage is action of resizing one texture or packing one atlas
+int Project::GetStagesCount()
+{
+	int ret = 0;
+
+	for(auto task : tasks)
+	{
+		int resolutions = 1;
+
+		if(task->resize) resolutions = task->outputRes.size();
+
+		if(task->atlas) ret += resolutions * 2;
+		else ret += resolutions;
+	}
+
+	return ret;
+}
+
 QList<Task*>& Project::GetTasks()
 {
 	return tasks;

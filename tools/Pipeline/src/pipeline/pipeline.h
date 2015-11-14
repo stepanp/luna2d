@@ -32,23 +32,34 @@
 const QString ERROR_MASK = "In task \"%1\" : %2";
 const QString ERROR_SAVE_MASK = "Cannot save file \"%1\"";
 
-class Pipeline
+class Pipeline : public QObject
 {
+	Q_OBJECT
+
 public:
 	Pipeline();
 	~Pipeline();
 
 private:
-	Project* project;
+	Project* project = nullptr;
 	Resizer resizer;
 	AtlasBuilder atlasBuilder;
 	QStringList errors;
+
+	// Info for displaying progress percentage
+	// SEE: "Project::GetStagesCount"
+	int curStages = 0;
+	int totalStages = 0;
 
 private:
 	QString CheckTask(Task* task); // Check task params for errors
 	void RunTask(Task* task);
 	void ResizeStage(ImageList images, Task* task);
 	void BuildAtlasStage(QHash<QString,ImageList> images, Task* task);
+	void UpdateProgress();
+
+signals:
+	void progressUpdated(float percent);
 
 public:
 	QStringList GetResolutionsNames();

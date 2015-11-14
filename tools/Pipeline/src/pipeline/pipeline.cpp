@@ -43,8 +43,7 @@ static bool SaveImage(const QImage& image, const QString& directory, const QStri
 }
 
 
-Pipeline::Pipeline() :
-	project(nullptr)
+Pipeline::Pipeline()
 {
 }
 
@@ -68,6 +67,8 @@ QString Pipeline::CheckTask(Task *task)
 		if(!MathUtils::IsPowerOfTwo(params.maxWidth)) return "Atlas max width must be power of two";
 		if(!MathUtils::IsPowerOfTwo(params.maxHeight)) return "Atlas max height must be power of two";
 	}
+
+	if(!task->atlas && !task->resize) return "Task haven't any pipeline stage";
 
 	return QString::null;
 }
@@ -103,6 +104,7 @@ void Pipeline::ResizeStage(ImageList images, Task* task)
 	for(QString res : task->outputRes)
 	{
 		imagesByRes[res] = resizer.Run(images, task->sourceRes, res, task->potSize);
+		UpdateProgress();
 	}
 
 	// Pass images to build atals stage
@@ -161,7 +163,15 @@ void Pipeline::BuildAtlasStage(QHash<QString,ImageList> images, Task* task)
 				errors.push_back(ERROR_MASK.arg(task->name).arg(resError));
 			}
 		}
+
+		UpdateProgress();
 	}
+}
+
+void Pipeline::UpdateProgress()
+{
+	curStages++;
+	emit progressUpdated(curStages / (float)totalStages);
 }
 
 QStringList Pipeline::GetResolutionsNames()
@@ -199,6 +209,8 @@ bool Pipeline::OpenProject(const QString& path)
 	QString projectName = QFileInfo(path).baseName();
 
 	project = new Project(projectName, QFileInfo(path).path(), doc.object());
+	totalStages = project->GetStagesCount();
+
 	return true;
 }
 
@@ -232,6 +244,8 @@ QStringList Pipeline::RunProject()
 
 	if(!IsProjectOpened()) return errors;
 
+	emit progressUpdated(0);
+
 	for(Task* task : project->GetTasks())
 	{
 		QString error = CheckTask(task);
@@ -239,6 +253,8 @@ QStringList Pipeline::RunProject()
 		if(error.isNull()) RunTask(task);
 		else errors.push_back(ERROR_MASK.arg(task->name).arg(error));
 	}
+
+	curStages = 0;
 
 	return errors;
 }

@@ -53,7 +53,7 @@ SOURCES += main.cpp\
     pipeline/atlasbuilder.cpp \
 	ui/settings.cpp \
 	../../../thirdparty/RectangleBinPack/MaxRectsBinPack.cpp \
-	../../../thirdparty/RectangleBinPack/Rect.cpp \
+	../../../thirdparty/RectangleBinPack/Rect.cpp
 
 HEADERS  += ui/mainwindow.h \
     project/project.h \
@@ -68,7 +68,7 @@ HEADERS  += ui/mainwindow.h \
     pipeline/atlasbuilder.h \
     ui/settings.h \
 	../../../thirdparty/RectangleBinPack/MaxRectsBinPack.h \
-	../../../thirdparty/RectangleBinPack/Rect.h \
+	../../../thirdparty/RectangleBinPack/Rect.h
 
 FORMS    += mainwindow.ui
 
