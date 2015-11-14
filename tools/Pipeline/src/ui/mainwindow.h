@@ -78,7 +78,7 @@ private:
 	void UpdateAtlasSizesTable();
 	void SetAtlasSizesAdvancedMode(bool advanced);
 	QTreeWidgetItem* MakeTreeItem(const QString& text, const ProjectTreeData& data);
-	QComboBox* MakeAtlasSizeComboBox();
+	QComboBox* MakeAtlasSizeComboBox(int defaultSize = MIN_ATLAS_SIZE);
 	QAction* MakeSeparator();
 	Task* GetSelectedTask();
 	TaskNode* GetSelectedTaskNode();

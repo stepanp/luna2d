@@ -273,6 +273,9 @@ void MainWindow::UpdateAtlasSizesTable()
 	// Remove all rows
 	while(ui->tableAtlasSizes->rowCount() > 0) ui->tableAtlasSizes->removeRow(0);
 
+	int simpleModeWidth = ui->comboMaxWidth->currentText().toInt();
+	int simpleModeHeight = ui->comboMaxHeight->currentText().toInt();
+
 	QStringList resolutions = pipeline.GetResolutionsNames();
 	int rowIndex = 0;
 	for(int i = 0; i < resolutions.size(); i++)
@@ -281,8 +284,8 @@ void MainWindow::UpdateAtlasSizesTable()
 
 		ui->tableAtlasSizes->insertRow(rowIndex);
 		ui->tableAtlasSizes->setItem(rowIndex, 0, new QTableWidgetItem(resolutions.at(i)));
-		ui->tableAtlasSizes->setCellWidget(rowIndex, 1, MakeAtlasSizeComboBox());
-		ui->tableAtlasSizes->setCellWidget(rowIndex, 2, MakeAtlasSizeComboBox());
+		ui->tableAtlasSizes->setCellWidget(rowIndex, 1, MakeAtlasSizeComboBox(simpleModeWidth));
+		ui->tableAtlasSizes->setCellWidget(rowIndex, 2, MakeAtlasSizeComboBox(simpleModeHeight));
 
 		rowIndex++;
 	}
@@ -302,7 +305,7 @@ QTreeWidgetItem* MainWindow::MakeTreeItem(const QString& text, const ProjectTree
 	return item;
 }
 
-QComboBox* MainWindow::MakeAtlasSizeComboBox()
+QComboBox* MainWindow::MakeAtlasSizeComboBox(int defaultSize)
 {
 	QComboBox* ret = new QComboBox();
 
@@ -310,6 +313,8 @@ QComboBox* MainWindow::MakeAtlasSizeComboBox()
 	{
 		ret->addItem(QString::number(i), i);
 	}
+
+	ret->setCurrentText(QString::number(defaultSize));
 
 	return ret;
 }
