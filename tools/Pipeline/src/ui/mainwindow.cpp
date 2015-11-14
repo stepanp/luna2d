@@ -512,7 +512,7 @@ void MainWindow::OnRunProject()
 	dlg.setFixedSize(400, dlg.size().height());
 
 	connect(&pipeline, &Pipeline::progressUpdated,
-		[this, &dlg](float progress)
+		[&dlg](float progress)
 		{
 			dlg.setValue(progress * 100);
 			QApplication::processEvents();

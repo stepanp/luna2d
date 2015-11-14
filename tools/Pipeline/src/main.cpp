@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QMessageBox>
+#include <QProgressDialog>
 
 enum class LaunchMode
 {
@@ -60,13 +61,24 @@ void ParseCommandLine(QString& projectPath, LaunchMode& launchMode)
 void RunProjectUi(const QString& projectPath)
 {
 	Pipeline pipeline;
-	if(pipeline.OpenProject(projectPath))
-	{
-		QStringList errors = pipeline.RunProject();
-		if(!errors.empty())
+	if(!pipeline.OpenProject(projectPath)) return;
+
+	QProgressDialog dlg("Processing project...", QString::null, 0, 100, nullptr, TOOL_WINDOW);
+	dlg.setMinimumDuration(0);
+	dlg.setFixedSize(400, dlg.size().height());
+
+	dlg.connect(&pipeline, &Pipeline::progressUpdated,
+		[&dlg](float progress)
 		{
-			QMessageBox::critical(nullptr, "Errors", errors.join("\n"));
-		}
+			dlg.setValue(progress * 100);
+			QApplication::processEvents();
+		});
+
+	QStringList errors = pipeline.RunProject();
+	if(!errors.empty())
+	{
+		dlg.cancel();
+		QMessageBox::critical(nullptr, "Errors", errors.join("\n"));
 	}
 }
 
