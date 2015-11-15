@@ -23,14 +23,25 @@
 
 #pragma once
 
-#include <string>
+#include <unordered_map>
 
 namespace luna2d{
 
-const int BASE_SIZE = 320;
-const std::string SCRIPTS_PATH = "scripts/"; // Path to scripts in root directory
-const std::string LOCALIZATION_PATH = "languages/"; // Path to localization files in root directory
-const std::string CONFIG_FILENAME = "config.luna2d"; // Name of config file
+const std::string DEFAULT_RESOLUTION = "HVGA";
+
+// List of all available screen resolutions
+// For calculatring virtual resolution needs only height, so table not store resolutions width
+const std::unordered_map<std::string, int> RESOLUTIONS_TABLE =
+{
+	{"HVGA", 320}, // 480x320
+	{"WVGA", 480}, // 800x480
+	{"qHD", 540}, // 960x540
+	{"HD", 720}, // 1280x720
+	{"FullHD", 1080}, // 1920x1080
+	{"WSVGA", 600}, // 1024x600
+	{"WXGA", 800}, // 1280x800
+	{"Retina iPad", 1536}, // 2048x1536
+	{"WQXGA", 1600}, //2560x1600
+};
 
 }
-

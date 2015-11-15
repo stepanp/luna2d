@@ -24,7 +24,7 @@
 
 #include "task.h"
 #include "project.h"
-#include "lunaconstants.h"
+#include "common/lunaresolutions.h"
 #include <QDir>
 #include <QStandardPaths>
 

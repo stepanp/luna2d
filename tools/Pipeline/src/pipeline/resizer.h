@@ -27,7 +27,7 @@
 #include <QPair>
 #include <QStringList>
 #include <QImage>
-#include "lunasizes.h"
+#include "common/lunaresolutions.h"
 
 typedef QList<QPair<QString, QImage>> ImageList;
 

@@ -25,24 +25,9 @@
 
 #include "lunaconfig.h"
 #include "lunaglm.h"
+#include "lunaresolutions.h"
 
 namespace luna2d{
-
-// List of all available screen resolutions
-// For calculatring virtual resolution needs only height, so table not store resolutions width
-const std::unordered_map<std::string, int> RESOLUTIONS_TABLE =
-{
-	{"HVGA", 320}, // 480x320
-	{"WVGA", 480}, // 800x480
-	{"qHD", 540}, // 960x540
-	{"HD", 720}, // 1280x720
-	{"FullHD", 1080}, // 1920x1080
-	{"WSVGA", 600}, // 1024x600
-	{"WXGA", 800}, // 1280x800
-	{"Retina iPad", 1536}, // 2048x1536
-	{"WQXGA", 1600}, //2560x1600
-};
-
 
 class LUNASizes
 {
