@@ -29,16 +29,17 @@
 #include <QPair>
 #include <QJsonObject>
 #include <QStringList>
+#include <QHash>
 
 const int MIN_ATLAS_SIZE = 16;
 const int MAX_ATLAS_SIZE = 4096;
+const int DEFAULT_ATLAS_SIZE = 1024;
 
 struct AtlasParams
 {
 	QString name = "New atlas";
-	int maxWidth = MIN_ATLAS_SIZE;
-	int maxHeight = MIN_ATLAS_SIZE;
-	int padding = 1;
+	QHash<QString, QSize> sizes;
+	int padding = 2;
 	bool duplicatePadding = true;
 };
 
@@ -51,6 +52,6 @@ private:
 	QStringList errors;
 
 public:
-	QPair<QImage,QJsonObject> Run(ImageList images, const AtlasParams& params);
+	QPair<QImage,QJsonObject> Run(ImageList images,  int width, int height, const AtlasParams& params);
 	QStringList GetErrors();
 };

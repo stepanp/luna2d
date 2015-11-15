@@ -24,6 +24,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "utils/mathutils.h"
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QMessageBox>
@@ -52,13 +53,6 @@ MainWindow::MainWindow(const QString& projectPath) :
 		QListWidgetItem* item = new QListWidgetItem(res, ui->listResolutions);
 		item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
 		item->setCheckState(Qt::Unchecked);
-	}
-
-	// Fill supported sizes for atlases
-	for(int i = MIN_ATLAS_SIZE; i <= MAX_ATLAS_SIZE; i *= 2)
-	{
-		ui->comboMaxWidth->addItem(QString("%1").arg(i), i);
-		ui->comboMaxHeight->addItem(QString("%1").arg(i), i);
 	}
 
 	// Set stretch sections in header of atlas sizes table
@@ -95,9 +89,6 @@ MainWindow::MainWindow(const QString& projectPath) :
 
 	// "Atlas settings" tab signals
 	connect(ui->editAtlasName, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedAtlasName);
-	connect(ui->checkAdvancedMode, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedAdvancedMode);
-	connect(ui->comboMaxWidth, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsChangedMaxWidth(int)));
-	connect(ui->comboMaxHeight, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsChangedMaxHeight(int)));
 	connect(ui->editPadding,  SIGNAL(valueChanged(int)), this, SLOT(OnTabsChangedPadding(int)));
 	connect(ui->checkDuplicatePadding, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedDuplicatePadding);
 
@@ -260,8 +251,6 @@ void MainWindow::UpdateAtlasTab()
 	Task* task = GetSelectedTask();
 
 	ui->editAtlasName->setText(task->atlasParams.name);
-	ui->comboMaxWidth->setCurrentText(QString::number(task->atlasParams.maxWidth));
-	ui->comboMaxHeight->setCurrentText(QString::number(task->atlasParams.maxHeight));
 	ui->editPadding->setValue(task->atlasParams.padding);
 	ui->checkDuplicatePadding->setChecked(task->atlasParams.duplicatePadding);
 
@@ -273,28 +262,39 @@ void MainWindow::UpdateAtlasSizesTable()
 	// Remove all rows
 	while(ui->tableAtlasSizes->rowCount() > 0) ui->tableAtlasSizes->removeRow(0);
 
-	int simpleModeWidth = ui->comboMaxWidth->currentText().toInt();
-	int simpleModeHeight = ui->comboMaxHeight->currentText().toInt();
-
+	Task* task = GetSelectedTask();
 	QStringList resolutions = pipeline.GetResolutionsNames();
 	int rowIndex = 0;
+
 	for(int i = 0; i < resolutions.size(); i++)
 	{
-		if(GetSelectedTask()->outputRes.indexOf(resolutions.at(i)) == -1) continue;
+		auto res = resolutions.at(i);
+
+		if(task->outputRes.indexOf(res) == -1) continue;
+
+		QSize atlasSize = task->atlasParams.sizes[res];
+		QComboBox* comboWidth = MakeAtlasSizeComboBox(atlasSize.width());
+		QComboBox* comboHeight = MakeAtlasSizeComboBox(atlasSize.height());
+
+		connect(comboWidth, &QComboBox::currentTextChanged,
+			[this, comboWidth, res](const QString& value)
+			{
+				GetSelectedTask()->atlasParams.sizes[res].setWidth(value.toInt());
+			});
+
+		connect(comboHeight, &QComboBox::currentTextChanged,
+			[this, comboHeight, res](const QString& value)
+			{
+				GetSelectedTask()->atlasParams.sizes[res].setHeight(value.toInt());
+			});
 
 		ui->tableAtlasSizes->insertRow(rowIndex);
 		ui->tableAtlasSizes->setItem(rowIndex, 0, new QTableWidgetItem(resolutions.at(i)));
-		ui->tableAtlasSizes->setCellWidget(rowIndex, 1, MakeAtlasSizeComboBox(simpleModeWidth));
-		ui->tableAtlasSizes->setCellWidget(rowIndex, 2, MakeAtlasSizeComboBox(simpleModeHeight));
+		ui->tableAtlasSizes->setCellWidget(rowIndex, 1, comboWidth);
+		ui->tableAtlasSizes->setCellWidget(rowIndex, 2, comboHeight);
 
 		rowIndex++;
 	}
-}
-
-void MainWindow::SetAtlasSizesAdvancedMode(bool advanced)
-{
-	ui->pagesAtlasSize->setCurrentIndex(advanced ? PAGE_ATLAS_SIZE_ADVANCED : PAGE_ATLAS_SIZE_SIMPLE);
-	ui->pagesAtlasSize->setFixedHeight(advanced ? ATLAS_SIZE_ADVANCED_HEIGHT : ATLAS_SIZE_SIMPLE_HEIGHT);
 }
 
 QTreeWidgetItem* MainWindow::MakeTreeItem(const QString& text, const ProjectTreeData& data)
@@ -515,6 +515,7 @@ void MainWindow::OnRunProject()
 	dlg.setMinimumDuration(0);
 	dlg.setWindowModality(Qt::WindowModal);
 	dlg.setFixedSize(400, dlg.size().height());
+	dlg.setWindowTitle(WINDOW_TITLE);
 
 	connect(&pipeline, &Pipeline::progressUpdated,
 		[&dlg](float progress)
@@ -652,8 +653,20 @@ void MainWindow::OnTabsChangedResolutionsList(QListWidgetItem* item)
 	if(!item || !GetSelectedTask()) return;
 
 	QString res = item->text();
-	if(item->checkState() == Qt::Checked) GetSelectedTask()->outputRes.push_back(res);
-	else if(item->checkState() == Qt::Unchecked) GetSelectedTask()->outputRes.removeOne(res);
+
+	if(item->checkState() == Qt::Checked)
+	{
+		auto task = GetSelectedTask();
+		task->outputRes.push_back(res);
+		task->atlasParams.sizes.insert(res, QSize(DEFAULT_ATLAS_SIZE, DEFAULT_ATLAS_SIZE));
+	}
+
+	else if(item->checkState() == Qt::Unchecked)
+	{
+		auto task = GetSelectedTask();
+		task->outputRes.removeOne(res);
+		task->atlasParams.sizes.remove(res);
+	}
 
 	UpdateAtlasSizesTable();
 }
@@ -675,27 +688,6 @@ void MainWindow::OnTabsChangedAtlasName(const QString& value)
 	if(!GetSelectedTask()) return;
 
 	GetSelectedTask()->atlasParams.name = value;
-}
-
-void MainWindow::OnTabsChangedAdvancedMode(bool value)
-{
-	if(!GetSelectedTask()) return;
-
-	SetAtlasSizesAdvancedMode(value);
-}
-
-void MainWindow::OnTabsChangedMaxWidth(int value)
-{
-	if(!GetSelectedTask()) return;
-
-	GetSelectedTask()->atlasParams.maxWidth = ui->comboMaxWidth->itemData(value).toInt();
-}
-
-void MainWindow::OnTabsChangedMaxHeight(int value)
-{
-	if(!GetSelectedTask()) return;
-
-	GetSelectedTask()->atlasParams.maxHeight = ui->comboMaxWidth->itemData(value).toInt();
 }
 
 void MainWindow::OnTabsChangedPadding(int value)

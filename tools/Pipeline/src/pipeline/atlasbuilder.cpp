@@ -30,16 +30,16 @@
 
 using namespace rbp;
 
-QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, const AtlasParams &params)
+QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int height, const AtlasParams &params)
 {
 	errors.clear();
 
-	QImage atlas(params.maxWidth, params.maxHeight, QImage::Format_ARGB32);
+	QImage atlas(width, height, QImage::Format_ARGB32);
 	atlas.fill(Qt::transparent);
 
 	QJsonObject jsonAtlas;
 
-	MaxRectsBinPack packer(params.maxWidth, params.maxHeight, false);
+	MaxRectsBinPack packer(width, height, false);
 	auto heuristic = MaxRectsBinPack::RectBestAreaFit;
 	int maxRight = 0;
 	int maxBottom = 0;

@@ -119,9 +119,6 @@ public slots:
 
 	// "Atlas settings" tab slots
 	void OnTabsChangedAtlasName(const QString& value);
-	void OnTabsChangedAdvancedMode(bool value);
-	void OnTabsChangedMaxWidth(int value);
-	void OnTabsChangedMaxHeight(int value);
 	void OnTabsChangedPadding(int value);
 	void OnTabsChangedDuplicatePadding(bool value);
 };

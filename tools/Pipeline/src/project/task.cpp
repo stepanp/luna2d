@@ -53,9 +53,9 @@ Task::Task(Project* project, const QJsonObject& jsonTask) :
 		outputRes.push_back(jsonRes.toString());
 	}
 
-	for(auto jsonNodeRef : jsonTask["nodes"].toArray())
+	for(auto jsonNodeRes : jsonTask["nodes"].toArray())
 	{
-		QJsonObject jsonNode = jsonNodeRef.toObject();
+		QJsonObject jsonNode = jsonNodeRes.toObject();
 		QString path = AbsolutePath(jsonNode["path"].toString());
 
 		if(jsonNode["type"] == "file") nodes.push_back(new FileNode(path));
@@ -66,10 +66,15 @@ Task::Task(Project* project, const QJsonObject& jsonTask) :
 	{
 		QJsonObject jsonAtlasParams = jsonTask["atlasParams"].toObject();
 		atlasParams.name = jsonAtlasParams["name"].toString();
-		atlasParams.maxWidth = jsonAtlasParams["maxWidth"].toInt();
-		atlasParams.maxHeight = jsonAtlasParams["maxHeight"].toInt();
 		atlasParams.padding = jsonAtlasParams["padding"].toInt();
 		atlasParams.duplicatePadding = jsonAtlasParams["duplicatePadding"].toBool();
+
+		QJsonObject jsonSizes = jsonAtlasParams["sizes"].toObject();
+		for(auto& res : jsonSizes.keys())
+		{
+			QJsonObject size = jsonSizes[res].toObject();
+			atlasParams.sizes.insert(res, QSize(size["width"].toInt(), size["height"].toInt()));
+		}
 	}
 }
 
@@ -151,10 +156,23 @@ QJsonObject Task::ToJson()
 	{
 		QJsonObject jsonAtlasParams;
 		jsonAtlasParams["name"] = atlasParams.name;
-		jsonAtlasParams["maxWidth"] = atlasParams.maxWidth;
-		jsonAtlasParams["maxHeight"] = atlasParams.maxHeight;
 		jsonAtlasParams["padding"] = atlasParams.padding;
 		jsonAtlasParams["duplicatePadding"] = atlasParams.duplicatePadding;
+
+		QJsonObject jsonSizes;
+		for(auto res : atlasParams.sizes.keys())
+		{
+			QSize size = atlasParams.sizes[res];
+
+			QJsonObject jsonSize;
+			jsonSize["width"] = size.width();
+			jsonSize["height"] = size.height();
+
+			jsonSizes[res] = jsonSize;
+		}
+
+		jsonAtlasParams["sizes"] = jsonSizes;
+
 		jsonTask["atlasParams"] = jsonAtlasParams;
 	}
 

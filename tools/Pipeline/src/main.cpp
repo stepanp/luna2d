@@ -66,6 +66,7 @@ void RunProjectUi(const QString& projectPath)
 	QProgressDialog dlg("Processing project...", QString::null, 0, 100, nullptr, TOOL_WINDOW);
 	dlg.setMinimumDuration(0);
 	dlg.setFixedSize(400, dlg.size().height());
+	dlg.setWindowTitle(WINDOW_TITLE);
 
 	dlg.connect(&pipeline, &Pipeline::progressUpdated,
 		[&dlg](float progress)

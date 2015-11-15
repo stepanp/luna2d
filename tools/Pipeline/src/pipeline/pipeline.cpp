@@ -64,8 +64,6 @@ QString Pipeline::CheckTask(Task *task)
 	{
 		const AtlasParams& params = task->atlasParams;
 		if(params.name.isEmpty()) return "Atlas name isn't specifed";
-		if(!MathUtils::IsPowerOfTwo(params.maxWidth)) return "Atlas max width must be power of two";
-		if(!MathUtils::IsPowerOfTwo(params.maxHeight)) return "Atlas max height must be power of two";
 	}
 
 	if(!task->atlas && !task->resize) return "Task haven't any pipeline stage";
@@ -131,7 +129,17 @@ void Pipeline::BuildAtlasStage(QHash<QString,ImageList> images, Task* task)
 {
 	for(const QString& resolution : images.keys())
 	{
-		QPair<QImage,QJsonObject> atlas = atlasBuilder.Run(images[resolution], task->atlasParams);
+		int width = task->atlasParams.sizes[resolution].width();
+		int height = task->atlasParams.sizes[resolution].height();
+
+		if(!MathUtils::IsPowerOfTwo(width) || !MathUtils::IsPowerOfTwo(height))
+		{
+			QString error = ERROR_MASK.arg(task->name).arg("Sizes of atlas for resolution \"%1\" must be power of two");
+			errors.push_back(error.arg(resolution));
+			return;
+		}
+
+		QPair<QImage,QJsonObject> atlas = atlasBuilder.Run(images[resolution], width, height, task->atlasParams);
 
 		// Save atlas image
 		QString imageFilename = MakeFilename(task->atlasParams.name, resolution, "png");
