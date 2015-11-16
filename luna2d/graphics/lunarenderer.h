@@ -54,6 +54,7 @@ private:
 	LUNAShader* primitivesShader;
 	LUNATexture *curTexture; // Texture program for current render call
 	std::shared_ptr<LUNACamera> camera;
+	bool enableBlending = true;
 
 	// Stats
 	int renderCalls; // Count of render calls on current frame
@@ -71,6 +72,9 @@ public:
 
 	void SetCamera(std::shared_ptr<LUNACamera> camera);
 	void SetBackgroundColor(const LUNAColor& backColor);
+
+	bool IsBlendingEnabled();
+	void EnableBlending(bool enable);
 
 	bool IsEnabledDebugRender();
 	void EnableDebugRender(bool enable);

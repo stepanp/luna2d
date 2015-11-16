@@ -61,6 +61,8 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("getRenderedVertexes", LuaFunction(lua, this, &LUNAGraphics::GetRenderedVertexes));
 	tblGraphics.SetField("getCamera", LuaFunction(lua, this, &LUNAGraphics::GetCamera));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
+	tblGraphics.SetField("isBlendingEnabled", LuaFunction(lua, renderer, &LUNARenderer::IsBlendingEnabled));
+	tblGraphics.SetField("EnableBlending", LuaFunction(lua, renderer, &LUNARenderer::EnableBlending));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
 

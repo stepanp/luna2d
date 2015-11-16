@@ -73,6 +73,18 @@ void LUNARenderer::SetBackgroundColor(const LUNAColor& backColor)
 	this->backColor = backColor;
 }
 
+bool LUNARenderer::IsBlendingEnabled()
+{
+	return enableBlending;
+}
+
+void LUNARenderer::EnableBlending(bool enable)
+{
+	Render();
+
+	enableBlending = enable;
+}
+
 bool LUNARenderer::IsEnabledDebugRender()
 {
 	return debugRender;
@@ -80,6 +92,8 @@ bool LUNARenderer::IsEnabledDebugRender()
 
 void LUNARenderer::EnableDebugRender(bool enable)
 {
+	Render();
+
 	debugRender = enable;
 }
 
@@ -191,8 +205,16 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 
 void LUNARenderer::Render()
 {
+	if(vertexBatch.empty()) return;
+
 	int vertexCount = vertexBatch.size() / LUNA_ELEMENT_PER_VERTEX;
-	if(vertexCount == 0) return;
+
+	if(enableBlending)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+	else glDisable(GL_BLEND);
 
 	shader->SetPositionAttribute(vertexBatch.data());
 	shader->SetColorAttribute(vertexBatch.data());
@@ -222,10 +244,6 @@ void LUNARenderer::Begin()
 	glClearColor(backColor.r, backColor.g, backColor.b, backColor.a);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	// Enable blending for opacity
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	shader->Bind();
 }
 
@@ -234,7 +252,6 @@ void LUNARenderer::End()
 	Render();
 
 	shader->Unbind();
-	glDisable(GL_BLEND);
 	inProgress = false;
 }
 
