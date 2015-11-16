@@ -75,6 +75,8 @@ public:
 
 	bool IsBlendingEnabled();
 	void EnableBlending(bool enable);
+	void EnableScissor(float x, float y, float width, float height);
+	void DisableScissor();
 
 	bool IsEnabledDebugRender();
 	void EnableDebugRender(bool enable);

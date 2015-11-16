@@ -85,6 +85,27 @@ void LUNARenderer::EnableBlending(bool enable)
 	enableBlending = enable;
 }
 
+void LUNARenderer::EnableScissor(float x, float y, float width, float height)
+{
+	Render();
+
+	auto sizes = LUNAEngine::SharedSizes();
+	GLint ix = x * sizes->GetScaleFactor();
+	GLint iy = y * sizes->GetScaleFactor();
+	GLsizei iwidth = width * sizes->GetScaleFactor();
+	GLsizei iheight = height * sizes->GetScaleFactor();
+
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(ix, iy, iwidth, iheight);
+}
+
+void LUNARenderer::DisableScissor()
+{
+	Render();
+
+	glDisable(GL_SCISSOR_TEST);
+}
+
 bool LUNARenderer::IsEnabledDebugRender()
 {
 	return debugRender;
