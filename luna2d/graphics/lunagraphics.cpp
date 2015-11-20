@@ -41,8 +41,16 @@ LUNAGraphics::LUNAGraphics()
 	renderer = new LUNARenderer();	
 
 	camera = std::make_shared<LUNACamera>(sizes->GetVirtualScreenWidth(), sizes->GetVirtualScreenHeight());
-	camera->SetPos(sizes->GetBaseScreenWidth() / 2.0f, sizes->GetBaseScreenHeight() / 2.0f);
 	renderer->SetCamera(camera);
+
+	if(sizes->GetScaleMode() <= LUNAScaleMode::FIT_TO_HEIGHT_RIGHT)
+	{
+		camera->SetPos(sizes->GetVirtualScreenWidth() / 2.0f, sizes->GetVirtualScreenHeight() / 2.0f);
+	}
+	else
+	{
+		camera->SetPos(sizes->GetBaseScreenWidth() / 2.0f, sizes->GetBaseScreenHeight() / 2.0f);
+	}
 
 	lastTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
 	fpsTime = 0;
