@@ -33,6 +33,13 @@
 
 class Project;
 
+enum class OutputFormat
+{
+	PNG_32,
+	PNG_24,
+	JPEG
+};
+
 class Task
 {
 public:
@@ -46,6 +53,7 @@ public:
 	QString outputDir;
 	bool resize, atlas; // Pipeline stages
 	QList<TaskNode*> nodes;
+	OutputFormat outputFormat;
 
 	// Resize params
 	QString sourceRes;

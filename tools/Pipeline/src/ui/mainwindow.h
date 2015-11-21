@@ -109,6 +109,7 @@ public slots:
 	void OnTabsChangedName(const QString& value);
 	void OnTabsChangedOutput(const QString& value);
 	void OnTabsOutputButton();
+	void OnTabsCnangedFormat(int index);
 	void OnTabsChangedResize(bool value);
 	void OnTabsChangedAtlas(bool value);
 

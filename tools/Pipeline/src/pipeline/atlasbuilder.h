@@ -31,6 +31,8 @@
 #include <QStringList>
 #include <QHash>
 
+enum class OutputFormat;
+
 const int MIN_ATLAS_SIZE = 16;
 const int MAX_ATLAS_SIZE = 4096;
 const int DEFAULT_ATLAS_SIZE = 1024;
@@ -52,6 +54,7 @@ private:
 	QStringList errors;
 
 public:
-	QPair<QImage,QJsonObject> Run(ImageList images,  int width, int height, const AtlasParams& params);
+	QPair<QImage,QJsonObject> Run(ImageList images, int width, int height,
+		OutputFormat format, const AtlasParams& params);
 	QStringList GetErrors();
 };

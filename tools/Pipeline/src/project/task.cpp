@@ -34,6 +34,7 @@ Task::Task(Project* project) :
 	outputDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)),
 	resize(true),
 	atlas(true),
+	outputFormat(OutputFormat::PNG_32),
 	sourceRes(QString::fromStdString(luna2d::DEFAULT_RESOLUTION)),
 	potSize(false)
 {
@@ -45,9 +46,15 @@ Task::Task(Project* project, const QJsonObject& jsonTask) :
 	outputDir(AbsolutePath(jsonTask["outputDir"].toString())),
 	resize(jsonTask["resize"].toBool()),
 	atlas(jsonTask["atlas"].toBool()),
+	outputFormat(OutputFormat::PNG_32),
 	sourceRes(jsonTask["sourceRes"].toString()),
 	potSize(jsonTask["potSize"].toBool())
 {
+	QString jsonOutputFormat = jsonTask["outputFormat"].toString();
+	if(jsonOutputFormat == "PNG_32") outputFormat = OutputFormat::PNG_32;
+	else if(jsonOutputFormat == "PNG_24") outputFormat = OutputFormat::PNG_24;
+	else if(jsonOutputFormat == "JPEG") outputFormat = OutputFormat::JPEG;
+
 	for(auto jsonRes : jsonTask["outputRes"].toArray())
 	{
 		outputRes.push_back(jsonRes.toString());
@@ -137,6 +144,19 @@ QJsonObject Task::ToJson()
 	jsonTask["atlas"] = atlas;
 	jsonTask["sourceRes"] = sourceRes;
 	jsonTask["potSize"] = potSize;
+
+	switch(outputFormat)
+	{
+	case OutputFormat::PNG_32:
+		jsonTask["outputFormat"] = "PNG_32";
+		break;
+	case OutputFormat::PNG_24:
+		jsonTask["outputFormat"] = "PNG_24";
+		break;
+	case OutputFormat::JPEG:
+		jsonTask["outputFormat"] = "JPEG";
+		break;
+	}
 
 	QJsonArray jsonResolutions;
 	for(QString res : outputRes) jsonResolutions.append(res);

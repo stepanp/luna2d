@@ -24,18 +24,36 @@
 
 #include "atlasbuilder.h"
 #include "utils/mathutils.h"
+#include "project/task.h"
 #include <MaxRectsBinPack.h>
 #include <QPainter>
 #include <QDebug>
 
 using namespace rbp;
 
-QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int height, const AtlasParams &params)
+QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int height,
+	OutputFormat format, const AtlasParams &params)
 {
 	errors.clear();
 
-	QImage atlas(width, height, QImage::Format_ARGB32);
-	atlas.fill(Qt::transparent);
+	QImage::Format fillFormat = QImage::Format_ARGB32;
+	Qt::GlobalColor fillColor = Qt::transparent;
+
+	switch(format)
+	{
+	case OutputFormat::PNG_32:
+		fillFormat = QImage::Format_ARGB32;
+		fillColor = Qt::transparent;
+		break;
+	case OutputFormat::PNG_24:
+	case OutputFormat::JPEG:
+		fillFormat = QImage::Format_RGB32;
+		fillColor = Qt::black;
+		break;
+	}
+
+	QImage atlas(width, height, fillFormat);
+	atlas.fill(fillColor);
 
 	QJsonObject jsonAtlas;
 

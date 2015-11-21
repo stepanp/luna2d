@@ -42,6 +42,9 @@ MainWindow::MainWindow(const QString& projectPath) :
 	ui->pages->setEnabled(false);
 	ui->projectTree->setContextMenuPolicy(Qt::CustomContextMenu);
 
+	// Fill output format combo box with formats
+	ui->comboFormat->addItems({ "PNG32", "PNG24", "JPEG" });
+
 	// Fill source resolution combo box with resolutions
 	QStringList resolutionsList = pipeline.GetResolutionsNames();
 	ui->comboSrcResolution->addItems(resolutionsList);
@@ -80,6 +83,7 @@ MainWindow::MainWindow(const QString& projectPath) :
 	connect(ui->editName, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedName);
 	connect(ui->editOutput, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedOutput);
 	connect(ui->btnOutput, &QPushButton::clicked, this, &MainWindow::OnTabsOutputButton);
+	connect(ui->comboFormat, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsCnangedFormat(int)));
 	connect(ui->checkResize, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedResize);
 	connect(ui->checkAtlas, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedAtlas);
 
@@ -142,6 +146,7 @@ void MainWindow::UpdateTaskTabs()
 
 	ui->editName->setText(task->name);
 	ui->editOutput->setText(task->outputDir);
+	ui->comboFormat->setCurrentIndex(static_cast<int>(task->outputFormat));
 	ui->checkResize->setChecked(task->resize);
 	ui->checkAtlas->setChecked(task->atlas);
 	ui->tabsSettings->setTabEnabled(TAB_RESIZE, task->resize);
@@ -618,6 +623,13 @@ void MainWindow::OnTabsOutputButton()
 		GetSelectedTask()->outputDir = dialog.selectedFiles().first();
 		ui->editOutput->setText(GetSelectedTask()->outputDir);
 	}
+}
+
+void MainWindow::OnTabsCnangedFormat(int index)
+{
+	if(!GetSelectedTask()) return;
+
+	GetSelectedTask()->outputFormat = static_cast<OutputFormat>(index);
 }
 
 void MainWindow::OnTabsChangedResize(bool value)

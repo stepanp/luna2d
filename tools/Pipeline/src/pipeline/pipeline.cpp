@@ -36,12 +36,38 @@ static QString MakeFilename(const QString& name, const QString& resolution, cons
 	else return QString("%1@%2.%3").arg(name).arg(resolution).arg(extension);
 }
 
-static bool SaveImage(const QImage& image, const QString& directory, const QString& filename)
+static bool SaveImage(const QImage& image, const QString& directory, const QString& filename, OutputFormat format)
 {
 	QDir outputDir(directory);
-	return image.save(outputDir.absoluteFilePath(filename), "PNG");
+	const char* strFormat = nullptr;
+
+	switch(format)
+	{
+	case OutputFormat::PNG_32:
+	case OutputFormat::PNG_24:
+		strFormat = "PNG";
+		break;
+	case OutputFormat::JPEG:
+		strFormat = "JPEG";
+		break;
+	}
+
+	return image.save(outputDir.absoluteFilePath(filename), strFormat);
 }
 
+static QString ExtensionForFormat(OutputFormat format)
+{
+	switch(format)
+	{
+	case OutputFormat::PNG_32:
+	case OutputFormat::PNG_24:
+		return "png";
+	case OutputFormat::JPEG:
+		return "jpg";
+	}
+
+	return "";
+}
 
 Pipeline::Pipeline()
 {
@@ -115,8 +141,8 @@ void Pipeline::ResizeStage(ImageList images, Task* task)
 		{
 			for(auto entry : imagesByRes[resolution])
 			{
-				QString filename = MakeFilename(entry.first, resolution, "png");
-				if(!SaveImage(entry.second, task->outputDir, filename))
+				QString filename = MakeFilename(entry.first, resolution, ExtensionForFormat(task->outputFormat));
+				if(!SaveImage(entry.second, task->outputDir, filename, task->outputFormat))
 				{
 					errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(filename)));
 				}
@@ -139,11 +165,12 @@ void Pipeline::BuildAtlasStage(QHash<QString,ImageList> images, Task* task)
 			return;
 		}
 
-		QPair<QImage,QJsonObject> atlas = atlasBuilder.Run(images[resolution], width, height, task->atlasParams);
+		QPair<QImage,QJsonObject> atlas = atlasBuilder.Run(images[resolution], width, height,
+			task->outputFormat, task->atlasParams);
 
 		// Save atlas image
-		QString imageFilename = MakeFilename(task->atlasParams.name, resolution, "png");
-		if(!SaveImage(atlas.first, task->outputDir, imageFilename))
+		QString imageFilename = MakeFilename(task->atlasParams.name, resolution, ExtensionForFormat(task->outputFormat));
+		if(!SaveImage(atlas.first, task->outputDir, imageFilename, task->outputFormat))
 		{
 			errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(imageFilename)));
 			return;
