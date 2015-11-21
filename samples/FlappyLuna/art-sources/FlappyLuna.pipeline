@@ -4,19 +4,32 @@
             "atlas": true,
             "atlasParams": {
                 "duplicatePadding": true,
-                "maxHeight": 2048,
-                "maxWidth": 2048,
                 "name": "items",
-                "padding": 1
+                "padding": 2,
+                "sizes": {
+                    "HD": {
+                        "height": 2048,
+                        "width": 2048
+                    },
+                    "HVGA": {
+                        "height": 1024,
+                        "width": 1024
+                    },
+                    "WVGA": {
+                        "height": 1024,
+                        "width": 1024
+                    }
+                }
             },
             "name": "Task1",
             "nodes": [
                 {
-                    "path": "",
+                    "path": ".",
                     "type": "folder"
                 }
             ],
             "outputDir": "../game/art",
+            "outputFormat": "PNG_32",
             "outputRes": [
                 "WVGA",
                 "HVGA",

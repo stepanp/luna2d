@@ -2,49 +2,49 @@
     "bg": {
         "height": 720,
         "width": 1240,
-        "x": 1,
-        "y": 1
+        "x": 2,
+        "y": 2
     },
     "bird": {
         "height": 72,
         "width": 72,
-        "x": 1243,
-        "y": 1
+        "x": 1246,
+        "y": 2
     },
     "bird_flap": {
         "height": 72,
         "width": 72,
-        "x": 1317,
-        "y": 1
+        "x": 1322,
+        "y": 2
     },
     "buildings": {
         "height": 355,
         "width": 1240,
-        "x": 1,
-        "y": 723
+        "x": 2,
+        "y": 726
     },
     "gameover": {
         "height": 185,
         "width": 357,
-        "x": 1391,
-        "y": 1
+        "x": 1398,
+        "y": 2
     },
     "moon": {
         "height": 120,
         "width": 120,
-        "x": 1243,
-        "y": 75
+        "x": 1246,
+        "y": 78
     },
     "tube_body": {
         "height": 1,
         "width": 90,
-        "x": 1750,
-        "y": 1
+        "x": 1759,
+        "y": 2
     },
     "tube_head": {
         "height": 36,
         "width": 90,
-        "x": 1842,
-        "y": 1
+        "x": 1853,
+        "y": 2
     }
 }
