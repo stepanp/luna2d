@@ -96,6 +96,9 @@ public:
 	// Duration of emitter working. "0" is infinite
 	float duration = 0.0f;
 
+	// Maximal count of particles. "0" is infinite
+	int maxCount = 0;
+
 	// Count of particles spawns at once
 	int spawnCount = 1;
 
@@ -110,6 +113,9 @@ public:
 
 	// Particle direction
 	LUNARangeFloat direction;
+
+	// Gravity
+	glm::vec2 gravity;
 
 	// Set angle between initial particle pos and emitter pos as direction
 	// "direction" value will be ignored.

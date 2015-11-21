@@ -52,6 +52,7 @@ public:
 private:
 	float lifetime, lifetimeTotal;
 	glm::vec2 dir;
+	glm::vec2 gravity;
 
 	LUNAParticleValue speed;
 	LUNAParticleValue rotate;

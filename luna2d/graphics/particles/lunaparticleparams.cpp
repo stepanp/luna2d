@@ -65,11 +65,13 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	emitterPos = luaParams.GetField<glm::vec2>("emitterPos");
 	attached = luaParams.GetBool("attached");
 	duration = luaParams.GetFloat("duration");
+	maxCount = luaParams.GetInt("maxCount");
 	spawnCount = luaParams.GetInt("spawnCount");
 	spawnDelay = luaParams.GetFloat("spawnDelay");
 	initSpawnDelay = luaParams.GetFloat("initSpawnDelay");
 	lifetime = luaParams.GetField<LUNARangeFloat>("lifetime");
 	direction = luaParams.GetField<LUNARangeFloat>("direction");
+	gravity = luaParams.GetField<glm::vec2>("gravity");
 	dirFromEmitter = luaParams.GetBool("dirFromEmitter");
 	speedBegin = luaParams.GetField<LUNARangeFloat>("speedBegin");
 	speedEnd = luaParams.GetField<LUNARangeFloat>("speedEnd");

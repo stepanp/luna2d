@@ -108,6 +108,8 @@ glm::vec2 LUNAParticleEmitter::GetSpawnPos()
 
 void LUNAParticleEmitter::Emit()
 {
+	if(params->maxCount > 0 && particles.size() > params->maxCount) return;
+
 	for(int i = 0; i < params->spawnCount; i++)
 	{
 		auto sprite = GetNextSprite();

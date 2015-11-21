@@ -51,6 +51,7 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	LUNASprite(*sprite),
 	lifetime(math::RandomFloat(params->lifetime.min, params->lifetime.max)),
 	lifetimeTotal(lifetime),
+	gravity(params->gravity),
 	speed(params->speedBegin, params->speedEnd, params->speedEasing),
 	rotate(params->rotateBegin, params->rotateEnd, params->rotateEasing),
 	alpha(params->alphaBegin, params->alphaEnd, params->alphaEasing),
@@ -104,5 +105,6 @@ void LUNAParticle::Update(float dt)
 	SetColor(r, g, b);
 
 	glm::vec2 newPos = GetPos() + (dir * (speed.GetValue(percent) * dt));
+	newPos -= gravity * dt;
 	SetPos(newPos.x, newPos.y);
 }
