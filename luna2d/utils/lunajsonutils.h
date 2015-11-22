@@ -24,14 +24,9 @@
 #pragma once
 
 #include "lunalua.h"
-#include <regex>
 #include <json11.hpp>
 
 namespace luna2d{
-
-const std::regex STRIP_COMMENTS_REGEX = std::regex("(/\\*([^*]|[\\r\\n]|(\\*+([^*/]|[\\r\\n])))*\\*+/)|(//.*)",
-	std::regex_constants::ECMAScript);
-
 
 // Strip comments from json
 std::string StripJsonComments(const std::string& data);

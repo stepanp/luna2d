@@ -26,11 +26,62 @@
 using namespace luna2d;
 using namespace json11;
 
+enum class StringState
+{
+	NONE,
+	SINGLE_LINE,
+	MULTI_LINE,
+	STRING,
+};
+
 // Parse json to strign and strip comments
 std::string luna2d::StripJsonComments(const std::string& data)
 {
+	StringState state = StringState::NONE;
 	std::string ret;
-	std::regex_replace(std::back_inserter(ret), data.begin(), data.end(), STRIP_COMMENTS_REGEX, "");
+	ret.reserve(data.size());
+
+	size_t i = 0;
+	while(i < data.length())
+	{
+		if(state == StringState::NONE)
+		{
+			if(data[i] == '/' && data[i + 1] == '/') state = StringState::SINGLE_LINE;
+			else if(data[i] == '/' && data[i + 1] == '*') state = StringState::MULTI_LINE;
+			else if(data[i] == '"')
+			{
+				state = StringState::STRING;
+				ret += data[i];
+			}
+			else ret += data[i];
+
+			i++;
+		}
+
+		else if(state == StringState::SINGLE_LINE)
+		{
+			if(data[i] == '\n') state = StringState::NONE;
+			else i++;
+		}
+
+		else if(state == StringState::MULTI_LINE)
+		{
+			if(data[i] == '*' && data[i + 1] == '/')
+			{
+				state = StringState::NONE;
+				i += 2;
+			}
+			else i++;
+		}
+
+		else if(state == StringState::STRING)
+		{
+			if(data[i] == '"') state = StringState::NONE;
+
+			ret += data[i];
+			i++;
+		}
+	}
 
 	return std::move(ret);
 }
