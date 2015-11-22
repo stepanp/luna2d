@@ -46,6 +46,9 @@ std::string luna2d::StripJsonComments(const std::string& data)
 	{
 		if(state == StringState::NONE)
 		{
+			// Remark about "data[i + 1]" and "while(i < data.length())"
+			// It's safety usage, because since C++11 internal buffer of std::string must ends with zero char
+
 			if(data[i] == '/' && data[i + 1] == '/') state = StringState::SINGLE_LINE;
 			else if(data[i] == '/' && data[i + 1] == '*') state = StringState::MULTI_LINE;
 			else if(data[i] == '"')
