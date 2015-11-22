@@ -24,7 +24,7 @@
 #include "lunafontloader.h"
 #include "lunafontgenerator.h"
 #include "lunafiles.h"
-#include <json11.hpp>
+#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;
@@ -39,7 +39,7 @@ bool LUNAFontLoader::Load(const std::string& filename)
 
 	std::string descData = files->ReadFileToString(desc);
 	std::string err;
-	Json jsonDesc = Json::parse(descData, err);
+	Json jsonDesc = Json::parse(StripJsonComments(descData), err);
 	if(jsonDesc == nullptr)
 	{
 		LUNA_LOGE(err.c_str());

@@ -26,9 +26,7 @@
 #include "lunalog.h"
 #include "lunafiles.h"
 #include "lunasizes.h"
-#include <functional>
-#include <algorithm>
-#include <json11.hpp>
+#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;
@@ -48,7 +46,8 @@ bool LUNAConfig::Read()
 
 	std::string configData = LUNAEngine::SharedFiles()->ReadFileToString(CONFIG_FILENAME, LUNAFileLocation::ASSETS);
 	std::string err;
-	Json jsonConfig = Json::parse(configData, err);
+	Json jsonConfig = Json::parse(StripJsonComments(configData), err);
+
 	if(jsonConfig == nullptr)
 	{
 		LUNA_LOGE("Error with parsing config: \"%s\"", err.c_str());

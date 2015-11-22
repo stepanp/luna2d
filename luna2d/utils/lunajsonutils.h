@@ -24,9 +24,15 @@
 #pragma once
 
 #include "lunalua.h"
+#include <regex>
 #include <json11.hpp>
 
 namespace luna2d{
+
+const std::regex STRIP_COMMENTS_REGEX = std::regex("//.*|\\/\\*[^(\\/\\*)]*?\\*\\/");
+
+// Strip comments from json
+std::string StripJsonComments(const std::string& data);
 
 // Deserialize json array to lua table
 LuaTable JsonArray2Lua(const json11::Json::array& array);

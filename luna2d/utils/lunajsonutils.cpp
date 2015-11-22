@@ -21,10 +21,19 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunajson2lua.h"
+#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;
+
+// Parse json to strign and strip comments
+std::string luna2d::StripJsonComments(const std::string& data)
+{
+	std::string ret;
+	std::regex_replace(std::back_inserter(ret), data.begin(), data.end(), STRIP_COMMENTS_REGEX, "");
+
+	return std::move(ret);
+}
 
 // Deserialize json array to lua table
 LuaTable luna2d::JsonArray2Lua(const Json::array& array)

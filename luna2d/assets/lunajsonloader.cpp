@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunajsonloader.h"
-#include "lunajson2lua.h"
+#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;
@@ -32,7 +32,7 @@ bool LUNAJsonLoader::Load(const std::string& filename)
 	std::string jsonData = LUNAEngine::SharedFiles()->ReadFileToString(filename);
 	std::string err;
 
-	json = Json::parse(jsonData, err);
+	json = Json::parse(StripJsonComments(jsonData), err);
 
 	if(json == nullptr)
 	{

@@ -24,7 +24,7 @@
 #pragma once
 
 #include "lunaassets.h"
-#include <json11.hpp>
+#include "lunajsonutils.h"
 
 namespace luna2d{
 
