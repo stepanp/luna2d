@@ -52,9 +52,14 @@ public:
 private:
 	float lifetime, lifetimeTotal;
 	glm::vec2 dir;
-	glm::vec2 gravity;
 
+	LUNAMotionMode gravityMotionMode;
+	glm::vec2 gravity, gravityAcc;
+
+	LUNAMotionMode speedMotionMode;
 	LUNAParticleValue speed;
+	float speedAcc = 0;
+
 	LUNAParticleValue rotate;
 	LUNAParticleValue alpha;
 	LUNAParticleValue scale;
@@ -62,6 +67,10 @@ private:
 	LUNAEasingFunc colorEasing;
 
 	bool deleted = false;
+
+private:
+	void UpdateSpeed(float percent, float dt);
+	void UpdateGravity(float dt);
 
 public:
 	bool IsDeleted();

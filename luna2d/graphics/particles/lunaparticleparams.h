@@ -62,6 +62,20 @@ const LUNAStringEnum<LUNASpawnAreaMode> SPAWN_AREA_MODE =
 };
 
 
+enum class LUNAMotionMode
+{
+	LINEAR,
+	ACCELERATED,
+};
+
+const LUNAStringEnum<LUNAMotionMode> MOTION_MODE =
+{
+	"linear",
+	"accelerated",
+};
+
+
+
 class LUNAParticleParams
 {
 public:
@@ -100,7 +114,7 @@ public:
 	int maxCount = 0;
 
 	// Count of particles spawns at once
-	int spawnCount = 1;
+	LUNARangeInt spawnCount = 1;
 
 	// Delay between spawning
 	float spawnDelay = 0.0f;
@@ -114,6 +128,9 @@ public:
 	// Particle direction
 	LUNARangeFloat direction;
 
+	// Gravity motion mode
+	LUNAMotionMode gravityMotionMode = LUNAMotionMode::ACCELERATED;
+
 	// Gravity
 	glm::vec2 gravity;
 
@@ -121,6 +138,9 @@ public:
 	// "direction" value will be ignored.
 	// Supports only on "LUNASpawnAreaMode::RECT" and "LUNASpawnAreaMode::CIRCLE" spawn area modes
 	bool dirFromEmitter = false;
+
+	// Speed motion mode
+	LUNAMotionMode speedMotionMode = LUNAMotionMode::LINEAR;
 
 	// Particle speed
 	LUNARangeFloat speedBegin = LUNARangeFloat(1.0f);

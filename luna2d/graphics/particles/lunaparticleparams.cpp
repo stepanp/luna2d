@@ -62,11 +62,25 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	textures = luaParams.GetField<std::vector<std::string>>("textures");
 	if(textures.empty()) LUNA_LOGE("Particle emitter must have at least one texture or texture region");
 
+	if(luaParams.HasField("gravityMotionMode"))
+	{
+		std::string gravityMotionModeStr = luaParams.GetString("gravityMotionMode");
+		if(MOTION_MODE.HasKey(gravityMotionModeStr)) gravityMotionMode = MOTION_MODE.FromString(gravityMotionModeStr);
+		else LUNA_LOGE("Unsupported gravity motion mode: \"%s\"", gravityMotionModeStr.c_str());
+	}
+
+	if(luaParams.HasField("speedMotionMode"))
+	{
+		std::string speedMotionModeStr = luaParams.GetString("speedMotionMode");
+		if(MOTION_MODE.HasKey(speedMotionModeStr)) speedMotionMode = MOTION_MODE.FromString(speedMotionModeStr);
+		else LUNA_LOGE("Unsupported speed motion mode: \"%s\"", speedMotionModeStr.c_str());
+	}
+
 	emitterPos = luaParams.GetField<glm::vec2>("emitterPos");
 	attached = luaParams.GetBool("attached");
 	duration = luaParams.GetFloat("duration");
 	maxCount = luaParams.GetInt("maxCount");
-	spawnCount = luaParams.GetInt("spawnCount");
+	spawnCount = luaParams.GetField<LUNARangeInt>("spawnCount");
 	spawnDelay = luaParams.GetFloat("spawnDelay");
 	initSpawnDelay = luaParams.GetFloat("initSpawnDelay");
 	lifetime = luaParams.GetField<LUNARangeFloat>("lifetime");

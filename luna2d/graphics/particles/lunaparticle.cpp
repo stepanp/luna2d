@@ -51,7 +51,9 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	LUNASprite(*sprite),
 	lifetime(math::RandomFloat(params->lifetime.min, params->lifetime.max)),
 	lifetimeTotal(lifetime),
+	gravityMotionMode(params->gravityMotionMode),
 	gravity(params->gravity),
+	speedMotionMode(params->speedMotionMode),
 	speed(params->speedBegin, params->speedEnd, params->speedEasing),
 	rotate(params->rotateBegin, params->rotateEnd, params->rotateEasing),
 	alpha(params->alphaBegin, params->alphaEnd, params->alphaEasing),
@@ -63,6 +65,22 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	SetOriginToCenter();
 	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
 	SetDirection(math::RandomFloat(params->direction.min, params->direction.max));
+}
+
+void LUNAParticle::UpdateSpeed(float percent, float dt)
+{
+	float value =  speed.GetValue(percent) * dt;
+
+	if(speedMotionMode == LUNAMotionMode::LINEAR) speedAcc = value;
+	else speedAcc += value;
+}
+
+void LUNAParticle::UpdateGravity(float dt)
+{
+	glm::vec2 value = gravity * dt;
+
+	if(gravityMotionMode == LUNAMotionMode::LINEAR) gravityAcc = value;
+	else gravityAcc += value;
 }
 
 bool LUNAParticle::IsDeleted()
@@ -104,7 +122,10 @@ void LUNAParticle::Update(float dt)
 	float b = math::EaseLerp(colorBegin.b, colorEnd.b, percent, colorEasing);
 	SetColor(r, g, b);
 
-	glm::vec2 newPos = GetPos() + (dir * (speed.GetValue(percent) * dt));
-	newPos -= gravity * dt;
+	UpdateSpeed(percent, dt);
+	UpdateGravity(dt);
+
+	glm::vec2 newPos = GetPos() + (dir * speedAcc);
+	newPos -= gravityAcc;
 	SetPos(newPos.x, newPos.y);
 }

@@ -110,7 +110,8 @@ void LUNAParticleEmitter::Emit()
 {
 	if(params->maxCount > 0 && particles.size() > params->maxCount) return;
 
-	for(int i = 0; i < params->spawnCount; i++)
+	int spawnCount = math::RandomInt(params->spawnCount.min, params->spawnCount.max);
+	for(int i = 0; i < spawnCount; i++)
 	{
 		auto sprite = GetNextSprite();
 		auto spawnPos = GetSpawnPos();
