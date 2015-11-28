@@ -50,15 +50,7 @@ public:
 		return map.count(key) == 1;
 	}
 
-	EnumType FromString(const std::string& key) const
-	{
-		auto it = map.find(key);
-		if(it == map.end()) return static_cast<EnumType>(-1);
-
-		return it->second;
-	}
-
-	EnumType FromString(const std::string& key, EnumType defaultValue) const
+	EnumType FromString(const std::string& key, EnumType defaultValue = static_cast<EnumType>(-1)) const
 	{
 		auto it = map.find(key);
 		if(it == map.end()) return defaultValue;
