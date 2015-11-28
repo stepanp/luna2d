@@ -57,6 +57,15 @@ public:
 
 	void Bind();
 	void Unbind();
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+public:
+	inline void Reload(const char *vertexSource, const char *fragmentSource)
+	{
+		program = CreateProgram(vertexSource, fragmentSource);
+		FetchDefaultAttributes();
+	}
+#endif
 };
 
 }

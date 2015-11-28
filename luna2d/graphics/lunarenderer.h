@@ -111,8 +111,8 @@ public:
 public:
 	inline void ReloadDefaultShader()
 	{
-		defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-		primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+		defaultShader->Reload(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
+		primitivesShader->Reload(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
 	}
 #endif
 };
