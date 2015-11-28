@@ -22,35 +22,43 @@
 //-----------------------------------------------------------------------------
 
 #include "lunarenderer.h"
+#include "lunamaterial.h"
 #include "lunasizes.h"
 #include "lunalog.h"
 #include "lunaassets.h"
 
 using namespace luna2d;
 
-LUNARenderer::LUNARenderer() :
-	inProgress(false),
-	debugRender(false)
+LUNARenderer::LUNARenderer()
 {
-	// Initialize vertex array
-	vertexBatch.reserve(LUNA_RESERVE_POLYGONS * LUNA_ELEMENT_PER_VERTEX);
+	// Initialize batch vertex array
+	vertexBatch.reserve(RENDER_RESERVE_BATCH * RENDER_ELEMENT_PER_VERTEX);
 
-	backColor = LUNAColor::WHITE;
-	curTexture = nullptr;
-	renderCalls = 0;
-
-	shader = new LUNAShader(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-	primitivesShader = new LUNAShader(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
-
-	// Initialize gl
-	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
-	glDisable(GL_DEPTH_TEST); // Depth test not needed for 2D
+	// Initialize default shaders
+	defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
+	primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
 }
 
-LUNARenderer::~LUNARenderer()
+void LUNARenderer::SetVertex(float u, float v, float x, float y, const LUNAColor& color)
 {
-	delete shader;
-	delete primitivesShader;
+	// Position
+	vertexBatch.push_back(x);
+	vertexBatch.push_back(y);
+
+	// Color
+	vertexBatch.push_back(color.r);
+	vertexBatch.push_back(color.g);
+	vertexBatch.push_back(color.b);
+	vertexBatch.push_back(color.a);
+
+	// Texture coordinates
+	vertexBatch.push_back(u);
+	vertexBatch.push_back(v);
+}
+
+bool LUNARenderer::IsInProgress()
+{
+	return inProgress;
 }
 
 int LUNARenderer::GetRenderCalls()
@@ -63,9 +71,19 @@ int LUNARenderer::GetRenderedVertexes()
 	return renderedVertexes;
 }
 
-void LUNARenderer::SetCamera(std::shared_ptr<LUNACamera> camera)
+std::shared_ptr<LUNAShader> LUNARenderer::GetDefaultShader()
 {
-	this->camera = camera;
+	return defaultShader;
+}
+
+std::shared_ptr<LUNAShader> LUNARenderer::GetPrimitvesShader()
+{
+	return primitivesShader;
+}
+
+LUNAColor LUNARenderer::GetBackgroundColor()
+{
+	return backColor;
 }
 
 void LUNARenderer::SetBackgroundColor(const LUNAColor& backColor)
@@ -73,16 +91,9 @@ void LUNARenderer::SetBackgroundColor(const LUNAColor& backColor)
 	this->backColor = backColor;
 }
 
-bool LUNARenderer::IsBlendingEnabled()
+void LUNARenderer::SetCamera(const std::shared_ptr<LUNACamera>& camera)
 {
-	return enableBlending;
-}
-
-void LUNARenderer::EnableBlending(bool enable)
-{
-	Render();
-
-	enableBlending = enable;
+	this->camera = camera;
 }
 
 void LUNARenderer::EnableScissor(float x, float y, float width, float height)
@@ -113,42 +124,19 @@ bool LUNARenderer::IsEnabledDebugRender()
 
 void LUNARenderer::EnableDebugRender(bool enable)
 {
-	Render();
-
 	debugRender = enable;
 }
 
-void LUNARenderer::SetVertex(float u, float v, float x, float y, const LUNAColor& color)
-{
-	// Position
-	vertexBatch.push_back(x);
-	vertexBatch.push_back(y);
 
-	// Color
-	vertexBatch.push_back(color.r);
-	vertexBatch.push_back(color.g);
-	vertexBatch.push_back(color.b);
-	vertexBatch.push_back(color.a);
-
-	// Texture coordinates
-	vertexBatch.push_back(u);
-	vertexBatch.push_back(v);
-}
-
-bool LUNARenderer::IsInProgress()
-{
-	return inProgress;
-}
-
-void LUNARenderer::RenderQuad(LUNATexture *texture,
+void LUNARenderer::RenderQuad(
 	float x1, float y1, float u1, float v1,
 	float x2, float y2, float u2, float v2,
 	float x3, float y3, float u3, float v3,
 	float x4, float y4, float u4, float v4,
-	const LUNAColor &color)
+	const LUNAMaterial* material, const LUNAColor& color)
 {
-	if(curTexture && curTexture != texture) Render();
-	curTexture = texture;
+	if(curMaterial && *curMaterial != *material) Render();
+	curMaterial = material;
 
 	// Make quad from two triangles like:
 	// 2-3 5
@@ -173,24 +161,24 @@ void LUNARenderer::RenderQuad(LUNATexture *texture,
 	}
 }
 
-void LUNARenderer::RenderVertexArray(LUNATexture *texture, const std::vector<float> &vertexes)
+void LUNARenderer::RenderVertexArray(std::vector<float>& vertexes, const LUNAMaterial* material)
 {
-	if(curTexture && curTexture != texture) Render();
-	curTexture = texture;
+	if(curMaterial && *curMaterial != *material) Render();
+	curMaterial = material;
 
 	vertexBatch.insert(vertexBatch.end(), vertexes.begin(), vertexes.end());
 
 	if(debugRender)
 	{
 		int count = vertexes.size();
-		for(int i = 0; i < count; i += LUNA_ELEMENT_PER_VERTEX * 3)
+		for(int i = 0; i < count; i += RENDER_ELEMENT_PER_VERTEX * 3)
 		{
 			float x1 = vertexes[i];
 			float y1 = vertexes[i + 1];
-			float x2 = vertexes[i + LUNA_ELEMENT_PER_VERTEX];
-			float y2 = vertexes[i + LUNA_ELEMENT_PER_VERTEX + 1];
-			float x3 = vertexes[i + LUNA_ELEMENT_PER_VERTEX * 2];
-			float y3 = vertexes[i + LUNA_ELEMENT_PER_VERTEX * 2 + 1];
+			float x2 = vertexes[i + RENDER_ELEMENT_PER_VERTEX];
+			float y2 = vertexes[i + RENDER_ELEMENT_PER_VERTEX + 1];
+			float x3 = vertexes[i + RENDER_ELEMENT_PER_VERTEX * 2];
+			float y3 = vertexes[i + RENDER_ELEMENT_PER_VERTEX * 2 + 1];
 
 			RenderLine(x1, y1, x2, y2, LUNAColor::WHITE);
 			RenderLine(x1, y1, x3, y3, LUNAColor::WHITE);
@@ -202,8 +190,7 @@ void LUNARenderer::RenderVertexArray(LUNATexture *texture, const std::vector<flo
 void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNAColor& color)
 {
 	Render();
-
-	primitivesShader->Bind();
+	curMaterial = nullptr;
 
 	// Position
 	float vertexes[] =
@@ -216,63 +203,73 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 		0, 0, // Unused texture coords
 	};
 
+	primitivesShader->Bind();
 	primitivesShader->SetPositionAttribute(vertexes);
 	primitivesShader->SetColorAttribute(vertexes);
 	primitivesShader->SetTransformMatrix(camera->GetMatrix());
 	glDrawArrays(GL_LINES, 0, 2);
+}
 
-	shader->Bind();
+void LUNARenderer::BeginRender()
+{
+	inProgress = true;
+	renderCalls = 0;
+	renderedVertexes = 0;
+
+	vertexBatch.clear();
+
+	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
+	glDisable(GL_DEPTH_TEST); // Depth test not needed for 2D
+
+	glClearColor(backColor.r, backColor.g, backColor.b, backColor.a);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 }
 
 void LUNARenderer::Render()
 {
 	if(vertexBatch.empty()) return;
 
-	int vertexCount = vertexBatch.size() / LUNA_ELEMENT_PER_VERTEX;
+	int vertexCount = vertexBatch.size() / RENDER_ELEMENT_PER_VERTEX;
 
-	if(enableBlending)
+	// Set blending mode
+	switch(curMaterial->blending)
 	{
+	case LUNABlendingMode::NONE:
+		glDisable(GL_BLEND);
+		break;
+	case LUNABlendingMode::ALPHA:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		break;
+	case LUNABlendingMode::ADDITIVE:
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		break;
 	}
-	else glDisable(GL_BLEND);
 
+	auto shader = curMaterial->shader.lock();
+	auto texture = curMaterial->texture.lock();
+
+	shader->Bind();
 	shader->SetPositionAttribute(vertexBatch.data());
 	shader->SetColorAttribute(vertexBatch.data());
 	shader->SetTexCoordsAttribute(vertexBatch.data());
 	shader->SetTransformMatrix(camera->GetMatrix());
-	shader->SetTextureUniform(curTexture);
+	shader->SetTextureUniform(texture.get());
 
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-	curTexture->Unbind();
 
-	// Reset vertex array
-	renderedVertexes += vertexCount;
 	vertexBatch.clear();
+	renderedVertexes += vertexCount;
 	renderCalls++;
 
 	LUNA_CHECK_GL_ERROR();
 }
 
-void LUNARenderer::Begin()
-{
-	inProgress = true;
-	vertexBatch.clear();
-	renderCalls = 0;
-	renderedVertexes = 0;
-
-	// Clear screen
-	glClearColor(backColor.r, backColor.g, backColor.b, backColor.a);
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	shader->Bind();
-}
-
-void LUNARenderer::End()
+void LUNARenderer::EndRender()
 {
 	Render();
 
-	shader->Unbind();
+	curMaterial = nullptr;
 	inProgress = false;
 }
-

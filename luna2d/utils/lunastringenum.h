@@ -58,6 +58,14 @@ public:
 		return it->second;
 	}
 
+	EnumType FromString(const std::string& key, EnumType defaultValue) const
+	{
+		auto it = map.find(key);
+		if(it == map.end()) return defaultValue;
+
+		return it->second;
+	}
+
 	std::string FromEnum(EnumType value) const
 	{
 		for(const auto& entry : map)

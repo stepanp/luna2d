@@ -38,10 +38,8 @@ LUNAGraphics::LUNAGraphics()
 {
 	LUNASizes* sizes = LUNAEngine::SharedSizes();
 
-	renderer = new LUNARenderer();	
-
 	camera = std::make_shared<LUNACamera>(sizes->GetVirtualScreenWidth(), sizes->GetVirtualScreenHeight());
-	renderer->SetCamera(camera);
+	renderer.SetCamera(camera);
 
 	if(sizes->GetScaleMode() <= LUNAScaleMode::FIT_TO_HEIGHT_RIGHT)
 	{
@@ -69,12 +67,10 @@ LUNAGraphics::LUNAGraphics()
 	tblGraphics.SetField("getRenderedVertexes", LuaFunction(lua, this, &LUNAGraphics::GetRenderedVertexes));
 	tblGraphics.SetField("getCamera", LuaFunction(lua, this, &LUNAGraphics::GetCamera));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
-	tblGraphics.SetField("isBlendingEnabled", LuaFunction(lua, renderer, &LUNARenderer::IsBlendingEnabled));
-	tblGraphics.SetField("enableBlending", LuaFunction(lua, renderer, &LUNARenderer::EnableBlending));
-	tblGraphics.SetField("enableScissor", LuaFunction(lua, renderer, &LUNARenderer::EnableScissor));
-	tblGraphics.SetField("disableScissor", LuaFunction(lua, renderer, &LUNARenderer::DisableScissor));
-	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, renderer, &LUNARenderer::EnableDebugRender));
-	tblGraphics.SetField("renderLine", LuaFunction(lua, renderer, &LUNARenderer::RenderLine));
+	tblGraphics.SetField("enableScissor", LuaFunction(lua, &renderer, &LUNARenderer::EnableScissor));
+	tblGraphics.SetField("disableScissor", LuaFunction(lua, &renderer, &LUNARenderer::DisableScissor));
+	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, &renderer, &LUNARenderer::EnableDebugRender));
+	tblGraphics.SetField("renderLine", LuaFunction(lua, &renderer, &LUNARenderer::RenderLine));
 
 	// Bind camera
 	LuaClass<LUNACamera> clsCamera(lua);
@@ -90,6 +86,8 @@ LUNAGraphics::LUNAGraphics()
 	clsSprite.SetConstructor<const LuaAny&>();
 	clsSprite.SetMethod("setTexture", &LUNASprite::SetTexture);
 	clsSprite.SetMethod("setTextureRegion", &LUNASprite::SetTextureRegion);
+	clsSprite.SetMethod("getBlendingMode", &LUNASprite::GetBlendingMode);
+	clsSprite.SetMethod("setBlendingMode", &LUNASprite::SetBlendingMode);
 	clsSprite.SetMethod("getX", &LUNASprite::GetX);
 	clsSprite.SetMethod("getY", &LUNASprite::GetY);
 	clsSprite.SetMethod("setX", &LUNASprite::SetX);
@@ -227,14 +225,9 @@ LUNAGraphics::LUNAGraphics()
 	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
 }
 
-LUNAGraphics::~LUNAGraphics()
-{
-	delete renderer;
-}
-
 LUNARenderer* LUNAGraphics::GetRenderer()
 {
-	return renderer;
+	return &renderer;
 }
 
 std::shared_ptr<LUNACamera> LUNAGraphics::GetCamera()
@@ -254,17 +247,17 @@ float LUNAGraphics::GetDeltaTime()
 
 int LUNAGraphics::GetRenderCalls()
 {
-	return renderer->GetRenderCalls();
+	return renderer.GetRenderCalls();
 }
 
 int LUNAGraphics::GetRenderedVertexes()
 {
-	return renderer->GetRenderedVertexes();
+	return renderer.GetRenderedVertexes();
 }
 
 void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
-{
-	renderer->SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
+{	
+	renderer.SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
 }
 
 bool LUNAGraphics::IsPaused()
@@ -310,7 +303,7 @@ void LUNAGraphics::OnUpdate()
 	}
 
 	// Render
-	renderer->Begin();
+	renderer.BeginRender();
 	LUNAEngine::SharedScenes()->OnRender();
-	renderer->End();
+	renderer.EndRender();
 }

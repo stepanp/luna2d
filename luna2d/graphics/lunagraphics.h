@@ -33,10 +33,9 @@ class LUNAGraphics
 {
 public:
 	LUNAGraphics();
-	~LUNAGraphics();
 
 private:
-	LUNARenderer* renderer;
+	LUNARenderer renderer;
 	std::shared_ptr<LUNACamera> camera;
 
 	// For calculating delta time and FPS

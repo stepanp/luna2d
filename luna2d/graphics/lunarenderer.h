@@ -23,10 +23,8 @@
 
 #pragma once
 
-#include "lunashader.h"
-#include "lunatextureregion.h"
 #include "lunacolor.h"
-#include "lunalua.h"
+#include "lunashader.h"
 #include "lunacamera.h"
 
 // Default shaders
@@ -35,46 +33,94 @@
 #include "shaders/primitives.vert.h"
 #include "shaders/primitives.frag.h"
 
-const int LUNA_RESERVE_POLYGONS = 1000; // Count of polygons for which allocated memory when renderer initializing
-const int LUNA_ELEMENT_PER_VERTEX = 8; // Count of array elements for each vertex
+const int RENDER_RESERVE_BATCH = 1000; // Count of polygons for which allocated memory when renderer initializing
+const int RENDER_ELEMENT_PER_VERTEX = 8; // Count of array elements for each vertex
 
 namespace luna2d{
+
+class LUNAMaterial;
 
 class LUNARenderer
 {
 public:
 	LUNARenderer();
-	~LUNARenderer();
 
 private:
-	std::vector<float> vertexBatch; // Vertex array for batching
+	// Vertex array for batching
+	std::vector<float> vertexBatch;
 
-	LUNAColor backColor; // Background color
-	LUNAShader *shader;
-	LUNAShader* primitivesShader;
-	LUNATexture *curTexture; // Texture program for current render call
+	// Default shader
+	std::shared_ptr<LUNAShader> defaultShader, primitivesShader;
+
+	// Background color
+	LUNAColor backColor = LUNAColor::WHITE;
+
+	// Camera for current render call
 	std::shared_ptr<LUNACamera> camera;
-	bool enableBlending = true;
 
-	// Stats
-	int renderCalls; // Count of render calls on current frame
-	int renderedVertexes; // Count of rendered vertexes on current frame
-	bool inProgress;
-	bool debugRender;
+	// Material for current render call
+	const LUNAMaterial* curMaterial = nullptr;
+
+	// Info for stats
+	int renderCalls = 0; // Count of render calls on current frame
+	int renderedVertexes = 0; // Count of rendered vertexes on current frame
+
+	bool inProgress = false;
+	bool debugRender = false;
 
 private:
+	void SwitchMaterial(const LUNAMaterial* material);
 	void SetVertex(float u, float v, float x, float y, const LUNAColor& color);
+	/*void BindMaterial(const LUNAMaterial& material);
+	void SetVertex(float u, float v, float x, float y, const LUNAColor& color);*/
 
 public:
 	bool IsInProgress();
+
 	int GetRenderCalls();
 	int GetRenderedVertexes();
 
-	void SetCamera(std::shared_ptr<LUNACamera> camera);
+	std::shared_ptr<LUNAShader> GetDefaultShader();
+	std::shared_ptr<LUNAShader> GetPrimitvesShader();
+
+	LUNAColor GetBackgroundColor();
 	void SetBackgroundColor(const LUNAColor& backColor);
 
-	bool IsBlendingEnabled();
-	void EnableBlending(bool enable);
+	void SetCamera(const std::shared_ptr<LUNACamera>& camera);
+
+	void EnableScissor(float x, float y, float width, float height);
+	void DisableScissor();
+
+	bool IsEnabledDebugRender();
+	void EnableDebugRender(bool enable);
+
+	void RenderQuad(float x1, float y1, float u1, float v1,
+		float x2, float y2, float u2, float v2,
+		float x3, float y3, float u3, float v3,
+		float x4, float y4, float u4, float v4,
+		const LUNAMaterial* material, const LUNAColor& color);
+
+	void RenderVertexArray(std::vector<float>& vertexes, const LUNAMaterial* material);
+
+	void RenderLine(float x1, float y1, float x2, float y2, const LUNAColor& color);
+
+	void BeginRender();
+	void Render();
+	void EndRender();
+
+
+	/*bool IsInProgress();
+	int GetRenderCalls();
+	int GetRenderedVertexes();
+
+	std::shared_ptr<LUNAShader> GetDefaultShader();
+	std::shared_ptr<LUNAShader> GetPrimitvesShader();
+
+	LUNAColor GetBackgroundColor();
+	void SetBackgroundColor(const LUNAColor& backColor);
+
+	void SetCamera(const std::shared_ptr<LUNACamera>& camera);
+
 	void EnableScissor(float x, float y, float width, float height);
 	void DisableScissor();
 
@@ -94,7 +140,7 @@ public:
 
 	void Render();
 	void Begin();
-	void End();
+	void End();*/
 
 // Reload default shaders when application lost OpenGL context
 // SEE: "lunaassets.h"
@@ -102,12 +148,8 @@ public:
 public:
 	inline void ReloadDefaultShader()
 	{
-		// Delete old shaders
-		delete shader;
-		delete primitivesShader;
-
-		shader = new LUNAShader(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-		primitivesShader = new LUNAShader(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+		defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
+		primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
 	}
 #endif
 };

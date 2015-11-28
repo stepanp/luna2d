@@ -36,8 +36,8 @@ LUNASprite::LUNASprite() {}
 LUNASprite::LUNASprite(const LuaAny& asset)
 {
 	// Create sprite from texture
-	texture = asset.To<std::weak_ptr<LUNATexture>>();
-	if(InitFromTexture(texture)) return;
+	material.texture = asset.To<std::weak_ptr<LUNATexture>>();
+	if(InitFromTexture(material.texture)) return;
 
 	// Create sprite from texture region
 	auto region = asset.To<std::weak_ptr<LUNATextureRegion>>();
@@ -58,7 +58,7 @@ LUNASprite::LUNASprite(const std::weak_ptr<LUNATextureRegion>& region)
 
 LUNASprite::LUNASprite(const LUNASprite& spr)
 {
-	texture = spr.texture;
+	material.texture = spr.material.texture;
 	x = spr.x;
 	y = spr.y;
 	originX = spr.originX;
@@ -79,7 +79,7 @@ bool LUNASprite::InitFromTexture(const std::weak_ptr<LUNATexture>& texture)
 {
 	if(texture.expired()) return false;
 
-	this->texture = texture;
+	material.texture = texture;
 
 	u1 = 0;
 	v1 = 0;
@@ -99,8 +99,8 @@ bool LUNASprite::InitFromRegion(const std::weak_ptr<LUNATextureRegion>& region)
 	if(region.expired()) return false;
 
 	auto sharedRegion = region.lock();
-	texture = sharedRegion->GetTexture();
-	if(texture.expired()) return false;
+	material.texture = sharedRegion->GetTexture();
+	if(material.texture.expired()) return false;
 
 	u1 = sharedRegion->GetU1();
 	v1 = sharedRegion->GetV1();
@@ -117,7 +117,7 @@ void LUNASprite::SetTexture(const std::weak_ptr<LUNATexture>& texture)
 {
 	if(texture.expired()) LUNA_RETURN_ERR("Attempt set invalid texure to sprite");
 
-	this->texture = texture.lock();
+	material.texture = texture.lock();
 	u1 = 0;
 	v1 = 0;
 	u2 = 1;
@@ -133,7 +133,7 @@ void LUNASprite::SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region
 
 		if(!regionTexture.expired())
 		{
-			texture = regionTexture.lock();
+			material.texture = regionTexture;
 			u1 = sharedRegion->GetU1();
 			v1 = sharedRegion->GetV1();
 			u2 = sharedRegion->GetU2();
@@ -143,6 +143,16 @@ void LUNASprite::SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region
 	}
 
 	LUNA_RETURN_ERR("Attempt set invalid texure region to sprite")
+}
+
+LUNABlendingMode LUNASprite::GetBlendingMode()
+{
+	return material.blending;
+}
+
+void LUNASprite::SetBlendingMode(LUNABlendingMode blendingMode)
+{
+	material.blending = blendingMode;
 }
 
 float LUNASprite::GetX()
@@ -262,7 +272,7 @@ void LUNASprite::SetScale(float scale)
 
 void LUNASprite::Render()
 {
-	if(texture.expired())
+	if(material.texture.expired())
 	{
 		LUNA_LOGE("Attempt to render invalid sprite");
 		return;
@@ -317,8 +327,8 @@ void LUNASprite::Render()
 		y4 = ry4;
 	}
 
-	renderer->RenderQuad(texture.lock().get(),
-		x + x1, y + y1, u1, v2, x + x2, y + y2, u1, v1, x + x3, y + y3, u2, v1, x + x4, y + y4, u2, v2, color);
+	renderer->RenderQuad(x + x1, y + y1, u1, v2, x + x2, y + y2, u1, v1, x + x3, y + y3, u2, v1, x + x4, y + y4, u2, v2,
+		&material, color);
 }
 
 // Get rotation angle (in degrees)

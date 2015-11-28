@@ -21,62 +21,35 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunamesh.h"
-#include "lunarenderer.h"
-#include "lunaassets.h"
+#include "lunamaterial.h"
 #include "lunagraphics.h"
 
 using namespace luna2d;
 
-LUNAMesh::LUNAMesh(const std::weak_ptr<LUNATexture>& texture)
+LUNAMaterial::LUNAMaterial() :
+	shader(LUNAEngine::SharedGraphics()->GetRenderer()->GetDefaultShader()),
+	blending(LUNABlendingMode::ALPHA)
 {
-	SetTexture(texture);
 }
 
-void LUNAMesh::Clear()
+LUNAMaterial::LUNAMaterial(const std::weak_ptr<LUNATexture>& texture, const std::weak_ptr<LUNAShader>& shader,
+	LUNABlendingMode blending) :
+	texture(texture),
+	shader(shader),
+	blending(blending)
 {
-	vertexes.clear();
 }
 
-void LUNAMesh::SetTexture(const std::weak_ptr<LUNATexture>& texture)
+bool LUNAMaterial::operator==(const LUNAMaterial& material) const
 {
-	if(texture.expired())
-	{
-		LUNA_LOGE("Attemp to set invalid texture to mesh");
-		return;
-	}
+	if(blending != material.blending) return false;
+	if(texture.lock() != material.texture.lock()) return false;
+	if(shader.lock() != material.shader.lock()) return false;
 
-	material.texture = texture;
+	return true;
 }
 
-void LUNAMesh::AddVertex(float x, float y, float r, float g, float b, float alpha, float u, float v)
+bool LUNAMaterial::operator!=(const LUNAMaterial& material) const
 {
-	// Position
-	vertexes.push_back(x);
-	vertexes.push_back(y);
-
-	// Color
-	vertexes.push_back(r);
-	vertexes.push_back(g);
-	vertexes.push_back(b);
-	vertexes.push_back(alpha);
-
-	// Texture coordinates
-	vertexes.push_back(u);
-	vertexes.push_back(v);
-}
-
-void LUNAMesh::Render()
-{
-	if(material.texture.expired())
-	{
-		LUNA_LOGE("Attempt to render invalid mesh");
-		return;
-	}
-
-	// Do not draw empty mesh
-	if(vertexes.size() == 0) return;
-
-	LUNARenderer* renderer = LUNAEngine::SharedGraphics()->GetRenderer();
-	renderer->RenderVertexArray(vertexes, &material);
+	return !operator==(material);
 }

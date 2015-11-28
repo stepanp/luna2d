@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunatextureregion.h"
+#include "lunamaterial.h"
 #include "lunacolor.h"
 #include "lunalua.h"
 #include "lunavector2.h"
@@ -42,7 +43,7 @@ public:
 	LUNASprite(const LUNASprite& spr);
 
 protected:
-	std::weak_ptr<LUNATexture> texture;
+	LUNAMaterial material;
 	float x = 0;
 	float y = 0;
 	float originX = 0;
@@ -65,6 +66,8 @@ protected:
 public:
 	void SetTexture(const std::weak_ptr<LUNATexture>& texture);
 	void SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region);
+	LUNABlendingMode GetBlendingMode();
+	void SetBlendingMode(LUNABlendingMode blendingMode);
 	float GetX();
 	float GetY();
 	void SetX(float x);

@@ -124,7 +124,7 @@ void LUNAAnimation::Update(float deltaTime)
 	if(curFrame.expired()) LUNA_RETURN_ERR("Invalid frame in animation");
 
 	auto frameRegion = curFrame.lock();
-	texture = frameRegion->GetTexture();
+	material.texture = frameRegion->GetTexture();
 	u1 = frameRegion->GetU1();
 	v1 = frameRegion->GetV1();
 	u2 = frameRegion->GetU2();

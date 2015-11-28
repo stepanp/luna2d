@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include "lunatexture.h"
+#include "lunamaterial.h"
 #include "lunalua.h"
 
 namespace luna2d{
@@ -36,7 +36,7 @@ public:
 	LUNAMesh(const std::weak_ptr<LUNATexture>& texture);
 
 private:
-	std::weak_ptr<LUNATexture> texture;
+	LUNAMaterial material;
 	std::vector<float> vertexes;
 
 public:

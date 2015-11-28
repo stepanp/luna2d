@@ -135,7 +135,7 @@ void LUNAShader::Unbind()
 void LUNAShader::SetPositionAttribute(float *vertexArray)
 {
 	glEnableVertexAttribArray(a_position);
-	glVertexAttribPointer(a_position, 2, GL_FLOAT, GL_FALSE, LUNA_ELEMENT_PER_VERTEX * sizeof(float), vertexArray);
+	glVertexAttribPointer(a_position, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray);
 }
 
 void LUNAShader::SetColorAttribute(float *vertexArray)
@@ -143,7 +143,7 @@ void LUNAShader::SetColorAttribute(float *vertexArray)
 	if(a_color == -1) return;
 
 	glEnableVertexAttribArray(a_color);
-	glVertexAttribPointer(a_color, 4, GL_FLOAT, GL_FALSE, LUNA_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 2);
+	glVertexAttribPointer(a_color, 4, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 2);
 }
 
 void LUNAShader::SetTexCoordsAttribute(float *vertexArray)
@@ -151,7 +151,7 @@ void LUNAShader::SetTexCoordsAttribute(float *vertexArray)
 	if(a_texCoords == -1) return;
 
 	glEnableVertexAttribArray(a_texCoords);
-	glVertexAttribPointer(a_texCoords, 2, GL_FLOAT, GL_FALSE, LUNA_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 6);
+	glVertexAttribPointer(a_texCoords, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 6);
 }
 
 void LUNAShader::SetTransformMatrix(const glm::mat4& matrix)
