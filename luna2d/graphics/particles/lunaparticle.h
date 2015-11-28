@@ -29,6 +29,8 @@
 
 namespace luna2d{
 
+class LUNAParticleSystem;
+
 class LUNAParticleValue
 {
 public:
@@ -66,6 +68,8 @@ private:
 	LUNAColor colorBegin, colorEnd;
 	LUNAEasingFunc colorEasing;
 
+	std::shared_ptr<LUNAParticleSystem> subsystem;
+
 	bool deleted = false;
 
 private:
@@ -74,9 +78,12 @@ private:
 
 public:
 	bool IsDeleted();
+	std::shared_ptr<LUNAParticleSystem> GetSubsystem();
 	void SetColor(float r, float g, float b);
 	void SetDirection(float angle);
+	void SetPos(float x, float y);
 	void Update(float dt);
+	void Render();
 };
 
 }

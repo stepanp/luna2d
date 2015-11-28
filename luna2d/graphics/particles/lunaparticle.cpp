@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaparticle.h"
+#include "lunaparticlesystem.h"
 #include "lunamath.h"
 #include "lunaeasing.h"
 
@@ -66,6 +67,8 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	SetOriginToCenter();
 	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
 	SetDirection(math::RandomFloat(params->direction.min, params->direction.max));
+
+	if(!params->subemitters.empty()) subsystem = std::make_shared<LUNAParticleSystem>(params->subemitters);
 }
 
 void LUNAParticle::UpdateSpeed(float percent, float dt)
@@ -89,6 +92,11 @@ bool LUNAParticle::IsDeleted()
 	return deleted;
 }
 
+std::shared_ptr<LUNAParticleSystem> LUNAParticle::GetSubsystem()
+{
+	return subsystem;
+}
+
 void LUNAParticle::SetColor(float r, float g, float b)
 {
 	color.r = r;
@@ -99,6 +107,12 @@ void LUNAParticle::SetColor(float r, float g, float b)
 void LUNAParticle::SetDirection(float angle)
 {
 	dir = glm::rotate(glm::vec2(1.0f, 0), glm::radians(angle));
+}
+
+void LUNAParticle::SetPos(float x, float y)
+{
+	LUNASprite::SetPos(x, y);
+	if(subsystem) subsystem->SetPos(x, y);
 }
 
 void LUNAParticle::Update(float dt)
@@ -129,4 +143,12 @@ void LUNAParticle::Update(float dt)
 	glm::vec2 newPos = GetPos() + (dir * speedAcc);
 	newPos -= gravityAcc;
 	SetPos(newPos.x, newPos.y);
+
+	if(subsystem) subsystem->Update(dt);
+}
+
+void LUNAParticle::Render()
+{
+	if(subsystem) subsystem->Render();
+	LUNASprite::Render();
 }

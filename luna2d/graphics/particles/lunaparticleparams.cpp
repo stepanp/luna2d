@@ -105,4 +105,13 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 	scaleEasing = GetEasing(luaParams, "scaleEasing");
 	alphaEasing = GetEasing(luaParams, "alphaEasing");
 	colorEasing = GetEasing(luaParams, "colorEasing");
+
+	auto luaSubemitters = luaParams.GetField<std::vector<LuaTable>>("subemitters");
+	if(!luaSubemitters.empty())
+	{
+		for(auto table : luaSubemitters)
+		{
+			subemitters.push_back(std::make_shared<LUNAParticleParams>(table));
+		}
+	}
 }

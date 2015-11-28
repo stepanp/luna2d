@@ -34,6 +34,7 @@ class LUNAParticleSystem
 
 public:
 	LUNAParticleSystem(const LuaTable& luaParams);
+	LUNAParticleSystem(const std::vector<std::shared_ptr<LUNAParticleParams>>& params);
 
 private:
 	glm::vec2 pos;

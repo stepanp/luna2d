@@ -38,6 +38,9 @@ private:
 	std::shared_ptr<LUNAParticleParams> params;
 	std::vector<std::shared_ptr<LUNASprite>> sourceSprites;
 	std::vector<std::shared_ptr<LUNAParticle>> particles;
+
+	std::unordered_set<std::shared_ptr<LUNAParticleSystem>> subsystems;
+
 	glm::vec2 pos;
 	float durationTime = 0;
 	float emitTime = 0;

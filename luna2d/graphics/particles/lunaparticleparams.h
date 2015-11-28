@@ -167,6 +167,10 @@ public:
 	// Particle color
 	LUNAColor colorBegin, colorEnd;
 	LUNAEasingFunc colorEasing = easing::Linear;
+
+	// Params for subemiiters
+	// If it's empty particles will not has subemitters
+	std::vector<std::shared_ptr<LUNAParticleParams>> subemitters;
 };
 
 }

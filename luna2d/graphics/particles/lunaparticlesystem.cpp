@@ -34,6 +34,14 @@ LUNAParticleSystem::LUNAParticleSystem(const LuaTable& luaParams)
 	}
 }
 
+LUNAParticleSystem::LUNAParticleSystem(const std::vector<std::shared_ptr<LUNAParticleParams>>& params)
+{
+	for(auto& emitterParams : params)
+	{
+		emitters.push_back(std::make_shared<LUNAParticleEmitter>(emitterParams));
+	}
+}
+
 float LUNAParticleSystem::GetX()
 {
 	return pos.x;

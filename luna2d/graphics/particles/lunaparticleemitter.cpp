@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaparticleemitter.h"
+#include "lunaparticlesystem.h"
 #include "lunaassets.h"
 #include "lunamath.h"
 
@@ -115,7 +116,14 @@ void LUNAParticleEmitter::Emit()
 	{
 		auto sprite = GetNextSprite();
 		auto spawnPos = GetSpawnPos();
+
 		auto particle = std::make_shared<LUNAParticle>(sprite, params);
+		auto subsystem = particle->GetSubsystem();
+
+		// If particle has particle subsystem
+		// Add it to subsystems list to control playback(start/pause/stop)
+		// from this emitter
+		if(subsystem) subsystems.insert(subsystem);
 
 		particle->SetPos(spawnPos.x, spawnPos.y);
 		if(params->dirFromEmitter && params->spawnAreaMode != LUNASpawnAreaMode::POINT)
@@ -159,6 +167,9 @@ void LUNAParticleEmitter::UpdateParticles(float dt)
 		particles[i]->Update(dt);
 		if(particles[i]->IsDeleted())
 		{
+			auto subsystem = particles[i]->GetSubsystem();
+			if(subsystem) subsystems.erase(subsystem);
+
 			particles.erase(particles.begin() + i);
 			count = particles.size();
 			i--;
@@ -201,12 +212,16 @@ bool LUNAParticleEmitter::IsRunning()
 void LUNAParticleEmitter::Start()
 {
 	running = true;
+
+	for(auto& subsystem : subsystems) subsystem->Start();
 }
 
 // Stop emitting without reset duration
 void LUNAParticleEmitter::Pause()
 {
 	running = false;
+
+	for(auto& subsystem : subsystems) subsystem->Pause();
 }
 
 // Stop emitting
@@ -215,6 +230,8 @@ void LUNAParticleEmitter::Stop()
 	running = false;
 	durationTime = 0;
 	emitTime = 0;
+
+	for(auto& subsystem : subsystems) subsystem->Stop();
 }
 
 void LUNAParticleEmitter::Update(float dt)
