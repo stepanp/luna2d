@@ -33,5 +33,12 @@ int main(int argc, char* argv[])
 	MainWindow wnd;
 	wnd.show();
 
+#ifdef Q_OS_WIN32
+	// On Windows "QApplication::desktop()->availableGeometry()" returns incorrect rect
+	// when it called before window show
+	// So, center window after showing
+	wnd.MoveToCenter();
+#endif
+
 	return app.exec();
 }

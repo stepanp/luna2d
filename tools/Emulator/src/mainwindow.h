@@ -87,4 +87,7 @@ public slots:
 
 public:
 	void closeEvent(QCloseEvent*);
+
+	// Move window to screen center
+	void MoveToCenter();
 };

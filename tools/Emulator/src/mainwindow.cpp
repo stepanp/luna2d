@@ -198,11 +198,7 @@ void MainWindow::SetResolution(int resolutionIndex)
 	}
 
 	setFixedSize(wndWidth, wndHeight + ui->menuBar->height()); // Consider menubar height
-
-	// Place widnow to screen center
-	QRect screenRect = QApplication::desktop()->availableGeometry();
-	QRect wndRect = frameGeometry();
-	move((screenRect.width() - wndRect.width()) / 2, (screenRect.height() - wndRect.height()) / 2);
+	MoveToCenter();
 
 	Settings::curResolution = resolutionIndex;
 }
@@ -420,4 +416,12 @@ void MainWindow::OnSetPipelineProject()
 void MainWindow::closeEvent(QCloseEvent*)
 {
 	Settings::Save();
+}
+
+// Move window to screen center
+void MainWindow::MoveToCenter()
+{
+	QRect screenRect = QApplication::desktop()->availableGeometry();
+	QRect wndRect = frameGeometry();
+	move((screenRect.width() - wndRect.width()) / 2, (screenRect.height() - wndRect.height()) / 2);
 }
