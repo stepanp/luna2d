@@ -75,7 +75,6 @@ const LUNAStringEnum<LUNAMotionMode> MOTION_MODE =
 };
 
 
-
 class LUNAParticleParams
 {
 public:
@@ -100,6 +99,9 @@ public:
 
 	// Mode of selection texture from textures list for each new particle
 	LUNATextureSelectionMode textureSelectionMode = LUNATextureSelectionMode::SHUFFLE;
+
+	// Blending mode
+	LUNABlendingMode blendingMode = LUNABlendingMode::ALPHA;
 
 	// Emitter position relative particle system
 	glm::vec2 emitterPos;

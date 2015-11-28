@@ -62,6 +62,7 @@ LUNAParticle::LUNAParticle(const std::shared_ptr<LUNASprite>& sprite, const std:
 	colorEnd(params->colorEnd),
 	colorEasing(params->colorEasing)
 {
+	SetBlendingMode(params->blendingMode);
 	SetOriginToCenter();
 	SetAngle(math::RandomFloat(params->initAngle.min, params->initAngle.max));
 	SetDirection(math::RandomFloat(params->direction.min, params->direction.max));

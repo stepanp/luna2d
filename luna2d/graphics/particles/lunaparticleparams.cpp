@@ -76,6 +76,7 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 		else LUNA_LOGE("Unsupported speed motion mode: \"%s\"", speedMotionModeStr.c_str());
 	}
 
+	blendingMode = luaParams.GetField<LUNABlendingMode>("blendingMode");
 	emitterPos = luaParams.GetField<glm::vec2>("emitterPos");
 	attached = luaParams.GetBool("attached");
 	duration = luaParams.GetFloat("duration");

@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "lunarenderer.h"
-#include "lunamaterial.h"
 #include "lunasizes.h"
 #include "lunalog.h"
 #include "lunaassets.h"

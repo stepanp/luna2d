@@ -26,6 +26,7 @@
 #include "lunacolor.h"
 #include "lunashader.h"
 #include "lunacamera.h"
+#include "lunamaterial.h"
 
 // Default shaders
 #include "shaders/default.vert.h"
@@ -37,8 +38,6 @@ const int RENDER_RESERVE_BATCH = 1000; // Count of polygons for which allocated 
 const int RENDER_ELEMENT_PER_VERTEX = 8; // Count of array elements for each vertex
 
 namespace luna2d{
-
-class LUNAMaterial;
 
 class LUNARenderer
 {
