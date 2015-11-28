@@ -75,6 +75,15 @@ void LUNAParticleSystem::SetPos(float x, float y)
 	for(auto& emitter : emitters) emitter->SetPos(pos);
 }
 
+ // Set position ignoring "attached" flag for emitters
+void LUNAParticleSystem::SetPosIgnoreAttached(float x, float y)
+{
+	pos.x = x;
+	pos.y = y;
+
+	for(auto& emitter : emitters) emitter->SetPosIgnoreAttached(pos);
+}
+
 bool LUNAParticleSystem::IsLoop()
 {
 	return loop;

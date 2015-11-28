@@ -59,6 +59,7 @@ public:
 	bool IsFinished();
 	glm::vec2 GetPos();
 	void SetPos(const glm::vec2& pos);
+	void SetPosIgnoreAttached(const glm::vec2& pos); // Set position ignoring "attached" flag
 	bool IsRunning();
 	void Start(); // Start or resume emitting
 	void Pause(); // Stop emitting without reset duration

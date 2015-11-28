@@ -82,6 +82,7 @@ public:
 	void SetColor(float r, float g, float b);
 	void SetDirection(float angle);
 	void SetPos(float x, float y);
+	void SetPosIgnoreAttached(float x, float y);
 	void Update(float dt);
 	void Render();
 };

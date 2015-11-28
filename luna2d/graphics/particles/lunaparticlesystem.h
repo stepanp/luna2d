@@ -49,6 +49,7 @@ public:
 	void SetY(float y);
 	glm::vec2 GetPos();
 	void SetPos(float x, float y);
+	void SetPosIgnoreAttached(float x, float y); // Set position ignoring "attached" flag for emitters
 	bool IsLoop();
 	void SetLoop(bool loop);
 	bool IsRunning();

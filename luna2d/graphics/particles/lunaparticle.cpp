@@ -115,6 +115,12 @@ void LUNAParticle::SetPos(float x, float y)
 	if(subsystem) subsystem->SetPos(x, y);
 }
 
+void LUNAParticle::SetPosIgnoreAttached(float x, float y)
+{
+	LUNASprite::SetPos(x, y);
+	if(subsystem) subsystem->SetPosIgnoreAttached(x, y);
+}
+
 void LUNAParticle::Update(float dt)
 {
 	if(deleted) return;

@@ -196,8 +196,26 @@ void LUNAParticleEmitter::SetPos(const glm::vec2& pos)
 		for(auto& particle : particles)
 		{
 			glm::vec2 relativePos = particle->GetPos() - this->pos;
-			particle->SetPos(relativePos.x + newPos.x, relativePos.y + newPos.y);
+
+			if(!particle->GetSubsystem()) particle->SetPos(relativePos.x + newPos.x, relativePos.y + newPos.y);
+			particle->SetPosIgnoreAttached(relativePos.x + newPos.x, relativePos.y + newPos.y);
 		}
+	}
+
+	this->pos = newPos;
+}
+
+// Set position ignoring "attached" flag
+void LUNAParticleEmitter::SetPosIgnoreAttached(const glm::vec2& pos)
+{
+	glm::vec2 newPos = pos + params->emitterPos;
+
+	for(auto& particle : particles)
+	{
+		glm::vec2 relativePos = particle->GetPos() - this->pos;
+
+		if(!particle->GetSubsystem()) particle->SetPos(relativePos.x + newPos.x, relativePos.y + newPos.y);
+		particle->SetPosIgnoreAttached(relativePos.x + newPos.x, relativePos.y + newPos.y);
 	}
 
 	this->pos = newPos;
