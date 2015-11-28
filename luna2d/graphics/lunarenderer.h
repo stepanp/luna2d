@@ -69,10 +69,7 @@ private:
 	bool debugRender = false;
 
 private:
-	void SwitchMaterial(const LUNAMaterial* material);
 	void SetVertex(float u, float v, float x, float y, const LUNAColor& color);
-	/*void BindMaterial(const LUNAMaterial& material);
-	void SetVertex(float u, float v, float x, float y, const LUNAColor& color);*/
 
 public:
 	bool IsInProgress();
@@ -107,40 +104,6 @@ public:
 	void BeginRender();
 	void Render();
 	void EndRender();
-
-
-	/*bool IsInProgress();
-	int GetRenderCalls();
-	int GetRenderedVertexes();
-
-	std::shared_ptr<LUNAShader> GetDefaultShader();
-	std::shared_ptr<LUNAShader> GetPrimitvesShader();
-
-	LUNAColor GetBackgroundColor();
-	void SetBackgroundColor(const LUNAColor& backColor);
-
-	void SetCamera(const std::shared_ptr<LUNACamera>& camera);
-
-	void EnableScissor(float x, float y, float width, float height);
-	void DisableScissor();
-
-	bool IsEnabledDebugRender();
-	void EnableDebugRender(bool enable);
-
-	void RenderQuad(LUNATexture *texture,
-		float x1, float y1, float u1, float v1,
-		float x2, float y2, float u2, float v2,
-		float x3, float y3, float u3, float v3,
-		float x4, float y4, float u4, float v4,
-		const LUNAColor &color);
-	void RenderVertexArray(LUNATexture* texture, const std::vector<float>& vertexes);
-
-	// Render primitives
-	void RenderLine(float x1, float y1, float x2, float y2, const LUNAColor &color);
-
-	void Render();
-	void Begin();
-	void End();*/
 
 // Reload default shaders when application lost OpenGL context
 // SEE: "lunaassets.h"
