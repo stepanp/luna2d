@@ -115,3 +115,8 @@ LUNAParticleParams::LUNAParticleParams(const LuaTable& luaParams)
 		}
 	}
 }
+
+bool LUNAParticleParams::HasSubemitters()
+{
+	return !subemitters.empty();
+}

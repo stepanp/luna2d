@@ -84,7 +84,7 @@ public:
 	void SetPos(float x, float y);
 	void SetPosIgnoreAttached(float x, float y);
 	void Update(float dt);
-	void Render();
+	void RenderSubparticles();
 };
 
 }

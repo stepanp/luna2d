@@ -153,8 +153,7 @@ void LUNAParticle::Update(float dt)
 	if(subsystem) subsystem->Update(dt);
 }
 
-void LUNAParticle::Render()
+void LUNAParticle::RenderSubparticles()
 {
 	if(subsystem) subsystem->Render();
-	LUNASprite::Render();
 }

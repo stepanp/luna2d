@@ -261,5 +261,13 @@ void LUNAParticleEmitter::Update(float dt)
 
 void LUNAParticleEmitter::Render()
 {
+	// For emitters with subemitters,
+	// do render particles in 2 steps
+	// to minimze rendercalls when using different blending modes
+	if(params->HasSubemitters())
+	{
+		for(auto& particle : particles) particle->RenderSubparticles();
+	}
+
 	for(auto& particle : particles) particle->Render();
 }
