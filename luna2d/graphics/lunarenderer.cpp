@@ -36,6 +36,8 @@ LUNARenderer::LUNARenderer()
 	// Initialize default shaders
 	defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
 	primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+
+	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
 }
 
 void LUNARenderer::SetVertex(float u, float v, float x, float y, const LUNAColor& color)
@@ -216,7 +218,6 @@ void LUNARenderer::BeginRender()
 
 	vertexBatch.clear();
 
-	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
 	glDisable(GL_DEPTH_TEST); // Depth test not needed for 2D
 
 	glClearColor(backColor.r, backColor.g, backColor.b, backColor.a);

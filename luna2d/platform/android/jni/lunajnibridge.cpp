@@ -55,6 +55,9 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screen
 
 LUNA_JNI_FUNC(void, LunaNative, reloadAssets)(JNIEnv* env, jclass cls)
 {
+	// Reset view port
+	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
+	
 	LUNAEngine::SharedGraphics()->GetRenderer()->ReloadDefaultShader();
 	LUNAEngine::SharedAssets()->ReloadAssets();
 }
