@@ -55,6 +55,8 @@ public:
 	void SetAlpha(float alpha);
 	float GetAlpha();
 	void SetFont(const std::weak_ptr<LUNAFont> font);
+	float GetWidth();
+	float GetHeight();
 	std::string GetText(); // Get text value in UTF-8 encoding
 	void SetText(const std::string& text); // Set text value. Given text in UTF-8 encoding
 	void Render();

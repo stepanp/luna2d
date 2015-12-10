@@ -95,6 +95,26 @@ void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
 	this->font = font;
 }
 
+float LUNAText::GetWidth()
+{
+	if(sprites.empty()) return 0.0f;
+
+	float width = 0;
+	for(auto& spr : sprites) width += spr->GetWidth();
+
+	return width;
+}
+
+float LUNAText::GetHeight()
+{
+	if(sprites.empty()) return 0.0f;
+
+	float maxHeight = sprites[0]->GetHeight();
+	for(auto& spr : sprites) maxHeight = std::max(maxHeight, spr->GetHeight());
+
+	return maxHeight;
+}
+
 // Get text value in UTF-8 encoding
 std::string LUNAText::GetText()
 {

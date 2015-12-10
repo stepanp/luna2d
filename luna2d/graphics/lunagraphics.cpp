@@ -156,6 +156,8 @@ LUNAGraphics::LUNAGraphics()
 	clsText.SetMethod("setY", &LUNAText::SetY);
 	clsText.SetMethod("getPos", &LUNAText::GetPos);
 	clsText.SetMethod("setPos", &LUNAText::SetPos);
+	clsText.SetMethod("getWidth", &LUNAText::GetWidth);
+	clsText.SetMethod("getHeight", &LUNAText::GetHeight);
 	clsText.SetMethod("setColor", &LUNAText::SetColor);
 	clsText.SetMethod("getColor", &LUNAText::GetColor);
 	clsText.SetMethod("setAlpha", &LUNAText::SetAlpha);
