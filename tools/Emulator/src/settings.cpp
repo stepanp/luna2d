@@ -24,6 +24,7 @@
 
 #include "settings.h"
 #include <QSettings>
+#include <QDir>
 
 // Default values of settings
 QStringList Settings::recentGames = QStringList();
@@ -136,16 +137,30 @@ void Settings::Save()
 	settings.endArray();
 }
 
+static QString NormalizePath(const QString& path)
+{
+	QDir dir(path);
+	QString ret = dir.toNativeSeparators(dir.absolutePath());
+
+#ifdef Q_OS_WIN32
+	if(!ret.isEmpty()) ret[0] = ret.at(0).toUpper(); // Make disk letter upper on windows
+#endif
+
+	return ret;
+}
+
 void Settings::AddRecentGame(const QString& gamePath)
 {
-	int index = recentGames.indexOf(gamePath);
+	QString normalizedPath = NormalizePath(gamePath);
+
+	int index = recentGames.indexOf(normalizedPath);
 
 	// If given game already exists, move it to top,
 	// else just add
 	if(index != -1) recentGames.move(index, 0);
 	else
 	{
-		recentGames.push_front(gamePath);
+		recentGames.push_front(normalizedPath);
 
 		// Limit max games count
 		if(recentGames.size() > MAX_RECENT_GAMES) recentGames.removeLast();
