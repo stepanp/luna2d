@@ -64,9 +64,9 @@ void LUNAText::SetPos(float x, float y)
 
 void LUNAText::SetColor(float r, float g, float b)
 {
-	color.r = r;
-	color.g = g;
-	color.b = b;
+	color.r = r / 255.0f;
+	color.g = g / 255.0f;
+	color.b = b / 255.0f;
 }
 
 LUNAColor LUNAText::GetColor()
