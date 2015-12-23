@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionOpen_in_Pipeline->setEnabled(false);
 	ui->actionSet_project->setEnabled(false);
 	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+	ui->actionTake_screenshot->setEnabled(false);
 
 	// Set placeholder image to engine widget
 	ui->centralWidget->SetPlaceholderImage(QImage(":/images/placeholder_image.png"));
@@ -181,6 +182,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	// Resize pixmap for screenshots
 	screenshotsPixmap = QPixmap(ui->centralWidget->size());
+	ui->actionTake_screenshot->setEnabled(true);
 }
 
 void MainWindow::SetResolution(int resolutionIndex)
@@ -288,6 +290,7 @@ void MainWindow::OnActionClose()
 	ui->actionRun_project->setEnabled(false);
 	ui->actionOpen_in_Pipeline->setEnabled(false);
 	ui->actionSet_project->setEnabled(false);
+	ui->actionTake_screenshot->setEnabled(false);
 	Settings::gameWasOpened = false;
 
 	setWindowTitle(WINDOW_TITLE);
@@ -421,6 +424,8 @@ void MainWindow::OnSetPipelineProject()
 
 void MainWindow::OnTakeScreenshot()
 {
+	if(!ui->centralWidget->IsEngineInitialized()) return;
+
 	ui->centralWidget->render(&screenshotsPixmap);
 
 	QDateTime now = QDateTime::currentDateTime();
