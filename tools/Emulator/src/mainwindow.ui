@@ -95,6 +95,7 @@
      <addaction name="actionPipelineProject"/>
     </widget>
     <addaction name="menuPipeline"/>
+    <addaction name="actionTake_screenshot"/>
    </widget>
    <addaction name="menuEngine"/>
    <addaction name="menuView"/>
@@ -197,6 +198,14 @@
    </property>
    <property name="text">
     <string>...</string>
+   </property>
+  </action>
+  <action name="actionTake_screenshot">
+   <property name="text">
+    <string>Take screenshot</string>
+   </property>
+   <property name="shortcut">
+    <string>F12</string>
    </property>
   </action>
  </widget>

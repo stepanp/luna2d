@@ -31,6 +31,8 @@
 #include <QDesktopWidget>
 #include <QCommandLineParser>
 #include <QProcess>
+#include <QDateTime>
+#include <QStandardPaths>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -71,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionRun_project, &QAction::triggered, this, &MainWindow::OnRunPipelineProject);
 	connect(ui->actionOpen_in_Pipeline, &QAction::triggered, this, &MainWindow::OnOpenInPipeline);
 	connect(ui->actionSet_project, &QAction::triggered, this, &MainWindow::OnSetPipelineProject);
+	connect(ui->actionTake_screenshot, &QAction::triggered, this, &MainWindow::OnTakeScreenshot);
 }
 
 MainWindow::~MainWindow()
@@ -175,6 +178,9 @@ void MainWindow::OpenGame(const QString &gamePath)
 	// Update "Tools/Pipeline" menu
 	ui->actionSet_project->setEnabled(true);
 	UpdatePipelineMenu();
+
+	// Resize pixmap for screenshots
+	screenshotsPixmap = QPixmap(ui->centralWidget->size());
 }
 
 void MainWindow::SetResolution(int resolutionIndex)
@@ -411,6 +417,22 @@ void MainWindow::OnSetPipelineProject()
 		Settings::SetPipelineProject(curGameName, projectPath);
 		UpdatePipelineMenu();
 	}
+}
+
+void MainWindow::OnTakeScreenshot()
+{
+	ui->centralWidget->render(&screenshotsPixmap);
+
+	QDateTime now = QDateTime::currentDateTime();
+	QString nowStr = now.toString("hh-mm-ss dd.MM.yyyy");
+
+	// Make path for screenshots
+	QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/luna2d/Emulator/";
+	path += ui->centralWidget->GetGameName() + "/";
+	QDir dir(path);
+	if(!dir.exists()) dir.mkpath(".");
+
+	screenshotsPixmap.save(path + SCREENSHOT_NAME.arg(nowStr));
 }
 
 void MainWindow::closeEvent(QCloseEvent*)

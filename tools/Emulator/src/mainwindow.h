@@ -38,6 +38,8 @@ const QString WINDOW_TITLE = "luna2d Emulator";
 const QString WINDOW_TITLE_NAME = "%1 - " + WINDOW_TITLE;
 const QString WINDOW_TITLE_FPS = "%1 - " + WINDOW_TITLE + " [FPS: %2]";
 const QString MENU_NO_PIPELINE_PROJECT = "<Project is not set>";
+const QString SCREENSHOT_NAME = "Screenshot (%1).png";
+const QString FORBIDDEN_FILE_SYMBOLS =  "\\/:?\"<>|";
 
 class MainWindow : public QMainWindow
 {
@@ -56,6 +58,7 @@ private:
 	WatcherDialog* watcherDlg;
 	QString curGamePath; // Path to current opened game
 	QString curGameName; // Name of current opened game
+	QPixmap screenshotsPixmap; // Pixmap to taking screnshots
 
 private:
 	void SetupRecentGames(); // Setup recent games menu
@@ -84,6 +87,7 @@ public slots:
 	void OnRunPipelineProject();
 	void OnOpenInPipeline();
 	void OnSetPipelineProject();
+	void OnTakeScreenshot();
 
 public:
 	void closeEvent(QCloseEvent*);
