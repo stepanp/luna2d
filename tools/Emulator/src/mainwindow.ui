@@ -89,6 +89,7 @@
       <string>Pipeline</string>
      </property>
      <addaction name="actionRun_project"/>
+     <addaction name="actionRun_project_restart"/>
      <addaction name="actionOpen_in_Pipeline"/>
      <addaction name="actionSet_project"/>
      <addaction name="separator"/>
@@ -206,6 +207,11 @@
    </property>
    <property name="shortcut">
     <string>F12</string>
+   </property>
+  </action>
+  <action name="actionRun_project_restart">
+   <property name="text">
+    <string>Run project &amp;&amp; restart game</string>
    </property>
   </action>
  </widget>

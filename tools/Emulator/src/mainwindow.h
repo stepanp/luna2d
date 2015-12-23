@@ -85,6 +85,7 @@ public slots:
 	void OnWatcherClosed();
 	void OnLogError();
 	void OnRunPipelineProject();
+	void OnRunPipelineProjectAndRestart();
 	void OnOpenInPipeline();
 	void OnSetPipelineProject();
 	void OnTakeScreenshot();

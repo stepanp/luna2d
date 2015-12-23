@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
 	ui->actionRun_project->setEnabled(false);
+	ui->actionRun_project_restart->setEnabled(false);
 	ui->actionOpen_in_Pipeline->setEnabled(false);
 	ui->actionSet_project->setEnabled(false);
 	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
@@ -72,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionSettings, &QAction::triggered, this, &MainWindow::OnActionSettings);
 	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::OnAbout);
 	connect(ui->actionRun_project, &QAction::triggered, this, &MainWindow::OnRunPipelineProject);
+	connect(ui->actionRun_project_restart, &QAction::triggered, this, &MainWindow::OnRunPipelineProjectAndRestart);
 	connect(ui->actionOpen_in_Pipeline, &QAction::triggered, this, &MainWindow::OnOpenInPipeline);
 	connect(ui->actionSet_project, &QAction::triggered, this, &MainWindow::OnSetPipelineProject);
 	connect(ui->actionTake_screenshot, &QAction::triggered, this, &MainWindow::OnTakeScreenshot);
@@ -229,6 +231,7 @@ void MainWindow::UpdatePipelineMenu()
 	bool hasProject = !pipelineProject.isEmpty();
 
 	ui->actionRun_project->setEnabled(hasProject);
+	ui->actionRun_project_restart->setEnabled(hasProject);
 	ui->actionOpen_in_Pipeline->setEnabled(hasProject);
 
 	if(hasProject) ui->actionPipelineProject->setText(pipelineProject);
@@ -288,6 +291,7 @@ void MainWindow::OnActionClose()
 	ui->actionRestart_game->setEnabled(false);
 	ui->actionClose_game->setEnabled(false);
 	ui->actionRun_project->setEnabled(false);
+	ui->actionRun_project_restart->setEnabled(false);
 	ui->actionOpen_in_Pipeline->setEnabled(false);
 	ui->actionSet_project->setEnabled(false);
 	ui->actionTake_screenshot->setEnabled(false);
@@ -395,6 +399,12 @@ void MainWindow::OnRunPipelineProject()
 
 	pipeline.start(pipelinePath, { projectPath, "-u" });
 	pipeline.waitForFinished();
+}
+
+void MainWindow::OnRunPipelineProjectAndRestart()
+{
+	OnRunPipelineProject();
+	OnActionRestart();
 }
 
 void MainWindow::OnOpenInPipeline()
