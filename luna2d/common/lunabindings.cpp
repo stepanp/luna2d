@@ -25,6 +25,7 @@
 #include "lunaengine.h"
 #include "lunalua.h"
 #include "lunaaudio.h"
+#include "lunaplatformutils.h"
 #include "lunaprefs.h"
 #include "lunatimer.h"
 #include "lunaanimator.h"
@@ -243,7 +244,12 @@ static void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 // Bind "luna.platform" module
 static void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 {
-	tblLuna.SetField("platform", LUNA_PLATFORM_STRING);
+	LuaTable tblPlatform(lua);
+
+	tblPlatform.SetField("name", LUNA_PLATFORM_STRING);
+	tblPlatform.SetField("openUrl", LuaFunction(lua, LUNAEngine::SharedPlatformUtils(), &LUNAPlatformUtils::OpenUrl));
+
+	tblLuna.SetField("platform", tblPlatform);
 }
 
 // Bind "luna.audio" module

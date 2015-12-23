@@ -38,3 +38,8 @@ std::string LUNAWpUtils::GetSystemLocale()
 	return std::move(ret);
 }
 
+// Open given url in system browser
+void LUNAWpUtils::OpenUrl(const std::string& url)
+{
+	LUNA_LOGE("Method LUNAWpUtils::OpenUrl is not implemented");
+}

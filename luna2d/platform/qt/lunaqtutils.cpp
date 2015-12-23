@@ -23,6 +23,8 @@
 
 #include "lunaqtutils.h"
 #include <QLocale>
+#include <QDesktopServices>
+#include <QUrl>
 
 using namespace luna2d;
 
@@ -33,4 +35,8 @@ std::string LUNAQtUtils::GetSystemLocale()
 	return QLocale::system().name().toStdString();
 }
 
-
+// Open given url in system browser
+void LUNAQtUtils::OpenUrl(const std::string& url)
+{
+	QDesktopServices::openUrl(QUrl(QString::fromStdString(url)));
+}

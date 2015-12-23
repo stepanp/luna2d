@@ -44,3 +44,9 @@ std::string LUNAAndroidUtils::GetSystemLocale()
 {
 	return jni::FromJString(jni::Env()->CallStaticObjectMethod(javaUtils, javaGetSystemLocale));
 }
+
+// Open given url in system browser
+void LUNAAndroidUtils::OpenUrl(const std::string& url)
+{
+	LUNA_LOGE("Method LUNAAndroidUtils::OpenUrl is not implemented");
+}
