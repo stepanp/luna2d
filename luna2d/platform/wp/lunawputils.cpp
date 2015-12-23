@@ -23,11 +23,18 @@
 
 #include "lunawputils.h"
 #include "lunawstring.h"
+#include "lunalog.h"
 #include <algorithm>
 #include <windows.h>
+#include <ppltasks.h>
 
 using namespace Windows::System::UserProfile;
 using namespace luna2d;
+
+LUNAWpUtils::LUNAWpUtils(Windows::UI::Core::CoreDispatcher^ dispatcher) :
+	dispatcher(dispatcher)
+{
+}
 
 // Get system locale in "xx_XX" format
 // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
@@ -41,5 +48,21 @@ std::string LUNAWpUtils::GetSystemLocale()
 // Open given url in system browser
 void LUNAWpUtils::OpenUrl(const std::string& url)
 {
-	LUNA_LOGE("Method LUNAWpUtils::OpenUrl is not implemented");
+	Windows::Foundation::Uri^ uri = nullptr;
+
+	try
+	{
+		uri = ref new Windows::Foundation::Uri(ToPlatformString(url));
+	}
+	catch(Platform::InvalidArgumentException^ e)
+	{
+		LUNA_LOGE("Cannot open url: %s", url.c_str());
+		return;
+	}
+
+	dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal,
+		ref new Windows::UI::Core::DispatchedHandler([uri]()
+		{
+			concurrency::task<bool> startTask(Windows::System::Launcher::LaunchUriAsync(uri));
+		}));
 }

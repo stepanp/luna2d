@@ -199,7 +199,8 @@ void OpenGLESPage::StartRenderLoop()
 
 			if(!LUNAEngine::Shared()->IsInitialized())
 			{
-				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), new LUNAWpUtils(), new LUNAWpPrefs());
+				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), 
+					new LUNAWpUtils(swapChainPanel->Dispatcher), new LUNAWpPrefs());
 				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
 			}
 			else LUNAEngine::Shared()->MainLoop();
