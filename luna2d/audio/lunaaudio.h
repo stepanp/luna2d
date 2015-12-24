@@ -68,6 +68,8 @@ private:
 	std::shared_ptr<LUNAAudioPlayer> musicPlayer;
 	float musicVolume = 1.0f;
 	float soundVolume = 1.0f;
+	bool muteMusic = false;
+	bool muteSound = false;
 
 protected:
 	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer();
@@ -101,6 +103,18 @@ public:
 
 	// Stop all players with given source id
 	void StopPlayersWithSource(ALuint sourceId);
+
+	// Check is music muted
+	bool IsMusicMuted();
+
+	// Mute\unmute music
+	void MuteMusic(bool mute);
+
+	// Check is sound muted
+	bool IsSoundMuted();
+
+	// Mute\unmute all sounds
+	void MuteSound(bool mute);
 };
 
 }

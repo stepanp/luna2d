@@ -205,3 +205,30 @@ void LUNAAudio::StopPlayersWithSource(ALuint sourceId)
 		if(player->GetSourceId() == sourceId) player->Stop();
 	}
 }
+
+// Check is music muted
+bool LUNAAudio::IsMusicMuted()
+{
+	return muteMusic;
+}
+
+// Mute\unmute music
+void LUNAAudio::MuteMusic(bool mute)
+{
+	muteMusic = mute;
+	musicPlayer->SetVolume(mute ? 0.0f : musicVolume);
+}
+
+// Check is sound muted
+bool LUNAAudio::IsSoundMuted()
+{
+	return muteSound;
+}
+
+// Mute\unmute all sounds
+void LUNAAudio::MuteSound(bool mute)
+{
+	muteSound = mute;
+	for(auto& player : players) player->SetVolume(mute ? 0.0f : soundVolume);
+}
+
