@@ -102,13 +102,13 @@ void LUNARenderer::EnableScissor(float x, float y, float width, float height)
 	Render();
 
 	auto sizes = LUNAEngine::SharedSizes();
-	GLint ix = x * sizes->GetScaleFactor();
-	GLint iy = y * sizes->GetScaleFactor();
-	GLsizei iwidth = width * sizes->GetScaleFactor();
-	GLsizei iheight = height * sizes->GetScaleFactor();
+	auto pos = sizes->VirtualToScreen(glm::vec2(x, y));
+	auto size = sizes->VirtualToScreen(glm::vec2(x + width, y + height));
+	size -= pos;
 
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(ix, iy, iwidth, iheight);
+	glScissor((GLint)std::roundf(pos.x), (GLint)std::roundf(pos.y),
+		(GLsizei)std::roundf(size.x), (GLsizei)std::roundf(size.y));
 }
 
 void LUNARenderer::DisableScissor()

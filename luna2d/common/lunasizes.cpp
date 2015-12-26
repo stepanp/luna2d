@@ -237,7 +237,9 @@ float LUNASizes::GetTextureScale()
 // Convert coorditates from virtual resolution to physical screen resolution
 glm::vec2 LUNASizes::VirtualToScreen(glm::vec2 pos)
 {
-	glm::vec4 transformedPos = transformMatrix * glm::vec4(pos.x, pos.y, 0, 0);
+	glm::vec3 transformedPos = glm::project(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), transformMatrix,
+		glm::vec4(0, 0, physicalWidth, physicalHeight));
+
 	return glm::vec2(transformedPos.x, transformedPos.y);
 }
 
