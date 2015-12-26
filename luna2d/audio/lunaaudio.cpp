@@ -129,6 +129,12 @@ std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer()
 	return *it;
 }
 
+// Check is music playing
+bool LUNAAudio::IsMusicPlaying()
+{
+	return musicPlayer->IsUsing();
+}
+
 // Play background music from given audio source
 void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
 {
