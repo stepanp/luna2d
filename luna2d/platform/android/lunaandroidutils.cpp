@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidutils.h"
+#include "lunalog.h"
 
 using namespace luna2d;
 
