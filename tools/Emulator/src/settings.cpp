@@ -61,6 +61,7 @@ void Settings::Load()
 	// Add bullit-in resolutions
 	resolutions.push_back(Resolution(480, 320, "HVGA", true));
 	resolutions.push_back(Resolution(800, 480, "WVGA", true));
+	resolutions.push_back(Resolution(960, 540, "qHD", true));
 	resolutions.push_back(Resolution(1280, 720, "HD", true));
 	resolutions.push_back(Resolution(1024, 768, "iPad", true));
 	resolutions.push_back(Resolution(1920, 1080, "FullHD", true));
