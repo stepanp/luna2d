@@ -161,11 +161,13 @@ void LUNAEngine::MainLoop()
 void LUNAEngine::OnPause()
 {
 	graphics->OnPause();
+	audio->OnPause();
 }
 
 void LUNAEngine::OnResume()
 {
 	graphics->OnResume();
+	audio->OnResume();
 }
 
 void LUNAEngine::OnTouchDown(float x, float y, int touchIndex)

@@ -40,10 +40,12 @@ protected:
 	ALuint soundId;
 	ALuint sourceId;
 	bool isUsing = false;
+	bool backgroundPause = false;
 
 public:
 	ALuint GetSourceId();
 	bool IsUsing();
+	bool IsPlaying();
 	void SetSource(ALuint sourceId);
 	void SetLoop(bool loop);
 	void Play();
@@ -52,6 +54,8 @@ public:
 	void Rewind();
 	void SetVolume(float volume);
 	void SetMute(bool mute);
+	void OnPause();
+	void OnResume();
 };
 
 
@@ -118,6 +122,12 @@ public:
 
 	// Mute\unmute all sounds
 	void MuteSound(bool mute);
+
+	// Pause audio when engine is pausing
+	void OnPause();
+
+	// Resume audio when engine is resuming
+	void OnResume();
 };
 
 }

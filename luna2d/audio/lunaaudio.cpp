@@ -47,10 +47,22 @@ bool LUNAAudioPlayer::IsUsing()
 	{
 		ALint state;
 		alGetSourcei(soundId, AL_SOURCE_STATE, &state);
-		return state == AL_PLAYING;
+		return state == AL_PLAYING || state == AL_PAUSED;
 	}
 
 	return isUsing;
+}
+
+bool LUNAAudioPlayer::IsPlaying()
+{
+	if(isUsing)
+	{
+		ALint state;
+		alGetSourcei(soundId, AL_SOURCE_STATE, &state);
+		return state == AL_PLAYING;
+	}
+
+	return false;
 }
 
 void LUNAAudioPlayer::SetSource(ALuint sourceId)
@@ -95,6 +107,24 @@ void LUNAAudioPlayer::SetVolume(float volume)
 void LUNAAudioPlayer::SetMute(bool mute)
 {
 
+}
+
+void LUNAAudioPlayer::OnPause()
+{
+	if(IsPlaying())
+	{
+		Pause();
+		backgroundPause = true;
+	}
+}
+
+void LUNAAudioPlayer::OnResume()
+{
+	if(backgroundPause)
+	{
+		Play();
+		backgroundPause = false;
+	}
 }
 
 
@@ -238,3 +268,16 @@ void LUNAAudio::MuteSound(bool mute)
 	for(auto& player : players) player->SetVolume(mute ? 0.0f : soundVolume);
 }
 
+// Pause audio when engine is pausing
+void LUNAAudio::OnPause()
+{
+	musicPlayer->OnPause();
+	for(auto& player : players) player->OnPause();
+}
+
+// Resume audio when engine is resuming
+void LUNAAudio::OnResume()
+{
+	musicPlayer->OnResume();
+	for(auto& player : players) player->OnResume();
+}
