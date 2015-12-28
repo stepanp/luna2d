@@ -75,8 +75,6 @@ private:
 	LUNAStrings* strings = nullptr;
 	LUNADebug* debug = nullptr;
 
-	std::unordered_map<std::string, LUNAModule*> modules;
-
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
 
@@ -87,8 +85,6 @@ public:
 	void Deinitialize();
 	std::shared_ptr<LUNAConfig> GetConfig();
 	std::string GetGameName(); // Get name of runned game
-	void LoadModules();
-	void UnloadModules();
 	void RunEmbeddedScripts();
 	bool IsInitialized();
 
@@ -98,17 +94,6 @@ public:
 	void OnTouchDown(float x, float y, int touchIndex);
 	void OnTouchMoved(float x, float y, int touchIndex);
 	void OnTouchUp(float x, float y, int touchIndex);
-
-	// Get module by name
-	template<typename Module>
-	Module* GetModule(const std::string& name)
-	{
-		if(!modules.count(name)) return nullptr;
-		return static_cast<Module*>(modules[name]);
-	}
-
-	template<typename Module>
-	static Module* SharedModule(const std::string& name) { return Shared()->GetModule<Module>(name); }
 
 	static LUNAEngine* Shared(); // Get shared instance of engine
 	inline static LUNAFiles* SharedFiles() { return Shared()->files; }

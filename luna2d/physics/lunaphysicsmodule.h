@@ -23,11 +23,11 @@
 
 #pragma once
 
-#include "modules/lunamodule.h"
+#include "lunalua.h"
 
 namespace luna2d{
 
-class LUNAPhysicsModule : public LUNAModule
+class LUNAPhysicsModule
 {
 public:
 	virtual void Load(LuaScript *lua);

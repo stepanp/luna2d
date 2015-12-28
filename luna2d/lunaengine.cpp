@@ -37,11 +37,9 @@
 #include "lunamath.h"
 #include "lunabindings.h"
 
-#include "modules/lunamoduleslist.h"
-
 using namespace luna2d;
 
-LUNAEngine::LUNAEngine() : modules(modulesList)
+LUNAEngine::LUNAEngine()
 {
 }
 
@@ -87,7 +85,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
-	LoadModules();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))
@@ -105,8 +102,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 
 void LUNAEngine::Deinitialize()
 {
-	UnloadModules();
-
 	config.reset();
 
 	delete assets;
@@ -145,17 +140,6 @@ std::shared_ptr<LUNAConfig> LUNAEngine::GetConfig()
 std::string LUNAEngine::GetGameName()
 {
 	return config->gameName;
-}
-
-void LUNAEngine::LoadModules()
-{
-	// Load all modules
-	for(auto& module : modules) module.second->Load(lua);
-}
-
-void LUNAEngine::UnloadModules()
-{
-	for(auto& module : modules) module.second->Unload();
 }
 
 void LUNAEngine::RunEmbeddedScripts()
