@@ -46,31 +46,37 @@ bool LUNAFontLoader::Load(const std::string& filename)
 		return false;
 	}
 
-	auto jsonSizes = jsonDesc["sizes"];
-	if(!jsonSizes.is_object())
-	{
-		LUNA_LOGE("Invalid font description file");
-		return false;
-	}
-
 	// Load font file
 	LUNAFontGenerator generator;
 	if(!generator.Load(filename)) return false;
 
-	// Enable\disable characters sets
-	auto jsonChars = jsonDesc["chars"];
-	if(jsonChars.is_object())
-	{
-		generator.enableLatin = jsonChars["latin"].bool_value() == true;
-		generator.enableCyrillic = jsonChars["cyrillic"].bool_value() == true;
-		generator.enableCommon = jsonChars["common"].bool_value() == true;
-		generator.enableNumbers = jsonChars["numbers"].bool_value() == true;
-	}
-
 	// Generate bitmap fonts for each specifed size in description file
-	for(auto entry : jsonSizes.object_items())
+	for(auto entry : jsonDesc.object_items())
 	{
-		fonts[entry.first] = generator.GenerateFont(entry.second.int_value());
+		generator.ResetCharSets();
+
+		if(entry.second.is_number()) fonts[entry.first] = generator.GenerateFont(entry.second.int_value());
+		else if(entry.second.is_object())
+		{
+			auto sizeParams = entry.second;
+
+			if(!sizeParams["size"].is_number())
+			{
+				LUNA_LOGE("Invalid parameters for font size %s", entry.first.c_str());
+				continue;
+			}
+
+			auto jsonChars = sizeParams["chars"];
+			if(jsonChars.is_object())
+			{
+				generator.enableLatin = jsonChars["latin"].bool_value() == true;
+				generator.enableCyrillic = jsonChars["cyrillic"].bool_value() == true;
+				generator.enableCommon = jsonChars["common"].bool_value() == true;
+				generator.enableNumbers = jsonChars["numbers"].bool_value() == true;
+			}
+
+			fonts[entry.first] = generator.GenerateFont(sizeParams["size"].int_value());
+		}
 	}
 
 	return !fonts.empty();

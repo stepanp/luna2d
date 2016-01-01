@@ -55,6 +55,14 @@ int LUNAFontGenerator::PixelsToUnits(int pixels)
 	return pixels * 64;
 }
 
+void LUNAFontGenerator::ResetCharSets()
+{
+	enableLatin = true;
+	enableCyrillic = true;
+	enableCommon = true;
+	enableNumbers = true;
+}
+
 bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation location)
 {
 	// Initialize FreeType

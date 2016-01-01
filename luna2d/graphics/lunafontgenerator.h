@@ -68,6 +68,7 @@ private:
 	int PixelsToUnits(int pixels);
 
 public:
+	void ResetCharSets();
 	bool Load(const std::string& filename, LUNAFileLocation location = LUNAFileLocation::ASSETS); // Load
 	std::shared_ptr<LUNAFont> GenerateFont(int size); // Create bitmap font with given size
 };
