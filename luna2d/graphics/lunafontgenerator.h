@@ -56,6 +56,7 @@ private:
 	FT_Face face = nullptr;
 	std::vector<unsigned char> fontBuffer;
 
+public:
 	bool enableLatin = true;
 	bool enableCyrillic = true;
 	bool enableCommon = true;

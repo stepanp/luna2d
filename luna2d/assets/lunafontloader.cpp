@@ -46,12 +46,29 @@ bool LUNAFontLoader::Load(const std::string& filename)
 		return false;
 	}
 
+	auto jsonSizes = jsonDesc["sizes"];
+	if(!jsonSizes.is_object())
+	{
+		LUNA_LOGE("Invalid font description file");
+		return false;
+	}
+
 	// Load font file
 	LUNAFontGenerator generator;
 	if(!generator.Load(filename)) return false;
 
+	// Enable\disable characters sets
+	auto jsonChars = jsonDesc["chars"];
+	if(jsonChars.is_object())
+	{
+		generator.enableLatin = jsonChars["latin"].bool_value() == true;
+		generator.enableCyrillic = jsonChars["cyrillic"].bool_value() == true;
+		generator.enableCommon = jsonChars["common"].bool_value() == true;
+		generator.enableNumbers = jsonChars["numbers"].bool_value() == true;
+	}
+
 	// Generate bitmap fonts for each specifed size in description file
-	for(auto entry : jsonDesc.object_items())
+	for(auto entry : jsonSizes.object_items())
 	{
 		fonts[entry.first] = generator.GenerateFont(entry.second.int_value());
 	}
