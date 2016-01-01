@@ -32,7 +32,7 @@ bool LUNAJsonLoader::Load(const std::string& filename)
 	std::string jsonData = LUNAEngine::SharedFiles()->ReadFileToString(filename);
 	std::string err;
 
-	json = Json::parse(StripJsonComments(jsonData), err);
+	json = Json::parse(jsonData, err, JsonParse::COMMENTS);
 
 	if(json == nullptr)
 	{

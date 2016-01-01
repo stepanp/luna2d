@@ -28,9 +28,6 @@
 
 namespace luna2d{
 
-// Strip comments from json
-std::string StripJsonComments(const std::string& data);
-
 // Deserialize json array to lua table
 LuaTable JsonArray2Lua(const json11::Json::array& array);
 

@@ -39,7 +39,7 @@ bool LUNAFontLoader::Load(const std::string& filename)
 
 	std::string descData = files->ReadFileToString(desc);
 	std::string err;
-	Json jsonDesc = Json::parse(StripJsonComments(descData), err);
+	Json jsonDesc = Json::parse(descData, err, JsonParse::COMMENTS);
 	if(jsonDesc == nullptr)
 	{
 		LUNA_LOGE(err.c_str());

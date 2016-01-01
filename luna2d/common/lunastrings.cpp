@@ -115,7 +115,7 @@ void LUNAStrings::LoadStrings()
 	if(localeData.empty()) LUNA_RETURN_ERR("Cannot load strings form file \"%s\"", filename.c_str());
 
 	std::string err;
-	Json jsonLocale = Json::parse(StripJsonComments(localeData), err);
+	Json jsonLocale = Json::parse(localeData, err, JsonParse::COMMENTS);
 	if(jsonLocale == nullptr) LUNA_RETURN_ERR("Cannot load strings: %s", err.c_str());
 
 	for(auto entry : jsonLocale.object_items())

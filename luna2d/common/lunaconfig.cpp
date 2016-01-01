@@ -46,7 +46,7 @@ bool LUNAConfig::Read()
 
 	std::string configData = LUNAEngine::SharedFiles()->ReadFileToString(CONFIG_FILENAME, LUNAFileLocation::ASSETS);
 	std::string err;
-	Json jsonConfig = Json::parse(StripJsonComments(configData), err);
+	Json jsonConfig = Json::parse(configData, err, JsonParse::COMMENTS);
 
 	if(jsonConfig == nullptr)
 	{
