@@ -62,7 +62,7 @@ bool LUNAFontLoader::Load(const std::string& filename)
 
 			if(!sizeParams["size"].is_number())
 			{
-				LUNA_LOGE("Invalid parameters for font size %s", entry.first.c_str());
+				LUNA_LOGE("Invalid parameters for \"%s\" font size ", entry.first.c_str());
 				continue;
 			}
 
