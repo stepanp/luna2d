@@ -48,12 +48,16 @@ LUNAAds::LUNAAds()
 
 void LUNAAds::OnVideoSuccess()
 {
+	LUNAEngine::Shared()->OnResume();
+
 	auto tblAds = GetAdsTable();
 	if(tblAds.HasField("onVideoSuccess")) tblAds.GetFunction("onVideoSuccess").CallVoid();
 }
 
 void LUNAAds::OnVideoFail()
 {
+	LUNAEngine::Shared()->OnResume();
+
 	auto tblAds = GetAdsTable();
 	if(tblAds.HasField("onVideoFail")) tblAds.GetFunction("onVideoFail").CallVoid();
 }
@@ -93,5 +97,6 @@ void LUNAAds::ShowVideo()
 {
 	if(!IsVideoReady()) return;
 
+	LUNAEngine::Shared()->OnPause();
 	sdk->ShowVideo();
 }
