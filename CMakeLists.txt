@@ -53,6 +53,8 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}/physics/shapes
 	${LUNA2D_DIR}/physics/joints
 	${LUNA2D_DIR}/platform
+	${LUNA2D_DIR}/sdkapi
+	${LUNA2D_DIR}/sdkapi/platform
 	${LUNA2D_DIR}/utils
 )
 
@@ -210,6 +212,12 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	file (GLOB LUNA2D_WP_APP_HEADERS "${LUNA2D_WP_APP_DIR}/*.h")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_APP_HEADERS})
 
+	set(LUNA2D_WP_SDKAPI_DIR ${LUNA2D_DIR}/sdkapi/platform/wp)
+	include_directories(${LUNA2D_WP_SDKAPI_DIR})
+	aux_source_directory(${LUNA2D_WP_SDKAPI_DIR} LUNA2D_WP_SOURCES)
+	file (GLOB LUNA2D_WP_SDKAPI_HEADERS "${LUNA2D_WP_SDKAPI_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_WP_SDKAPI_HEADERS})
+
 	# Add xaml files
 	set(LUNA2D_WP_XAML ${LUNA2D_WP_APP_DIR}/OpenGLESPage.xaml)
 
@@ -235,7 +243,8 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	endforeach()
 
 	source_group("luna2d\\platform\\wp" ${LUNA2D_WP_DIR})
-	source_group("luna2d\\platform\\wp\\application" ${LUNA2D_WP_DIR}/application)
+	source_group("luna2d\\platform\\wp\\application" ${LUNA2D_WP_APP_DIR})
+	source_group("luna2d\\sdkapi\\platform\\wp" ${LUNA2D_WP_SDKAPI_DIR})
 
 	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES}
 		${LUNA2D_WP_SOURCES} ${LUNA2D_WP_XAML})

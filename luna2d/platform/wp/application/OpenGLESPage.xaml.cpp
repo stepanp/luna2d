@@ -19,7 +19,9 @@ OpenGLESPage::OpenGLESPage() :
 	mOpenGLES(&gles),
 	mRenderSurface(EGL_NO_SURFACE),
 	mCustomRenderSurfaceSize(0,0),
-	mUseCustomRenderSurfaceSize(false)
+	mUseCustomRenderSurfaceSize(false),
+	successEvent(nullptr),
+	failEvent(nullptr)
 {
 	InitializeComponent();
 
@@ -76,6 +78,39 @@ OpenGLESPage::~OpenGLESPage()
 {
 	StopRenderLoop();
 	DestroyRenderSurface();
+}
+
+void OpenGLESPage::SetDelegates(
+		GetNameEvent^ getName,
+		IsVideoSupportedEvent^ videoSupported,
+		IsVideoReadyEvent^ videoReady,
+		ShowVideoEvent^ showVideo)
+{
+	getNameEvent = getName;
+	videoSupportedEvent = videoSupported;
+	videoReadyEvent = videoReady;
+	showVideoEvent = showVideo;
+}
+
+CallbackEvent^ OpenGLESPage::GetSuccessDelegate()
+{
+	return successEvent;
+}
+
+CallbackEvent^ OpenGLESPage::GetFailDelegate()
+{
+	return failEvent;
+}
+
+void OpenGLESPage::RunInUiThread(ThreadEvent^ handler)
+{
+	swapChainPanel->Dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, 
+		ref new Windows::UI::Core::DispatchedHandler([handler]() { handler->Invoke(); }));
+}
+
+void OpenGLESPage::RunInGameThread(ThreadEvent^ handler)
+{
+	gameThreadEvents.push(Platform::Agile<ThreadEvent>(handler));
 }
 
 void OpenGLESPage::OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
@@ -138,7 +173,7 @@ void OpenGLESPage::CreateRenderSurface()
 		// To avoid incorrect swap chain panel size in Windows Phone
 		auto dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 		auto bounds = Windows::UI::Xaml::Window::Current->Bounds;
-		scaleFactor = dispInfo->RawPixelsPerViewPixel;
+		scaleFactor = (float)dispInfo->RawPixelsPerViewPixel;
 		
 		mCustomRenderSurfaceSize = Size(bounds.Width * scaleFactor, bounds.Height * scaleFactor);
 		mUseCustomRenderSurfaceSize = true;
@@ -191,8 +226,6 @@ void OpenGLESPage::StartRenderLoop()
 
 		while(action->Status == Windows::Foundation::AsyncStatus::Started)
 		{
-			ProcessPointers();
-
 			GLsizei panelWidth = 0;
 			GLsizei panelHeight = 0;
 			GetSwapChainPanelSize(&panelWidth, &panelHeight);
@@ -202,8 +235,21 @@ void OpenGLESPage::StartRenderLoop()
 				LUNAEngine::Shared()->Assemble(new LUNAWpFiles(), new LUNAWpLog(), 
 					new LUNAWpUtils(swapChainPanel->Dispatcher), new LUNAWpPrefs());
 				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
+
+				auto sdk = std::make_shared<LUNAWpAdsProxy>(swapChainPanel->Dispatcher);
+
+				sdk->SetDelegates(getNameEvent, videoSupportedEvent, videoReadyEvent, showVideoEvent);
+				successEvent = sdk->GetSuccessDelegate();
+				failEvent = sdk->GetFailDelegate();
+
+				LUNAEngine::SharedAds()->SetSdk(sdk);
 			}
-			else LUNAEngine::Shared()->MainLoop();
+			else 
+			{
+				ProcessGameThreadEvents();
+				ProcessPointers();
+				LUNAEngine::Shared()->MainLoop();
+			}			
 
 			// The call to eglSwapBuffers might not be successful (i.e. due to Device Lost)
 			// If the call fails, then we must reinitialize EGL and the GL resources.
@@ -249,6 +295,15 @@ void OpenGLESPage::OnPointerMoved(Object^ sender, PointerEventArgs^ e)
 void OpenGLESPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
 {
 	pointers.push(std::make_shared<TouchEvent>(TouchType::TOUCH_UP, e));
+}
+
+void OpenGLESPage::ProcessGameThreadEvents()
+{
+	Platform::Agile<ThreadEvent> threadEvent;
+	while(gameThreadEvents.try_pop(threadEvent))
+	{
+		threadEvent->Invoke();
+	}
 }
 
 void OpenGLESPage::ProcessPointers()

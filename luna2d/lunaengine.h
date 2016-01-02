@@ -42,9 +42,9 @@ class LuaScript;
 class LUNAFiles;
 class LUNALog;
 class LUNAPlatformUtils;
-class LUNAAudio;
 class LUNAPrefs;
-class LUNAModule;
+class LUNAAudio;
+
 class LUNAAssets;
 class LUNAGraphics;
 class LUNAScenes;
@@ -52,6 +52,8 @@ class LUNASizes;
 class LUNAStrings;
 class LUNADebug;
 class LUNAConfig;
+
+class LUNAAds;
 
 class LUNAEngine
 {
@@ -61,11 +63,13 @@ public:
 	~LUNAEngine();
 
 private:
+	// Platform-specific subsystems
 	LUNAFiles* files = nullptr;
 	LUNALog* log = nullptr;
 	LUNAPlatformUtils* platformUtils = nullptr;
 	LUNAPrefs* prefs = nullptr;
 
+	// Common subsystems
 	LuaScript* lua = nullptr;
 	LUNAAssets* assets = nullptr;
 	LUNAGraphics* graphics = nullptr;
@@ -74,6 +78,9 @@ private:
 	LUNASizes* sizes = nullptr;
 	LUNAStrings* strings = nullptr;
 	LUNADebug* debug = nullptr;
+
+	// Subsystems of SDK API
+	LUNAAds* ads;
 
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
@@ -108,6 +115,8 @@ public:
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
 	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
+
+	inline static LUNAAds* SharedAds() { return Shared()->ads; }
 };
 
 }

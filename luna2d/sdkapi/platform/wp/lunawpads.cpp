@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // luna2d engine
-// Copyright 2014-2015 Stepan Prokofjev
+// Copyright 2014-2016 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -21,51 +21,64 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunawputils.h"
-#include "lunawstring.h"
-#include "lunalog.h"
-#include <algorithm>
-#include <windows.h>
-#include <ppltasks.h>
+#pragma once
 
-using namespace Windows::System::UserProfile;
+#include "lunawpads.h"
+#include "lunawstring.h"
+
 using namespace luna2d;
 
-LUNAWpUtils::LUNAWpUtils(Windows::UI::Core::CoreDispatcher^ dispatcher) :
+LUNAWpAdsProxy::LUNAWpAdsProxy(Windows::UI::Core::CoreDispatcher^ dispatcher) :
 	dispatcher(dispatcher)
 {
 }
 
-// Get system locale in "xx_XX" format
-// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-std::string LUNAWpUtils::GetSystemLocale()
+void LUNAWpAdsProxy::SetDelegates(
+		GetNameEvent^ getName,
+		IsVideoSupportedEvent^ videoSupported,
+		IsVideoReadyEvent^ videoReady,
+		ShowVideoEvent^ showVideo)
 {
-	std::string ret = FromPlatfromString(GlobalizationPreferences::Languages->GetAt(0));
-	std::replace(ret.begin(), ret.end(), '-', '_');
-	return std::move(ret);
+	getNameEvent = getName;
+	videoSupportedEvent = videoSupported;
+	videoReadyEvent = videoReady;
+	showVideoEvent = showVideo;
 }
 
-// Open given url in system browser
-void LUNAWpUtils::OpenUrl(const std::string& url)
+CallbackEvent^ LUNAWpAdsProxy::GetSuccessDelegate()
 {
-	Windows::Foundation::Uri^ uri = nullptr;
-
-	try
-	{
-		uri = ref new Windows::Foundation::Uri(ToPlatformString(url));
-	}
-	catch(Platform::InvalidArgumentException^ e)
-	{
-		LUNA_LOGE("Cannot open url: %s", url.c_str());
-		return;
-	}
-
-	RunInUiThread([uri]() { concurrency::task<bool> startTask(Windows::System::Launcher::LaunchUriAsync(uri)); });
+	return ref new CallbackEvent([this]() { onSuccess(); });
 }
 
-// Run given handler in UI thread
-void LUNAWpUtils::RunInUiThread(std::function<void()> handler)
+CallbackEvent^ LUNAWpAdsProxy::GetFailDelegate()
 {
-	dispatcher->RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal,
-		ref new Windows::UI::Core::DispatchedHandler(handler));	
+	return ref new CallbackEvent([this]() { onFail(); });
+}
+
+std::string LUNAWpAdsProxy::GetName()
+{
+	return FromPlatfromString(getNameEvent->Invoke());
+}
+
+bool LUNAWpAdsProxy::IsVideoSupported()
+{
+	return videoSupportedEvent->Invoke();
+}
+
+bool LUNAWpAdsProxy::IsVideoReady()
+{
+	return videoReadyEvent->Invoke();
+}
+
+void LUNAWpAdsProxy::ShowVideo()
+{
+	showVideoEvent->Invoke();
+}
+
+void LUNAWpAdsProxy::SetVideoCallbacks(
+	const std::function<void()>& onSuccess,
+	const std::function<void()>& onFail)
+{
+	this->onSuccess = onSuccess;
+	this->onFail = onFail;
 }

@@ -36,6 +36,7 @@
 #include "lunaconfig.h"
 #include "lunamath.h"
 #include "lunabindings.h"
+#include "lunaads.h"
 
 using namespace luna2d;
 
@@ -85,6 +86,8 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
+
+	ads = new LUNAAds();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))

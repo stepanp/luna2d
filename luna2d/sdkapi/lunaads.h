@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // luna2d engine
-// Copyright 2014-2015 Stepan Prokofjev
+// Copyright 2014-2016 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,31 +23,49 @@
 
 #pragma once
 
-#include "lunaplatformutils.h"
+#include "lunabasesdk.h"
+#include "lunalua.h"
 
 namespace luna2d{
 
-//-----------------------------------------------------
-// Platform utils implementation for Windows Phone / RT
-//-----------------------------------------------------
-class LUNAWpUtils : public LUNAPlatformUtils
+class LUNAAdsSdk : public LUNABaseSdk
 {
 public:
-	LUNAWpUtils(Windows::UI::Core::CoreDispatcher^ dispatcher);
+	virtual bool IsVideoSupported() = 0;
+
+	virtual bool IsVideoReady() = 0;
+
+	virtual void ShowVideo() = 0;
+
+	virtual void SetVideoCallbacks(
+		const std::function<void()>& onSuccess,
+		const std::function<void()>& onFail) = 0;
+};
+
+
+class LUNAAds
+{
+public:
+	LUNAAds();
 
 private:
-	Windows::UI::Core::CoreDispatcher^ dispatcher;
+	std::shared_ptr<LUNAAdsSdk> sdk;
+
+private:
+	void OnVideoSuccess();
+
+	void OnVideoFail();
 
 public:
-	// Get system locale in "xx_XX" format
-	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-	virtual std::string GetSystemLocale();
+	bool IsSdkSet();
 
-	// Open given url in system browser
-	virtual void OpenUrl(const std::string& url);
+	void SetSdk(const std::shared_ptr<LUNAAdsSdk>& sdk);
 
-	// Run given handler in UI thread
-	void RunInUiThread(std::function<void()> handler);
+	bool IsVideoSupported();
+
+	bool IsVideoReady();
+
+	void ShowVideo();
 };
 
 }

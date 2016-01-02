@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // luna2d engine
-// Copyright 2014-2015 Stepan Prokofjev
+// Copyright 2014-2016 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,31 +23,18 @@
 
 #pragma once
 
-#include "lunaplatformutils.h"
+#include "lunaengine.h"
 
 namespace luna2d{
 
-//-----------------------------------------------------
-// Platform utils implementation for Windows Phone / RT
-//-----------------------------------------------------
-class LUNAWpUtils : public LUNAPlatformUtils
+class LUNABaseSdk
 {
 public:
-	LUNAWpUtils(Windows::UI::Core::CoreDispatcher^ dispatcher);
+	// Get SDK name
+	virtual std::string GetName() = 0;
 
-private:
-	Windows::UI::Core::CoreDispatcher^ dispatcher;
-
-public:
-	// Get system locale in "xx_XX" format
-	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-	virtual std::string GetSystemLocale();
-
-	// Open given url in system browser
-	virtual void OpenUrl(const std::string& url);
-
-	// Run given handler in UI thread
-	void RunInUiThread(std::function<void()> handler);
+	// Read string with given name from game config
+	std::string GetConfigString(const std::string& name);
 };
 
 }

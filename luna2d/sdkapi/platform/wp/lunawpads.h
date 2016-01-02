@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // luna2d engine
-// Copyright 2014-2015 Stepan Prokofjev
+// Copyright 2014-2016 Stepan Prokofjev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,31 +23,49 @@
 
 #pragma once
 
-#include "lunaplatformutils.h"
+#include "lunaads.h"
+#include <windows.h>
 
 namespace luna2d{
 
-//-----------------------------------------------------
-// Platform utils implementation for Windows Phone / RT
-//-----------------------------------------------------
-class LUNAWpUtils : public LUNAPlatformUtils
+public delegate Platform::String^ GetNameEvent();
+public delegate bool IsVideoSupportedEvent();
+public delegate bool IsVideoReadyEvent();
+public delegate void ShowVideoEvent();
+public delegate void CallbackEvent();
+
+class LUNAWpAdsProxy : public LUNAAdsSdk
 {
 public:
-	LUNAWpUtils(Windows::UI::Core::CoreDispatcher^ dispatcher);
+	LUNAWpAdsProxy(Windows::UI::Core::CoreDispatcher^ dispatcher);
 
 private:
 	Windows::UI::Core::CoreDispatcher^ dispatcher;
+	GetNameEvent^ getNameEvent;
+	IsVideoSupportedEvent^ videoSupportedEvent;
+	IsVideoReadyEvent^ videoReadyEvent;
+	ShowVideoEvent^ showVideoEvent;
+
+	std::function<void()> onSuccess, onFail;
 
 public:
-	// Get system locale in "xx_XX" format
-	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-	virtual std::string GetSystemLocale();
+	void SetDelegates(
+		GetNameEvent^ getName,
+		IsVideoSupportedEvent^ videoSupported,
+		IsVideoReadyEvent^ videoReady,
+		ShowVideoEvent^ showVideo);
 
-	// Open given url in system browser
-	virtual void OpenUrl(const std::string& url);
+	CallbackEvent^ GetSuccessDelegate();
+	CallbackEvent^ GetFailDelegate();
 
-	// Run given handler in UI thread
-	void RunInUiThread(std::function<void()> handler);
+	virtual std::string GetName();
+	virtual bool IsVideoSupported();
+	virtual bool IsVideoReady();
+	virtual void ShowVideo();
+	virtual void SetVideoCallbacks(
+		const std::function<void()>& onSuccess,
+		const std::function<void()>& onFail
+	);
 };
 
 }

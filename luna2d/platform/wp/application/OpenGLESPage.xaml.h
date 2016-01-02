@@ -12,8 +12,12 @@
 #include <concurrent_queue.h>
 #include <math.h>
 
+#include "lunawpads.h"
+
 namespace luna2d
 {
+	public delegate void ThreadEvent();
+
 	enum class TouchType
 	{
 		TOUCH_DOWN,
@@ -41,9 +45,29 @@ namespace luna2d
 	{
 	public:
 		OpenGLESPage();
-		virtual ~OpenGLESPage();		
+		virtual ~OpenGLESPage();
+
+	public:
+		void SetDelegates(
+			GetNameEvent^ getName,
+			IsVideoSupportedEvent^ videoSupported,
+			IsVideoReadyEvent^ videoReady,
+			ShowVideoEvent^ showVideo);
+
+		CallbackEvent^ GetSuccessDelegate();
+		CallbackEvent^ GetFailDelegate();
+
+		void RunInUiThread(ThreadEvent^ handler);
+		void RunInGameThread(ThreadEvent^ handler);
 
 	private:
+		GetNameEvent^ getNameEvent;
+		IsVideoSupportedEvent^ videoSupportedEvent;
+		IsVideoReadyEvent^ videoReadyEvent;
+		ShowVideoEvent^ showVideoEvent;
+		CallbackEvent^ successEvent;
+		CallbackEvent^ failEvent;
+
 		void OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
 		void OnSwapChainPanelSizeChanged(Platform::Object^ sender, Windows::UI::Xaml::SizeChangedEventArgs^ e);
@@ -75,6 +99,10 @@ namespace luna2d
 		void OnPointerPressed(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
 		void OnPointerMoved(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
 		void OnPointerReleased(Platform::Object^ sender, Windows::UI::Core::PointerEventArgs^ e);
+
+		
+		Concurrency::concurrent_queue<Platform::Agile<ThreadEvent>> gameThreadEvents;
+		void ProcessGameThreadEvents();
 
 		Concurrency::concurrent_queue<std::shared_ptr<TouchEvent>> pointers;
 		std::vector<int> touchIndexes;
