@@ -90,6 +90,7 @@ include_directories(${THIRDPARTY_DIRS})
 
 # Lua
 aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
+list(REMOVE_ITEM THIRDPARTY_SOURCES ${THIRDPARTY_DIR}/lua/luac.c)
 
 # libpng
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
