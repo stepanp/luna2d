@@ -84,12 +84,14 @@ void OpenGLESPage::SetDelegates(
 		GetNameEvent^ getName,
 		IsVideoSupportedEvent^ videoSupported,
 		IsVideoReadyEvent^ videoReady,
-		ShowVideoEvent^ showVideo)
+		ShowVideoEvent^ showVideo,
+		RequestRateAppEvent^ rateApp)
 {
 	getNameEvent = getName;
 	videoSupportedEvent = videoSupported;
 	videoReadyEvent = videoReady;
 	showVideoEvent = showVideo;
+	rateAppEvent = rateApp;
 }
 
 CallbackEvent^ OpenGLESPage::GetSuccessDelegate()
@@ -243,6 +245,10 @@ void OpenGLESPage::StartRenderLoop()
 				failEvent = sdk->GetFailDelegate();
 
 				LUNAEngine::SharedAds()->SetSdk(sdk);
+
+				auto storeSdk = std::make_shared<LUNAWpStoreProxy>();
+				storeSdk->SetDelegates(rateAppEvent);
+				LUNAEngine::SharedStore()->SetSdk(storeSdk);
 			}
 			else 
 			{

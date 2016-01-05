@@ -37,6 +37,7 @@
 #include "lunamath.h"
 #include "lunabindings.h"
 #include "lunaads.h"
+#include "lunastore.h"
 
 using namespace luna2d;
 
@@ -88,6 +89,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	DoBindings();
 
 	ads = new LUNAAds();
+	store = new LUNAStore();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))

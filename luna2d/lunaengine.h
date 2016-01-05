@@ -54,6 +54,7 @@ class LUNADebug;
 class LUNAConfig;
 
 class LUNAAds;
+class LUNAStore;
 
 class LUNAEngine
 {
@@ -81,6 +82,7 @@ private:
 
 	// Subsystems of SDK API
 	LUNAAds* ads;
+	LUNAStore* store;
 
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
@@ -117,6 +119,7 @@ public:
 	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
 
 	inline static LUNAAds* SharedAds() { return Shared()->ads; }
+	inline static LUNAStore* SharedStore() { return Shared()->store; }
 };
 
 }

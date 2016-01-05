@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "lunawpads.h"
+#include "lunawpstore.h"
 
 namespace luna2d
 {
@@ -52,7 +53,8 @@ namespace luna2d
 			GetNameEvent^ getName,
 			IsVideoSupportedEvent^ videoSupported,
 			IsVideoReadyEvent^ videoReady,
-			ShowVideoEvent^ showVideo);
+			ShowVideoEvent^ showVideo,
+			RequestRateAppEvent^ rateApp);
 
 		CallbackEvent^ GetSuccessDelegate();
 		CallbackEvent^ GetFailDelegate();
@@ -67,6 +69,7 @@ namespace luna2d
 		ShowVideoEvent^ showVideoEvent;
 		CallbackEvent^ successEvent;
 		CallbackEvent^ failEvent;
+		RequestRateAppEvent^ rateAppEvent;
 
 		void OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
