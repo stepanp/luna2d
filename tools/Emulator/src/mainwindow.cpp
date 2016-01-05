@@ -33,6 +33,7 @@
 #include <QProcess>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -77,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionOpen_in_Pipeline, &QAction::triggered, this, &MainWindow::OnOpenInPipeline);
 	connect(ui->actionSet_project, &QAction::triggered, this, &MainWindow::OnSetPipelineProject);
 	connect(ui->actionTake_screenshot, &QAction::triggered, this, &MainWindow::OnTakeScreenshot);
+	connect(ui->actionOpen_screenshots_folder, &QAction::triggered, this, &MainWindow::OnOpenScreenshotsFolder);
 }
 
 MainWindow::~MainWindow()
@@ -236,6 +238,17 @@ void MainWindow::UpdatePipelineMenu()
 
 	if(hasProject) ui->actionPipelineProject->setText(pipelineProject);
 	else ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+}
+
+QString MainWindow::MakeScreenhotsFolder()
+{
+	QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/luna2d/Emulator/";
+	path += ui->centralWidget->GetGameName() + "/";
+
+	QDir dir(path);
+	if(!dir.exists()) dir.mkpath(".");
+
+	return path;
 }
 
 void MainWindow::OnGlSurfaceInitialized()
@@ -440,14 +453,15 @@ void MainWindow::OnTakeScreenshot()
 
 	QDateTime now = QDateTime::currentDateTime();
 	QString nowStr = now.toString("hh-mm-ss dd.MM.yyyy");
-
-	// Make path for screenshots
-	QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/luna2d/Emulator/";
-	path += ui->centralWidget->GetGameName() + "/";
-	QDir dir(path);
-	if(!dir.exists()) dir.mkpath(".");
+	QString path = MakeScreenhotsFolder();
 
 	screenshotsPixmap.save(path + SCREENSHOT_NAME.arg(nowStr));
+}
+
+void MainWindow::OnOpenScreenshotsFolder()
+{
+	QString path = MakeScreenhotsFolder();
+	QDesktopServices::openUrl(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::closeEvent(QCloseEvent*)

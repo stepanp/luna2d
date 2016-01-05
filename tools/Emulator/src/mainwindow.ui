@@ -95,8 +95,16 @@
      <addaction name="separator"/>
      <addaction name="actionPipelineProject"/>
     </widget>
+    <widget class="QMenu" name="menuScreenshot">
+     <property name="title">
+      <string>Screenshots</string>
+     </property>
+     <addaction name="actionTake_screenshot"/>
+     <addaction name="separator"/>
+     <addaction name="actionOpen_screenshots_folder"/>
+    </widget>
     <addaction name="menuPipeline"/>
-    <addaction name="actionTake_screenshot"/>
+    <addaction name="menuScreenshot"/>
    </widget>
    <addaction name="menuEngine"/>
    <addaction name="menuView"/>
@@ -212,6 +220,11 @@
   <action name="actionRun_project_restart">
    <property name="text">
     <string>Run project &amp;&amp; restart game</string>
+   </property>
+  </action>
+  <action name="actionOpen_screenshots_folder">
+   <property name="text">
+    <string>Open screenshots folder</string>
    </property>
   </action>
  </widget>

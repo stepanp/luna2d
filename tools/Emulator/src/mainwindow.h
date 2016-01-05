@@ -68,6 +68,7 @@ private:
 	void SetResolution(int resolutionIndex);
 	void OpenLogDialog();
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
+	QString MakeScreenhotsFolder();
 
 public slots:
 	void OnGlSurfaceInitialized();
@@ -89,6 +90,7 @@ public slots:
 	void OnOpenInPipeline();
 	void OnSetPipelineProject();
 	void OnTakeScreenshot();
+	void OnOpenScreenshotsFolder();
 
 public:
 	void closeEvent(QCloseEvent*);
