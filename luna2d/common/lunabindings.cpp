@@ -23,6 +23,7 @@
 
 #include "lunabindings.h"
 #include "lunaengine.h"
+#include "lunaconfig.h"
 #include "lunalua.h"
 #include "lunaaudio.h"
 #include "lunaplatformutils.h"
@@ -369,6 +370,21 @@ static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 	tblPrefs.SetMetatable(meta);
 }
 
+// Bind "luna.config" module
+static void BindConfig(LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblConfig(lua);
+	tblLuna.SetField("config", tblConfig);
+
+	auto config = LUNAEngine::Shared()->GetConfig();
+	tblConfig.SetField("gameName", config->gameName);
+	tblConfig.SetField("orientation", ORIENTATION.FromEnum(config->orientation));
+	tblConfig.SetField("resolutions", config->resolutions);
+	tblConfig.SetField("scaleMode", SCALE_MODE.FromEnum(config->scaleMode));
+	tblConfig.SetField("baseWidth", config->baseWidth);
+	tblConfig.SetField("baseHeight", config->baseHeight);
+}
+
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
 // SEE: "lunagraphics.cpp", "lunassets.cpp"
@@ -386,4 +402,5 @@ void luna2d::DoBindings()
 	BindPlatform(lua, tblLuna);
 	BindAudio(lua, tblLuna);
 	BindPrefs(lua, tblLuna);
+	BindConfig(lua, tblLuna);
 }

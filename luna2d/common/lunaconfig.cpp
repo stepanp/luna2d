@@ -69,10 +69,9 @@ bool LUNAConfig::Read()
 
 	if(jsonConfig["orientation"] != nullptr)
 	{
-		std::string str = jsonConfig["orientation"].string_value();
-		if(str == "portrait") orientation = LUNAOrientation::PORTRAIT;
-		else if(str == "landscape") orientation = LUNAOrientation::LANDSCAPE;
-		else LUNA_LOGE("Incorrect orientation \"%s\"", str.c_str());
+		std::string orientationStr = jsonConfig["orientation"].string_value();
+		if(ORIENTATION.HasKey(orientationStr)) orientation = ORIENTATION.FromString(orientationStr);
+		else LUNA_LOGE("Incorrect orientation \"%s\"", orientationStr.c_str());
 	}
 
 	if(jsonConfig["resolutions"] != nullptr)

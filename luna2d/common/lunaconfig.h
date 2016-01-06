@@ -34,6 +34,12 @@ enum class LUNAOrientation
 	LANDSCAPE
 };
 
+const LUNAStringEnum<LUNAOrientation> ORIENTATION =
+{
+	"portrait",
+	"landscape"
+};
+
 enum class LUNAScaleMode
 {
 	FIT_TO_HEIGHT_LEFT,
