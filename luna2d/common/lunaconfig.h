@@ -72,8 +72,10 @@ public:
 	std::vector<std::string> resolutions;
 	int baseWidth = 480;
 	int baseHeight = BASE_SIZE;
+	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> customValues;
 
 public:
+	std::string GetCustomValue(const std::string& nameSpace, const std::string& name) const;
 	bool Read();
 };
 

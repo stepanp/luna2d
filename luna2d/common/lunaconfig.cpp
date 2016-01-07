@@ -36,6 +36,18 @@ LUNAConfig::LUNAConfig()
 	resolutions = { DEFAULT_RESOLUTION };
 }
 
+std::string LUNAConfig::GetCustomValue(const std::string& nameSpace, const std::string& name) const
+{
+	auto nsIt = customValues.find(nameSpace);
+	if(nsIt == customValues.end()) return "";
+
+	auto ns = (*nsIt).second;
+	auto valueIt = ns.find(name);
+	if(valueIt == ns.end()) return "";
+
+	return (*valueIt).second;
+}
+
 bool LUNAConfig::Read()
 {
 	if(!LUNAEngine::SharedFiles()->IsExists(CONFIG_FILENAME))
@@ -67,53 +79,77 @@ bool LUNAConfig::Read()
 		return false;
 	}
 
-	if(jsonConfig["orientation"] != nullptr)
+	for(auto& entry : jsonConfig.object_items())
 	{
-		std::string orientationStr = jsonConfig["orientation"].string_value();
-		if(ORIENTATION.HasKey(orientationStr)) orientation = ORIENTATION.FromString(orientationStr);
-		else LUNA_LOGE("Incorrect orientation \"%s\"", orientationStr.c_str());
-	}
+		auto& key = entry.first;
 
-	if(jsonConfig["resolutions"] != nullptr)
-	{
-		auto jsonResolutions = jsonConfig["resolutions"].array_items();
-		std::vector<std::string> parsedResolutions;
+		if(key == "name") continue;
 
-		// Parse resolutions from config
-		for(auto item : jsonResolutions)
+		else if(key == "orientation")
 		{
-			std::string res = item.string_value();
-
-			if(RESOLUTIONS_TABLE.count(res) == 0)
-			{
-				LUNA_LOGE("Unsupported resolution \"%s\"", res.c_str());
-				continue;
-			}
-
-			parsedResolutions.push_back(res);
+			std::string orientationStr = jsonConfig["orientation"].string_value();
+			if(ORIENTATION.HasKey(orientationStr)) orientation = ORIENTATION.FromString(orientationStr);
+			else LUNA_LOGE("Incorrect orientation \"%s\"", orientationStr.c_str());
 		}
 
-		// Replace default resolutions list with resolutions from config
-		if(!parsedResolutions.empty()) resolutions.swap(parsedResolutions);
-	}
+		else if(key == "resolutions")
+		{
+			auto jsonResolutions = jsonConfig["resolutions"].array_items();
+			std::vector<std::string> parsedResolutions;
 
-	if(jsonConfig["scaleMode"] != nullptr)
-	{
-		std::string scaleModeStr = jsonConfig["scaleMode"].string_value();
-		if(!SCALE_MODE.HasKey(scaleModeStr)) LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
-		else scaleMode = SCALE_MODE.FromString(scaleModeStr);
-	}
+			// Parse resolutions from config
+			for(auto item : jsonResolutions)
+			{
+				std::string res = item.string_value();
 
-	if(jsonConfig["baseWidth"] != nullptr)
-	{
-		if(jsonConfig["baseWidth"].is_number()) baseWidth = jsonConfig["baseWidth"].int_value();
-		else LUNA_LOGE("Base width must be number");
-	}
+				if(RESOLUTIONS_TABLE.count(res) == 0)
+				{
+					LUNA_LOGE("Unsupported resolution \"%s\"", res.c_str());
+					continue;
+				}
 
-	if(jsonConfig["baseHeight"] != nullptr)
-	{
-		if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
-		else LUNA_LOGE("Base height must be number");
+				parsedResolutions.push_back(res);
+			}
+
+			// Replace default resolutions list with resolutions from config
+			if(!parsedResolutions.empty()) resolutions.swap(parsedResolutions);
+		}
+
+		else if(key == "scaleMode")
+		{
+			std::string scaleModeStr = jsonConfig["scaleMode"].string_value();
+			if(!SCALE_MODE.HasKey(scaleModeStr)) LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
+			else scaleMode = SCALE_MODE.FromString(scaleModeStr);
+		}
+
+		else if(key == "baseWidth")
+		{
+			if(jsonConfig["baseWidth"].is_number()) baseWidth = jsonConfig["baseWidth"].int_value();
+			else LUNA_LOGE("Base width must be number");
+		}
+
+		else if(key == "baseHeight")
+		{
+			if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
+			else LUNA_LOGE("Base height must be number");
+		}
+
+		else if(entry.second.is_object())
+		{
+			std::unordered_map<std::string, std::string> nameSpace;
+
+			for(auto& nsEntry : entry.second.object_items())
+			{
+				auto& value = nsEntry.second;
+
+				if(value.is_string()) nameSpace[nsEntry.first] = value.string_value();
+				else LUNA_LOGW("Unsupported type of custom value: \"%s\"", nsEntry.first.c_str());
+			}
+
+			customValues[key] = nameSpace;
+		}
+
+		else LUNA_LOGW("Unknown param \"%s\" in config", key.c_str());
 	}
 
 	return true;

@@ -136,7 +136,7 @@ void LUNAEngine::Deinitialize()
 	initialized = false;
 }
 
-std::shared_ptr<LUNAConfig> LUNAEngine::GetConfig()
+std::shared_ptr<const LUNAConfig> LUNAEngine::GetConfig()
 {
 	return config;
 }

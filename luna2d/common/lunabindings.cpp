@@ -383,6 +383,11 @@ static void BindConfig(LuaScript* lua, LuaTable& tblLuna)
 	tblConfig.SetField("scaleMode", SCALE_MODE.FromEnum(config->scaleMode));
 	tblConfig.SetField("baseWidth", config->baseWidth);
 	tblConfig.SetField("baseHeight", config->baseHeight);
+
+	for(auto& entry : config->customValues)
+	{
+		tblConfig.SetField(entry.first, entry.second);
+	}
 }
 
 // Bind common classes and functions to lua

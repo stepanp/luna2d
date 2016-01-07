@@ -92,7 +92,7 @@ public:
 	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs);
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
-	std::shared_ptr<LUNAConfig> GetConfig();
+	std::shared_ptr<const LUNAConfig> GetConfig();
 	std::string GetGameName(); // Get name of runned game
 	void RunEmbeddedScripts();
 	bool IsInitialized();
