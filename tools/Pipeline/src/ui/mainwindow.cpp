@@ -539,7 +539,7 @@ void MainWindow::OnRunProject()
 
 void MainWindow::OnAbout()
 {
-	QMessageBox::about(this, "About", "luna2d Pipeline\nThis is part of luna2d engine\nCopyright 2014-2015 Stepan Prokofjev");
+	QMessageBox::about(this, "About", "luna2d Pipeline\nThis is part of luna2d engine\nCopyright 2014-2016 Stepan Prokofjev");
 }
 
 void MainWindow::OnSelectedTreeItem(QTreeWidgetItem*, QTreeWidgetItem*)
