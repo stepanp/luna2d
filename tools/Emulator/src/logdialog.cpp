@@ -55,7 +55,7 @@ void LogDialog::ShowLogMessage(LogType type, const QString& message)
 {
 	QListWidgetItem* item = new QListWidgetItem(message);
 
-	if(type == LogType::LOG_WARNING) item->setForeground(Qt::yellow);
+	if(type == LogType::LOG_WARNING) item->setForeground(Qt::darkYellow);
 	else if(type == LogType::LOG_ERROR) item->setForeground(Qt::red);
 
 	ui->listLog->addItem(item);
