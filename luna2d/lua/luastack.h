@@ -199,6 +199,22 @@ struct LuaStack<std::vector<T>>
 };
 
 template<typename T>
+struct LuaStack<std::unordered_map<std::string,T>>
+{
+	static void Push(lua_State* luaVm, const std::unordered_map<std::string,T>& map)
+	{
+		lua_createtable(luaVm, 0, map.size());
+
+		for(auto& entry : map)
+		{
+			lua_pushstring(luaVm, entry.first.c_str());
+			LuaStack<T>::Push(luaVm, entry.second);
+			lua_rawset(luaVm, -3);
+		}
+	}
+};
+
+template<typename T>
 struct LuaStack<std::unordered_set<T>>
 {
 	static void Push(lua_State* luaVm, const std::unordered_set<T>& set)
