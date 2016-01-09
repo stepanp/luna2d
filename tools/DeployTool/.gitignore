@@ -1,0 +1,6 @@
+build*
+DeployTool.exe
+DeployToold.exe
+DeployTool.app/*
+DeployToold.app/*
+ui/DeployTool.pro.user
