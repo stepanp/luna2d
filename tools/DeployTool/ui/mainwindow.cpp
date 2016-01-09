@@ -24,6 +24,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "pythonutils.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <json11.hpp>
@@ -142,7 +143,13 @@ void MainWindow::OnParamsBack()
 
 void MainWindow::OnParamsNext()
 {
+	QStringList pyCommand;
+	/*pyCommand << "-f" << parameter1 <<
+					"-t" << parameter2 <<
+					"-v" << parameter3 <<
+					"-e" << parameter4;*/
 
+	RunScript("generateproject.py", pyCommand);
 }
 
 void MainWindow::OnOutputPathButton()

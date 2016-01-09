@@ -32,9 +32,11 @@ INCLUDEPATH += ../../../thirdparty/json11/
 
 SOURCES += main.cpp\
 		mainwindow.cpp \
-		../../../thirdparty/json11/json11.cpp
+		../../../thirdparty/json11/json11.cpp \
+    pythonutils.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    pythonutils.h
 
 FORMS    += mainwindow.ui
 
