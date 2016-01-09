@@ -82,7 +82,7 @@ MainWindow::MainWindow(const QString& projectPath) :
 	// "Task settings" tab signals
 	connect(ui->editName, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedName);
 	connect(ui->editOutput, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedOutput);
-	connect(ui->btnOutput, &QPushButton::clicked, this, &MainWindow::OnTabsOutputButton);
+	connect(ui->btnOutput, &QToolButton::clicked, this, &MainWindow::OnTabsOutputButton);
 	connect(ui->comboFormat, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsCnangedFormat(int)));
 	connect(ui->checkResize, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedResize);
 	connect(ui->checkAtlas, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedAtlas);
