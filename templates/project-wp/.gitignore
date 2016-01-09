@@ -1,0 +1,13 @@
+/*.sdf
+/*.suo
+/*.opensdf
+/ipch/*
+/Debug/*
+/Release/*
+/ARM/*
+/Generated Files/*
+/*.vcxproj.user
+/Assets/game/*
+/AppPackages/*
+/GeneratedAssets/*
+/BundleArtifacts/*
