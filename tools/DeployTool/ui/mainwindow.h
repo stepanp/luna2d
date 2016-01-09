@@ -41,6 +41,10 @@ public:
 private:
 	Ui::MainWindow *ui;
 
+private:
+	void FillPlatformCombo();
+
 public slots:
+	void OnInputPathButton();
 	void OnAbout();
 };

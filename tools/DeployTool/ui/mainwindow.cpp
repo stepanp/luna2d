@@ -25,6 +25,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -32,12 +33,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	ui->comboTargetOs->addItem("iOS");
-	ui->comboTargetOs->addItem("Android");
-	ui->comboTargetOs->addItem("Windows Phone");
+	FillPlatformCombo();
 
-	ui->comboTargetOs->setItemData(0, QVariant(0), Qt::UserRole - 1);
-
+	connect(ui->btnInputPath, &QToolButton::clicked, this, &MainWindow::OnInputPathButton);
 	connect(ui->btnAbout, &QPushButton::clicked, this, &MainWindow::OnAbout);
 }
 
@@ -45,6 +43,37 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 }
+
+void MainWindow::FillPlatformCombo()
+{
+	ui->comboTargetOs->addItem("iOS");
+	ui->comboTargetOs->addItem("Android");
+	ui->comboTargetOs->addItem("Windows Phone");
+
+	// Disable iOS target on non-OSX platforms
+#ifndef Q_OS_MAC
+	ui->comboTargetOs->setItemData(0, QVariant(0), Qt::UserRole - 1);
+	ui->comboTargetOs->setCurrentIndex(1);
+#endif
+
+	// Disable Windows Phone target on non-Windows platforms
+#ifndef Q_OS_WIN32
+	ui->comboTargetOs->setItemData(2, QVariant(0), Qt::UserRole - 1);
+#endif
+}
+
+void MainWindow::OnInputPathButton()
+{
+	QFileDialog dialog;
+	dialog.setFileMode(QFileDialog::DirectoryOnly);
+	dialog.setOption(QFileDialog::ShowDirsOnly);
+
+	if(dialog.exec())
+	{
+		ui->editInputPath->setText(dialog.selectedFiles().first());
+	}
+}
+
 
 void MainWindow::OnAbout()
 {
