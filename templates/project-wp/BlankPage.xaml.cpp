@@ -6,7 +6,7 @@
 #include "pch.h"
 #include "BlankPage.xaml.h"
 
-using namespace project_wp;
+using namespace LUNA_PROJECT_NAME;
 
 using namespace Platform;
 using namespace Windows::Foundation;

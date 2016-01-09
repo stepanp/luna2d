@@ -7,7 +7,7 @@
 
 #include "App.g.h"
 
-namespace project_wp
+namespace LUNA_PROJECT_NAME
 {
 	/// <summary>
 	/// Provides application-specific behavior to supplement the default Application class.

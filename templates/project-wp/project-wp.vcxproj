@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0ec639ef-f218-476d-8869-663e9f65b794}</ProjectGuid>
-    <RootNamespace>project_wp</RootNamespace>
+    <RootNamespace>LUNA_PROJECT_NAME</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

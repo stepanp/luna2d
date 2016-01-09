@@ -2,14 +2,14 @@
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
 
   <Identity Name="0f95eb19-6c30-44f3-acc7-a39d65df546a"
-            Publisher="CN=Stepan"
+            Publisher="CN=PublisherName"
             Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="0f95eb19-6c30-44f3-acc7-a39d65df546a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>project-wp</DisplayName>
-    <PublisherDisplayName>Stepan</PublisherDisplayName>
+    <DisplayName>LUNA_PROJECT_NAME</DisplayName>
+    <PublisherDisplayName>PublisherName</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -25,12 +25,12 @@
   <Applications>
     <Application Id="App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="project_wp.App">
+        EntryPoint="LUNA_PROJECT_NAME.App">
         <m3:VisualElements
-            DisplayName="project-wp"
+            DisplayName="LUNA_PROJECT_NAME"
             Square150x150Logo="Assets\Logo.png"
             Square44x44Logo="Assets\SmallLogo.png"
-            Description="project-wp"
+            Description="LUNA_PROJECT_NAME"
             ForegroundText="light"
             BackgroundColor="transparent">
             <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Square71x71Logo.png"/>

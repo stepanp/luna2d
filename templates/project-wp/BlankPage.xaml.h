@@ -7,7 +7,7 @@
 
 #include "BlankPage.g.h"
 
-namespace project_wp
+namespace LUNA_PROJECT_NAME
 {
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.

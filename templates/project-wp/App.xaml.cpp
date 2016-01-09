@@ -5,7 +5,7 @@
 
 #include "pch.h"
 
-using namespace project_wp;
+using namespace LUNA_PROJECT_NAME;
 
 using namespace Platform;
 using namespace Windows::ApplicationModel;
