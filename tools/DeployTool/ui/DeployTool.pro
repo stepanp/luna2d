@@ -28,8 +28,11 @@ QMAKE_CXXFLAGS_WARN_ON += -Werror=return-type
 
 DESTDIR = $$PWD/../
 
+INCLUDEPATH += ../../../thirdparty/json11/
+
 SOURCES += main.cpp\
-        mainwindow.cpp
+		mainwindow.cpp \
+		../../../thirdparty/json11/json11.cpp
 
 HEADERS  += mainwindow.h
 

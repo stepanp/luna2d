@@ -43,8 +43,13 @@ private:
 
 private:
 	void FillPlatformCombo();
+	QString CheckGameProjectPath(const QString& path);
 
 public slots:
 	void OnInputPathButton();
+	void OnNext();
+	void OnParamsBack();
+	void OnParamsNext();
+	void OnOutputPathButton();
 	void OnAbout();
 };

@@ -26,6 +26,9 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QFileDialog>
+#include <json11.hpp>
+
+using namespace json11;
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -35,7 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	FillPlatformCombo();
 
+	ui->btnNext->setDisabled(true);
+
 	connect(ui->btnInputPath, &QToolButton::clicked, this, &MainWindow::OnInputPathButton);
+	connect(ui->btnNext, &QPushButton::clicked, this, &MainWindow::OnNext);
+	connect(ui->btnBackParams, &QPushButton::clicked, this, &MainWindow::OnParamsBack);
+	connect(ui->btnNextParams, &QPushButton::clicked, this, &MainWindow::OnParamsNext);
 	connect(ui->btnAbout, &QPushButton::clicked, this, &MainWindow::OnAbout);
 }
 
@@ -62,6 +70,14 @@ void MainWindow::FillPlatformCombo()
 #endif
 }
 
+QString MainWindow::CheckGameProjectPath(const QString& path)
+{
+	QFile file(path + "/config.luna2d");
+
+	if(!file.exists()) return "Game project directory must contains \"config.luna2d\" file";
+	else return "";
+}
+
 void MainWindow::OnInputPathButton()
 {
 	QFileDialog dialog;
@@ -70,10 +86,76 @@ void MainWindow::OnInputPathButton()
 
 	if(dialog.exec())
 	{
-		ui->editInputPath->setText(dialog.selectedFiles().first());
+		QString path = dialog.selectedFiles().first();
+		QString error = CheckGameProjectPath(path);
+
+		if(error.isEmpty())
+		{
+			ui->editInputPath->setText(path);
+			ui->btnNext->setDisabled(false);
+		}
+		else
+		{
+			QMessageBox::critical(this, "Error opening game project", error);
+			ui->btnNext->setDisabled(!CheckGameProjectPath(ui->editInputPath->text()).isEmpty());
+		}
 	}
 }
 
+void MainWindow::OnNext()
+{
+	QString inputPath = ui->editInputPath->text();
+	QString error = CheckGameProjectPath(inputPath);
+
+	if(!error.isEmpty())
+	{
+		QMessageBox::critical(this, "Error opening game project", error);
+		ui->btnNext->setDisabled(true);
+		return;
+	}
+
+	ui->pages->setCurrentWidget(ui->pageParams);
+
+	QString outputPath = inputPath.left(inputPath.lastIndexOf("/")) + "/";
+	outputPath += "project-wp";
+
+	ui->editOutputPath->setText(outputPath);
+
+	QFile configFile(inputPath + "/config.luna2d");
+	if(!configFile.open(QIODevice::ReadOnly)) return;
+
+	std::string jsonErr;
+	Json jsonConfig = Json::parse(configFile.readAll().toStdString(), jsonErr, JsonParse::COMMENTS);
+
+	if(jsonConfig == nullptr) return;
+
+	if(jsonConfig["name"].is_string())
+	{
+		ui->editName->setText(QString::fromStdString(jsonConfig["name"].string_value()));
+	}
+}
+
+void MainWindow::OnParamsBack()
+{
+	ui->pages->setCurrentWidget(ui->pageMain);
+}
+
+void MainWindow::OnParamsNext()
+{
+
+}
+
+void MainWindow::OnOutputPathButton()
+{
+	QFileDialog dialog;
+	dialog.setFileMode(QFileDialog::DirectoryOnly);
+	dialog.setOption(QFileDialog::ShowDirsOnly);
+
+	if(dialog.exec())
+	{
+		ui->editOutputPath->setText(dialog.selectedFiles().first());
+	}
+}
 
 void MainWindow::OnAbout()
 {
