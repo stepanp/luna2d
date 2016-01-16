@@ -112,7 +112,12 @@ def make_config_dir(args):
 
 	if not args.strip_git:
 		with open(config_dir + "/.gitignore", "w") as file:
-			file.writelines(["/cache/*"])
+			file.writelines(
+				[
+					"cache/*\n",
+				    "assets/*\n",
+				    "libs/*\n",
+				])
 
 	shutil.copyfile(os.path.dirname(__file__) + "/update.py", config_dir + "/update.py")
 

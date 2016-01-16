@@ -157,6 +157,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <_CustomResource Include="$(MSBuildThisFileDirectory)\.luna2d\assets\game\**\*">
+      <Link>Assets\game\%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <DeploymentContent>true</DeploymentContent>
+    </_CustomResource>
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="luna2d">
       <HintPath>LUNA2D_PATH\lib\wp\luna2d.winmd</HintPath>
       <IsWinMDFile>true</IsWinMDFile>
@@ -170,4 +176,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="_CollectCustomResources" BeforeTargets="AssignTargetPaths">
+    <Message Text="Adding resource: %(_CustomResource.Identity) -&gt; %(_CustomResource.Link)" />
+    <ItemGroup>
+      <None Include="@(_CustomResource)" />
+    </ItemGroup>
+  </Target>
 </Project>

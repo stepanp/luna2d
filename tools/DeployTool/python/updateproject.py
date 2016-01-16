@@ -25,10 +25,9 @@
 import argparse
 import shutil
 import os
+import subprocess
 import utils
-import constants
 import update_wp
-
 
 def main(args):
 	if "LUNA2D_PATH" not in os.environ:
@@ -39,15 +38,11 @@ def main(args):
 	global LUNA2D_PATH
 	global CONFIG
 	global PROJECT_CONFIG
-	global CONSTANTS
 
 	ARGS = args
 	LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
 	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
 	#PROJECT_CONFIG = utils.load_json(ARGS.project_path + "/project-config.luna2d")
-	CONSTANTS = {
-		 "LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
-	}
 
 	print("Updating libraries...")
 	update_libs(args)
@@ -56,14 +51,35 @@ def main(args):
 	if ARGS.platform == "wp":
 		update_wp.do_update(ARGS, CONFIG)
 
-	if args.update_assets:
-		print("Updating assets..")
-		update_assets(args)
+	if args.update_assets == "true":
+		update_assets(args, LUNA2D_PATH)
 
 	print("Done")
 
-def update_assets(args):
-	pass
+def update_assets(args, luna2d_path):
+	assets_path = args.project_path + "/.luna2d/assets/"
+	compiler_path = luna2d_path + "/tools/luac/luac"
+
+	shutil.rmtree(assets_path, ignore_errors=True)
+	os.makedirs(assets_path)
+
+	print("Updating assets..")
+	shutil.copytree(args.game_path, assets_path + "/game")
+
+	print("Compiling scripts..")
+	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
+		for item in files:
+			filename = os.path.realpath(str(os.path.join(root, item)))
+			outFilename = filename + "c"
+
+			subprocess.call([compiler_path,
+				"-s",
+				"-o",
+				outFilename,
+				filename])
+
+			os.remove(filename)
+			os.rename(outFilename, filename)
 
 def update_libs(args):
 	pass
