@@ -22,59 +22,14 @@
 # IN THE SOFTWARE.
 #-----------------------------------------------------------------------------
 
-import argparse
-import shutil
-import os
+import constants_wp
 import utils
-import constants
-import update_wp
+import re
 
+def do_update(args, config):
+	orientation = config["orientation"] if "orientation" in config else "landscape"
 
-def main(args):
-	if "LUNA2D_PATH" not in os.environ:
-		print("LUNA2D_PATH environment value isn't set")
-		exit(1)
-
-	global ARGS
-	global LUNA2D_PATH
-	global CONFIG
-	global PROJECT_CONFIG
-	global CONSTANTS
-
-	ARGS = args
-	LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
-	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
-	#PROJECT_CONFIG = utils.load_json(ARGS.project_path + "/project-config.luna2d")
-	CONSTANTS = {
-		 "LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
-	}
-
-	print("Updating libraries...")
-	update_libs(args)
-
-	print("Updating project..")
-	if ARGS.platform == "wp":
-		update_wp.do_update(ARGS, CONFIG)
-
-	if args.update_assets:
-		print("Updating assets..")
-		update_assets(args)
-
-	print("Done")
-
-def update_assets(args):
-	pass
-
-def update_libs(args):
-	pass
-
-def parse_args():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("--game_path", required=True)
-	parser.add_argument("--project_path", required=True)
-	parser.add_argument("--platform", required=True)
-	parser.add_argument("--update_assets", default=True)
-
-	return parser.parse_args()
-
-main(parse_args())
+	# Update "Package.appxmanifest"
+	utils.substitute_file_regexp(args.project_path + "/Package.appxmanifest",
+		constants_wp.ORIENTATION_REGEXP,
+		constants_wp.ORIENTATION_LANDSCAPE if orientation == "landscape" else constants_wp.ORIENTATION_PORTRAIT)

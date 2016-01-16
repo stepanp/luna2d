@@ -24,94 +24,107 @@
 
 import argparse
 import shutil
-import json
 import os
+import subprocess
+import constants
+import utils
+import json
 
 def main(args):
-    if "LUNA2D_PATH" not in os.environ:
-        print("LUNA2D_PATH environment value isn't set")
-        exit(1)
+	if "LUNA2D_PATH" not in os.environ:
+		print("LUNA2D_PATH environment value isn't set")
+		exit(1)
 
-    global ARGS
-    global LUNA2D_PATH
-    global TEMPLATE_PATH
-    global CONFIG
-    global CONSTANTS
-    global IGNORE_EXTENSIONS
+	global ARGS
+	global LUNA2D_PATH
+	global TEMPLATE_PATH
+	global CONFIG
+	global CONSTANTS
+	global IGNORE_EXTENSIONS
 
-    ARGS = args
-    LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
-    TEMPLATE_PATH = LUNA2D_PATH + "/templates/" + args.template
-    CONFIG = load_json(ARGS.input_path + "/config.luna2d")
-    CONSTANTS = {
-         "LUNA_PROJECT_NAME" : args.name,
-         "LUNA2D_PATH" : "$(LUNA2D_PATH)",
-    }
-    IGNORE_EXTENSIONS = [".png", ".jpg", ".jpeg"]
+	ARGS = args
+	LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
+	TEMPLATE_PATH = LUNA2D_PATH + "/templates/" + args.template
+	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
+	CONSTANTS = {
+		 "LUNA_PROJECT_NAME" : args.name,
+		 "LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
+	}
+	IGNORE_EXTENSIONS = [".png", ".jpg", ".jpeg"]
 
-    print(ARGS)
-    print(LUNA2D_PATH)
-    print(TEMPLATE_PATH)
-    print(CONFIG)
-    print(CONSTANTS)
+	print(ARGS)
+	print(LUNA2D_PATH)
+	print(TEMPLATE_PATH)
+	print(CONFIG)
+	print(CONSTANTS)
 
-    shutil.rmtree(ARGS.output_path, ignore_errors=True)
+	shutil.rmtree(ARGS.project_path, ignore_errors=True)
 
-    print("Creating project from template...")
-    process_files(TEMPLATE_PATH, ARGS.output_path)
+	print("Creating project from template..")
+	process_files(TEMPLATE_PATH, ARGS.project_path)
+
+	print("Creating config directory..")
+	make_config_dir(args)
+
+	subprocess.call(
+		[
+			"python", "updateproject.py",
+		    "--game_path", ARGS.game_path,
+		    "--project_path", ARGS.project_path,
+		    "--platform", ARGS.platform,
+		    "--update_assets", "false",
+		])
 
 def process_files(template_path, output_path):
-    for root, dirs, files in os.walk(template_path):
-        for file in files:
+	for root, dirs, files in os.walk(template_path):
+		for file in files:
 
-            if ARGS.strip_git and is_git_file(file):
-                continue
+			if ARGS.strip_git and utils.is_git_file(file):
+				continue
 
-            inner_path = root[len(template_path) + 1:]
-            process_file(root, output_path + "/" + inner_path, file)
+			inner_path = root[len(template_path) + 1:]
+			process_file(root, output_path + "/" + inner_path, file)
 
 def process_file(template_path, output_path, filename):
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+	if not os.path.exists(output_path):
+		os.makedirs(output_path)
 
-    template_filename = template_path + "/" + filename
-    out_filename = output_path + "/" + substitute_constants(filename, CONSTANTS)
+	template_filename = template_path + "/" + filename
+	out_filename = output_path + "/" + utils.substitute_constants(filename, CONSTANTS)
 
-    if any(map(lambda ext: filename.endswith(ext), IGNORE_EXTENSIONS)):
-        shutil.copyfile(template_filename, out_filename)
+	if any(map(lambda ext: filename.endswith(ext), IGNORE_EXTENSIONS)):
+		shutil.copyfile(template_filename, out_filename)
 
-    else:
-        file_data = None
-        with open(template_filename, "r") as file:
-            file_data = file.read()
+	else:
+		utils.substitute_file_constants(template_filename, out_filename, CONSTANTS)
 
-        file_data = substitute_constants(file_data, CONSTANTS)
+def make_config_dir(args):
+	config_dir = args.project_path + "/.luna2d"
+	os.makedirs(config_dir)
 
-        with open(out_filename, "w") as file:
-            file.write(file_data)
+	build_config = {
+		"platform" : args.platform,
+	    "gamePath" : utils.normalize_slashes(os.path.relpath(args.game_path, args.project_path)),
+	}
 
-def substitute_constants(string, constants):
-    for k,v in constants.items():
-        string = string.replace(k, v)
+	with open(config_dir + "/build.luna2d", "w") as file:
+		json.dump(build_config, file, indent=4, separators=(',', ': '))
 
-    return string
+	if not args.strip_git:
+		with open(config_dir + "/.gitignore", "w") as file:
+			file.writelines(["/cache/*"])
+
+	shutil.copyfile(os.path.dirname(__file__) + "/update.py", config_dir + "/update.py")
 
 def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--input_path", required=True)
-    parser.add_argument("--output_path", required=True)
-    parser.add_argument("--template", required=True)
-    parser.add_argument("--name", required=True)
-    parser.add_argument("--platform", required=True)
-    parser.add_argument("--strip_git", default=False)
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--game_path", required=True)
+	parser.add_argument("--project_path", required=True)
+	parser.add_argument("--template", required=True)
+	parser.add_argument("--name", required=True)
+	parser.add_argument("--platform", required=True)
+	parser.add_argument("--strip_git", default=False)
 
-    return parser.parse_args()
-
-def load_json(json_path):
-      with open(json_path) as data:
-         return json.load(data)
-
-def is_git_file(filename):
-    return filename.startswith(".git")
+	return parser.parse_args()
 
 main(parse_args())

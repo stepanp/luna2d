@@ -22,59 +22,43 @@
 # IN THE SOFTWARE.
 #-----------------------------------------------------------------------------
 
-import argparse
-import shutil
-import os
-import utils
-import constants
-import update_wp
+import json
+import re
 
+def substitute_file_regexp(filename, regexp, str):
+	file_data = None
 
-def main(args):
-	if "LUNA2D_PATH" not in os.environ:
-		print("LUNA2D_PATH environment value isn't set")
-		exit(1)
+	with open(filename, "r") as file:
+		file_data = file.read()
 
-	global ARGS
-	global LUNA2D_PATH
-	global CONFIG
-	global PROJECT_CONFIG
-	global CONSTANTS
+	file_data = regexp.sub(str, file_data)
 
-	ARGS = args
-	LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
-	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
-	#PROJECT_CONFIG = utils.load_json(ARGS.project_path + "/project-config.luna2d")
-	CONSTANTS = {
-		 "LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
-	}
+	with open(filename, "w") as file:
+		file.write(file_data)
 
-	print("Updating libraries...")
-	update_libs(args)
+def substitute_file_constants(in_filename, out_filename, constants):
+	file_data = None
 
-	print("Updating project..")
-	if ARGS.platform == "wp":
-		update_wp.do_update(ARGS, CONFIG)
+	with open(in_filename, "r") as file:
+		file_data = file.read()
 
-	if args.update_assets:
-		print("Updating assets..")
-		update_assets(args)
+	file_data = substitute_constants(file_data, constants)
 
-	print("Done")
+	with open(out_filename, "w") as file:
+		file.write(file_data)
 
-def update_assets(args):
-	pass
+def substitute_constants(string, constants):
+	for k,v in constants.items():
+		string = string.replace(k, v)
 
-def update_libs(args):
-	pass
+	return string
 
-def parse_args():
-	parser = argparse.ArgumentParser()
-	parser.add_argument("--game_path", required=True)
-	parser.add_argument("--project_path", required=True)
-	parser.add_argument("--platform", required=True)
-	parser.add_argument("--update_assets", default=True)
+def load_json(json_path):
+	with open(json_path) as data:
+		return json.load(data)
 
-	return parser.parse_args()
+def is_git_file(filename):
+	return filename.startswith(".git")
 
-main(parse_args())
+def normalize_slashes(path):
+	return path.replace("\\", "/")

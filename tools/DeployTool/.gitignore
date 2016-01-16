@@ -5,3 +5,4 @@ DeployTool.app/*
 DeployToold.app/*
 ui/DeployTool.pro.user
 python/.idea/*
+*.pyc
