@@ -21,7 +21,8 @@ OpenGLESPage::OpenGLESPage() :
 	mCustomRenderSurfaceSize(0,0),
 	mUseCustomRenderSurfaceSize(false),
 	successEvent(nullptr),
-	failEvent(nullptr)
+	failEvent(nullptr),
+	isDelegatesSet(false)
 {
 	InitializeComponent();
 
@@ -92,6 +93,8 @@ void OpenGLESPage::SetDelegates(
 	videoReadyEvent = videoReady;
 	showVideoEvent = showVideo;
 	rateAppEvent = rateApp;
+
+	isDelegatesSet = true;
 }
 
 CallbackEvent^ OpenGLESPage::GetSuccessDelegate()
@@ -238,17 +241,20 @@ void OpenGLESPage::StartRenderLoop()
 					new LUNAWpUtils(swapChainPanel->Dispatcher), new LUNAWpPrefs());
 				LUNAEngine::Shared()->Initialize(panelWidth, panelHeight);
 
-				auto sdk = std::make_shared<LUNAWpAdsProxy>(swapChainPanel->Dispatcher);
+				if(isDelegatesSet)
+				{
+					auto sdk = std::make_shared<LUNAWpAdsProxy>(swapChainPanel->Dispatcher);
 
-				sdk->SetDelegates(getNameEvent, videoSupportedEvent, videoReadyEvent, showVideoEvent);
-				successEvent = sdk->GetSuccessDelegate();
-				failEvent = sdk->GetFailDelegate();
+					sdk->SetDelegates(getNameEvent, videoSupportedEvent, videoReadyEvent, showVideoEvent);
+					successEvent = sdk->GetSuccessDelegate();
+					failEvent = sdk->GetFailDelegate();
 
-				LUNAEngine::SharedAds()->SetSdk(sdk);
+					LUNAEngine::SharedAds()->SetSdk(sdk);
 
-				auto storeSdk = std::make_shared<LUNAWpStoreProxy>();
-				storeSdk->SetDelegates(rateAppEvent);
-				LUNAEngine::SharedStore()->SetSdk(storeSdk);
+					auto storeSdk = std::make_shared<LUNAWpStoreProxy>();
+					storeSdk->SetDelegates(rateAppEvent);
+					LUNAEngine::SharedStore()->SetSdk(storeSdk);
+				}
 			}
 			else 
 			{

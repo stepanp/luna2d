@@ -70,6 +70,7 @@ namespace luna2d
 		CallbackEvent^ successEvent;
 		CallbackEvent^ failEvent;
 		RequestRateAppEvent^ rateAppEvent;
+		bool isDelegatesSet;
 
 		void OnPageLoaded(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void OnVisibilityChanged(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::VisibilityChangedEventArgs^ args);
