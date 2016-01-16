@@ -28,4 +28,4 @@
 
 QString GetScriptsPath();
 
-void RunScript(const QString& name, const QStringList& params);
+void RunScript(const QString& name, const QStringList& args);

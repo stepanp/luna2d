@@ -28,74 +28,73 @@ import json
 import os
 
 def main(args):
-    print(args.input_path)
-    print(args.output_path)
-    print(args.template)
-    print(args.name)
-    print(args.platform)
+    if "LUNA2D_PATH" not in os.environ:
+        print("LUNA2D_PATH environment value isn't set")
+        exit(1)
 
-    shutil.rmtree(args.output_path, ignore_errors=True)
+    global ARGS
+    global LUNA2D_PATH
+    global TEMPLATE_PATH
+    global CONFIG
+    global CONSTANTS
+    global IGNORE_EXTENSIONS
 
-    template_path = args.template
-    config = parse_config(args.input_path + "/config.luna2d")
-
-    constants_list = \
-    {
-        "LUNA_PROJECT_NAME" : args.name
+    ARGS = args
+    LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
+    TEMPLATE_PATH = LUNA2D_PATH + "/templates/" + args.template
+    CONFIG = load_json(ARGS.input_path + "/config.luna2d")
+    CONSTANTS = {
+         "LUNA_PROJECT_NAME" : args.name,
+         "LUNA2D_PATH" : "$(LUNA2D_PATH)",
     }
+    IGNORE_EXTENSIONS = [".png", ".jpg", ".jpeg"]
 
-    process_files(template_path, args.output_path, constants_list)
+    print(ARGS)
+    print(LUNA2D_PATH)
+    print(TEMPLATE_PATH)
+    print(CONFIG)
+    print(CONSTANTS)
 
-def parse_config(config_path):
-    with open(config_path) as data:
-        return json.load(data)
+    shutil.rmtree(ARGS.output_path, ignore_errors=True)
 
-def process_files(template_path, output_path, constants):
+    print("Creating project from template...")
+    process_files(TEMPLATE_PATH, ARGS.output_path)
+
+def process_files(template_path, output_path):
     for root, dirs, files in os.walk(template_path):
         for file in files:
-            inner_path = root[len(template_path) + 1:]
-            process_file(root, output_path + "/" + inner_path, file, constants)
 
-def process_file(template_path, output_path, filename, constants):
+            if ARGS.strip_git and is_git_file(file):
+                continue
+
+            inner_path = root[len(template_path) + 1:]
+            process_file(root, output_path + "/" + inner_path, file)
+
+def process_file(template_path, output_path, filename):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
     template_filename = template_path + "/" + filename
-    out_filename = output_path + "/" + substitute_constants(filename, constants)
+    out_filename = output_path + "/" + substitute_constants(filename, CONSTANTS)
 
-    if filename.endswith(".png"):
+    if any(map(lambda ext: filename.endswith(ext), IGNORE_EXTENSIONS)):
         shutil.copyfile(template_filename, out_filename)
-        return
 
-    file_data = None
-    with open(template_filename, "r") as file:
-        file_data = file.read()
+    else:
+        file_data = None
+        with open(template_filename, "r") as file:
+            file_data = file.read()
 
-    file_data = substitute_constants(file_data, constants)
+        file_data = substitute_constants(file_data, CONSTANTS)
 
-    with open(out_filename, "w") as file:
-        file.write(file_data)
+        with open(out_filename, "w") as file:
+            file.write(file_data)
 
 def substitute_constants(string, constants):
     for k,v in constants.items():
         string = string.replace(k, v)
 
     return string
-
-def replace(file, old, new):
-    # Read contents from file as a single string
-    file_handle = open(file, 'r')
-    file_string = file_handle.read()
-    file_handle.close()
-
-    # Use RE package to allow for replacement (also allowing for (multiline) REGEX)
-    file_string = file_string.replace(old, new)
-
-    # Write contents to file.
-    # Using mode 'w' truncates the file.
-    file_handle = open(file, 'w')
-    file_handle.write(file_string)
-    file_handle.close()
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -104,7 +103,15 @@ def parse_args():
     parser.add_argument("--template", required=True)
     parser.add_argument("--name", required=True)
     parser.add_argument("--platform", required=True)
+    parser.add_argument("--strip_git", default=False)
 
     return parser.parse_args()
+
+def load_json(json_path):
+      with open(json_path) as data:
+         return json.load(data)
+
+def is_git_file(filename):
+    return filename.startswith(".git")
 
 main(parse_args())

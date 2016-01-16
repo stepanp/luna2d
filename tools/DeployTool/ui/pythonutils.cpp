@@ -31,9 +31,10 @@ QString GetScriptsPath()
 	return QCoreApplication::applicationDirPath() + "/python/";
 }
 
-void RunScript(const QString& name, const QStringList& params)
+void RunScript(const QString& name, const QStringList& args)
 {
 	QProcess process;
-	process.start("python " + GetScriptsPath() + name);
+
+	process.start("python " + GetScriptsPath() + name + " " + args.join(" "));
 	process.waitForFinished();
 }

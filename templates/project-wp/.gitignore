@@ -9,5 +9,5 @@
 /*.vcxproj.user
 /Assets/game/*
 /AppPackages/*
-/GeneratedAssets/*
+/Generated Assets/*
 /BundleArtifacts/*

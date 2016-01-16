@@ -132,21 +132,21 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\thirdparty\angle\prebuilt\wp\arm\libEGL.dll">
+    <None Include="LUNA2D_PATH\lib\wp\libEGL.dll">
       <DeploymentContent>true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
     </None>
-    <None Include="..\..\thirdparty\angle\prebuilt\wp\arm\libGLESv2.dll">
+    <None Include="LUNA2D_PATH\lib\wp\libGLESv2.dll">
       <DeploymentContent>true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
     </None>
-    <None Include="..\..\thirdparty\OpenAL\prebuilt\wp\arm\OpenAL.wp8.dll">
+    <None Include="LUNA2D_PATH\lib\wp\OpenAL.wp8.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="luna2d">
-      <HintPath>..\..\lib\wp\luna2d.winmd</HintPath>
+      <HintPath>LUNA2D_PATH\lib\wp\luna2d.winmd</HintPath>
       <IsWinMDFile>true</IsWinMDFile>
     </Reference>
   </ItemGroup>

@@ -143,13 +143,16 @@ void MainWindow::OnParamsBack()
 
 void MainWindow::OnParamsNext()
 {
-	QStringList pyCommand;
-	/*pyCommand << "-f" << parameter1 <<
-					"-t" << parameter2 <<
-					"-v" << parameter3 <<
-					"-e" << parameter4;*/
+	QStringList args =
+	{
+		"--input_path", ui->editInputPath->text(),
+		"--output_path", ui->editOutputPath->text(),
+		"--template", "project-wp",
+		"--name", ui->editName->text(),
+		"--platform", "wp",
+	};
 
-	RunScript("generateproject.py", pyCommand);
+	RunScript("generateproject.py", args);
 }
 
 void MainWindow::OnOutputPathButton()

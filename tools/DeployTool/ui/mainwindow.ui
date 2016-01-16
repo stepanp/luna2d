@@ -31,12 +31,12 @@
      <widget class="QPushButton" name="btnNewGame">
       <property name="minimumSize">
        <size>
-        <width>120</width>
+        <width>100</width>
         <height>30</height>
        </size>
       </property>
       <property name="text">
-       <string>New game project</string>
+       <string>New project...</string>
       </property>
      </widget>
     </item>
