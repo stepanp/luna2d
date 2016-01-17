@@ -83,6 +83,8 @@ def process_files(template_path, output_path):
 				continue
 
 			inner_path = root[len(template_path) + 1:]
+			inner_path = utils.substitute_constants(inner_path, CONSTANTS)
+
 			process_file(root, output_path + "/" + inner_path, file)
 
 def process_file(template_path, output_path, filename):
@@ -103,6 +105,7 @@ def make_config_dir(args):
 	os.makedirs(config_dir)
 
 	build_config = {
+		"projectName" : args.name,
 		"platform" : args.platform,
 		"gamePath" : utils.normalize_slashes(os.path.relpath(args.game_path, args.project_path)),
 	}

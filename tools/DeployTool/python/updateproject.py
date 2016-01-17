@@ -44,12 +44,14 @@ def main(args):
 	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
 	#PROJECT_CONFIG = utils.load_json(ARGS.project_path + "/project-config.luna2d")
 
+	build_config = utils.load_json(args.project_path + "/.luna2d/build.luna2d")
+
 	print("Updating libraries...")
 	update_libs(args)
 
 	print("Updating project..")
 	if ARGS.platform == "wp":
-		update_wp.do_update(ARGS, CONFIG)
+		update_wp.do_update(ARGS, CONFIG, build_config["projectName"])
 
 	if args.update_assets == "true":
 		update_assets(args, LUNA2D_PATH)
@@ -82,7 +84,11 @@ def update_assets(args, luna2d_path):
 			os.rename(outFilename, filename)
 
 def update_libs(args):
-	pass
+	libs_source_dir = LUNA2D_PATH + "/lib/wp/"
+	libs_dest_dir = args.project_path + "/.luna2d/libs"
+
+	shutil.rmtree(libs_dest_dir, ignore_errors=True)
+	shutil.copytree(libs_source_dir, libs_dest_dir)
 
 def parse_args():
 	parser = argparse.ArgumentParser()

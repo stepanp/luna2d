@@ -26,10 +26,10 @@ import constants_wp
 import utils
 import re
 
-def do_update(args, config):
+def do_update(args, config, project_name):
 	orientation = config["orientation"] if "orientation" in config else "landscape"
 
 	# Update "Package.appxmanifest"
-	utils.substitute_file_regexp(args.project_path + "/Package.appxmanifest",
+	utils.substitute_file_regexp(args.project_path + "/" + project_name + "/Package.appxmanifest",
 		constants_wp.ORIENTATION_REGEXP,
 		constants_wp.ORIENTATION_LANDSCAPE if orientation == "landscape" else constants_wp.ORIENTATION_PORTRAIT)
