@@ -1,5 +1,6 @@
 {
     "projectName": "FlappyLuna",
     "gamePath": "../game",
+    "luna2dPath": "../../..",
     "platform": "wp"
 }

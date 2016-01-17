@@ -132,15 +132,15 @@
 		</ClCompile>
 	</ItemGroup>
 	<ItemGroup>
-		<None Include="..\.luna2d\libs\libEGL.dll">
+		<None Include="$(SolutionDir)\.luna2d\libs\libEGL.dll">
 			<DeploymentContent>true</DeploymentContent>
 			<DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
 		</None>
-		<None Include="..\.luna2d\libs\libGLESv2.dll">
+		<None Include="$(SolutionDir)\.luna2d\libs\libGLESv2.dll">
 			<DeploymentContent>true</DeploymentContent>
 			<DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
 		</None>
-		<None Include="..\.luna2d\libs\OpenAL.wp8.dll">
+		<None Include="$(SolutionDir)\.luna2d\libs\OpenAL.wp8.dll">
 			<DeploymentContent>true</DeploymentContent>
 			<DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
 		</None>
@@ -153,7 +153,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="luna2d">
-			<HintPath>..\.luna2d\libs\luna2d.winmd</HintPath>
+			<HintPath>$(SolutionDir)\.luna2d\libs\luna2d.winmd</HintPath>
 			<IsWinMDFile>true</IsWinMDFile>
 		</Reference>
 	</ItemGroup>
@@ -163,7 +163,7 @@
 		</Page>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\luna2d Update\luna2d Update.vcxproj">
+		<ProjectReference Include="..\luna2d DeployTool\luna2d DeployTool.vcxproj">
 			<Project>{102f89a5-8580-4a8f-84d3-941e8945df88}</Project>
 		</ProjectReference>
 	</ItemGroup>

@@ -1,3 +1,9 @@
+#----------------------------------------------------------
+# THIS FILE IS AUTOMATICALLY CREATED BY LUNA2D DEPLOY TOOL
+# IT'S NECESSARY FOR PROPER OPERATION OF LUNA2D DEPLOY TOOL
+# DO NOT MODIFY IT MANUALLY
+#----------------------------------------------------------
+
 import subprocess
 import os
 import json
@@ -11,7 +17,16 @@ with open(config_path + "/build.luna2d") as data:
 platform = build_config["platform"]
 project_path = os.path.realpath(config_path + "/..")
 game_path = os.path.normpath(os.path.join(project_path, build_config["gamePath"]))
-luna2d_path = os.path.abspath(os.environ["LUNA2D_PATH"])
+
+luna2d_path = None
+
+if build_config["luna2dPath"] == "$(LUNA2D_PATH)":
+	luna2d_path = os.path.abspath(os.environ["LUNA2D_PATH"])
+else:
+	if os.path.isabs(build_config["luna2dPath"]):
+		luna2d_path = build_config["luna2dPath"]
+	else:
+		luna2d_path = os.path.normpath(os.path.join(project_path, build_config["luna2dPath"]))
 
 subprocess.call(
 	[
@@ -19,5 +34,5 @@ subprocess.call(
 		"--game_path", game_path,
 		"--project_path", project_path,
 		"--platform", platform,
-		"--update_assets", "true",
+		"--skip_assets", "false",
 	])

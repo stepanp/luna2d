@@ -61,4 +61,8 @@ def is_git_file(filename):
 	return filename.startswith(".git")
 
 def normalize_slashes(path):
-	return path.replace("\\", "/")
+	npath = path.replace("\\", "/")
+	if npath.endswith("/"):
+		return npath[:-1]
+	else:
+		return npath

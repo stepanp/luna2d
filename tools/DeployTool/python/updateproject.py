@@ -30,31 +30,20 @@ import utils
 import update_wp
 
 def main(args):
-	if "LUNA2D_PATH" not in os.environ:
-		print("LUNA2D_PATH environment value isn't set")
-		exit(1)
-
-	global ARGS
-	global LUNA2D_PATH
-	global CONFIG
-	global PROJECT_CONFIG
-
-	ARGS = args
-	LUNA2D_PATH = os.path.abspath(os.environ["LUNA2D_PATH"])
-	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
-	#PROJECT_CONFIG = utils.load_json(ARGS.project_path + "/project-config.luna2d")
-
+	luna2d_path = get_luna2d_path()
+	config = utils.load_json(args.game_path + "/config.luna2d")
+	# project_config = utils.load_json(args.project_path + "/project-config.luna2d")
 	build_config = utils.load_json(args.project_path + "/.luna2d/build.luna2d")
 
 	print("Updating libraries...")
-	update_libs(args)
+	update_libs(args, luna2d_path)
 
 	print("Updating project..")
-	if ARGS.platform == "wp":
-		update_wp.do_update(ARGS, CONFIG, build_config["projectName"])
+	if args.platform == "wp":
+		update_wp.do_update(args, config, build_config["projectName"])
 
-	if args.update_assets == "true":
-		update_assets(args, LUNA2D_PATH)
+	if args.skip_assets == "false":
+		update_assets(args, luna2d_path)
 
 	print("Done")
 
@@ -83,19 +72,23 @@ def update_assets(args, luna2d_path):
 			os.remove(filename)
 			os.rename(outFilename, filename)
 
-def update_libs(args):
-	libs_source_dir = LUNA2D_PATH + "/lib/wp/"
+def update_libs(args, luna2d_path):
+	libs_source_dir = luna2d_path + "/lib/wp/"
 	libs_dest_dir = args.project_path + "/.luna2d/libs"
 
 	shutil.rmtree(libs_dest_dir, ignore_errors=True)
 	shutil.copytree(libs_source_dir, libs_dest_dir)
+
+# Get absolute path to luna2d directory where is current script
+def get_luna2d_path():
+	return utils.normalize_slashes(os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + "/../../../"))
 
 def parse_args():
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--game_path", required=True)
 	parser.add_argument("--project_path", required=True)
 	parser.add_argument("--platform", required=True)
-	parser.add_argument("--update_assets", default=True)
+	parser.add_argument("--skip_assets", default=False)
 
 	return parser.parse_args()
 

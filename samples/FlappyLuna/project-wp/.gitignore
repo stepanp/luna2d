@@ -13,6 +13,6 @@ FlappyLuna/*.vcxproj.user
 FlappyLuna/Assets/game/*
 FlappyLuna/AppPackages/*
 FlappyLuna/BundleArtifacts/*
-luna2d Update/*
-!luna2d Update/luna2d Update.vcxproj
-!luna2d Update/luna2d Update.vcxproj.filters
+luna2d DeployTool/*
+!luna2d DeployTool/luna2d DeployTool.vcxproj
+!luna2d DeployTool/luna2d DeployTool.vcxproj.filters

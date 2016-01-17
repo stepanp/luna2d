@@ -13,6 +13,6 @@ LUNA_PROJECT_NAME/*.vcxproj.user
 LUNA_PROJECT_NAME/Assets/game/*
 LUNA_PROJECT_NAME/AppPackages/*
 LUNA_PROJECT_NAME/BundleArtifacts/*
-luna2d Update/*
-!luna2d Update/luna2d Update.vcxproj
-!luna2d Update/luna2d Update.vcxproj.filters
+luna2d DeployTool/*
+!luna2d DeployTool/luna2d DeployTool.vcxproj
+!luna2d DeployTool/luna2d DeployTool.vcxproj.filters

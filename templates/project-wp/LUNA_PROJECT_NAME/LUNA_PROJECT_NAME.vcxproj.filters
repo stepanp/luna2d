@@ -41,9 +41,9 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="LUNA2D_PATH\lib\wp\libEGL.dll" />
-    <None Include="LUNA2D_PATH\lib\wp\libGLESv2.dll" />
-    <None Include="LUNA2D_PATH\lib\wp\OpenAL.wp8.dll" />
+    <None Include="$(SolutionDir)\.luna2d\libs\libEGL.dll" />
+    <None Include="$(SolutionDir)\.luna2d\libs\libGLESv2.dll" />
+    <None Include="$(SolutionDir)\.luna2d\libs\OpenAL.wp8.dll" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="BlankPage.xaml" />
