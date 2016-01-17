@@ -31,12 +31,25 @@
 QString GetLuna2dPath()
 {
 	QDir dir(QCoreApplication::applicationDirPath() + "../../../");
+
+	// Escape DeployTool.app/Contents/Mac path
+#ifdef Q_OS_MAC
+	dir.cd("../../../");
+#endif
+
 	return dir.absolutePath();
 }
 
 QString GetScriptsPath()
 {
-	return QCoreApplication::applicationDirPath() + "/python/";
+	QDir dir(QCoreApplication::applicationDirPath());
+
+	// Escape DeployTool.app/Contents/Mac path
+#ifdef Q_OS_MAC
+	dir.cd("../../../");
+#endif
+
+	return dir.absolutePath() + "/python/";
 }
 
 QStringList RunScript(const QString& name, const QStringList& args)

@@ -58,8 +58,7 @@ def main(args):
 			"--project_path", args.project_path,
 			"--platform", args.platform,
 			"--skip_assets", "true",
-		],
-		shell=True)
+		])
 
 def process_files(template_path, output_path, args, constants):
 	for root, dirs, files in os.walk(template_path):

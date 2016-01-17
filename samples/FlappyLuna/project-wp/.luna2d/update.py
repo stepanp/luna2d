@@ -8,7 +8,7 @@ import subprocess
 import os
 import json
 
-config_path = os.path.dirname(__file__)
+config_path = os.path.dirname(os.path.abspath(__file__))
 
 build_config = None
 with open(config_path + "/build.luna2d") as data:
