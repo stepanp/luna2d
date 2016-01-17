@@ -24,7 +24,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "pythonutils.h"
+#include "utils.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <json11.hpp>
@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->btnNext, &QPushButton::clicked, this, &MainWindow::OnNext);
 	connect(ui->btnBackParams, &QPushButton::clicked, this, &MainWindow::OnParamsBack);
 	connect(ui->btnNextParams, &QPushButton::clicked, this, &MainWindow::OnParamsNext);
+	connect(ui->pages, &QStackedWidget::currentChanged, this, &MainWindow::OnPageOpened);
 	connect(ui->btnAbout, &QPushButton::clicked, this, &MainWindow::OnAbout);
 }
 
@@ -143,16 +144,17 @@ void MainWindow::OnParamsBack()
 
 void MainWindow::OnParamsNext()
 {
-	QStringList args =
-	{
-		"--input_path", ui->editInputPath->text(),
-		"--output_path", ui->editOutputPath->text(),
-		"--template", "project-wp",
-		"--name", ui->editName->text(),
-		"--platform", "wp",
-	};
+	QString projectPath = ui->editOutputPath->text();
+	QDir dir(projectPath);
 
-	RunScript("generateproject.py", args);
+	if(dir.exists())
+	{
+		QMessageBox::critical(this, "Directory already exists",
+			"Cannot create project in \"" + projectPath + "\".\nDirectory already exists.");
+		return;
+	}
+
+	ui->pages->setCurrentWidget(ui->pageOutput);
 }
 
 void MainWindow::OnOutputPathButton()
@@ -165,6 +167,24 @@ void MainWindow::OnOutputPathButton()
 	{
 		ui->editOutputPath->setText(dialog.selectedFiles().first());
 	}
+}
+
+void MainWindow::OnPageOpened(int pageIndex)
+{
+	if(pageIndex != ui->pages->indexOf(ui->pageOutput)) return;
+
+	QStringList args =
+	{
+		"--luna2d_path", GetLuna2dPath(),
+		"--game_path", ui->editInputPath->text(),
+		"--project_path", ui->editOutputPath->text(),
+		"--template", "project-wp",
+		"--name", ui->editName->text(),
+		"--platform", "wp",
+	};
+
+	auto output = RunScript("generateproject.py", args);
+	for(auto& str : output) ui->txtOutput->append(str);
 }
 
 void MainWindow::OnAbout()

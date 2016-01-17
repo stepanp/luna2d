@@ -81,7 +81,7 @@ def update_libs(args, luna2d_path):
 
 # Get absolute path to luna2d directory where is current script
 def get_luna2d_path():
-	return utils.normalize_slashes(os.path.realpath(os.path.dirname(os.path.abspath(__file__)) + "/../../../"))
+	return utils.normalize_slashes(os.path.realpath(utils.get_scripts_path() + "/../../../"))
 
 def parse_args():
 	parser = argparse.ArgumentParser()

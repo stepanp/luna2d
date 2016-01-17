@@ -51,5 +51,6 @@ public slots:
 	void OnParamsBack();
 	void OnParamsNext();
 	void OnOutputPathButton();
+	void OnPageOpened(int pageIndex);
 	void OnAbout();
 };

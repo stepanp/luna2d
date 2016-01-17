@@ -22,10 +22,41 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "utils.h"
+#include <QDir>
+#include <QCoreApplication>
+#include <QProcess>
+#include <QDebug>
 
-#include <QStringList>
+QString GetLuna2dPath()
+{
+	QDir dir(QCoreApplication::applicationDirPath() + "../../../");
+	return dir.absolutePath();
+}
 
-QString GetScriptsPath();
+QString GetScriptsPath()
+{
+	return QCoreApplication::applicationDirPath() + "/python/";
+}
 
-void RunScript(const QString& name, const QStringList& args);
+QStringList RunScript(const QString& name, const QStringList& args)
+{
+	QProcess process;
+	QStringList output;
+
+	process.connect(&process, &QProcess::readyRead,
+		[&]()
+		{
+			QString outputPart = process.readAll();
+			QStringList outputPartList = outputPart.split(QRegExp("\n|\r\n|\r"), QString::SkipEmptyParts);
+
+			outputPartList.append(output);
+			output = outputPartList;
+		});
+
+	process.setProcessChannelMode(QProcess::MergedChannels);
+	process.start("python " + GetScriptsPath() + name + " " + args.join(" "));
+	process.waitForFinished();
+
+	return output;
+}

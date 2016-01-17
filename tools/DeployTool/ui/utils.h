@@ -22,19 +22,12 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "pythonutils.h"
-#include <QCoreApplication>
-#include <QProcess>
+#pragma once
 
-QString GetScriptsPath()
-{
-	return QCoreApplication::applicationDirPath() + "/python/";
-}
+#include <QStringList>
 
-void RunScript(const QString& name, const QStringList& args)
-{
-	QProcess process;
+QString GetLuna2dPath();
 
-	process.start("python " + GetScriptsPath() + name + " " + args.join(" "));
-	process.waitForFinished();
-}
+QString GetScriptsPath();
+
+QStringList RunScript(const QString& name, const QStringList& args);

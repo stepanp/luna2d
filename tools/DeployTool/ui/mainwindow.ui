@@ -139,7 +139,7 @@
        <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="pageMain">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -431,6 +431,26 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="pageOutput">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="1" column="0" alignment="Qt::AlignHCenter">
+         <widget class="QPushButton" name="btnDone">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Done</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTextBrowser" name="txtOutput"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -445,18 +465,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>btnAbout</sender>
-   <signal>toggled(bool)</signal>
+   <sender>btnDone</sender>
+   <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>OnAbout()</slot>
+   <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>514</x>
-     <y>375</y>
+     <x>299</x>
+     <y>329</y>
     </hint>
     <hint type="destinationlabel">
-     <x>297</x>
-     <y>372</y>
+     <x>299</x>
+     <y>199</y>
     </hint>
    </hints>
   </connection>

@@ -53,12 +53,13 @@ def main(args):
 
 	subprocess.call(
 		[
-			"python", "updateproject.py",
+			"python", utils.get_scripts_path() + "/updateproject.py",
 			"--game_path", args.game_path,
 			"--project_path", args.project_path,
 			"--platform", args.platform,
 			"--skip_assets", "true",
-		])
+		],
+		shell=True)
 
 def process_files(template_path, output_path, args, constants):
 	for root, dirs, files in os.walk(template_path):
@@ -108,7 +109,7 @@ def make_config_dir(args, luna2d_path):
 					"libs/*\n",
 				])
 
-	shutil.copyfile(os.path.dirname(__file__) + "/update.py", config_dir + "/update.py")
+	shutil.copyfile(utils.get_scripts_path() + "/update.py", config_dir + "/update.py")
 
 def get_absolute_luna2d_path(project_path, luna2d_path):
 	if os.path.isabs(luna2d_path):

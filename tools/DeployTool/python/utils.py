@@ -23,7 +23,7 @@
 #-----------------------------------------------------------------------------
 
 import json
-import re
+import os
 
 def substitute_file_regexp(filename, regexp, str):
 	file_data = None
@@ -66,3 +66,6 @@ def normalize_slashes(path):
 		return npath[:-1]
 	else:
 		return npath
+
+def get_scripts_path():
+	return os.path.dirname(os.path.abspath(__file__))
