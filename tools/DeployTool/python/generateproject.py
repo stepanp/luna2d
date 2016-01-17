@@ -47,8 +47,8 @@ def main(args):
 	TEMPLATE_PATH = LUNA2D_PATH + "/templates/" + args.template
 	CONFIG = utils.load_json(ARGS.game_path + "/config.luna2d")
 	CONSTANTS = {
-		 "LUNA_PROJECT_NAME" : args.name,
-		 "LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
+		"LUNA_PROJECT_NAME" : args.name,
+		"LUNA2D_PATH" : constants.PLATFORM[ARGS.platform]["LUNA2D_PATH"]
 	}
 	IGNORE_EXTENSIONS = [".png", ".jpg", ".jpeg"]
 
@@ -69,10 +69,10 @@ def main(args):
 	subprocess.call(
 		[
 			"python", "updateproject.py",
-		    "--game_path", ARGS.game_path,
-		    "--project_path", ARGS.project_path,
-		    "--platform", ARGS.platform,
-		    "--update_assets", "false",
+			"--game_path", ARGS.game_path,
+			"--project_path", ARGS.project_path,
+			"--platform", ARGS.platform,
+			"--update_assets", "false",
 		])
 
 def process_files(template_path, output_path):
@@ -104,7 +104,7 @@ def make_config_dir(args):
 
 	build_config = {
 		"platform" : args.platform,
-	    "gamePath" : utils.normalize_slashes(os.path.relpath(args.game_path, args.project_path)),
+		"gamePath" : utils.normalize_slashes(os.path.relpath(args.game_path, args.project_path)),
 	}
 
 	with open(config_dir + "/build.luna2d", "w") as file:
@@ -115,8 +115,8 @@ def make_config_dir(args):
 			file.writelines(
 				[
 					"cache/*\n",
-				    "assets/*\n",
-				    "libs/*\n",
+					"assets/*\n",
+					"libs/*\n",
 				])
 
 	shutil.copyfile(os.path.dirname(__file__) + "/update.py", config_dir + "/update.py")
