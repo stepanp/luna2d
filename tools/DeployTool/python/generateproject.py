@@ -32,13 +32,18 @@ import json
 IGNORE_EXTENSIONS = [".png", ".jpg", ".jpeg"]
 
 def main(args):
+	if args.debug_clear_project == "true":
+		shutil.rmtree(args.project_path, ignore_errors=True)
+
+	elif os.path.exists(args.project_path):
+		print("Cannot create project in \"" + args.project_path + "\". Directory already exists.")
+		exit(1)
+
 	luna2d_path = get_absolute_luna2d_path(args.project_path, args.luna2d_path)
 	template_path = luna2d_path + "/templates/" + args.template
 	constants = {
 		"LUNA_PROJECT_NAME" : args.name,
 	}
-
-	shutil.rmtree(args.project_path, ignore_errors=True)
 
 	print("Creating project from template..")
 	process_files(template_path, args.project_path, args, constants)
@@ -120,6 +125,7 @@ def parse_args():
 	parser.add_argument("--name", required=True)
 	parser.add_argument("--platform", required=True)
 	parser.add_argument("--strip_git", default=False)
+	parser.add_argument("--debug_clear_project", default=False)
 
 	return parser.parse_args()
 
