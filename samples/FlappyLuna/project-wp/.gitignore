@@ -1,0 +1,18 @@
+/*.sdf
+/*.suo
+/*.opensdf
+/ipch/*
+/Debug/*
+/Release/*
+/ARM/*
+FlappyLuna/Debug/*
+FlappyLuna/Release/*
+FlappyLuna/ARM/*
+FlappyLuna/Generated Files/*
+FlappyLuna/*.vcxproj.user
+FlappyLuna/Assets/game/*
+FlappyLuna/AppPackages/*
+FlappyLuna/BundleArtifacts/*
+luna2d Update/*
+!luna2d Update/luna2d Update.vcxproj
+!luna2d Update/luna2d Update.vcxproj.filters
