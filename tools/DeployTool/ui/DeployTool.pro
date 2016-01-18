@@ -33,10 +33,12 @@ INCLUDEPATH += ../../../thirdparty/json11/
 SOURCES += main.cpp\
 		mainwindow.cpp \
 		../../../thirdparty/json11/json11.cpp \
-    utils.cpp
+    utils.cpp \
+    template.cpp
 
 HEADERS  += mainwindow.h \
-    utils.h
+    utils.h \
+    template.h
 
 FORMS    += mainwindow.ui
 

@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	FillTemplates();
 	FillPlatformCombo();
 
 	ui->btnNext->setDisabled(true);
@@ -54,22 +55,44 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::FillPlatformCombo()
+void MainWindow::FillTemplates()
 {
-	ui->comboTargetOs->addItem("iOS");
-	ui->comboTargetOs->addItem("Android");
-	ui->comboTargetOs->addItem("Windows Phone");
+	Template tmplIos("iOS", "project-ios", "ios");
+	Template tmplAndroid("Android", "project-android", "android");
+	Template tmplWp("Windows Phone", "project-wp", "wp");
 
 	// Disable iOS target on non-OSX platforms
 #ifndef Q_OS_MAC
-	ui->comboTargetOs->setItemData(0, QVariant(0), Qt::UserRole - 1);
-	ui->comboTargetOs->setCurrentIndex(1);
+	tmplIos.enabled = false;
 #endif
 
 	// Disable Windows Phone target on non-Windows platforms
 #ifndef Q_OS_WIN32
-	ui->comboTargetOs->setItemData(2, QVariant(0), Qt::UserRole - 1);
+	tmplWp.enabled = false;
 #endif
+
+	templates.push_back(tmplIos);
+	templates.push_back(tmplAndroid);
+	templates.push_back(tmplWp);
+}
+
+void MainWindow::FillPlatformCombo()
+{
+	int selected = 0;
+
+	for(int i = 0; i < templates.size(); i++)
+	{
+		auto& tmpl = templates[i];
+
+		ui->comboTargetOs->addItem(tmpl.displayName);
+		if(!tmpl.enabled)
+		{
+			ui->comboTargetOs->setItemData(i, QVariant(0), Qt::UserRole - 1);
+			if(selected == i) selected++;
+		}
+	}
+
+	ui->comboTargetOs->setCurrentIndex(selected);
 }
 
 QString MainWindow::CheckGameProjectPath(const QString& path)
@@ -78,6 +101,12 @@ QString MainWindow::CheckGameProjectPath(const QString& path)
 
 	if(!file.exists()) return "Game project directory must contains \"config.luna2d\" file";
 	else return "";
+}
+
+const Template&MainWindow::GetSelectedTemplate()
+{
+	int index = ui->comboTargetOs->currentIndex();
+	return templates[index];
 }
 
 void MainWindow::OnInputPathButton()
@@ -112,29 +141,44 @@ void MainWindow::OnNext()
 	if(!error.isEmpty())
 	{
 		QMessageBox::critical(this, "Error opening game project", error);
-		ui->btnNext->setDisabled(true);
+		return;
+	}
+
+	// Load config for get game name
+	QFile configFile(inputPath + "/config.luna2d");
+	if(!configFile.open(QIODevice::ReadOnly))
+	{
+		QMessageBox::critical(this, "Error opening game project", "Error loading \"config.luna2d\" file");
+		return;
+	}
+
+	std::string jsonErr;
+	Json jsonConfig = Json::parse(configFile.readAll().toStdString(), jsonErr, JsonParse::COMMENTS);
+
+	if(jsonConfig == nullptr)
+	{
+		QMessageBox::critical(this, "Error opening game project", "Error parsing \"config.luna2d\" file");
+		return;
+	}
+
+	if(!jsonConfig["name"].is_string() || jsonConfig["name"].string_value().empty())
+	{
+		QMessageBox::critical(this, "Error opening game project",
+			"\"config.luna2d\" file hasn't required \"name\" field");
 		return;
 	}
 
 	ui->pages->setCurrentWidget(ui->pageParams);
 
-	QString outputPath = inputPath.left(inputPath.lastIndexOf("/")) + "/";
-	outputPath += "project-wp";
+	auto selectedTemplate = this->GetSelectedTemplate();
+	QString gameName = QString::fromStdString(jsonConfig["name"].string_value());
 
+	// Set default path using template name
+	QString outputPath = inputPath.left(inputPath.lastIndexOf("/")) + "/" + selectedTemplate.name;
 	ui->editOutputPath->setText(outputPath);
 
-	QFile configFile(inputPath + "/config.luna2d");
-	if(!configFile.open(QIODevice::ReadOnly)) return;
-
-	std::string jsonErr;
-	Json jsonConfig = Json::parse(configFile.readAll().toStdString(), jsonErr, JsonParse::COMMENTS);
-
-	if(jsonConfig == nullptr) return;
-
-	if(jsonConfig["name"].is_string())
-	{
-		ui->editName->setText(QString::fromStdString(jsonConfig["name"].string_value()));
-	}
+	// Set project name using game name from config
+	ui->editName->setText(gameName);
 }
 
 void MainWindow::OnParamsBack()
@@ -173,14 +217,16 @@ void MainWindow::OnPageOpened(int pageIndex)
 {
 	if(pageIndex != ui->pages->indexOf(ui->pageOutput)) return;
 
+	auto selectedTemplate = this->GetSelectedTemplate();
+
 	QStringList args =
 	{
 		"--luna2d_path", GetLuna2dPath(),
 		"--game_path", ui->editInputPath->text(),
 		"--project_path", ui->editOutputPath->text(),
-		"--template", "project-wp",
+		"--template", selectedTemplate.name,
 		"--name", ui->editName->text(),
-		"--platform", "wp",
+		"--platform", selectedTemplate.platform,
 	};
 
 	auto output = RunScript("generateproject.py", args);

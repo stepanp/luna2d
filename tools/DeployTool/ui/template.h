@@ -24,38 +24,14 @@
 
 #pragma once
 
-#include <QMainWindow>
-#include <QList>
-#include "template.h"
+#include <QStringList>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
+struct Template
 {
-	Q_OBJECT
+	Template(const QString& displayName, const QString& name, const QString& platform);
 
-public:
-	explicit MainWindow(QWidget *parent = 0);
-	~MainWindow();
-
-private:
-	Ui::MainWindow *ui;
-	QList<Template> templates;
-
-private:
-	void FillTemplates();
-	void FillPlatformCombo();
-	QString CheckGameProjectPath(const QString& path);
-	const Template& GetSelectedTemplate();
-
-public slots:
-	void OnInputPathButton();
-	void OnNext();
-	void OnParamsBack();
-	void OnParamsNext();
-	void OnOutputPathButton();
-	void OnPageOpened(int pageIndex);
-	void OnAbout();
+	QString displayName;
+	QString name;
+	QString platform;
+	bool enabled = true;
 };
