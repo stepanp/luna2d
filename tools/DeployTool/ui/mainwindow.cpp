@@ -103,7 +103,7 @@ QString MainWindow::CheckGameProjectPath(const QString& path)
 	else return "";
 }
 
-const Template&MainWindow::GetSelectedTemplate()
+const Template& MainWindow::GetSelectedTemplate()
 {
 	int index = ui->comboTargetOs->currentIndex();
 	return templates[index];
