@@ -32,6 +32,13 @@ namespace luna2d{
 //-------------------------------------
 class LUNAIosUtils : public LUNAPlatformUtils
 {
+public:
+    // Get system locale in "xx_XX" format
+    // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
+    virtual std::string GetSystemLocale();
+    
+    // Open given url in system browser
+    virtual void OpenUrl(const std::string& url);
 
 };
 

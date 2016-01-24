@@ -101,7 +101,7 @@ using namespace luna2d;
 	if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) std::swap(screenWidth, screenHeight);
 	
 	// Initialize engine
-	LUNAEngine::Shared()->Assemble(new LUNAIosFiles(), new LUNAIosLog(), new LUNAIosUtils());
+	LUNAEngine::Shared()->Assemble(new LUNAIosFiles(), new LUNAIosLog(), new LUNAIosUtils(), nullptr);
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
 }
 
@@ -130,7 +130,7 @@ using namespace luna2d;
 	while(touch = [t nextObject])
 	{
 		CGPoint point = [touch locationInView:self.view];
-		LUNAEngine::Shared()->OnTouchDown([self translateTouchX:point.x], [self translateTouchY:point.y]);
+		LUNAEngine::Shared()->OnTouchDown([self translateTouchX:point.x], [self translateTouchY:point.y], 0);
 	}
 }
 
@@ -142,7 +142,7 @@ using namespace luna2d;
 	while(touch = [t nextObject])
 	{
 		CGPoint point = [touch locationInView:self.view];
-		LUNAEngine::Shared()->OnTouchMoved([self translateTouchX:point.x], [self translateTouchY:point.y]);
+		LUNAEngine::Shared()->OnTouchMoved([self translateTouchX:point.x], [self translateTouchY:point.y], 0);
 	}
 }
 
@@ -154,7 +154,7 @@ using namespace luna2d;
 	while(touch = [t nextObject])
 	{
 		CGPoint point = [touch locationInView:self.view];
-		LUNAEngine::Shared()->OnTouchUp([self translateTouchX:point.x], [self translateTouchY:point.y]);
+		LUNAEngine::Shared()->OnTouchUp([self translateTouchX:point.x], [self translateTouchY:point.y], 0);
 	}
 }
 
@@ -166,7 +166,7 @@ using namespace luna2d;
 	while(touch = [t nextObject])
 	{
 		CGPoint point = [touch locationInView:self.view];
-		LUNAEngine::Shared()->OnTouchUp([self translateTouchX:point.x], [self translateTouchY:point.y]);
+		LUNAEngine::Shared()->OnTouchUp([self translateTouchX:point.x], [self translateTouchY:point.y], 0);
 	}
 }
 

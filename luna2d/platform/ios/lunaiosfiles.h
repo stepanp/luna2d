@@ -44,29 +44,44 @@ private:
 	NSString* GetPathInLocation(const std::string& path, LUNAFileLocation location);
 	
 public:
-	// Get root folder for file location
-	virtual std::string GetRootFolder(LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    // Get root folder for file location
+    virtual std::string GetRootFolder(LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Check for given path is file
+    virtual bool IsFile(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Check for given path is directory
+    virtual bool IsDirectory(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Check for path is exists
+    virtual bool IsExists(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Get list of files and subdirectories in given directory
+    virtual std::vector<std::string> GetFileList(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Get size of file
+    virtual ssize_t GetFileSize(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Read all file data
+    virtual std::vector<unsigned char> ReadFile(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Read all file data as string
+    virtual std::string ReadFileToString(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Write given byte buffer to file
+    virtual bool WriteFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
+    
+    // Write given text data to file
+    virtual bool WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
+    
+    // Read all data from file compressed using "Deflate" algorithm
+    virtual std::vector<unsigned char> ReadCompressedFile(const std::string& path,
+        LUNAFileLocation location = LUNAFileLocation::ASSETS);
+    
+    // Write given byte buffer to file and compress it with "Deflate" algorithm
+    virtual bool WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data,
+        LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
 
-	// Check for given path is file
-	virtual bool IsFile(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Check for given path is directory
-	virtual bool IsDirectory(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Check for path is exists
-	virtual bool IsExists(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Get list of files and subdirectories in given directory
-	virtual std::vector<std::string> GetFileList(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Get size of file
-	virtual ssize_t GetFileSize(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Read all file data
-	virtual std::vector<unsigned char> ReadFile(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
-
-	// Read all file data as string
-	virtual std::string ReadFileToString(const std::string& path, LUNAFileLocation location = LUNAFileLocation::ASSETS);
 };
 
 }

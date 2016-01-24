@@ -192,3 +192,31 @@ std::string LUNAIosFiles::ReadFileToString(const std::string &path, LUNAFileLoca
 	
 	return std::move(ret);
 }
+
+// Write given byte buffer to file
+bool LUNAIosFiles::WriteFile(const std::string &path, const std::vector<unsigned char> &data, LUNAFileLocation location)
+{
+    LUNA_LOGE("Method LUNAIosFiles::WriteFile is not implemented");
+    return false;
+}
+
+// Write given text data to file
+bool LUNAIosFiles::WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location)
+{
+    LUNA_LOGE("Method LUNAIosFiles::WriteFileFromString is not implemented");
+    return false;
+}
+
+// Read all data from file compressed using "Deflate" algorithm
+std::vector<unsigned char> LUNAIosFiles::ReadCompressedFile(const std::string& path, LUNAFileLocation location)
+{
+    LUNA_LOGE("Method LUNAIosFiles::ReadCompressedFile is not implemented");
+    return std::vector<unsigned char>();
+}
+
+// Write given byte buffer to file and compress it with "Deflate" algorithm
+bool LUNAIosFiles::WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location)
+{
+    LUNA_LOGE("Method LUNAIosFiles::WriteCompressedFile is not implemented");
+    return false;
+}
