@@ -154,6 +154,9 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 # Build iOS static library
 elseif(${PLATFROM_NAME} STREQUAL "ios")
+	# Set optimization level same as in XCode
+	string(REPLACE "-O3" "-Os" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
+	string(REPLACE "-O3" "-Os" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 
 	# luna2d iOS source
 	set(LUNA2D_IOS_DIR ${LUNA2D_DIR}/platform/ios)
@@ -161,6 +164,12 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 	aux_source_directory(${LUNA2D_IOS_DIR} LUNA2D_SOURCES)
 	file (GLOB LUNA2D_IOS_HEADERS "${LUNA2D_IOS_DIR}/*.h")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_IOS_HEADERS})
+
+	set(LUNA2D_IOS_APP_DIR ${LUNA2D_IOS_DIR}/application)
+	include_directories(${LUNA2D_IOS_APP_DIR})
+	aux_source_directory(${LUNA2D_IOS_APP_DIR} LUNA2D_SOURCES)
+	file (GLOB LUNA2D_IOS_APP_HEADERS "${LUNA2D_IOS_APP_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_IOS_APP_HEADERS})
 
 	# Make source groups
 	foreach(DIR ${LUNA2D_DIRS})
@@ -175,14 +184,18 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
 
-	source_group("luna2d\\platform\\ios" ${LUNA2D_WP_DIR})
-	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_WP_APP_DIR})
+	source_group("luna2d\\platform\\ios" ${LUNA2D_IOS_DIR})
+	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_IOS_APP_DIR})
 
-	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
 	set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "6.0")
 
 	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
+
+	set_xcode_property(${LIB_NAME} OTHER_LDFLAGS "-ObjC")
 
 
 # Build Android shared library
@@ -260,9 +273,9 @@ elseif(${PLATFROM_NAME} STREQUAL "wp")
 	set(LUNA2D_WP_XAML ${LUNA2D_WP_APP_DIR}/OpenGLESPage.xaml)
 
 	# Set same ouput directory for debug and release configurations
-	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
-	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
-	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+	set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
 	# Enable WinRT extesion only for luna2d wp files
 	set_source_files_properties(${LUNA2D_WP_SOURCES} PROPERTIES COMPILE_FLAGS -ZW)
