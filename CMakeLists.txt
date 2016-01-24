@@ -11,6 +11,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 endif()
 
+
 # Debug config
 if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
 	set(LIB_NAME ${PROJECT_NAME}d)
@@ -20,9 +21,11 @@ elseif(${CMAKE_BUILD_TYPE} MATCHES "Release")
 	set(LIB_NAME ${PROJECT_NAME})
 endif()
 
-
 # Set platform name
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+if(IOS)
+	set(PLATFROM_NAME "ios")
+
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
 	set(PLATFROM_NAME "android")
 
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsPhone")
@@ -32,7 +35,6 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR ${CMAKE_SYSTEM_NAME} STREQUAL 
 	set(PLATFROM_NAME "qt")
 
 endif()
-
 
 # luna2d sources
 set(LUNA2D_DIR ${PROJECT_SOURCE_DIR}/luna2d)
@@ -113,7 +115,9 @@ list(APPEND THIRDPARTY_SOURCES ${FREETYPE_SOURCES})
 aux_source_directory(${THIRDPARTY_DIR}/json11 THIRDPARTY_SOURCES)
 
 # zlib
-aux_source_directory(${THIRDPARTY_DIR}/zlib THIRDPARTY_SOURCES)
+if(NOT ${PLATFROM_NAME} STREQUAL "ios")
+	aux_source_directory(${THIRDPARTY_DIR}/zlib THIRDPARTY_SOURCES)
+endif()
 
 # OpenAL
 include_directories(${THIRDPARTY_DIR}/OpenAL/include)
@@ -146,6 +150,39 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 	qt5_use_modules(${LIB_NAME} Widgets)
 	qt5_use_modules(${LIB_NAME} OpenGL)
+
+
+# Build iOS static library
+elseif(${PLATFROM_NAME} STREQUAL "ios")
+
+	# luna2d iOS source
+	set(LUNA2D_IOS_DIR ${LUNA2D_DIR}/platform/ios)
+	include_directories(${LUNA2D_IOS_DIR})
+	aux_source_directory(${LUNA2D_IOS_DIR} LUNA2D_SOURCES)
+	file (GLOB LUNA2D_IOS_HEADERS "${LUNA2D_IOS_DIR}/*.h")
+	list(APPEND LUNA2D_HEADERS ${LUNA2D_IOS_HEADERS})
+
+	# Make source groups
+	foreach(DIR ${LUNA2D_DIRS})
+		STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" GROUP_NAME ${DIR})
+		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
+		source_group(${GROUP_NAME} ${DIR})
+	endforeach()
+
+	foreach(DIR ${THIRDPARTY_DIRS})
+		STRING(REPLACE "${PROJECT_SOURCE_DIR}/" "" GROUP_NAME ${DIR})
+		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
+		source_group(${GROUP_NAME} ${DIR})
+	endforeach()
+
+	source_group("luna2d\\platform\\ios" ${LUNA2D_WP_DIR})
+	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_WP_APP_DIR})
+
+	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
+
+	set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "6.0")
+
+	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
 
 # Build Android shared library
