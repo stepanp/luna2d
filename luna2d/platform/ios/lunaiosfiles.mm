@@ -133,14 +133,14 @@ ssize_t LUNAIosFiles::GetFileSize(const std::string& path, LUNAFileLocation loca
 	if(location == LUNAFileLocation::ASSETS)
 	{
 		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-        FILE* file = fopen([fullPath UTF8String], "r");
-        if(!file) return -1;
-        
-        fseek(file, 0, SEEK_END);
-        ssize_t size = ftell(file);
-        fclose(file);
-        
-        return size;
+		FILE* file = fopen([fullPath UTF8String], "r");
+		if(!file) return -1;
+		
+		fseek(file, 0, SEEK_END);
+		ssize_t size = ftell(file);
+		fclose(file);
+		
+		return size;
 	}
 	
 	return -1;
@@ -196,27 +196,27 @@ std::string LUNAIosFiles::ReadFileToString(const std::string &path, LUNAFileLoca
 // Write given byte buffer to file
 bool LUNAIosFiles::WriteFile(const std::string &path, const std::vector<unsigned char> &data, LUNAFileLocation location)
 {
-    LUNA_LOGE("Method LUNAIosFiles::WriteFile is not implemented");
-    return false;
+	LUNA_LOGE("Method LUNAIosFiles::WriteFile is not implemented");
+	return false;
 }
 
 // Write given text data to file
 bool LUNAIosFiles::WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location)
 {
-    LUNA_LOGE("Method LUNAIosFiles::WriteFileFromString is not implemented");
-    return false;
+	LUNA_LOGE("Method LUNAIosFiles::WriteFileFromString is not implemented");
+	return false;
 }
 
 // Read all data from file compressed using "Deflate" algorithm
 std::vector<unsigned char> LUNAIosFiles::ReadCompressedFile(const std::string& path, LUNAFileLocation location)
 {
-    LUNA_LOGE("Method LUNAIosFiles::ReadCompressedFile is not implemented");
-    return std::vector<unsigned char>();
+	LUNA_LOGE("Method LUNAIosFiles::ReadCompressedFile is not implemented");
+	return std::vector<unsigned char>();
 }
 
 // Write given byte buffer to file and compress it with "Deflate" algorithm
 bool LUNAIosFiles::WriteCompressedFile(const std::string& path, const std::vector<unsigned char>& data, LUNAFileLocation location)
 {
-    LUNA_LOGE("Method LUNAIosFiles::WriteCompressedFile is not implemented");
-    return false;
+	LUNA_LOGE("Method LUNAIosFiles::WriteCompressedFile is not implemented");
+	return false;
 }
