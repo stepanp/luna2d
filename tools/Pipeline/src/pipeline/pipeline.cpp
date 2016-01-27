@@ -275,13 +275,18 @@ void Pipeline::CloseProject()
 
 QStringList Pipeline::RunProject()
 {
-	errors.clear();
+	if(!IsProjectOpened()) return QStringList();
 
-	if(!IsProjectOpened()) return errors;
+	return RunTaskList(project->GetTasks());
+}
+
+QStringList Pipeline::RunTaskList(const QList<Task*>& taskList)
+{
+	errors.clear();
 
 	emit progressUpdated(0);
 
-	for(Task* task : project->GetTasks())
+	for(Task* task : taskList)
 	{
 		QString error = CheckTask(task);
 

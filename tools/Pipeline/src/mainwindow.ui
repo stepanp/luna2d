@@ -473,6 +473,7 @@
     <addaction name="actionAddFolder"/>
     <addaction name="actionRemoveNode"/>
     <addaction name="separator"/>
+    <addaction name="actionRunTask"/>
     <addaction name="actionRun"/>
    </widget>
    <addaction name="menuFile"/>
@@ -584,6 +585,11 @@
    </property>
    <property name="text">
     <string>Save project as...</string>
+   </property>
+  </action>
+  <action name="actionRunTask">
+   <property name="text">
+    <string>Run task</string>
    </property>
   </action>
  </widget>

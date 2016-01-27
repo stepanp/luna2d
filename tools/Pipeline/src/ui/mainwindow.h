@@ -97,6 +97,7 @@ public slots:
 	void OnAddFile();
 	void OnAddFolder();
 	void OnRemoveNode();
+	void OnRunSelectedTask();
 	void OnRunProject();
 	void OnAbout();
     void OnSelectedTreeItem(QTreeWidgetItem*, QTreeWidgetItem*);

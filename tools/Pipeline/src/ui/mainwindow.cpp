@@ -71,6 +71,7 @@ MainWindow::MainWindow(const QString& projectPath) :
 	connect(ui->actionAddFolder, &QAction::triggered, this, &MainWindow::OnAddFolder);
 	connect(ui->actionAddFile, &QAction::triggered, this, &MainWindow::OnAddFile);
 	connect(ui->actionRemoveNode, &QAction::triggered, this, &MainWindow::OnRemoveNode);
+	connect(ui->actionRunTask, &QAction::triggered, this, &MainWindow::OnRunSelectedTask);
 	connect(ui->actionRun, &QAction::triggered, this, &MainWindow::OnRunProject);
 	connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::OnAbout);
 	connect(ui->projectTree, &QTreeWidget::currentItemChanged, this, &MainWindow::OnSelectedTreeItem);
@@ -173,6 +174,7 @@ void MainWindow::UpdateUi()
 		ui->actionAddFolder->setEnabled(true);
 		ui->actionAddFile->setEnabled(true);
 		ui->actionRemoveNode->setEnabled(true);
+		ui->actionRunTask->setEnabled(true);
 		ui->actionRun->setEnabled(true);
 	}
 	else
@@ -188,6 +190,7 @@ void MainWindow::UpdateUi()
 		ui->actionAddFolder->setEnabled(false);
 		ui->actionAddFile->setEnabled(false);
 		ui->actionRemoveNode->setEnabled(false);
+		ui->actionRunTask->setEnabled(false);
 		ui->actionRun->setEnabled(false);
 		ui->pages->setEnabled(false);
 	}
@@ -462,9 +465,13 @@ void MainWindow::OnRemoveTask()
 {
 	if(!GetSelectedTask() || !pipeline.IsProjectOpened()) return;
 
-	Project* project = pipeline.GetProject();
-	project->RemoveTask(GetSelectedTask());
-	ui->projectTree->topLevelItem(0)->removeChild(ui->projectTree->currentItem());
+	if(QMessageBox::question(this, "Remove task", "Are you sure you want to remove this task?",
+		QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes)
+	{
+		Project* project = pipeline.GetProject();
+		project->RemoveTask(GetSelectedTask());
+		ui->projectTree->topLevelItem(0)->removeChild(ui->projectTree->currentItem());
+	}
 }
 
 void MainWindow::OnAddFile()
@@ -510,6 +517,32 @@ void MainWindow::OnRemoveNode()
 
 	GetTaskFromItem(parentItem)->RemoveNode(GetSelectedTaskNode());
 	parentItem->removeChild(item);
+}
+
+void MainWindow::OnRunSelectedTask()
+{
+	Task* task = GetSelectedTask();
+	if(!task) return;
+
+	QProgressDialog dlg("Processing task...", QString::null, 0, 100, this, TOOL_WINDOW);
+	dlg.setMinimumDuration(0);
+	dlg.setWindowModality(Qt::WindowModal);
+	dlg.setFixedSize(400, dlg.size().height());
+	dlg.setWindowTitle(WINDOW_TITLE);
+
+	connect(&pipeline, &Pipeline::progressUpdated,
+		[&dlg](float progress)
+		{
+			dlg.setValue(progress * 100);
+			QApplication::processEvents();
+		});
+
+	QStringList errors = pipeline.RunTaskList({ task });
+	if(!errors.empty())
+	{
+		dlg.cancel();
+		QMessageBox::critical(this, "Errors", errors.join("\n"));
+	}
 }
 
 void MainWindow::OnRunProject()
@@ -568,6 +601,8 @@ void MainWindow::OnProjectTreeMenu(const QPoint &point)
 		actions.push_back(ui->actionAddFolder);
 		actions.push_back(MakeSeparator());
 		actions.push_back(ui->actionRemoveTask);
+		actions.push_back(MakeSeparator());
+		actions.push_back(ui->actionRunTask);
 	}
 	else if(type == ProjectTreeDataType::TASK_NODE)
 	{

@@ -70,4 +70,5 @@ public:
 	bool SaveProject(const QString& path);
 	void CloseProject();
 	QStringList RunProject();
+	QStringList RunTaskList(const QList<Task*>& taskList);
 };
