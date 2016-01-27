@@ -75,6 +75,7 @@ Task::Task(Project* project, const QJsonObject& jsonTask) :
 		atlasParams.name = jsonAtlasParams["name"].toString();
 		atlasParams.padding = jsonAtlasParams["padding"].toInt();
 		atlasParams.duplicatePadding = jsonAtlasParams["duplicatePadding"].toBool();
+		atlasParams.heuristic = static_cast<AtlasParams::Heuristic>(jsonAtlasParams["heuristic"].toInt());
 
 		QJsonObject jsonSizes = jsonAtlasParams["sizes"].toObject();
 		for(auto& res : jsonSizes.keys())
@@ -178,6 +179,7 @@ QJsonObject Task::ToJson()
 		jsonAtlasParams["name"] = atlasParams.name;
 		jsonAtlasParams["padding"] = atlasParams.padding;
 		jsonAtlasParams["duplicatePadding"] = atlasParams.duplicatePadding;
+		jsonAtlasParams["heuristic"] = static_cast<int>(atlasParams.heuristic);
 
 		QJsonObject jsonSizes;
 		for(auto res : atlasParams.sizes.keys())

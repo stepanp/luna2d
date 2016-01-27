@@ -32,7 +32,7 @@
 using namespace rbp;
 
 QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int height,
-	OutputFormat format, const AtlasParams &params)
+	OutputFormat format, const AtlasParams& params)
 {
 	errors.clear();
 
@@ -58,7 +58,6 @@ QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int hei
 	QJsonObject jsonAtlas;
 
 	MaxRectsBinPack packer(width, height, false);
-	auto heuristic = MaxRectsBinPack::RectBestAreaFit;
 	int maxRight = 0;
 	int maxBottom = 0;
 
@@ -66,7 +65,7 @@ QPair<QImage,QJsonObject> AtlasBuilder::Run(ImageList images, int width, int hei
 	for(auto entry : images)
 	{
 		const QImage& image = entry.second;
-		Rect rect = packer.Insert(image.width() + params.padding * 2, image.height() + params.padding * 2, heuristic);
+		Rect rect = packer.Insert(image.width() + params.padding * 2, image.height() + params.padding * 2, params.heuristic);
 
 		maxRight = std::max(rect.x + rect.width, maxRight);
 		maxBottom = std::max(rect.y + rect.height, maxBottom);

@@ -270,50 +270,10 @@
             <string>Atlas settings</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="1" column="0" colspan="3">
-             <widget class="QLabel" name="label_6">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_9">
               <property name="text">
-               <string>File name:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="3">
-             <widget class="QLineEdit" name="editAtlasName"/>
-            </item>
-            <item row="7" column="0" colspan="3">
-             <widget class="QCheckBox" name="checkDuplicatePadding">
-              <property name="text">
-               <string>Duplicate padding</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="1">
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>161</width>
-                <height>347</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="6" column="0" colspan="3">
-             <widget class="QSpinBox" name="editPadding"/>
-            </item>
-            <item row="5" column="0" colspan="2">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Padding:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>Sizes:</string>
+               <string>Heuristic:</string>
               </property>
              </widget>
             </item>
@@ -377,6 +337,56 @@
                </property>
               </column>
              </widget>
+            </item>
+            <item row="12" column="1">
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>161</width>
+                <height>347</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="9" column="0" colspan="3">
+             <widget class="QCheckBox" name="checkDuplicatePadding">
+              <property name="text">
+               <string>Duplicate padding</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QLineEdit" name="editAtlasName"/>
+            </item>
+            <item row="8" column="0" colspan="3">
+             <widget class="QSpinBox" name="editPadding"/>
+            </item>
+            <item row="1" column="0" colspan="3">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>File name:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0" colspan="2">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Padding:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Sizes:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QComboBox" name="comboHeuristic"/>
             </item>
            </layout>
           </widget>

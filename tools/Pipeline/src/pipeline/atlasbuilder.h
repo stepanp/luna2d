@@ -30,6 +30,7 @@
 #include <QJsonObject>
 #include <QStringList>
 #include <QHash>
+#include <MaxRectsBinPack.h>
 
 enum class OutputFormat;
 
@@ -39,10 +40,13 @@ const int DEFAULT_ATLAS_SIZE = 1024;
 
 struct AtlasParams
 {
+	using Heuristic = rbp::MaxRectsBinPack::FreeRectChoiceHeuristic;
+
 	QString name = "New atlas";
 	QHash<QString, QSize> sizes;
 	int padding = 2;
 	bool duplicatePadding = true;
+	Heuristic heuristic = Heuristic::RectBestAreaFit;
 };
 
 typedef QList<QPair<QString,QImage>> ImageList;

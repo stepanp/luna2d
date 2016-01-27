@@ -45,6 +45,17 @@ MainWindow::MainWindow(const QString& projectPath) :
 	// Fill output format combo box with formats
 	ui->comboFormat->addItems({ "PNG32", "PNG24", "JPEG" });
 
+	// Fill heuristic combo box
+	// SEE: "FreeRectChoiceHeuristic" in "MaxRectsBinPack.h"
+	ui->comboHeuristic->addItems(
+	{
+		"Best short side fit",
+		"Best long side fit",
+		"Best area fit (default)",
+		"Bottom-left rule",
+		"Contact point rule"
+	});
+
 	// Fill source resolution combo box with resolutions
 	QStringList resolutionsList = pipeline.GetResolutionsNames();
 	ui->comboSrcResolution->addItems(resolutionsList);
@@ -96,6 +107,7 @@ MainWindow::MainWindow(const QString& projectPath) :
 	connect(ui->editAtlasName, &QLineEdit::textChanged, this, &MainWindow::OnTabsChangedAtlasName);
 	connect(ui->editPadding,  SIGNAL(valueChanged(int)), this, SLOT(OnTabsChangedPadding(int)));
 	connect(ui->checkDuplicatePadding, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedDuplicatePadding);
+	connect(ui->comboHeuristic, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsCnangedHeuristic(int)));
 
 	// Try open project specifed in command line arguments
 	if(!projectPath.isEmpty()) OpenProject(projectPath);
@@ -261,6 +273,7 @@ void MainWindow::UpdateAtlasTab()
 	ui->editAtlasName->setText(task->atlasParams.name);
 	ui->editPadding->setValue(task->atlasParams.padding);
 	ui->checkDuplicatePadding->setChecked(task->atlasParams.duplicatePadding);
+	ui->comboHeuristic->setCurrentIndex(static_cast<int>(task->atlasParams.heuristic));
 
 	UpdateAtlasSizesTable();
 }
@@ -749,4 +762,11 @@ void MainWindow::OnTabsChangedDuplicatePadding(bool value)
 	if(!GetSelectedTask()) return;
 
 	GetSelectedTask()->atlasParams.duplicatePadding = value;
+}
+
+void MainWindow::OnTabsCnangedHeuristic(int index)
+{
+	if(!GetSelectedTask()) return;
+
+	GetSelectedTask()->atlasParams.heuristic = static_cast<AtlasParams::Heuristic>(index);
 }

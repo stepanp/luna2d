@@ -123,4 +123,5 @@ public slots:
 	void OnTabsChangedAtlasName(const QString& value);
 	void OnTabsChangedPadding(int value);
 	void OnTabsChangedDuplicatePadding(bool value);
+	void OnTabsCnangedHeuristic(int index);
 };
