@@ -22,18 +22,27 @@ android {
     libraryVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
-            if (outputFile != null && outputFile.name.endsWith('.aar')) {
-                def fileName = "${archivesBaseName}.aar"
+
+            if(outputFile != null && outputFile.name.endsWith('.aar')) {
                 def outputPath = "${outputFile.parent}/../../../../../../../lib/android"
-                output.outputFile = new File(outputPath, fileName)
+                def name = "${archivesBaseName}"
+
+                if(variant.buildType.name == "debug") {
+                    name = name + "d"
+                }
+
+                output.outputFile = new File(outputPath, name + ".aar")
             }
         }
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
         }
     }
 }
