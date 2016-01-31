@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ["src/main/../../../../../../luna2d/platform/android/java"]
+            resources.srcDirs  = ["src/main/res"]
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.aar')) {
+                def fileName = "${archivesBaseName}.aar"
+                def outputPath = "${outputFile.parent}/../../../../../../../lib/android"
+                output.outputFile = new File(outputPath, fileName)
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
