@@ -45,6 +45,16 @@ android {
             minifyEnabled false
         }
     }
+
+    task runCMake(type:Exec) {
+        def scriptDir = "${projectDir}/../../"
+        workingDir scriptDir
+        commandLine "python", "gradlebuild.py"
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn runCMake
+    }
 }
 
 dependencies {

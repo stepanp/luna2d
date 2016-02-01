@@ -1,6 +1,7 @@
 .gradle
 .idea/*
 !.idea/.name
+luna2d/src/main/jniLibs/*
 /local.properties
 /build
 /captures

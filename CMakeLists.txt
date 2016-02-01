@@ -225,7 +225,10 @@ elseif(${PLATFROM_NAME} STREQUAL "android")
 	list(APPEND LUNA2D_HEADERS ${LUNA2D_ANDROID_HEADERS})
 	list(APPEND LUNA2D_SOURCES ${LUNA2D_ANDROID_DIR}/jni/lunajnibridge.cpp)
 
-	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${ANDROID_ABI})
+	# Set ouput dir to jniLibs dir of gradle
+	# Result *.so files will be packed to .aar package with gradle
+	# SEE: "luna2d/cmake/android/gradle-project/"
+	set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/android/gradle-project/luna2d/src/main/jniLibs/${ANDROID_ABI})
 
 	add_library(${LIB_NAME} SHARED ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
