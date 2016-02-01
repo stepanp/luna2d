@@ -2,6 +2,7 @@
 .idea/*
 !.idea/.name
 luna2d/src/main/jniLibs/*
+luna2d/build/*
 /local.properties
 /build
 /captures
