@@ -73,7 +73,7 @@ def update_assets(args, luna2d_path):
 			os.rename(outFilename, filename)
 
 def update_libs(args, luna2d_path):
-	libs_source_dir = luna2d_path + "/lib/wp/"
+	libs_source_dir = luna2d_path + "/lib/" + args.platform + "/release/"
 	libs_dest_dir = args.project_path + "/.luna2d/libs"
 
 	shutil.rmtree(libs_dest_dir, ignore_errors=True)

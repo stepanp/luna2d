@@ -4,5 +4,5 @@
 build/
 captures/
 *.iml
-*.DS_Store
+.DS_Store
 local.properties

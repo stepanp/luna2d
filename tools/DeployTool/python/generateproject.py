@@ -43,6 +43,7 @@ def main(args):
 	template_path = luna2d_path + "/templates/" + args.template
 	constants = {
 		"LUNA_PROJECT_NAME" : args.name,
+		"LUNA_PACKAGE_NAME" : args.package_name,
 	}
 
 	print("Creating project from template..")
@@ -123,6 +124,7 @@ def parse_args():
 	parser.add_argument("--project_path", required=True)
 	parser.add_argument("--template", required=True)
 	parser.add_argument("--name", required=True)
+	parser.add_argument("--package_name", default="")
 	parser.add_argument("--platform", required=True)
 	parser.add_argument("--strip_git", default=False)
 	parser.add_argument("--debug_clear_project", default=False)
