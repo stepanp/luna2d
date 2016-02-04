@@ -24,10 +24,11 @@ android {
             def outputFile = output.outputFile
 
             if(outputFile != null && outputFile.name.endsWith('.aar')) {
-                def outputPath = "${outputFile.parent}/../../../../../../../lib/android"
+                def buildType = "${variant.buildType.name}"
+                def outputPath = "${outputFile.parent}/../../../../../../../lib/android/${buildType}"
                 def name = "${archivesBaseName}"
 
-                if(variant.buildType.name == "debug") {
+                if(buildType == "debug") {
                     name = name + "d"
                 }
 
