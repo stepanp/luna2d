@@ -31,3 +31,10 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile(name:'luna2d', ext:'aar')
 }
+
+task runDeployTool(type: Exec) {
+    workingDir "${projectDir}/../.luna2d/"
+    commandLine "python", "update.py"
+}
+
+preBuild.dependsOn runDeployTool
