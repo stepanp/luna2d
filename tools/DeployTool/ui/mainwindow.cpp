@@ -135,6 +135,7 @@ void MainWindow::OnInputPathButton()
 
 void MainWindow::OnNext()
 {
+	auto selectedTemplate = this->GetSelectedTemplate();
 	QString inputPath = ui->editInputPath->text();
 	QString error = CheckGameProjectPath(inputPath);
 
@@ -168,10 +169,24 @@ void MainWindow::OnNext()
 		return;
 	}
 
+	QString gameName = QString::fromStdString(jsonConfig["name"].string_value());
+
+	// Set params page
 	ui->pages->setCurrentWidget(ui->pageParams);
 
-	auto selectedTemplate = this->GetSelectedTemplate();
-	QString gameName = QString::fromStdString(jsonConfig["name"].string_value());
+	// Set widget with platform-specific params
+	if(selectedTemplate.platform == "android")
+	{
+		ui->pagesPlatformParams->setCurrentWidget(ui->pageAndroid);
+		ui->editPackageName->setText("com.luna2d." + gameName.toLower());
+	}
+
+	else if(selectedTemplate.platform == "wp")
+	{
+		ui->pagesPlatformParams->setCurrentWidget(ui->pageWp);
+	}
+
+	ui->pagesPlatformParams->setMaximumHeight(ui->pagesPlatformParams->currentWidget()->minimumHeight());
 
 	// Set default path using template name
 	QString outputPath = inputPath.left(inputPath.lastIndexOf("/")) + "/" + selectedTemplate.name;
@@ -228,6 +243,9 @@ void MainWindow::OnPageOpened(int pageIndex)
 		"--name", ui->editName->text(),
 		"--platform", selectedTemplate.platform,
 	};
+
+	if(selectedTemplate.platform == "android")
+		args.append({ "--package_name", ui->editPackageName->text() });
 
 	auto output = RunScript("generateproject.py", args);
 	for(auto& str : output) ui->txtOutput->append(str);
