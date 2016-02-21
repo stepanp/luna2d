@@ -28,7 +28,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.opengl.GLSurfaceView;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 public class LunaGlView extends GLSurfaceView
@@ -87,6 +86,30 @@ public class LunaGlView extends GLSurfaceView
 	private void queueTouchEvent(TouchType type, float x, float y, int touchIndex)
 	{
 		queueEvent(new TouchEvent(type, x, y, touchIndex));
+	}
+
+	@Override
+	public void onPause()
+	{
+		// Handle pause event in renderer thread
+		queueEvent(new Runnable()
+		{
+			@Override
+			public void run() { LunaNative.onPause(); }
+		});
+	}
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		// Handle pause event in renderer thread
+		queueEvent(new Runnable()
+		{
+			@Override
+			public void run() { LunaNative.onResume(); }
+		});
 	}
 	
 	// Handling touch events

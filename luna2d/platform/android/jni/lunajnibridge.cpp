@@ -87,3 +87,13 @@ LUNA_JNI_FUNC(void, LunaNative, onTouchUp)(JNIEnv* env, jclass cls, jfloat x, jf
 	LUNAEngine::Shared()->OnTouchUp(x, y, touchIndex);
 }
 
+LUNA_JNI_FUNC(void, LunaNative, onPause)(JNIEnv* env, jclass cls)
+{
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnPause();
+}
+
+LUNA_JNI_FUNC(void, LunaNative, onResume)(JNIEnv* env, jclass cls)
+{
+	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnResume();
+}
+

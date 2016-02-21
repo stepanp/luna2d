@@ -48,19 +48,21 @@ public class LunaActivity extends Activity
 	protected void onPause()
 	{
 		super.onPause();
+		glView.onPause();
 	}
 
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
+		glView.onResume();
 	}
-	
+
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
 		super.onWindowFocusChanged(hasFocus);
-		
+
 		if(hasFocus) enableFullscreen();
 	}
 	
