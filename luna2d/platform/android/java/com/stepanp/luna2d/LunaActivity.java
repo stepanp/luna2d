@@ -48,14 +48,12 @@ public class LunaActivity extends Activity
 	protected void onPause()
 	{
 		super.onPause();
-		glView.onPause();
 	}
 
-	@Override 
+	@Override
 	protected void onResume()
 	{
 		super.onResume();
-		glView.onResume();
 	}
 	
 	@Override
