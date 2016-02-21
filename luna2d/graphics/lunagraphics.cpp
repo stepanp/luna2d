@@ -282,27 +282,26 @@ void LUNAGraphics::OnResume()
 
 void LUNAGraphics::OnUpdate()
 {
-	if(!paused)
+	if(paused) return;
+
+	// Calculate delta time
+	double curTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
+	deltaTime = curTime - lastTime;
+	lastTime = curTime;
+
+	if(deltaTime > MAX_DELTA) deltaTime = MAX_DELTA;
+
+	// Calculate FPS
+	fpsTime += deltaTime;
+	framesCount++;
+	if(fpsTime >= 1.0f)
 	{
-		// Calculate delta time
-		double curTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
-		deltaTime = curTime - lastTime;
-		lastTime = curTime;
-
-		if(deltaTime > MAX_DELTA) deltaTime = MAX_DELTA;
-
-		// Calculate FPS
-		fpsTime += deltaTime;
-		framesCount++;
-		if(fpsTime >= 1.0f)
-		{
-			lastFrames = framesCount;
-			fpsTime = 0;
-			framesCount = 0;
-		}
-
-		LUNAEngine::SharedScenes()->OnUpdate(deltaTime);
+		lastFrames = framesCount;
+		fpsTime = 0;
+		framesCount = 0;
 	}
+
+	LUNAEngine::SharedScenes()->OnUpdate(deltaTime);
 
 	// Render
 	renderer.BeginRender();

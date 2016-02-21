@@ -170,6 +170,9 @@ bool LUNAQtWidget::eventFilter(QObject* target, QEvent* event)
 		}
 	}
 
+	// Do not repaint widget on pause
+	else if(event->type() == QEvent::Paint && (IsEnginePaused())) return true;
+
 	return QObject::eventFilter(target, event);
 }
 
