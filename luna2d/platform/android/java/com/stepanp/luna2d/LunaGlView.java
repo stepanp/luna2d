@@ -97,6 +97,9 @@ public class LunaGlView extends GLSurfaceView
 			@Override
 			public void run() { LunaNative.onPause(); }
 		});
+
+		// Pause renderer
+		setRenderMode(RENDERMODE_WHEN_DIRTY);
 	}
 
 	@Override
@@ -110,6 +113,9 @@ public class LunaGlView extends GLSurfaceView
 			@Override
 			public void run() { LunaNative.onResume(); }
 		});
+
+		// Resume renderer
+		setRenderMode(RENDERMODE_CONTINUOUSLY);
 	}
 	
 	// Handling touch events
@@ -205,7 +211,7 @@ public class LunaGlView extends GLSurfaceView
 				LunaNative.initialize(screenWidth, screenHeight, appName, apkPath, appFolderPath);
 			}
 			
-			// When surface was rectreated, we need reload some assets: textures, shaders, etc.
+			// When surface was recreated, we need reload some assets: textures, shaders, etc.
 			else
 			{
 				LunaNative.reloadAssets();
