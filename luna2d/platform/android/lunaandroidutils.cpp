@@ -37,6 +37,7 @@ LUNAAndroidUtils::LUNAAndroidUtils()
 
 	// Get java wrapper method ids
 	javaGetSystemLocale = env->GetStaticMethodID(javaUtils, "getSystemLocale", "()Ljava/lang/String;");
+	javaOpenUrl = env->GetStaticMethodID(javaUtils, "openUrl", "(Ljava/lang/String;)V");
 }
 
 // Get system locale in "xx_XX" format
@@ -49,5 +50,5 @@ std::string LUNAAndroidUtils::GetSystemLocale()
 // Open given url in system browser
 void LUNAAndroidUtils::OpenUrl(const std::string& url)
 {
-	LUNA_LOGE("Method LUNAAndroidUtils::OpenUrl is not implemented");
+	jni::Env()->CallStaticVoidMethod(javaUtils, javaOpenUrl, jni::ToJString(url).j_str());
 }

@@ -38,6 +38,7 @@ public class LunaActivity extends Activity
 		enableFullscreen();
 		
 		LunaPrefs.init(this);
+		LunaUtils.init(this);
 		
 		// Create OpenGL surface view
 		glView = new LunaGlView(this);

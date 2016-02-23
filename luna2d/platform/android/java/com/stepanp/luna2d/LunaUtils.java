@@ -25,14 +25,45 @@ package com.stepanp.luna2d;
 
 import java.util.Locale;
 
-//---------------------------------------------------------
-//Java wrapper for Android implementation of platform utils
-//---------------------------------------------------------
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.net.Uri;
+import android.util.Log;
+
+//----------------------------------------------------------
+// Java wrapper for Android implementation of platform utils
+//----------------------------------------------------------
 public class LunaUtils 
 {
+	private static Activity activity;
+
+	public static void init(Activity activity)
+	{
+		LunaUtils.activity = activity;
+	}
+
 	// Get system locale
 	public static String getSystemLocale()
 	{
 		return Locale.getDefault().toString();
+	}
+
+	// Open given URL in system browser
+	public static void openUrl(String url)
+	{
+		try
+		{
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+			activity.startActivity(intent);
+		}
+		catch(ActivityNotFoundException e)
+		{
+			ApplicationInfo appInfo = activity.getApplicationInfo();
+			String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
+
+			Log.e(appName, "Cannot open url: " + url);
+		}
 	}
 }

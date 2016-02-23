@@ -39,6 +39,7 @@ public:
 private:
 	jclass javaUtils;
 	jmethodID javaGetSystemLocale;
+	jmethodID javaOpenUrl;
 
 public:
 	// Get system locale in "xx_XX" format
