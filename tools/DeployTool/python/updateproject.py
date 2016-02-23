@@ -32,8 +32,11 @@ import update_wp
 def main(args):
 	luna2d_path = get_luna2d_path()
 	config = utils.load_json(args.game_path + "/config.luna2d")
-	# project_config = utils.load_json(args.project_path + "/project-config.luna2d")
+	project_config = read_project_config(args.project_path)
 	build_config = utils.load_json(args.project_path + "/.luna2d/build.luna2d")
+
+	print("Updating config...")
+	merge_configs(config, project_config)
 
 	print("Updating libraries...")
 	update_libs(args, luna2d_path)
@@ -43,11 +46,11 @@ def main(args):
 		update_wp.do_update(args, config, build_config["projectName"])
 
 	if args.skip_assets == "false":
-		update_assets(args, luna2d_path)
+		update_assets(args, luna2d_path, config)
 
 	print("Done")
 
-def update_assets(args, luna2d_path):
+def update_assets(args, luna2d_path, merged_config):
 	assets_path = args.project_path + "/.luna2d/assets/"
 	compiler_path = luna2d_path + "/tools/luac/luac"
 
@@ -56,6 +59,9 @@ def update_assets(args, luna2d_path):
 
 	print("Updating assets..")
 	shutil.copytree(args.game_path, assets_path + "/game")
+
+	# Rewrite game config with merged config
+	utils.save_json(merged_config, assets_path + "/game/config.luna2d")
 
 	print("Compiling scripts..")
 	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
@@ -78,6 +84,19 @@ def update_libs(args, luna2d_path):
 
 	shutil.rmtree(libs_dest_dir, ignore_errors=True)
 	shutil.copytree(libs_source_dir, libs_dest_dir)
+
+# Merge main game config with project-specific config
+def merge_configs(config, project_config):
+	for k,v in project_config.iteritems():
+		config[k] = v
+
+def read_project_config(project_path):
+	config_path = project_path + "/project-config.luna2d"
+
+	if os.path.exists(config_path):
+		return utils.load_json(config_path)
+	else:
+		return {}
 
 # Get absolute path to luna2d directory where is current script
 def get_luna2d_path():

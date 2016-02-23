@@ -97,8 +97,7 @@ def make_config_dir(args, luna2d_path):
 	    "luna2dPath": utils.normalize_slashes(luna2d_path),
 	}
 
-	with open(config_dir + "/build.luna2d", "w") as file:
-		json.dump(build_config, file, indent=4, separators=(',', ': '))
+	utils.save_json(build_config, config_dir + "/build.luna2d")
 
 	if not args.strip_git:
 		with open(config_dir + "/.gitignore", "w") as file:

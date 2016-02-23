@@ -54,8 +54,12 @@ def substitute_constants(string, constants):
 	return string
 
 def load_json(json_path):
-	with open(json_path) as data:
-		return json.load(data)
+	with open(json_path) as file:
+		return json.load(file)
+
+def save_json(data, json_path):
+	with open(json_path, "w") as file:
+		json.dump(data, file, indent = 4, separators = (",", " : "))
 
 def is_git_file(filename):
 	return filename.startswith(".git")
