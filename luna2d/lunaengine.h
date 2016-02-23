@@ -80,10 +80,6 @@ private:
 	LUNAStrings* strings = nullptr;
 	LUNADebug* debug = nullptr;
 
-	// Subsystems of SDK API
-	LUNAAds* ads;
-	LUNAStore* store;
-
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
 
@@ -117,9 +113,6 @@ public:
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
 	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
-
-	inline static LUNAAds* SharedAds() { return Shared()->ads; }
-	inline static LUNAStore* SharedStore() { return Shared()->store; }
 };
 
 }
