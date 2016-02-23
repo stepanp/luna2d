@@ -25,6 +25,7 @@ package com.stepanp.luna2d.sdkapi;
 
 import android.app.Activity;
 import com.stepanp.luna2d.LunaActivity;
+import com.stepanp.luna2d.LunaGlView;
 
 public class LunaBaseSdk
 {
@@ -38,5 +39,10 @@ public class LunaBaseSdk
 	public void runInUiThread(Runnable runnable)
 	{
 		getSharedActivity().runOnUiThread(runnable);
+	}
+
+	public void runInRenderThread(Runnable runnable)
+	{
+		LunaGlView.getSharedGlView().queueEvent(runnable);
 	}
 }

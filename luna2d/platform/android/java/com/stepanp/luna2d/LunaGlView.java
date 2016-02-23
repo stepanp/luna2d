@@ -78,9 +78,17 @@ public class LunaGlView extends GLSurfaceView
 		setEGLContextClientVersion(2); // Enable OpenGL ES 2.0
 		renderer = new GlRenderer(activity);
 		setRenderer(renderer);
+
+		LunaGlView.sharedGlView = this;
 	}
 	
 	private GlRenderer renderer;
+	private static GLSurfaceView sharedGlView;
+
+	public static GLSurfaceView getSharedGlView()
+	{
+		return sharedGlView;
+	}
 	
 	// Handle touch event in renderer thread
 	private void queueTouchEvent(TouchType type, float x, float y, int touchIndex)
