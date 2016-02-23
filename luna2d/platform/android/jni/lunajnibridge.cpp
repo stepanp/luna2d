@@ -30,6 +30,7 @@
 #include "lunaandroidprefs.h"
 #include "lunaandroidjni.h"
 #include "lunasizes.h"
+#include "lunaandroidsdkapi.h"
 
 using namespace luna2d;
 
@@ -48,8 +49,12 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screen
 	// Initialize preferences util
 	LUNAAndroidPrefs* prefs = new LUNAAndroidPrefs();
 
+	// Initialize SDK API
+	LUNASdkApi* sdkApi = new LUNAAndroidSdkApi();
+
 	// Initialize engine
 	LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
+	LUNAEngine::Shared()->SetSdkApi(sdkApi);
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
 }
 

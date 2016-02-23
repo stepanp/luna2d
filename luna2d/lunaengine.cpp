@@ -36,6 +36,7 @@
 #include "lunaconfig.h"
 #include "lunamath.h"
 #include "lunabindings.h"
+#include "lunasdkapi.h"
 
 using namespace luna2d;
 
@@ -55,6 +56,11 @@ void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *pla
 	this->log = log;
 	this->platformUtils = platformUtils;
 	this->prefs = prefs;
+}
+
+void LUNAEngine::SetSdkApi(LUNASdkApi* sdkApi)
+{
+	this->sdkApi = sdkApi;
 }
 
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)
@@ -86,6 +92,11 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	RunEmbeddedScripts();
 	DoBindings();
 
+	if(sdkApi)
+	{
+		sdkApi->LoadSdkModule(LUNASdkModuleType::STORE, "test");
+	}
+
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))
 	{
@@ -104,6 +115,7 @@ void LUNAEngine::Deinitialize()
 {
 	config.reset();
 
+	delete sdkApi;
 	delete assets;
 	delete graphics;
 	delete scenes;
@@ -127,6 +139,7 @@ void LUNAEngine::Deinitialize()
 	files = nullptr;
 	platformUtils = nullptr;
 	log = nullptr;
+	sdkApi = nullptr;
 
 	initialized = false;
 }

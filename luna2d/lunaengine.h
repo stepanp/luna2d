@@ -53,8 +53,7 @@ class LUNAStrings;
 class LUNADebug;
 class LUNAConfig;
 
-class LUNAAds;
-class LUNAStore;
+class LUNASdkApi;
 
 class LUNAEngine
 {
@@ -80,12 +79,17 @@ private:
 	LUNAStrings* strings = nullptr;
 	LUNADebug* debug = nullptr;
 
+	LUNASdkApi* sdkApi = nullptr;
+
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
 
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
 	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs);
+
+	void SetSdkApi(LUNASdkApi* sdkApi);
+
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
 	std::shared_ptr<const LUNAConfig> GetConfig();
@@ -113,6 +117,7 @@ public:
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
 	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
+	inline static LUNASdkApi* SharedSdkApi() { return Shared()->sdkApi; }
 };
 
 }

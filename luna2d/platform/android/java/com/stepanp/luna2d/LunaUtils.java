@@ -37,13 +37,6 @@ import android.util.Log;
 //----------------------------------------------------------
 public class LunaUtils 
 {
-	private static Activity activity;
-
-	public static void init(Activity activity)
-	{
-		LunaUtils.activity = activity;
-	}
-
 	// Get system locale
 	public static String getSystemLocale()
 	{
@@ -53,6 +46,8 @@ public class LunaUtils
 	// Open given URL in system browser
 	public static void openUrl(String url)
 	{
+		Activity activity = LunaActivity.getSharedActivity();
+
 		try
 		{
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

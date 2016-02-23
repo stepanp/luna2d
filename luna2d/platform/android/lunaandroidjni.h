@@ -32,6 +32,7 @@
 
 // Hide "ugly" JNI function name
 #define LUNA_JNI_FUNC(retType, cls, name) extern "C" JNIEXPORT retType JNICALL Java_com_stepanp_luna2d_##cls##_##name
+#define LUNA_JNI_FUNC_PACKAGE(retType, package, cls, name) extern "C" JNIEXPORT retType JNICALL Java_com_stepanp_luna2d_##package##_##cls##_##name
 
 namespace luna2d{ namespace jni{
 
@@ -94,6 +95,5 @@ private:
 std::string FromJString(jstring javaStr);
 std::string FromJString(jobject javaStr);
 JString ToJString(const std::string& str);
-
 
 }}

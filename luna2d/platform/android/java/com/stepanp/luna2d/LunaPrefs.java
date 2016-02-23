@@ -37,8 +37,9 @@ public class LunaPrefs
 	private static SharedPreferences sharedPrefs;
 	private static Editor editor;
 	
-	public static void init(Activity activity)
+	public static void init()
 	{
+		Activity activity = LunaActivity.getSharedActivity();
 		sharedPrefs = activity.getSharedPreferences(PREFS_NAME, Activity.MODE_PRIVATE);
 	}
 	

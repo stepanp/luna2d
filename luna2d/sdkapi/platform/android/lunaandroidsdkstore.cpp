@@ -21,66 +21,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-package com.stepanp.luna2d;
+#include "lunaandroidsdkstore.h"
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
+using namespace luna2d;
 
-public class LunaActivity extends Activity
-{	
-	protected LunaGlView glView;
-	private static Activity sharedActivity = null;
+LUNAAndroidSdkStore::LUNAAndroidSdkStore()
+{
+	jni::Env env;
 
-	public static Activity getSharedActivity()
-	{
-		return sharedActivity;
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		enableFullscreen();
+	// Get ref to java wrapper class
+	jclass localRef = env->FindClass("com/stepanp/mylibrary/StoreTest");
+	javaSdkStore = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
+	env->DeleteLocalRef(localRef);
 
-		sharedActivity = this;
-		LunaPrefs.init();
-		
-		// Create OpenGL surface view
-		glView = new LunaGlView(this);
-		setContentView(glView);			
-	}
-	
-	@Override 
-	protected void onPause()
-	{
-		super.onPause();
-		glView.onPause();
-	}
+	jmethodID constructor = env->GetMethodID(javaSdkStore, "<init>", "()V");
 
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		glView.onResume();
-	}
+	jobject localRefObj = env->NewObject(javaSdkStore, constructor);
+	javaSdkStoreObj = reinterpret_cast<jobject>(env->NewGlobalRef(localRefObj));
+	env->DeleteLocalRef(localRefObj);
 
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus)
-	{
-		super.onWindowFocusChanged(hasFocus);
+	// Get java wrapper method ids
+	javaRateApp = env->GetMethodID(javaSdkStore, "rateApp", "()V");
+}
 
-		if(hasFocus) enableFullscreen();
-	}
-	
-	private void enableFullscreen()
-	{
-		getWindow().getDecorView().setSystemUiVisibility(
-			View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-			View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-			View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-			View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-			View.SYSTEM_UI_FLAG_FULLSCREEN |
-			View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);	
-	}
+void LUNAAndroidSdkStore::DoRateApp()
+{
+	jni::Env()->CallVoidMethod(javaSdkStoreObj, javaRateApp);
 }
