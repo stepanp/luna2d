@@ -24,7 +24,6 @@
 package com.stepanp.luna2d;
 
 import java.util.Locale;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
