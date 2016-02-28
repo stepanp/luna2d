@@ -36,8 +36,11 @@ enum class LUNASdkModuleType
 
 class LUNASdkApi
 {
+public:
+	virtual ~LUNASdkApi() {}
+
 protected:
-	LUNASdkStore* store = nullptr;
+	std::shared_ptr<LUNASdkStore> store;
 
 public:
 	virtual void LoadSdkModule(LUNASdkModuleType moduleType, const std::string& name) = 0;

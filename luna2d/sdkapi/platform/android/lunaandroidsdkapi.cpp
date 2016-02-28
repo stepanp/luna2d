@@ -24,8 +24,37 @@
 #include "lunaandroidsdkapi.h"
 #include "lunaandroidjni.h"
 #include "lunaandroidsdkstore.h"
+#include "lunaconfig.h"
+#include "lunalog.h"
+#include <string>
 
 using namespace luna2d;
+
+// Helper for load and create sdk object
+template<typename SdkClass>
+static std::shared_ptr<SdkClass> CreateSdkObject(const std::string& sdkTypeName, const std::string& sdkName)
+{
+	auto classpath = LUNAEngine::Shared()->GetConfig()->GetCustomString(sdkTypeName, "classpath");
+	if(classpath.empty()) 
+	{
+		LUNA_LOGE("Cannot load %s sdkmodule \"%s\". Classpath not specifed", sdkTypeName.c_str(), sdkName.c_str());
+		return nullptr;
+	}
+
+	// Convert classpath like "com.package.Class" 
+	// to internal JNI format like "com/package/Class"
+	std::replace(classpath.begin(), classpath.end(), '.', '/');
+
+	auto sdkObj = std::make_shared<SdkClass>(classpath);
+	if(!sdkObj->IsLoaded())
+	{
+		LUNA_LOGE("Cannot load %s sdkmodule \"%s\". Java class with classpath \"%s\" not found",
+			sdkTypeName.c_str(), sdkName.c_str(), classpath.c_str());
+		return nullptr;
+	}
+
+	return sdkObj;
+}
 
 LUNAAndroidSdkApi::LUNAAndroidSdkApi()
 {
@@ -34,9 +63,15 @@ LUNAAndroidSdkApi::LUNAAndroidSdkApi()
 
 void LUNAAndroidSdkApi::LoadSdkModule(LUNASdkModuleType moduleType, const std::string& name)
 {
-	store = new LUNAAndroidSdkStore();
-
-	BindStore();
+	if(moduleType == LUNASdkModuleType::STORE)
+	{
+		auto store = CreateSdkObject<LUNAAndroidSdkStore>("store", name);
+		if(store)
+		{
+			this->store = store;
+			BindStore();
+		}		
+	}
 }
 
 // Realization of "LunaBaseSdk.getConfigValue" Java-method

@@ -31,7 +31,7 @@ namespace luna2d{
 class LUNAAndroidSdkStore : public LUNASdkStore
 {
 public:
-	LUNAAndroidSdkStore();
+	LUNAAndroidSdkStore(const std::string& javaClass);
 
 private:
 	jclass javaSdkStore;

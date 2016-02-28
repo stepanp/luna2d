@@ -23,13 +23,12 @@
 
 #pragma once
 
+#include "lunabasesdk.h"
+
 namespace luna2d{
 
-class LUNASdkStore
+class LUNASdkStore : public LUNABaseSdk
 {
-public:
-	virtual ~LUNASdkStore() {}
-
 protected:
 	virtual void DoRateApp() = 0;
 

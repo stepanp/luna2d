@@ -25,12 +25,12 @@
 
 using namespace luna2d;
 
-LUNAAndroidSdkStore::LUNAAndroidSdkStore()
+LUNAAndroidSdkStore::LUNAAndroidSdkStore(const std::string& javaClass)
 {
 	jni::Env env;
 
 	// Get ref to java wrapper class
-	jclass localRef = env->FindClass("com/stepanp/mylibrary/StoreTest");
+	jclass localRef = env->FindClass(javaClass.c_str());
 	javaSdkStore = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
 	env->DeleteLocalRef(localRef);
 
@@ -42,6 +42,8 @@ LUNAAndroidSdkStore::LUNAAndroidSdkStore()
 
 	// Get java wrapper method ids
 	javaRateApp = env->GetMethodID(javaSdkStore, "rateApp", "()V");
+
+	isLoaded = true;
 }
 
 void LUNAAndroidSdkStore::DoRateApp()
