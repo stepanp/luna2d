@@ -75,7 +75,10 @@ public:
 	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> customValues;
 
 public:
-	std::string GetCustomValue(const std::string& nameSpace, const std::string& name) const;
+	std::string GetCustomString(const std::string& nameSpace, const std::string& name) const;
+	float GetCustomFloat(const std::string& nameSpace, const std::string& name) const;
+	int GetCustomInt(const std::string& nameSpace, const std::string& name) const;
+	bool GetCustomBool(const std::string& nameSpace, const std::string& name) const;
 	bool Read();
 };
 
