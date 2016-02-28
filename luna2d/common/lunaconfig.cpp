@@ -36,6 +36,18 @@ LUNAConfig::LUNAConfig()
 	resolutions = { DEFAULT_RESOLUTION };
 }
 
+bool LUNAConfig::HasCustomValue(const std::string& nameSpace, const std::string& name) const
+{
+	auto nsIt = customValues.find(nameSpace);
+	if(nsIt == customValues.end()) return false;
+
+	auto ns = (*nsIt).second;
+	auto valueIt = ns.find(name);
+	if(valueIt == ns.end()) return false;
+
+	return true;
+}
+
 std::string LUNAConfig::GetCustomString(const std::string& nameSpace, const std::string& name) const
 {
 	auto nsIt = customValues.find(nameSpace);
