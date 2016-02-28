@@ -23,40 +23,38 @@
 
 #pragma once
 
-// Supported platforms
-#define LUNA_PLATFORM_UNKNOWN 0
-#define LUNA_PLATFORM_QT 1
-#define LUNA_PLATFORM_ANDROID 2
-#define LUNA_PLATFORM_IOS 3
-#define LUNA_PLATFORM_WP 4
+//-------------------------------------------
+// Fix some platform-specific compiler issues
+//-------------------------------------------
 
-// Desktop emulator based on Qt
-#if defined(QT_CORE_LIB)
-	#define LUNA_PLATFORM LUNA_PLATFORM_QT
-	#define LUNA_PLATFORM_STRING "qt"
+#include <string>
+#include <sstream>
+#include <cstdlib>
+#include <math.h>
 
-// Android
-#elif defined(__ANDROID__)
-	#define LUNA_PLATFORM LUNA_PLATFORM_ANDROID
-	#define LUNA_PLATFORM_STRING "android"
+// Fix "%function% is not member of ::std"
+namespace std
+{
+	template <typename T>
+	inline std::string to_string(const T& value)
+	{
+		std::ostringstream os;
+		os << value;
+		return os.str();
+	}
 
-	#include "lunaandroidfixes.h"
+	inline int stoi(const string& str)
+	{
+		return atoi(str.c_str());
+	}
 
-// iOS
-#elif defined(__APPLE__)
-	#define LUNA_PLATFORM LUNA_PLATFORM_IOS
-	#define LUNA_PLATFORM_STRING "ios"
+	inline int stof(const string& str)
+	{
+		return atof(str.c_str());
+	}
 
-// Windows Phone / RT
-#elif (WINAPI_FAMILY == WINAPI_FAMILY_APP || WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
-	#define LUNA_PLATFORM LUNA_PLATFORM_WP
-	#define LUNA_PLATFORM_STRING "wp"
-	
-	#include "lunawpfixes.h"
-
-// Check for unsupported platforms
-#else
-	#define LUNA_PLATFORM LUNA_PLATFORM_UNKNOWN
-	#define LUNA_PLATFORM_STRING "unknown"
-	#error "Unsupported platform"
-#endif
+	inline float roundf(float f)
+	{
+		return ::roundf(f);
+	}
+}
