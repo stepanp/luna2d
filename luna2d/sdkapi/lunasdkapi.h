@@ -29,11 +29,6 @@ namespace luna2d{
 
 class LUNASdkStore;
 
-enum class LUNASdkModuleType
-{
-	STORE,
-};
-
 class LUNASdkApi
 {
 public:
@@ -43,7 +38,7 @@ protected:
 	std::shared_ptr<LUNASdkStore> store;
 
 public:
-	virtual void LoadSdkModule(LUNASdkModuleType moduleType, const std::string& name) = 0;
+	virtual void LoadSdkModules() = 0;
 
 protected:
 	void BindStore(); // Bind "luna.store" module

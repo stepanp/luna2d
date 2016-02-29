@@ -33,7 +33,7 @@ public:
 	LUNAAndroidSdkApi();
 
 public:
-	virtual void LoadSdkModule(LUNASdkModuleType moduleType, const std::string& name);
+	virtual void LoadSdkModules();
 };
 
 }

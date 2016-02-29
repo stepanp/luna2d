@@ -31,6 +31,12 @@ LUNAAndroidSdkStore::LUNAAndroidSdkStore(const std::string& javaClass)
 
 	// Get ref to java wrapper class
 	jclass localRef = env->FindClass(javaClass.c_str());
+	if(env->ExceptionCheck()) 
+	{
+		env->ExceptionClear();
+		return;
+	}
+
 	javaSdkStore = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
 	env->DeleteLocalRef(localRef);
 

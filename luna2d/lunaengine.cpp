@@ -92,10 +92,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	RunEmbeddedScripts();
 	DoBindings();
 
-	if(sdkApi)
-	{
-		sdkApi->LoadSdkModule(LUNASdkModuleType::STORE, "test");
-	}
+	if(sdkApi) sdkApi->LoadSdkModules();
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))
