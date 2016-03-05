@@ -63,6 +63,8 @@ def update_assets(args, luna2d_path, merged_config):
 	# Rewrite game config with merged config
 	utils.save_json(merged_config, assets_path + "/game/config.luna2d")
 
+	strip_unused_resolutions(assets_path, merged_config)
+
 	print("Compiling scripts..")
 	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
 		for item in files:
@@ -77,6 +79,21 @@ def update_assets(args, luna2d_path, merged_config):
 
 			os.remove(filename)
 			os.rename(outFilename, filename)
+
+# Remove assets with resolution not specifed in config
+def strip_unused_resolutions(assets_path, config):
+	for root, _, files in os.walk(assets_path + "/game/"):
+		for item in files:
+
+			# Default language files have prefix similar to resolution prefixes, skip it
+			if item.endswith("@Default.json"):
+				continue
+
+			filename = os.path.realpath(str(os.path.join(root, item)))
+			resolution = utils.get_resolution_suffix(filename)
+
+			if resolution is not None and not resolution in config["resolutions"]:
+				os.remove(filename)
 
 def update_libs(args, luna2d_path):
 	libs_source_dir = luna2d_path + "/lib/" + args.platform + "/release/"

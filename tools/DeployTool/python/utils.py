@@ -73,3 +73,12 @@ def normalize_slashes(path):
 
 def get_scripts_path():
 	return os.path.dirname(os.path.abspath(__file__))
+
+def get_resolution_suffix(filename):
+	at_index = filename.find("@")
+	dot_index = filename.rfind(".")
+
+	if at_index == -1 or dot_index == -1:
+		return None
+
+	return filename[at_index + 1:dot_index]
