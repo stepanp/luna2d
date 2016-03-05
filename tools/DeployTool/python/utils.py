@@ -82,3 +82,10 @@ def get_resolution_suffix(filename):
 		return None
 
 	return filename[at_index + 1:dot_index]
+
+def json_walk(data, predicate, parent = None):
+	for k,v in data.items():
+		if isinstance(v, dict):
+			json_walk(v, predicate, k)
+		else:
+			predicate(k, v, parent)

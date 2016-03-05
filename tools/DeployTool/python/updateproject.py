@@ -27,6 +27,7 @@ import shutil
 import os
 import subprocess
 import utils
+import update_android
 import update_wp
 
 def main(args):
@@ -39,7 +40,7 @@ def main(args):
 	merge_configs(config, project_config)
 
 	print("Updating libraries...")
-	update_libs(args, luna2d_path)
+	update_libs(args, luna2d_path, config)
 
 	print("Updating project..")
 	if args.platform == "wp":
@@ -50,7 +51,7 @@ def main(args):
 
 	print("Done")
 
-def update_assets(args, luna2d_path, merged_config):
+def update_assets(args, luna2d_path, config):
 	assets_path = args.project_path + "/.luna2d/assets/"
 	compiler_path = luna2d_path + "/tools/luac/luac"
 
@@ -61,9 +62,9 @@ def update_assets(args, luna2d_path, merged_config):
 	shutil.copytree(args.game_path, assets_path + "/game")
 
 	# Rewrite game config with merged config
-	utils.save_json(merged_config, assets_path + "/game/config.luna2d")
+	utils.save_json(config, assets_path + "/game/config.luna2d")
 
-	strip_unused_resolutions(assets_path, merged_config)
+	strip_unused_resolutions(assets_path, config)
 
 	print("Compiling scripts..")
 	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
@@ -95,12 +96,49 @@ def strip_unused_resolutions(assets_path, config):
 			if resolution is not None and not resolution in config["resolutions"]:
 				os.remove(filename)
 
-def update_libs(args, luna2d_path):
+def update_libs(args, luna2d_path, config):
 	libs_source_dir = luna2d_path + "/lib/" + args.platform + "/release/"
 	libs_dest_dir = args.project_path + "/.luna2d/libs"
 
+	# Copy luna2d libs
 	shutil.rmtree(libs_dest_dir, ignore_errors=True)
 	shutil.copytree(libs_source_dir, libs_dest_dir)
+
+	# Copy sdkmodules libs
+	def walk(key, value, parent):
+		if key == "sdkmodule":
+			module_type = parent
+			module_name = value
+			module_path = find_sdk_module(module_name, args, luna2d_path)
+
+			if module_path is None:
+				print("SDK module \"" + module_name + "\" not found")
+				return
+
+			module_config_path = module_path + "sdkmodule.luna2d"
+			if not os.path.exists(module_config_path):
+				print("Config for SDK module \"" + module_name + "\" not found")
+				return
+
+			module_config = utils.load_json(module_config_path)
+
+			for module_file in module_config["files"]:
+				src_path = module_path + "/" + module_file
+				dest_path = libs_dest_dir + "/" + module_name + "-" + module_file
+				shutil.copyfile(src_path, dest_path)
+
+			if args.platform == "android":
+				update_android.apply_sdk_module(args, module_type, config, module_config)
+
+	utils.json_walk(config, walk)
+
+def find_sdk_module(module_name, args, luna2d_path):
+	module_path = luna2d_path + "/sdkmodules/" + args.platform + "/" + module_name + "/"
+
+	if not os.path.exists(module_path):
+		return None
+
+	return module_path
 
 # Merge main game config with project-specific config
 def merge_configs(config, project_config):
