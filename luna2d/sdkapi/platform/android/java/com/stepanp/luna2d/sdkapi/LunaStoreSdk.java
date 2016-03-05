@@ -25,5 +25,6 @@ package com.stepanp.luna2d.sdkapi;
 
 public abstract class LunaStoreSdk extends LunaBaseSdk
 {
+	// Show rate app dialog
 	public abstract void rateApp();
 }

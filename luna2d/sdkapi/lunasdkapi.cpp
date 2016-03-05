@@ -36,5 +36,6 @@ void LUNASdkApi::BindStore()
 	LuaTable tblStore(lua);
 	tblLuna.SetField("store", tblStore);
 
-	tblStore.SetField("requestRateApp", LuaFunction(lua, store.get(), &LUNASdkStore::RateApp));
+	tblStore.SetField("showRateApp", LuaFunction(lua, store.get(), &LUNASdkStore::ShowRateApp));
+	tblStore.SetField("requestRateApp", LuaFunction(lua, store.get(), &LUNASdkStore::RequestRateApp));
 }

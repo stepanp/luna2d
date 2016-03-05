@@ -29,11 +29,26 @@ namespace luna2d{
 
 class LUNASdkStore : public LUNABaseSdk
 {
+public:
+	LUNASdkStore();
+
 protected:
+	// Show rate app dialog
+	// Should be implemented in platform-specific sdk module
 	virtual void DoRateApp() = 0;
 
+protected:
+	int launchCount = 2; // Launch count when need show rate app dialog
+	int curLaunchCount = 0; // Current launch count
+	bool dialogShowed = false;
+
 public:
-	void RateApp();
+	// Show rate app dialog immediately
+	void ShowRateApp();
+
+	// Request showing rate app dialog.
+	// Dialog will be showed at launch count specifed in "launchTimes" variable
+	void RequestRateApp();
 };
 
 }

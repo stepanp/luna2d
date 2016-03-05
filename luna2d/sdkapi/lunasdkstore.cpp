@@ -22,10 +22,38 @@
 //-----------------------------------------------------------------------------
 
 #include "lunasdkstore.h"
+#include "lunaconfig.h"
+#include "lunaprefs.h"
+#include "lunalog.h"
 
 using namespace luna2d;
 
-void LUNASdkStore::RateApp()
+LUNASdkStore::LUNASdkStore()
+{
+	auto config = LUNAEngine::Shared()->GetConfig();
+	auto prefs = LUNAEngine::SharedPrefs();
+
+	if(config->HasCustomValue("store", "launchCount")) launchCount = config->GetCustomInt("store", "launchCount");
+
+	// Calculate current launch count here
+	// because module creates at launch
+	curLaunchCount = prefs->GetInt("storeLaunchCount") + 1;
+	if(curLaunchCount <= launchCount) prefs->SetInt("storeLaunchCount", curLaunchCount);
+}
+
+// Show rate app dialog immediately
+void LUNASdkStore::ShowRateApp()
 {
 	DoRateApp();
+}
+
+// Request showing rate app dialog.
+// Dialog will be showed at launch time specifed in "launchTimes" variable
+void LUNASdkStore::RequestRateApp()
+{
+	if(curLaunchCount == launchCount && !dialogShowed)
+	{
+		dialogShowed = true;
+		DoRateApp();
+	}
 }

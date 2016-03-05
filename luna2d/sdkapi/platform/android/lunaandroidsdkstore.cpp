@@ -52,6 +52,7 @@ LUNAAndroidSdkStore::LUNAAndroidSdkStore(const std::string& javaClass)
 	isLoaded = true;
 }
 
+// Show rate app dialog
 void LUNAAndroidSdkStore::DoRateApp()
 {
 	jni::Env()->CallVoidMethod(javaSdkStoreObj, javaRateApp);

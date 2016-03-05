@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include "lunaengine.h"
+
 namespace luna2d{
 
 class LUNABaseSdk

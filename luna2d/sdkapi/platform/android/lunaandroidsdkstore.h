@@ -39,6 +39,7 @@ private:
 	jmethodID javaRateApp;
 
 protected:
+	// Show rate app dialog
 	virtual void DoRateApp();
 };
 
