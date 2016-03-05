@@ -29,12 +29,14 @@ repositories{
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile(name:'luna2d', ext:'aar')
 }
 
-task runDeployTool(type: Exec) {
-    workingDir "${projectDir}/../.luna2d/"
-    commandLine "python", "update.py"
+exec {
+    executable "python"
+    args "${projectDir}/../.luna2d/update.py"
 }
 
-preBuild.dependsOn runDeployTool
+fileTree(dir: "../.luna2d/libs", include: '**/*.aar').each { File file ->
+    def filename = file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name }
+    dependencies.add("compile", [name: filename, ext: 'aar'])
+}
