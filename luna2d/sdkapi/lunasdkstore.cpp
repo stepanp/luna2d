@@ -30,15 +30,15 @@ using namespace luna2d;
 
 LUNASdkStore::LUNASdkStore()
 {
-	auto config = LUNAEngine::Shared()->GetConfig();
+	auto configValues = LUNAEngine::Shared()->GetConfig()->GetCustomValues();
 	auto prefs = LUNAEngine::SharedPrefs();
 
-	if(config->HasCustomValue("store", "launchCount")) launchCount = config->GetCustomInt("store", "launchCount");
+	if(configValues["rateAppLaunchCount"].is_number()) launchCount =configValues["rateAppLaunchCount"].number_value();
 
 	// Calculate current launch count here
 	// because module creates at launch
-	curLaunchCount = prefs->GetInt("storeLaunchCount") + 1;
-	if(curLaunchCount <= launchCount) prefs->SetInt("storeLaunchCount", curLaunchCount);
+	curLaunchCount = prefs->GetInt("rateAppLaunchCount") + 1;
+	if(curLaunchCount <= launchCount) prefs->SetInt("rateAppLaunchCount", curLaunchCount);
 }
 
 // Show rate app dialog immediately

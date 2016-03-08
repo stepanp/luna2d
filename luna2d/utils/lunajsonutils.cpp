@@ -99,7 +99,7 @@ LuaTable luna2d::JsonObject2Lua(const Json::object& object)
 }
 
 // Deserialize root json object to lua table
-LuaTable luna2d::Json2Lua(json11::Json json)
+LuaTable luna2d::Json2Lua(const json11::Json& json)
 {
 	if(json.is_array()) return JsonArray2Lua(json.array_items());
 	else if(json.is_object()) return JsonObject2Lua(json.object_items());

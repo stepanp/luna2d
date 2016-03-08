@@ -373,21 +373,8 @@ static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 // Bind "luna.config" module
 static void BindConfig(LuaScript* lua, LuaTable& tblLuna)
 {
-	LuaTable tblConfig(lua);
-	tblLuna.SetField("config", tblConfig);
-
 	auto config = LUNAEngine::Shared()->GetConfig();
-	tblConfig.SetField("gameName", config->gameName);
-	tblConfig.SetField("orientation", ORIENTATION.FromEnum(config->orientation));
-	tblConfig.SetField("resolutions", config->resolutions);
-	tblConfig.SetField("scaleMode", SCALE_MODE.FromEnum(config->scaleMode));
-	tblConfig.SetField("baseWidth", config->baseWidth);
-	tblConfig.SetField("baseHeight", config->baseHeight);
-
-	for(auto& entry : config->customValues)
-	{
-		tblConfig.SetField(entry.first, entry.second);
-	}
+	tblLuna.SetField("config", Json2Lua(config->GetCustomValues()));
 }
 
 // Bind common classes and functions to lua

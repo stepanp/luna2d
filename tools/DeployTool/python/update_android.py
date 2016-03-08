@@ -23,7 +23,18 @@
 #-----------------------------------------------------------------------------
 
 # Apply android specific changes to project for given sdk module
-def apply_sdk_module(args, module_type, config, module_config):
+def apply_sdk_module(args, module_name, config, module_config):
 
-	# Add classpath of main module class to game config
-	config[module_type]["classpath"] = module_config["classpath"]
+	if "sdkmodules-classpath" not in config:
+		config["sdkmodules-classpath"] = [];
+
+	# Add classpath of main module class to classpaths list in gameconfig
+	module_type = get_module_type(module_name)
+	config["sdkmodules-classpath"].append(module_type + "-" + module_config["classpath"])
+
+def get_module_type(module_name):
+	dot_pos = module_name.find("-")
+	if dot_pos is None:
+		return ""
+	else:
+		return module_name[:dot_pos]

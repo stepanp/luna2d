@@ -35,6 +35,6 @@ LuaTable JsonArray2Lua(const json11::Json::array& array);
 LuaTable JsonObject2Lua(const json11::Json::object& object);
 
 // Deserialize root json object to lua table
-LuaTable Json2Lua(json11::Json json);
+LuaTable Json2Lua(const json11::Json& json);
 
 }

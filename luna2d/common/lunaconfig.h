@@ -24,7 +24,8 @@
 #pragma once
 
 #include "lunaengine.h"
-#include "utils/lunastringenum.h"
+#include "lunastringenum.h"
+#include "lunajsonutils.h"
 
 namespace luna2d{
 
@@ -72,14 +73,12 @@ public:
 	std::vector<std::string> resolutions;
 	int baseWidth = 480;
 	int baseHeight = BASE_SIZE;
-	std::unordered_map<std::string, std::unordered_map<std::string, std::string>> customValues;
+
+private:
+	json11::Json customValues;
 
 public:
-	bool HasCustomValue(const std::string& nameSpace, const std::string& name) const;
-	std::string GetCustomString(const std::string& nameSpace, const std::string& name) const;
-	float GetCustomFloat(const std::string& nameSpace, const std::string& name) const;
-	int GetCustomInt(const std::string& nameSpace, const std::string& name) const;
-	bool GetCustomBool(const std::string& nameSpace, const std::string& name) const;
+	const json11::Json& GetCustomValues() const;
 	bool Read();
 };
 

@@ -32,15 +32,8 @@ using namespace luna2d;
 
 // Helper for load and create sdk object
 template<typename SdkClass>
-static std::shared_ptr<SdkClass> CreateSdkObject(const std::string& sdkTypeName)
+static std::shared_ptr<SdkClass> CreateSdkObject(const std::string& classpath)
 {
-	const auto& classpath = LUNAEngine::Shared()->GetConfig()->GetCustomString(sdkTypeName, "classpath");
-	if(classpath.empty()) 
-	{
-		LUNA_LOGE("Cannot load %s sdkmodule \"%s\". Classpath not specifed", sdkTypeName.c_str());
-		return nullptr;
-	}
-
 	// Convert classpath like "com.package.Class" 
 	// to internal JNI format like "com/package/Class"
 	auto jniClasspath = classpath;
@@ -49,12 +42,25 @@ static std::shared_ptr<SdkClass> CreateSdkObject(const std::string& sdkTypeName)
 	auto sdkObj = std::make_shared<SdkClass>(jniClasspath);
 	if(!sdkObj->IsLoaded())
 	{
-		LUNA_LOGE("Cannot load %s sdkmodule. Java class \"%s\" not found",
-			sdkTypeName.c_str(), classpath.c_str());
+		LUNA_LOGE("Cannot load SDK module. Java class \"%s\" not found", classpath.c_str());
 		return nullptr;
 	}
 
 	return sdkObj;
+}
+
+static std::string ParseModuleType(const std::string& fullName)
+{
+	size_t dotPos = fullName.find("-");
+	if(dotPos == std::string::npos) return "";
+	return fullName.substr(0, dotPos);
+}
+
+static std::string ParseClasspath(const std::string& fullName)
+{
+	size_t dotPos = fullName.find("-");
+	if(dotPos == std::string::npos) return "";
+	return fullName.substr(dotPos + 1);
 }
 
 LUNAAndroidSdkApi::LUNAAndroidSdkApi()
@@ -64,8 +70,21 @@ LUNAAndroidSdkApi::LUNAAndroidSdkApi()
 
 void LUNAAndroidSdkApi::LoadSdkModules()
 {
-	// Load store sdk module
-	if((store = CreateSdkObject<LUNAAndroidSdkStore>("store"))) BindStore();
+	auto config = LUNAEngine::Shared()->GetConfig();
+	auto sdkModules = config->GetCustomValues()["sdkmodules-classpath"].array_items();
+
+	for(const auto& item : sdkModules)
+	{
+		auto type = ParseModuleType(item.string_value());
+		auto classpath = ParseClasspath(item.string_value());
+
+		if(type == "store")
+		{
+			if((store = CreateSdkObject<LUNAAndroidSdkStore>(classpath))) BindStore();
+		}
+
+		else LUNA_LOGE("Unsupported SDK module type: \"%s\"", type.c_str());
+	}
 }
 
 // Realization of "LunaBaseSdk.getConfigValue" Java-method

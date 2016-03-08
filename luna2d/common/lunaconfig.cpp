@@ -26,7 +26,6 @@
 #include "lunalog.h"
 #include "lunafiles.h"
 #include "lunasizes.h"
-#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;
@@ -36,45 +35,9 @@ LUNAConfig::LUNAConfig()
 	resolutions = { DEFAULT_RESOLUTION };
 }
 
-bool LUNAConfig::HasCustomValue(const std::string& nameSpace, const std::string& name) const
+const Json& LUNAConfig::GetCustomValues() const
 {
-	auto nsIt = customValues.find(nameSpace);
-	if(nsIt == customValues.end()) return false;
-
-	auto ns = (*nsIt).second;
-	auto valueIt = ns.find(name);
-	if(valueIt == ns.end()) return false;
-
-	return true;
-}
-
-std::string LUNAConfig::GetCustomString(const std::string& nameSpace, const std::string& name) const
-{
-	auto nsIt = customValues.find(nameSpace);
-	if(nsIt == customValues.end()) return "";
-
-	auto ns = (*nsIt).second;
-	auto valueIt = ns.find(name);
-	if(valueIt == ns.end()) return "";
-
-	return (*valueIt).second;
-}
-
-float LUNAConfig::GetCustomFloat(const std::string& nameSpace, const std::string& name) const
-{
-	const auto& str = GetCustomString(nameSpace, name);
-	return std::stof(str);
-}
-
-int LUNAConfig::GetCustomInt(const std::string& nameSpace, const std::string& name) const
-{
-	return static_cast<int>(GetCustomFloat(nameSpace, name));
-}
-
-bool LUNAConfig::GetCustomBool(const std::string& nameSpace, const std::string& name) const
-{
-	if(GetCustomString(nameSpace, name) == "true") return true;
-	return false;
+	return customValues;
 }
 
 bool LUNAConfig::Read()
@@ -108,6 +71,7 @@ bool LUNAConfig::Read()
 		return false;
 	}
 
+	// Fetch predefined values
 	for(auto& entry : jsonConfig.object_items())
 	{
 		auto& key = entry.first;
@@ -162,29 +126,9 @@ bool LUNAConfig::Read()
 			if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
 			else LUNA_LOGE("Base height must be number");
 		}
-
-		// Fetch custom values
-		else if(entry.second.is_object())
-		{
-			std::unordered_map<std::string, std::string> nameSpace;
-
-			// For ease storage all value types casts to string
-			for(auto& nsEntry : entry.second.object_items())
-			{
-				const auto& name = nsEntry.first;
-				const auto& value = nsEntry.second;
-
-				if(value.is_string()) nameSpace[name] = value.string_value();
-				else if(value.is_number()) nameSpace[name] = std::to_string(value.number_value());
-				else if(value.is_bool()) nameSpace[name] = value.bool_value() ? "true" : "false";
-				else LUNA_LOGW("Unsupported type of custom value: \"%s\"", name.c_str());
-			}
-
-			customValues[key] = nameSpace;
-		}
-
-		else LUNA_LOGW("Unknown param \"%s\" in config", key.c_str());
 	}
+
+	customValues = jsonConfig;
 
 	return true;
 }

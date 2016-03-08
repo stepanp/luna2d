@@ -105,32 +105,27 @@ def update_libs(args, luna2d_path, config):
 	shutil.copytree(libs_source_dir, libs_dest_dir)
 
 	# Copy sdkmodules libs
-	def walk(key, value, parent):
-		if key == "sdkmodule":
-			module_type = parent
-			module_name = value
-			module_path = find_sdk_module(module_name, args, luna2d_path)
+	for module_name in config["sdkmodules"]:
+		module_path = find_sdk_module(module_name, args, luna2d_path)
 
-			if module_path is None:
-				print("SDK module \"" + module_name + "\" not found")
-				return
+		if module_path is None:
+			print("SDK module \"" + module_name + "\" not found")
+			continue
 
-			module_config_path = module_path + "sdkmodule.luna2d"
-			if not os.path.exists(module_config_path):
-				print("Config for SDK module \"" + module_name + "\" not found")
-				return
+		module_config_path = module_path + "sdkmodule.luna2d"
+		if not os.path.exists(module_config_path):
+			print("Config for SDK module \"" + module_name + "\" not found")
+			continue
 
-			module_config = utils.load_json(module_config_path)
+		module_config = utils.load_json(module_config_path)
 
-			for module_file in module_config["files"]:
-				src_path = module_path + "/" + module_file
-				dest_path = libs_dest_dir + "/" + module_name + "-" + module_file
-				shutil.copyfile(src_path, dest_path)
+		for module_file in module_config["files"]:
+			src_path = module_path + "/" + module_file
+			dest_path = libs_dest_dir + "/" + module_name + "-" + module_file
+			shutil.copyfile(src_path, dest_path)
 
-			if args.platform == "android":
-				update_android.apply_sdk_module(args, module_type, config, module_config)
-
-	utils.json_walk(config, walk)
+		if args.platform == "android":
+			update_android.apply_sdk_module(args, module_name, config, module_config)
 
 def find_sdk_module(module_name, args, luna2d_path):
 	module_path = luna2d_path + "/sdkmodules/" + args.platform + "/" + module_name + "/"
