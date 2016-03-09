@@ -32,7 +32,7 @@ public abstract class LunaBaseSdk
 	// Check for value with given name exists in config
 	public native boolean hasConfigValue(String name);
 
-	// Get string value  from config by string
+	// Get string value from config by string
 	public native String getConfigString(String name);
 
 	// Get int value from config by string
@@ -45,7 +45,7 @@ public abstract class LunaBaseSdk
 	public native boolean getConfigBool(String name);
 
 	// Get main game activity
-	// Some android APIs requests Context, or Activity for work.
+	// Some android APIs requests Context or Activity for work.
 	// So, use Activity returning this method
 	public Activity getSharedActivity()
 	{
@@ -53,7 +53,7 @@ public abstract class LunaBaseSdk
 	}
 
 	// Run given runnable in UI thread
-	// Most SDK module functions calls from game thread
+	// Most methods of SDK modules calls from game thread.
 	// So, all actions with UI should be wrapped with this method
 	public void runInUiThread(Runnable runnable)
 	{
@@ -61,8 +61,8 @@ public abstract class LunaBaseSdk
 	}
 
 	// Run given runnable in game thread
-	// Game run in separate thread.
-	// So all actions from UI should be wrapped with this method
+	// Game running in separate thread.
+	// So, all actions with game in UI thread should be wrapped with this method
 	public void runInRenderThread(Runnable runnable)
 	{
 		LunaGlView.getSharedGlView().queueEvent(runnable);
