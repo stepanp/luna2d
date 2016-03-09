@@ -87,9 +87,40 @@ void LUNAAndroidSdkApi::LoadSdkModules()
 	}
 }
 
-// Realization of "LunaBaseSdk.getConfigValue" Java-method
+
+//-----------------------------------------------------
+// Realizations of "LunaBaseSdk.getConfig*" Java-metods
 // SEE "com.stepanp.luna2d.sdkapi.LunaBaseSdk"
-LUNA_JNI_FUNC_PACKAGE(jstring, sdkapi, LunaBaseSdk, getConfigValue)(JNIEnv* env, jmethodID method, jstring nameSpace, jstring name)
+//-----------------------------------------------------
+
+LUNA_JNI_FUNC_PACKAGE(bool, sdkapi, LunaBaseSdk, hasConfigValue)(JNIEnv* env, jmethodID method, jstring jName)
 {
-	return nameSpace;//jni::ToJString("getConfigValue").j_str();
+	auto name = jni::FromJString(jName);
+	return !LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].is_null();
+}
+
+LUNA_JNI_FUNC_PACKAGE(jstring, sdkapi, LunaBaseSdk, getConfigString)(JNIEnv* env, jmethodID method, jstring jName)
+{
+	auto name = jni::FromJString(jName);
+	auto string = LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].string_value();
+
+	return jni::Env()->NewStringUTF(string.c_str());
+}
+
+LUNA_JNI_FUNC_PACKAGE(int, sdkapi, LunaBaseSdk, getConfigInt)(JNIEnv* env, jmethodID method, jstring jName)
+{
+	auto name = jni::FromJString(jName);
+	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].number_value();
+}
+
+LUNA_JNI_FUNC_PACKAGE(float, sdkapi, LunaBaseSdk, getConfigFloat)(JNIEnv* env, jmethodID method, jstring jName)
+{
+	auto name = jni::FromJString(jName);
+	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].number_value();
+}
+
+LUNA_JNI_FUNC_PACKAGE(bool, sdkapi, LunaBaseSdk, getConfigBool)(JNIEnv* env, jmethodID method, jstring jName)
+{
+	auto name = jni::FromJString(jName);
+	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].bool_value();
 }

@@ -27,20 +27,42 @@ import android.app.Activity;
 import com.stepanp.luna2d.LunaActivity;
 import com.stepanp.luna2d.LunaGlView;
 
-public class LunaBaseSdk
+public abstract class LunaBaseSdk
 {
-	public native String getConfigValue(String namespace, String name);
+	// Check for value with given name exists in config
+	public native boolean hasConfigValue(String name);
 
+	// Get string value  from config by string
+	public native String getConfigString(String name);
+
+	// Get int value from config by string
+	public native int getConfigInt(String name);
+
+	// Get float value from config by string
+	public native float getConfigFloat(String name);
+
+	// Get bool value from config by string
+	public native boolean getConfigBool(String name);
+
+	// Get main game activity
+	// Some android APIs requests Context, or Activity for work.
+	// So, use Activity returning this method
 	public Activity getSharedActivity()
 	{
 		return LunaActivity.getSharedActivity();
 	}
 
+	// Run given runnable in UI thread
+	// Most SDK module functions calls from game thread
+	// So, all actions with UI should be wrapped with this method
 	public void runInUiThread(Runnable runnable)
 	{
 		getSharedActivity().runOnUiThread(runnable);
 	}
 
+	// Run given runnable in game thread
+	// Game run in separate thread.
+	// So all actions from UI should be wrapped with this method
 	public void runInRenderThread(Runnable runnable)
 	{
 		LunaGlView.getSharedGlView().queueEvent(runnable);

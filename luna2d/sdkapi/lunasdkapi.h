@@ -38,6 +38,8 @@ protected:
 	std::shared_ptr<LUNASdkStore> store;
 
 public:
+	std::shared_ptr<LUNASdkStore> GetStoreSdk();
+
 	virtual void LoadSdkModules() = 0;
 
 protected:

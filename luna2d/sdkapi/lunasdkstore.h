@@ -49,6 +49,9 @@ public:
 	// Request showing rate app dialog.
 	// Dialog will be showed at launch count specifed in "launchTimes" variable
 	void RequestRateApp();
+
+	// This method calls when user clicks "Rate later" button in rate app dialog
+	void OnUserPostpone();
 };
 
 }

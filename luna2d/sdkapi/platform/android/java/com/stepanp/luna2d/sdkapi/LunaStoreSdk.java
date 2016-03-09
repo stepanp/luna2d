@@ -27,4 +27,7 @@ public abstract class LunaStoreSdk extends LunaBaseSdk
 {
 	// Show rate app dialog
 	public abstract void rateApp();
+
+	// This method should be called when user clicks "Rate later" button
+	public native void onUserPostpone();
 }

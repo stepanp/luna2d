@@ -57,3 +57,8 @@ void LUNAAndroidSdkStore::DoRateApp()
 {
 	jni::Env()->CallVoidMethod(javaSdkStoreObj, javaRateApp);
 }
+
+LUNA_JNI_FUNC_PACKAGE(void, sdkapi, LunaStoreSdk, onUserPostpone)(JNIEnv* env, jmethodID method)
+{
+	LUNAEngine::SharedSdkApi()->GetStoreSdk()->OnUserPostpone();
+}

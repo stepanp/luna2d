@@ -27,6 +27,11 @@
 
 using namespace luna2d;
 
+std::shared_ptr<LUNASdkStore> LUNASdkApi::GetStoreSdk()
+{
+	return store;
+}
+
 // Bind "luna.store" module
 void LUNASdkApi::BindStore()
 {

@@ -57,3 +57,10 @@ void LUNASdkStore::RequestRateApp()
 		DoRateApp();
 	}
 }
+
+// This method calls when user clicks "Rate later" button in rate app dialog
+void LUNASdkStore::OnUserPostpone()
+{
+	// Reset saved launch count
+	LUNAEngine::SharedPrefs()->SetInt("rateAppLaunchCount", 0);
+}
