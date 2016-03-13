@@ -2,6 +2,6 @@
 	"name" : "LUNA_SDKMODULE_NAME",
 	"type" : "LUNA_SDKMODULE_TYPE",
 	"platform" : "android",
-	"classpath" : "LUNA_PACKAGE_NAME.",
+	"classpath" : "LUNA_PACKAGE_NAME.LUNA_CLASS_NAME",
 	"files" : [ "sdkmodule-release.aar" ]
 }

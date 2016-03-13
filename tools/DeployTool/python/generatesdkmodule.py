@@ -26,6 +26,7 @@ import argparse
 import shutil
 import os
 import utils
+import sdkmodule_android
 
 def main(args):
 	if args.debug_clear_project == "true":
@@ -41,10 +42,17 @@ def main(args):
 		"LUNA_SDKMODULE_TYPE" : args.module_type,
 		"LUNA_SDKMODULE_NAME" : args.name,
 		"LUNA_PACKAGE_NAME" : args.package_name,
+		"LUNA_CLASS_NAME" : args.class_name,
 		"LUNA2D_PATH" : luna2d_path,
 	}
 
-	utils.make_from_template(template_path, args.project_path, constants)
+	ignored_files = []
+
+	if args.platform == "android":
+		sdkmodule_android.apply_constants(args, constants)
+		ignored_files = sdkmodule_android.get_ignored_files(args, template_path)
+
+	utils.make_from_template(template_path, args.project_path, constants, ignored_files)
 
 def parse_args():
 	parser = argparse.ArgumentParser()
@@ -54,6 +62,7 @@ def parse_args():
 	parser.add_argument("--name", required=True)
 	parser.add_argument("--platform", required=True)
 	parser.add_argument("--package_name", default="")
+	parser.add_argument("--class_name", default="")
 	parser.add_argument("--strip_git", default=False)
 	parser.add_argument("--debug_clear_project", default=False)
 

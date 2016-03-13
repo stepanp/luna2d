@@ -26,8 +26,10 @@ import json
 import os
 import shutil
 
+BINARY_FILES_EXTENSIONS = ["png", "jpg", "jpeg"]
+
 # Make copy of template folder and replace constants
-def make_from_template(template_path, output_path, constants, ingore_extensions=[], strip_git=False):
+def make_from_template(template_path, output_path, constants, ignored_files=[], strip_git=False):
 
 	def process_file(template_path, output_path, filename, constants):
 		if not os.path.exists(output_path):
@@ -36,7 +38,8 @@ def make_from_template(template_path, output_path, constants, ingore_extensions=
 		template_filename = template_path + "/" + filename
 		out_filename = output_path + "/" + substitute_constants(filename, constants)
 
-		if any(map(lambda ext: filename.endswith(ext), ingore_extensions)):
+		# Just copy binary files without substituting constants
+		if any(map(lambda ext: filename.endswith(ext), BINARY_FILES_EXTENSIONS)):
 			shutil.copyfile(template_filename, out_filename)
 
 		else:
@@ -51,7 +54,8 @@ def make_from_template(template_path, output_path, constants, ingore_extensions=
 			inner_path = root[len(template_path) + 1:]
 			inner_path = substitute_constants(inner_path, constants)
 
-			process_file(root, output_path + "/" + inner_path, file, constants)
+			if file not in ignored_files and os.path.basename(root) not in ignored_files:
+				process_file(root, output_path + "/" + inner_path, file, constants)
 
 def substitute_file_regexp(filename, regexp, str):
 	file_data = None
@@ -122,3 +126,7 @@ def json_walk(data, predicate, parent = None):
 def get_luna2d_path():
 	return normalize_slashes(os.path.realpath(get_scripts_path() + "/../../../"))
 
+def find_dir(root_path, dir_name):
+	for root, dirs, files in os.walk(root_path):
+		if os.path.basename(root) == dir_name:
+			return root

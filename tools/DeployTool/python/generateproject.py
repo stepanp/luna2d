@@ -44,7 +44,7 @@ def main(args):
 	}
 
 	print("Creating project from template..")
-	utils.make_from_template(template_path, args.project_path, constants, [".png", ".jpg", ".jpeg"], args.strip_git)
+	utils.make_from_template(template_path, args.project_path, constants, strip_git=args.strip_git)
 
 	print("Creating config directory..")
 	make_config_dir(args, args.luna2d_path)
