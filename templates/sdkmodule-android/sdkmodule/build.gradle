@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+// Path to luna2d specifed in "sdkmodule/local.properties" file
+// NOTE: this file is NOT under version control system
+Properties properties = new Properties()
+properties.load(file('local.properties').newDataInputStream())
+def luna2dPath = properties.getProperty('luna2d.path')
+
+def moduleType = "LUNA_SDKMODULE_TYPE"
+def moduleName = "LUNA_SDKMODULE_NAME"
+
+android {
+	compileSdkVersion 23
+	buildToolsVersion "23.0.2"
+
+	defaultConfig {
+		minSdkVersion 14
+		targetSdkVersion 23
+		versionCode 1
+		versionName "1.0"
+	}
+
+	// Set output path for release library to luna2d skdmodules folder
+	libraryVariants.all { variant ->
+		variant.outputs.each { output ->
+			def outputFile = output.outputFile
+
+			if(outputFile != null && outputFile.name.endsWith('.aar')) {
+				def buildType = "${variant.buildType.name}"
+
+				if(buildType == "release")
+				{
+					def outputPath = "${luna2dPath}/sdkmodules/android/${moduleType}-${moduleName}"
+					output.outputFile = new File(outputPath, outputFile.name)
+				}
+			}
+		}
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+}
+
+repositories{
+	flatDir{
+		dirs "${luna2dPath}/lib/android/release"		 
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile(name:'luna2d', ext:'aar')
+}
