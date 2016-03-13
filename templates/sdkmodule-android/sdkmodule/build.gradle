@@ -3,11 +3,12 @@ apply plugin: 'com.android.library'
 // Path to luna2d specifed in "sdkmodule/local.properties" file
 // NOTE: this file is NOT under version control system
 Properties properties = new Properties()
-properties.load(file('local.properties').newDataInputStream())
+properties.load(file("local.properties").newDataInputStream())
 def luna2dPath = properties.getProperty('luna2d.path')
 
 def moduleType = "LUNA_SDKMODULE_TYPE"
 def moduleName = "LUNA_SDKMODULE_NAME"
+def outputPath = "${luna2dPath}/sdkmodules/android/${moduleType}-${moduleName}"
 
 android {
 	compileSdkVersion 23
@@ -28,9 +29,7 @@ android {
 			if(outputFile != null && outputFile.name.endsWith('.aar')) {
 				def buildType = "${variant.buildType.name}"
 
-				if(buildType == "release")
-				{
-					def outputPath = "${luna2dPath}/sdkmodules/android/${moduleType}-${moduleName}"
+				if(buildType == "release") {
 					output.outputFile = new File(outputPath, outputFile.name)
 				}
 			}
@@ -55,3 +54,10 @@ dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
 	compile(name:'luna2d', ext:'aar')
 }
+
+task copyConfig(type: Copy) {
+    from new File("sdkmodule.luna2d")
+    into '${outputPath}'
+}
+
+assembleRelease.dependsOn copyConfig
