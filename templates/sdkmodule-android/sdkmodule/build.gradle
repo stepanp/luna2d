@@ -57,7 +57,7 @@ dependencies {
 
 task copyConfig(type: Copy) {
     from new File("sdkmodule.luna2d")
-    into '${outputPath}'
+    into "${outputPath}"
 }
 
 assembleRelease.dependsOn copyConfig
