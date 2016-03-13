@@ -31,7 +31,7 @@ import update_android
 import update_wp
 
 def main(args):
-	luna2d_path = get_luna2d_path()
+	luna2d_path = utils.get_luna2d_path()
 	config = utils.load_json(args.game_path + "/config.luna2d")
 	project_config = read_project_config(args.project_path)
 	build_config = utils.load_json(args.project_path + "/.luna2d/build.luna2d")
@@ -147,10 +147,6 @@ def read_project_config(project_path):
 		return utils.load_json(config_path)
 	else:
 		return {}
-
-# Get absolute path to luna2d directory where is current script
-def get_luna2d_path():
-	return utils.normalize_slashes(os.path.realpath(utils.get_scripts_path() + "/../../../"))
 
 def parse_args():
 	parser = argparse.ArgumentParser()

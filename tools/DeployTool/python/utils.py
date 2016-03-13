@@ -24,6 +24,34 @@
 
 import json
 import os
+import shutil
+
+# Make copy of template folder and replace constants
+def make_from_template(template_path, output_path, constants, ingore_extensions=[], strip_git=False):
+
+	def process_file(template_path, output_path, filename, constants):
+		if not os.path.exists(output_path):
+			os.makedirs(output_path)
+
+		template_filename = template_path + "/" + filename
+		out_filename = output_path + "/" + substitute_constants(filename, constants)
+
+		if any(map(lambda ext: filename.endswith(ext), ingore_extensions)):
+			shutil.copyfile(template_filename, out_filename)
+
+		else:
+			substitute_file_constants(template_filename, out_filename, constants)
+
+	for root, dirs, files in os.walk(template_path):
+		for file in files:
+
+			if strip_git and is_git_file(file):
+				continue
+
+			inner_path = root[len(template_path) + 1:]
+			inner_path = substitute_constants(inner_path, constants)
+
+			process_file(root, output_path + "/" + inner_path, file, constants)
 
 def substitute_file_regexp(filename, regexp, str):
 	file_data = None
@@ -89,3 +117,8 @@ def json_walk(data, predicate, parent = None):
 			json_walk(v, predicate, k)
 		else:
 			predicate(k, v, parent)
+
+# Get absolute path to luna2d directory where is current script
+def get_luna2d_path():
+	return normalize_slashes(os.path.realpath(get_scripts_path() + "/../../../"))
+
