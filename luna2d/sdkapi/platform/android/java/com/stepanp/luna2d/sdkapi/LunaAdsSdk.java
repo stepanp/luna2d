@@ -21,16 +21,19 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunabasesdk.h"
+package com.stepanp.luna2d.sdkapi;
 
-using namespace luna2d;
-
-LUNABaseSdk::LUNABaseSdk(const std::string& name) :
-	name(name)
+public abstract class LunaAdsSdk extends LunaBaseSdk
 {
-}
+	public abstract boolean isVideoSupported();
 
-std::string LUNABaseSdk::GetName()
-{
-	return name;
+	public abstract boolean isVideoCached();
+
+	public abstract void cacheVideo();
+
+	public abstract void showVideo();
+
+	public native void onVideoCached();
+
+	public native void onVideoShowed();
 }

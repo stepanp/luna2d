@@ -37,6 +37,7 @@
 #include "lunamath.h"
 #include "lunabindings.h"
 #include "lunasdkapi.h"
+#include "lunasdkapibind.h"
 
 using namespace luna2d;
 
@@ -92,7 +93,11 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	RunEmbeddedScripts();
 	DoBindings();
 
-	if(sdkApi) sdkApi->LoadSdkModules();
+	if(sdkApi)
+	{
+		BindSdkApi();
+		sdkApi->LoadModules();
+	}
 
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua"))

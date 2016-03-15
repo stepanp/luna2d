@@ -30,7 +30,7 @@ namespace luna2d{
 class LUNASdkStore : public LUNABaseSdk
 {
 public:
-	LUNASdkStore();
+	LUNASdkStore(const std::string& name);
 
 protected:
 	// Show rate app dialog

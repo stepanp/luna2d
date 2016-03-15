@@ -24,12 +24,18 @@
 #include "lunasdkapi.h"
 #include "lunalua.h"
 #include "lunasdkstore.h"
+#include "lunasdkads.h"
 
 using namespace luna2d;
 
 std::shared_ptr<LUNASdkStore> LUNASdkApi::GetStoreSdk()
 {
 	return store;
+}
+
+std::shared_ptr<LUNAAds> LUNASdkApi::GetAds()
+{
+	return ads;
 }
 
 // Bind "luna.store" module

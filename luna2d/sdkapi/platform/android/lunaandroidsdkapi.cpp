@@ -22,32 +22,53 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidsdkapi.h"
-#include "lunaandroidjni.h"
 #include "lunaandroidsdkstore.h"
 #include "lunaconfig.h"
 #include "lunalog.h"
-#include <string>
 
 using namespace luna2d;
 
-// Helper for load and create sdk object
-template<typename SdkClass>
-static std::shared_ptr<SdkClass> CreateSdkObject(const std::string& classpath)
+LUNAAndroidSdkWrapper::LUNAAndroidSdkWrapper(const std::string& javaClasspath)
 {
 	// Convert classpath like "com.package.Class" 
 	// to internal JNI format like "com/package/Class"
-	auto jniClasspath = classpath;
+	auto jniClasspath = javaClasspath;
 	std::replace(jniClasspath.begin(), jniClasspath.end(), '.', '/');
 
-	auto sdkObj = std::make_shared<SdkClass>(jniClasspath);
-	if(!sdkObj->IsLoaded())
+	jni::Env env;
+
+	// Get ref to java wrapper class
+	jclass localClassRef = env->FindClass(jniClasspath.c_str());
+	if(env->ExceptionCheck()) 
 	{
-		LUNA_LOGE("Cannot load SDK module. Java class \"%s\" not found", classpath.c_str());
-		return nullptr;
+		env->ExceptionClear();
+		LUNA_LOGE("Cannot load SDK module. Java class \"%s\" not found", javaClasspath.c_str());
+		return;
 	}
 
-	return sdkObj;
+	javaClass = reinterpret_cast<jclass>(env->NewGlobalRef(localClassRef));
+	env->DeleteLocalRef(localClassRef);
+
+	// Make new object of java wrapper class
+	jmethodID constructor = env->GetMethodID(javaClass, "<init>", "()V");
+	jobject localObjRef = env->NewObject(javaClass, constructor);
+	javaObject = reinterpret_cast<jobject>(env->NewGlobalRef(localObjRef));
+	env->DeleteLocalRef(localObjRef);
+
+	isLoaded = true;
 }
+
+LUNAAndroidSdkWrapper::~LUNAAndroidSdkWrapper()
+{
+	jni::Env env;
+	if(javaObject) env->DeleteGlobalRef(javaObject);
+}
+
+bool LUNAAndroidSdkWrapper::IsLoaded()
+{
+	return isLoaded;
+}
+
 
 static std::string ParseModuleType(const std::string& fullName)
 {
@@ -56,35 +77,42 @@ static std::string ParseModuleType(const std::string& fullName)
 	return fullName.substr(0, dotPos);
 }
 
-static std::string ParseClasspath(const std::string& fullName)
+static std::string ParseModuleName(const std::string& fullName)
 {
 	size_t dotPos = fullName.find("-");
 	if(dotPos == std::string::npos) return "";
 	return fullName.substr(dotPos + 1);
 }
 
-LUNAAndroidSdkApi::LUNAAndroidSdkApi()
-{
 
-}
-
-void LUNAAndroidSdkApi::LoadSdkModules()
+void LUNAAndroidSdkApi::LoadModules()
 {
 	auto config = LUNAEngine::Shared()->GetConfig();
-	auto sdkModules = config->GetCustomValues()["sdkmodules-classpath"].array_items();
+	auto sdkModules = config->GetCustomValues()["sdkmodules"].array_items();
+	auto sdkModulesClasspath = config->GetCustomValues()["sdkmodules-classpath"].array_items();
 
-	for(const auto& item : sdkModules)
+	for(size_t i = 0; i < sdkModules.size(); i++)
 	{
-		auto type = ParseModuleType(item.string_value());
-		auto classpath = ParseClasspath(item.string_value());
+		const auto& module = sdkModules[i];
 
-		if(type == "store")
-		{
-			if((store = CreateSdkObject<LUNAAndroidSdkStore>(classpath))) BindStore();
-		}
-
-		else LUNA_LOGE("Unsupported SDK module type: \"%s\"", type.c_str());
+		LoadModule(ParseModuleType(module.string_value()), ParseModuleName(module.string_value()), 
+			sdkModulesClasspath[i].string_value());
 	}
+}
+
+void LUNAAndroidSdkApi::LoadModule(const std::string& type, const std::string& name, const std::string& classpath)
+{
+	if(type == "store")
+	{
+		auto storeSdk = std::make_shared<LUNAAndroidSdkStore>(name, classpath);
+		if(storeSdk->IsLoaded())
+		{
+			store = storeSdk;
+			BindStore();
+		}
+	}
+
+	else LUNA_LOGE("Unsupported SDK module type: \"%s\"", type.c_str());
 }
 
 

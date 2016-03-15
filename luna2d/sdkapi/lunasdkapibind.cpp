@@ -21,16 +21,29 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunabasesdk.h"
+#include "lunasdkapibind.h"
+#include "lunasdkapi.h"
+#include "lunalua.h"
+#include "lunasdkstore.h"
+#include "lunasdkads.h"
 
 using namespace luna2d;
 
-LUNABaseSdk::LUNABaseSdk(const std::string& name) :
-	name(name)
+// Bind "luna.ads" module
+static void BindAds(const std::shared_ptr<LUNAAds> ads, LuaScript* lua, LuaTable& tblLuna)
 {
+	LuaTable tblAds(lua);
+	tblLuna.SetField("ads", tblAds);
+
+	tblAds.SetField("isVideoReady", LuaFunction(lua, ads.get(), &LUNAAds::IsVideoReady));
+	tblAds.SetField("requestVideo", LuaFunction(lua, ads.get(), &LUNAAds::RequestVideo));
 }
 
-std::string LUNABaseSdk::GetName()
+void luna2d::BindSdkApi()
 {
-	return name;
+	auto lua = LUNAEngine::SharedLua();
+	auto tblLuna = lua->GetGlobalTable().GetTable("luna");
+	auto sdkApi = LUNAEngine::SharedSdkApi();
+
+	BindAds(sdkApi->GetAds(), lua, tblLuna);
 }

@@ -23,19 +23,17 @@
 
 #pragma once
 
+#include "lunaandroidsdkapi.h"
 #include "lunasdkstore.h"
-#include "lunaandroidjni.h"
 
 namespace luna2d{
 
-class LUNAAndroidSdkStore : public LUNASdkStore
+class LUNAAndroidSdkStore : public LUNASdkStore, public LUNAAndroidSdkWrapper
 {
 public:
-	LUNAAndroidSdkStore(const std::string& javaClass);
+	LUNAAndroidSdkStore(const std::string& name, const std::string& javaClasspath);
 
 private:
-	jclass javaSdkStore;
-	jobject javaSdkStoreObj;
 	jmethodID javaRateApp;
 
 protected:

@@ -28,7 +28,7 @@
 
 using namespace luna2d;
 
-LUNASdkStore::LUNASdkStore()
+LUNASdkStore::LUNASdkStore(const std::string& name) : LUNABaseSdk(name)
 {
 	auto configValues = LUNAEngine::Shared()->GetConfig()->GetCustomValues();
 	auto prefs = LUNAEngine::SharedPrefs();

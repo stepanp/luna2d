@@ -21,16 +21,12 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunabasesdk.h"
+#pragma once
 
-using namespace luna2d;
+#include "lunaengine.h"
 
-LUNABaseSdk::LUNABaseSdk(const std::string& name) :
-	name(name)
-{
-}
+namespace luna2d{
 
-std::string LUNABaseSdk::GetName()
-{
-	return name;
+void BindSdkApi();
+
 }

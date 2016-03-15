@@ -21,16 +21,47 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 #include "lunabasesdk.h"
 
-using namespace luna2d;
+namespace luna2d{
 
-LUNABaseSdk::LUNABaseSdk(const std::string& name) :
-	name(name)
+class LUNAAdsSdk : public LUNABaseSdk
 {
-}
+public:
+	virtual	~LUNAAdsSdk() {}
 
-std::string LUNABaseSdk::GetName()
+public:
+	virtual bool IsVideoSupported() = 0;
+
+	virtual bool IsVideoReady() = 0;
+
+	virtual void CacheVideo() = 0;
+
+	virtual void ShowVideo() = 0;
+};
+
+
+class LUNAAds
 {
-	return name;
+private:
+	std::shared_ptr<LUNAAdsSdk> video;
+
+public:
+	void AddVideoSdk(const std::shared_ptr<LUNAAdsSdk>& video);
+
+	bool IsVideoReady();
+
+	void CacheVideo();
+
+	void RequestVideo();
+
+	void OnVideoCompleted(const std::string& sdkName);
+
+	void OnVideoCanceled(const std::string& sdkName);
+
+	void OnVideoError(const std::string& sdkName, const std::string& error);
+};
+
 }

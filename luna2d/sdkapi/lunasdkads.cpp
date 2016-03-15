@@ -21,16 +21,66 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunabasesdk.h"
+#include "lunasdkads.h"
+#include "lunalua.h"
 
 using namespace luna2d;
 
-LUNABaseSdk::LUNABaseSdk(const std::string& name) :
-	name(name)
+static LuaTable GetAdsTable()
 {
+	auto lua = LUNAEngine::SharedLua();
+	auto tblLuna = lua->GetGlobalTable().GetTable("luna");
+	return tblLuna.GetTable("ads");
 }
 
-std::string LUNABaseSdk::GetName()
+void LUNAAds::AddVideoSdk(const std::shared_ptr<LUNAAdsSdk>& video)
 {
-	return name;
+	if(!video->IsVideoSupported()) LUNA_RETURN_ERR("SDK module \"%s\" not support video", video->GetName().c_str());
+
+	this->video = video;
+}
+
+bool LUNAAds::IsVideoReady()
+{
+	return video && video->IsVideoReady();
+}
+
+void LUNAAds::CacheVideo()
+{
+	if(video) video->CacheVideo();
+}
+
+void LUNAAds::RequestVideo()
+{
+	if(!IsVideoReady()) return;
+
+	video->ShowVideo();
+}
+
+void LUNAAds::OnVideoCompleted(const std::string& sdkName)
+{
+	auto tblAds = GetAdsTable();
+	auto fnCallback = tblAds.GetFunction("onVideoCompleted");
+
+	if(fnCallback != nil) fnCallback.CallVoid();
+
+	CacheVideo();
+}
+
+void LUNAAds::OnVideoCanceled(const std::string& sdkName)
+{
+	auto tblAds = GetAdsTable();
+	auto fnCallback = tblAds.GetFunction("onVideoCanceled");
+
+	if(fnCallback != nil) fnCallback.CallVoid();
+
+	CacheVideo();
+}
+
+void LUNAAds::OnVideoError(const std::string& sdkName, const std::string& error)
+{
+	auto tblAds = GetAdsTable();
+	auto fnCallback = tblAds.GetFunction("onVideoError");
+
+	if(fnCallback != nil) fnCallback.CallVoid(error);
 }

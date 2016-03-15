@@ -25,37 +25,19 @@
 
 using namespace luna2d;
 
-LUNAAndroidSdkStore::LUNAAndroidSdkStore(const std::string& javaClass)
+LUNAAndroidSdkStore::LUNAAndroidSdkStore(const std::string& name, const std::string& javaClasspath) : 
+	LUNASdkStore(name), LUNAAndroidSdkWrapper(javaClasspath)
 {
 	jni::Env env;
 
-	// Get ref to java wrapper class
-	jclass localRef = env->FindClass(javaClass.c_str());
-	if(env->ExceptionCheck()) 
-	{
-		env->ExceptionClear();
-		return;
-	}
-
-	javaSdkStore = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
-	env->DeleteLocalRef(localRef);
-
-	jmethodID constructor = env->GetMethodID(javaSdkStore, "<init>", "()V");
-
-	jobject localRefObj = env->NewObject(javaSdkStore, constructor);
-	javaSdkStoreObj = reinterpret_cast<jobject>(env->NewGlobalRef(localRefObj));
-	env->DeleteLocalRef(localRefObj);
-
 	// Get java wrapper method ids
-	javaRateApp = env->GetMethodID(javaSdkStore, "rateApp", "()V");
-
-	isLoaded = true;
+	javaRateApp = env->GetMethodID(javaClass, "rateApp", "()V");
 }
 
 // Show rate app dialog
 void LUNAAndroidSdkStore::DoRateApp()
 {
-	jni::Env()->CallVoidMethod(javaSdkStoreObj, javaRateApp);
+	jni::Env()->CallVoidMethod(javaObject, javaRateApp);
 }
 
 LUNA_JNI_FUNC_PACKAGE(void, sdkapi, LunaStoreSdk, onUserPostpone)(JNIEnv* env, jmethodID method)

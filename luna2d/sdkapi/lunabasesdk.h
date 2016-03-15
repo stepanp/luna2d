@@ -30,13 +30,14 @@ namespace luna2d{
 class LUNABaseSdk
 {
 public:
+	LUNABaseSdk(const std::string& name);
 	virtual ~LUNABaseSdk() {}
 
 protected:
-	bool isLoaded = false;
+	std::string name;
 
 public:
-	bool IsLoaded();
+	std::string GetName();
 };
 
 }

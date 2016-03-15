@@ -28,6 +28,7 @@
 namespace luna2d{
 
 class LUNASdkStore;
+class LUNAAds;
 
 class LUNASdkApi
 {
@@ -36,11 +37,13 @@ public:
 
 protected:
 	std::shared_ptr<LUNASdkStore> store;
+	std::shared_ptr<LUNAAds> ads;
 
 public:
 	std::shared_ptr<LUNASdkStore> GetStoreSdk();
+	std::shared_ptr<LUNAAds> GetAds();
 
-	virtual void LoadSdkModules() = 0;
+	virtual void LoadModules() = 0;
 
 protected:
 	void BindStore(); // Bind "luna.store" module

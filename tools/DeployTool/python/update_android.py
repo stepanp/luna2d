@@ -29,12 +29,4 @@ def apply_sdk_module(args, module_name, config, module_config):
 		config["sdkmodules-classpath"] = [];
 
 	# Add classpath of main module class to classpaths list in gameconfig
-	module_type = get_module_type(module_name)
-	config["sdkmodules-classpath"].append(module_type + "-" + module_config["classpath"])
-
-def get_module_type(module_name):
-	dot_pos = module_name.find("-")
-	if dot_pos is None:
-		return ""
-	else:
-		return module_name[:dot_pos]
+	config["sdkmodules-classpath"].append(module_config["classpath"])

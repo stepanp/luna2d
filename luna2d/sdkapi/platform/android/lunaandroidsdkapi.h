@@ -23,17 +23,37 @@
 
 #pragma once
 
-#include "lunasdkapi.h"
+#include "lunabasesdk.h"
+#include "lunaandroidjni.h"
 
 namespace luna2d{
+
+//----------------------------------------
+// Helper for wrap java classes of SDK API
+//----------------------------------------
+class LUNAAndroidSdkWrapper
+{
+public:
+	LUNAAndroidSdkWrapper(const std::string& javaClasspath);
+	~LUNAAndroidSdkWrapper();
+
+protected:
+	jclass javaClass = nullptr;
+	jobject javaObject = nullptr;
+	bool isLoaded = false;
+
+public:
+	bool IsLoaded();
+};
+
 
 class LUNAAndroidSdkApi : public LUNASdkApi
 {
 public:
-	LUNAAndroidSdkApi();
+	virtual void LoadModules();
 
-public:
-	virtual void LoadSdkModules();
+private:
+	void LoadModule(const std::string& type, const std::string& name, const std::string& classpath);
 };
 
 }
