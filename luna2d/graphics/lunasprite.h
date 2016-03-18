@@ -66,6 +66,7 @@ protected:
 public:
 	void SetTexture(const std::weak_ptr<LUNATexture>& texture);
 	void SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region);
+	void SetShader(const std::weak_ptr<LUNAShader>& shader);
 	LUNABlendingMode GetBlendingMode();
 	void SetBlendingMode(LUNABlendingMode blendingMode);
 	float GetX();

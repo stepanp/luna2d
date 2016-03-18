@@ -145,6 +145,11 @@ void LUNASprite::SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region
 	LUNA_RETURN_ERR("Attempt set invalid texure region to sprite")
 }
 
+void LUNASprite::SetShader(const std::weak_ptr<LUNAShader>& shader)
+{
+	material.shader = shader;
+}
+
 LUNABlendingMode LUNASprite::GetBlendingMode()
 {
 	return material.blending;

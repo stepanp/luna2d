@@ -33,6 +33,8 @@
 #include "shaders/default.frag.h"
 #include "shaders/primitives.vert.h"
 #include "shaders/primitives.frag.h"
+#include "shaders/font.vert.h"
+#include "shaders/font.frag.h"
 
 const int RENDER_RESERVE_BATCH = 1000; // Count of polygons for which allocated memory when renderer initializing
 const int RENDER_ELEMENT_PER_VERTEX = 8; // Count of array elements for each vertex
@@ -49,7 +51,7 @@ private:
 	std::vector<float> vertexBatch;
 
 	// Default shader
-	std::shared_ptr<LUNAShader> defaultShader, primitivesShader;
+	std::shared_ptr<LUNAShader> defaultShader, primitivesShader, fontShader;
 
 	// Background color
 	LUNAColor backColor = LUNAColor::WHITE;
@@ -78,6 +80,7 @@ public:
 
 	std::shared_ptr<LUNAShader> GetDefaultShader();
 	std::shared_ptr<LUNAShader> GetPrimitvesShader();
+	std::shared_ptr<LUNAShader> GetFontShader();
 
 	LUNAColor GetBackgroundColor();
 	void SetBackgroundColor(const LUNAColor& backColor);
@@ -112,6 +115,7 @@ public:
 	{
 		defaultShader->Reload(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
 		primitivesShader->Reload(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+		fontShader->Reload(LUNA_FONT_VERT_SHADER, LUNA_FONT_FRAG_SHADER);
 	}
 #endif
 };

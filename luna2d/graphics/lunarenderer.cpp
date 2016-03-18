@@ -36,6 +36,7 @@ LUNARenderer::LUNARenderer()
 	// Initialize default shaders
 	defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
 	primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
+	fontShader = std::make_shared<LUNAShader>(LUNA_FONT_VERT_SHADER, LUNA_FONT_FRAG_SHADER);
 
 	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
 }
@@ -80,6 +81,11 @@ std::shared_ptr<LUNAShader> LUNARenderer::GetDefaultShader()
 std::shared_ptr<LUNAShader> LUNARenderer::GetPrimitvesShader()
 {
 	return primitivesShader;
+}
+
+std::shared_ptr<LUNAShader> LUNARenderer::GetFontShader()
+{
+	return fontShader;
 }
 
 LUNAColor LUNARenderer::GetBackgroundColor()

@@ -23,6 +23,7 @@
 
 #include "lunatext.h"
 #include "lunautf.h"
+#include "lunagraphics.h"
 
 using namespace luna2d;
 
@@ -140,6 +141,7 @@ void LUNAText::SetText(const std::string& text)
 	for(char32_t c : this->text)
 	{
 		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
+		sprite->SetShader(LUNAEngine::SharedGraphics()->GetRenderer()->GetFontShader());
 		sprites.push_back(sprite);
 	}
 }
