@@ -87,7 +87,10 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	audio = new LUNAAudio();
 	scenes = new LUNAScenes();
 	strings = new LUNAStrings();
+
+#ifdef LUNA_DEBUG
 	debug = new LUNADebug();
+#endif
 
 	math::InitializeRandom();
 	RunEmbeddedScripts();
@@ -124,7 +127,12 @@ void LUNAEngine::Deinitialize()
 	delete audio;
 	delete sizes;
 	delete strings;
+
+#ifdef LUNA_DEBUG
 	delete debug;
+	debug = nullptr;
+#endif
+
 	delete lua;
 	delete files;
 	delete platformUtils;
@@ -136,7 +144,6 @@ void LUNAEngine::Deinitialize()
 	audio = nullptr;
 	sizes = nullptr;
 	strings = nullptr;
-	debug = nullptr;
 	lua = nullptr;
 	files = nullptr;
 	platformUtils = nullptr;

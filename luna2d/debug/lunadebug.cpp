@@ -21,6 +21,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef LUNA_DEBUG
+
 #include "lunadebug.h"
 #include "lunalua.h"
 #include "lunawatcher.h"
@@ -56,3 +58,5 @@ std::shared_ptr<luna2d::LUNAProfiler> LUNADebug::GetProfiler()
 {
 	return profiler;
 }
+
+#endif

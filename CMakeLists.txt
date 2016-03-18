@@ -150,6 +150,9 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
+	# Enable debug tools (profiler, watcher, etc.)
+	add_definitions(-DLUNA_DEBUG)
+
 	add_library(${LIB_NAME} STATIC ${LUNA2D_SOURCES} ${LUNA2D_HEADERS} ${THIRDPARTY_SOURCES})
 
 	qt5_use_modules(${LIB_NAME} Widgets)

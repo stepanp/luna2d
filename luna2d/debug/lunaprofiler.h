@@ -23,22 +23,51 @@
 
 #pragma once
 
+#ifdef LUNA_DEBUG
+
 #include "lunaengine.h"
 #include "lunadebug.h"
 
 namespace luna2d{
 
-typedef std::chrono::duration<float> Seconds;
+typedef std::chrono::duration<double> Seconds;
+
+
+enum class LUNAProfilerTag
+{
+	ASSET,
+	CUSTOM
+};
+
 
 class LUNAProfiler
 {
 public:
-	void ProfileAsset(Seconds seconds, const std::string& tag);
+	void Profile(LUNAProfilerTag tag, Seconds seconds, const std::string& message);
+
+public:
+	static std::chrono::system_clock::time_point assetTime, customTime;
 };
 
-#define LUNA_PROFILE_ASSET_BEGIN() auto _profiler_start = std::chrono::system_clock::now()
-#define LUNA_PROFILE_ASSET_END(tag) \
-	auto _profiler_end = std::chrono::system_clock::now(); \
-	auto _profiler_elapsed = std::chrono::duration_cast<Seconds>(_profiler_end - _profiler_start); \
-	LUNAEngine::SharedDebug()->GetProfiler()->ProfileAsset(_profiler_elapsed, tag)
 }
+
+#define _LUNA_PROFILE_BEGIN(timeVar) timeVar = std::chrono::system_clock::now()
+#define _LUNA_PROFILE_END(timeVar, tag, message) \
+	{ \
+		auto end = std::chrono::system_clock::now(); \
+		auto elapsed = std::chrono::duration_cast<Seconds>(end - timeVar); \
+		LUNAEngine::SharedDebug()->GetProfiler()->Profile(tag, elapsed, message); \
+		timeVar = end; \
+	}
+
+#else
+
+#define _LUNA_PROFILE_BEGIN(timeVar)
+#define _LUNA_PROFILE_END(timeVar, tag, message)
+
+#endif
+
+#define LUNA_PROFILE_BEGIN() _LUNA_PROFILE_BEGIN(LUNAProfiler::customTime)
+#define LUNA_PROFILE_END(message) _LUNA_PROFILE_END(LUNAProfiler::customTime, LUNAProfilerTag::CUSTOM, message)
+#define LUNA_PROFILE_ASSET_BEGIN() _LUNA_PROFILE_BEGIN(LUNAProfiler::assetTime)
+#define LUNA_PROFILE_ASSET_END(message) _LUNA_PROFILE_END(LUNAProfiler::assetTime, LUNAProfilerTag::ASSET, message)

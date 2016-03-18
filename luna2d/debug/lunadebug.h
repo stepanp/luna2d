@@ -23,6 +23,8 @@
 
 #pragma once
 
+#ifdef LUNA_DEBUG
+
 #include "lunaengine.h"
 
 namespace luna2d{
@@ -45,3 +47,5 @@ public:
 };
 
 }
+
+#endif

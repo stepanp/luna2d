@@ -35,6 +35,8 @@ INCLUDEPATH += ../../../luna2d \
 		../../../luna2d/utils/ \
 		../../../luna2d/debug/
 
+DEFINES += LUNA_DEBUG
+
 CONFIG(debug, debug|release) {
 	LIBS += -L$$PWD/../../../lib/qt/ -lluna2dd
 	PRE_TARGETDEPS += $$PWD/../../../lib/qt/libluna2dd.a

@@ -78,9 +78,12 @@ private:
 	LUNAScenes* scenes = nullptr;
 	LUNASizes* sizes = nullptr;
 	LUNAStrings* strings = nullptr;
-	LUNADebug* debug = nullptr;
 
 	LUNASdkApi* sdkApi = nullptr;
+
+#ifdef LUNA_DEBUG
+	LUNADebug* debug = nullptr;
+#endif
 
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
@@ -117,8 +120,11 @@ public:
 	inline static LUNAScenes* SharedScenes() { return Shared()->scenes; }
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
-	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
 	inline static LUNASdkApi* SharedSdkApi() { return Shared()->sdkApi; }
+
+#ifdef LUNA_DEBUG
+	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
+#endif
 };
 
 }

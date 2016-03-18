@@ -21,12 +21,27 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef LUNA_DEBUG
+
 #include "lunaprofiler.h"
 #include "lunalog.h"
 
 using namespace luna2d;
 
-void LUNAProfiler::ProfileAsset(Seconds seconds, const std::string& tag)
+void LUNAProfiler::Profile(LUNAProfilerTag tag, Seconds seconds, const std::string& message)
 {
-	LUNA_LOG("Asset \"%s\" loaded for %f seconds", tag.c_str(), seconds.count());
+	switch(tag)
+	{
+	case LUNAProfilerTag::ASSET:
+		LUNA_LOG("Asset \"%s\" loaded for %f seconds", message.c_str(), seconds.count());
+		break;
+	case LUNAProfilerTag::CUSTOM:
+		LUNA_LOG("%s running for %f seconds", message.c_str(), seconds.count());
+		break;
+	}
 }
+
+std::chrono::system_clock::time_point LUNAProfiler::assetTime;
+std::chrono::system_clock::time_point LUNAProfiler::customTime;
+
+#endif
