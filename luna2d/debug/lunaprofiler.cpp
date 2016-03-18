@@ -33,10 +33,10 @@ void LUNAProfiler::Profile(LUNAProfilerTag tag, Seconds seconds, const std::stri
 	switch(tag)
 	{
 	case LUNAProfilerTag::ASSET:
-		LUNA_LOG("Asset \"%s\" loaded for %f seconds", message.c_str(), seconds.count());
+		//LUNA_LOG("Asset \"%s\" loaded for %f seconds", message.c_str(), seconds.count());
 		break;
 	case LUNAProfilerTag::CUSTOM:
-		LUNA_LOG("%s running for %f seconds", message.c_str(), seconds.count());
+		//LUNA_LOG("%s running for %f seconds", message.c_str(), seconds.count());
 		break;
 	}
 }
