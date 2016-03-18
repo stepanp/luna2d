@@ -35,6 +35,7 @@ enum class LUNAColorType
 {
 	RGB = 1,
 	RGBA = 2,
+	ALPHA = 3,
 };
 
 //---------------------------

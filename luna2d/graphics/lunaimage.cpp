@@ -31,7 +31,15 @@ using namespace luna2d;
 
 int BytesPerPixel(LUNAColorType colorType)
 {
-	return colorType == LUNAColorType::RGBA ? 4 : 3;
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return 4;
+	case LUNAColorType::RGB:
+		return 4;
+	case LUNAColorType::ALPHA:
+		return 1;
+	}
 }
 
 // Construct empty image
@@ -49,7 +57,7 @@ LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType) :
 }
 
 // Constuct image from given data
-LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType, std::vector<unsigned char> data) :
+LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType, const std::vector<unsigned char>& data) :
 	data(data),
 	width(width),
 	height(height),
@@ -107,21 +115,24 @@ void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
 
-	if(colorType == LUNAColorType::RGB)
-	{
-		int pos = CoordsToPos(x, y);
-		data[pos] = color.GetR();
-		data[pos + 1] = color.GetG();
-		data[pos + 2] = color.GetB();
-	}
+	int pos = CoordsToPos(x, y);
 
-	else if(colorType == LUNAColorType::RGBA)
+	switch(colorType)
 	{
-		int pos = CoordsToPos(x, y);
+	case LUNAColorType::RGBA:
 		data[pos] = color.GetR();
 		data[pos + 1] = color.GetG();
 		data[pos + 2] = color.GetB();
 		data[pos + 3] = color.GetA();
+		break;
+	case LUNAColorType::RGB:
+		data[pos] = color.GetR();
+		data[pos + 1] = color.GetG();
+		data[pos + 2] = color.GetB();
+		break;
+	case LUNAColorType::ALPHA:
+		data[pos] = color.GetA();
+		break;
 	}
 }
 
@@ -131,8 +142,15 @@ LUNAColor LUNAImage::GetPixel(int x, int y) const
 
 	int pos = CoordsToPos(x, y);
 
-	if(colorType == LUNAColorType::RGB) return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2]);
-	else return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], data[pos + 3]);
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], data[pos + 3]);
+	case LUNAColorType::RGB:
+		return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2]);
+	case LUNAColorType::ALPHA:
+		return LUNAColor::Rgb(255, 255, 255, data[pos]);
+	}
 }
 
 // Fill image with given color
@@ -147,6 +165,14 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
 	if(IsEmpty() || image.IsEmpty()) return;
 	if(x < 0 || y < 0 || x + image.GetWidth() > width || y + image.GetHeight() > height) return;
 
+	// Line-by-line copying buffer is faster than SetPixel
+	// Use it when possible
+	if(image.GetColorType() == colorType)
+	{
+		DrawBuffer(x, y, image.GetData(), image.GetWidth(), image.GetHeight(), image.GetColorType());
+		return;
+	}
+
 	for(int j = 0; j < image.GetHeight(); j++)
 	{
 		for(int i = 0; i < image.GetWidth(); i++)
@@ -156,7 +182,35 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
 	}
 }
 
-// Draw filled rectangle
+// Draw image from given buffer to this image
+// Width and height of buffer in pixels
+// Color type of given buffer should be same as image color type
+void LUNAImage::DrawBuffer(int x, int y,
+	const std::vector<unsigned char>& buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType)
+{
+	DrawRawBuffer(x, y, buffer.data(), bufferWidth, bufferHeight, bufferColorType);
+}
+// Draw image from given raw buffer to this image
+// Width and height of buffer in pixels
+// Color type of given buffer should be same as image color type
+void LUNAImage::DrawRawBuffer(int x, int y,
+	const unsigned char* buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType)
+{
+	if(bufferColorType != colorType || x < 0 || y < 0 ||
+		x + bufferWidth > width || y + bufferHeight > height) return;
+
+	int rowLen = bufferWidth * BytesPerPixel(bufferColorType);
+
+	for(int row = 0; row < bufferHeight; row++)
+	{
+		int pos = CoordsToPos(x, y + row);
+		int bufferPos = row * rowLen;
+
+		memcpy(&data[pos], &buffer[bufferPos], rowLen);
+	}
+}
+
+// Fill rectangle on image with given color
 void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
 {
 	for(int j = 0; j < height; j++)

@@ -55,11 +55,20 @@ void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	GLint glColorType = GL_RGB;
-	if(colorType == LUNAColorType::RGB) glColorType = GL_RGB;
-	else if(colorType == LUNAColorType::RGBA) glColorType = GL_RGBA;
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		glColorType = GL_RGBA;
+		break;
+	case LUNAColorType::RGB:
+		glColorType = GL_RGB;
+		break;
+	case LUNAColorType::ALPHA:
+		glColorType = GL_ALPHA;
+		break;
+	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0,
-		glColorType, GL_UNSIGNED_BYTE, &data[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0, glColorType, GL_UNSIGNED_BYTE, &data[0]);
 
 	id = textureId;
 

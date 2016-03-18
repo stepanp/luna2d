@@ -107,7 +107,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	int totalArea = (chars.size() + 1 /* + unknown char */) * charArea;
 	int textureSide = math::NearestPowerOfTwo(std::ceil(std::sqrt(totalArea)));
 
-	LUNAImage image(textureSide, textureSide, LUNAColorType::RGBA);
+	LUNAImage image(textureSide, textureSide, LUNAColorType::ALPHA);
 
 	// Fill image with white transparent color to avoid black artefacts around chars
 	image.Fill(LUNAColor::Rgb(255, 255, 255, 0));
@@ -149,18 +149,10 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 		int charW = UnitsToPixels(face->glyph->advance.x);
 		int charX = penX + face->glyph->bitmap_left;
 		int charY = penY + maxH - bmpHeight - baseline + charDescender;
+
 		// Draw char bimtap to image
-		for(int y = 0; y < bmpHeight; y++)
-		{
-			for(int x = 0; x < bmpWidth; x++)
-			{
-				// FreeType generates 8-bit per pixel grayscale bitmap
-				// We convert it to 32-bit image with alpha channel
-				// Brightness level of pixels is using as alpha channel
-				unsigned char bmpPixel = bmp.buffer[x + bmpWidth * y];
-				image.SetPixel(charX + x, charY + y, LUNAColor::Rgb(255, 255, 255, bmpPixel));
-			}
-		}
+		image.DrawRawBuffer(charX, charY, bmp.buffer, bmpWidth, bmpHeight, LUNAColorType::ALPHA);
+
 		charRegions.push_back(CharRegion(c, penX, penY, charW, maxH));
 
 		penX += charW + CHAR_PADDING;

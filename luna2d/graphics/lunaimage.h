@@ -44,7 +44,7 @@ public:
 	LUNAImage(int width, int height, LUNAColorType colorType);
 
 	// Constuct image from given data
-	LUNAImage(int width, int height, LUNAColorType colorType, std::vector<unsigned char> data);
+	LUNAImage(int width, int height, LUNAColorType colorType, const std::vector<unsigned char>& data);
 
 	// Constructor with loading
 	LUNAImage(const std::string& filename, const LUNAImageFormat& format,
@@ -66,11 +66,30 @@ public:
 	LUNAColorType GetColorType() const;
 	bool Load(const std::string& filename, const LUNAImageFormat& format,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
+
 	void SetPixel(int x, int y, const LUNAColor& color);
 	LUNAColor GetPixel(int x, int y) const;
-	void Fill(const LUNAColor& color); // Fill image with given color
-	void DrawImage(int x, int y, const LUNAImage& image); // Draw another image to this image
-	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color); // Draw filled rectangle
+
+	// Fill image with given color
+	void Fill(const LUNAColor& color);
+
+	 // Draw another image to this image
+	void DrawImage(int x, int y, const LUNAImage& image);
+
+	// Draw image from given buffer to this image
+	// Width and height of buffer in pixels
+	// Color type of given buffer should be same as image color type
+	void DrawBuffer(int x, int y,
+		const std::vector<unsigned char>& buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType);
+
+	// Draw image from given raw buffer to this image
+	// Width and height of buffer in pixels
+	// Color type of given buffer should be same as image color type
+	void DrawRawBuffer(int x, int y,
+		const unsigned char* buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType);
+
+	// Fill rectangle on image with given color
+	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color);
 };
 
 }
