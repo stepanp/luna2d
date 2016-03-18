@@ -63,7 +63,7 @@ void WatcherDialog::AttachWatcher()
 {
 	ui->tableFields->setEnabled(true);
 
-	watcher = LUNAEngine::SharedDebug()->GetWatcher();
+	watcher = LUNAEngine::SharedDebug()->GetWatcher().get(); // TODO: replace to std::shared_ptr here
 	watcher->SetListener(this);
 	watcher->FetchAllTables();
 }

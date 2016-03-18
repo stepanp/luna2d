@@ -29,6 +29,7 @@
 #include "lunajsonloader.h"
 #include "lunaaudiowavloader.h"
 #include "lunaaudiooggloader.h"
+#include "lunaprofiler.h"
 
 using namespace luna2d;
 
@@ -161,11 +162,15 @@ void LUNAAssets::DoLoadFile(const std::string& path)
 	// Don't load asset if it already exists
 	if(parentTable.HasField(name)) return;
 
+	LUNA_PROFILE_ASSET_BEGIN();
+
 	if(!loader->Load(path))
 	{
 		LUNA_LOGE("Cannot load asset from file \"%s\"", path.c_str());
 		return;
 	}
+
+	LUNA_PROFILE_ASSET_END(path);
 
 	loader->PushToLua(name, parentTable);
 }

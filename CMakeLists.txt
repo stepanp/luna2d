@@ -61,6 +61,7 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}/sdkapi/platform
 	${LUNA2D_DIR}/sdkapi/platform/${PLATFROM_NAME}
 	${LUNA2D_DIR}/utils
+	${LUNA2D_DIR}/debug
 )
 
 foreach(DIR ${LUNA2D_DIRS})

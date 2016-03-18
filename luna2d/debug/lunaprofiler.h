@@ -21,34 +21,24 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#pragma once
+
+#include "lunaengine.h"
 #include "lunadebug.h"
-#include "lunalua.h"
 
-using namespace luna2d;
+namespace luna2d{
 
-LUNADebug::LUNADebug()
+typedef std::chrono::duration<float> Seconds;
+
+class LUNAProfiler
 {
-	LuaScript* lua = LUNAEngine::SharedLua();
+public:
+	void ProfileAsset(Seconds seconds, const std::string& tag);
+};
 
-	// Initialize watcher
-	watcher = new LUNAWatcher();
-
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-	LuaTable tblDebug(lua);
-
-	tblDebug.SetField("addToWatcher", LuaFunction(lua, watcher, &LUNAWatcher::AddTable));
-	tblDebug.SetField("removeFromWatcher", LuaFunction(lua, watcher, &LUNAWatcher::RemoveTable));
-
-	tblLuna.SetField("debug", tblDebug);
-}
-
-LUNADebug::~LUNADebug()
-{
-	delete watcher;
-	watcher = nullptr;
-}
-
-LUNAWatcher* LUNADebug::GetWatcher()
-{
-	return watcher;
+#define LUNA_PROFILE_ASSET_BEGIN() auto _profiler_start = std::chrono::system_clock::now()
+#define LUNA_PROFILE_ASSET_END(tag) \
+	auto _profiler_end = std::chrono::system_clock::now(); \
+	auto _profiler_elapsed = std::chrono::duration_cast<Seconds>(_profiler_end - _profiler_start); \
+	LUNAEngine::SharedDebug()->GetProfiler()->ProfileAsset(_profiler_elapsed, tag)
 }

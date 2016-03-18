@@ -21,24 +21,38 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "lunaengine.h"
+#include "lunadebug.h"
+#include "lunalua.h"
 #include "lunawatcher.h"
+#include "lunaprofiler.h"
 
-namespace luna2d{
+using namespace luna2d;
 
-class LUNADebug
+LUNADebug::LUNADebug()
 {
-public:
-	LUNADebug();
-	~LUNADebug();
+	LuaScript* lua = LUNAEngine::SharedLua();
 
-private:
-	LUNAWatcher* watcher = nullptr;
+	// Initialize watcher
+	watcher = std::make_shared<LUNAWatcher>();
 
-public:
-	LUNAWatcher* GetWatcher();
-};
+	// Initialize profiler
+	profiler = std::make_shared<LUNAProfiler>();
 
+	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
+	LuaTable tblDebug(lua);
+
+	tblDebug.SetField("addToWatcher", LuaFunction(lua, watcher.get(), &LUNAWatcher::AddTable));
+	tblDebug.SetField("removeFromWatcher", LuaFunction(lua, watcher.get(), &LUNAWatcher::RemoveTable));
+
+	tblLuna.SetField("debug", tblDebug);
+}
+
+std::shared_ptr<LUNAWatcher> LUNADebug::GetWatcher()
+{
+	return watcher;
+}
+
+std::shared_ptr<luna2d::LUNAProfiler> LUNADebug::GetProfiler()
+{
+	return profiler;
 }

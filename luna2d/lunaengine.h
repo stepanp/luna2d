@@ -35,6 +35,7 @@
 #include <functional>
 #include <type_traits>
 #include <algorithm>
+#include <chrono>
 
 namespace luna2d{
 

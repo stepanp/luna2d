@@ -32,7 +32,8 @@ INCLUDEPATH += ../../../luna2d \
         ../../../luna2d/platform/ \
 		../../../luna2d/platform/qt/ \
 		../../../thirdparty/lua/ \
-		../../../luna2d/utils/
+		../../../luna2d/utils/ \
+		../../../luna2d/debug/
 
 CONFIG(debug, debug|release) {
 	LIBS += -L$$PWD/../../../lib/qt/ -lluna2dd
