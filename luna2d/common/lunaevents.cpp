@@ -42,11 +42,15 @@ LUNAEvents::LUNAEvents()
 // For maximize perfomance implemented as "lua_CFunction"
 int LUNAEvents::LuaSend(lua_State* luaVm)
 {
-	auto handlersMap = LUNAEngine::SharedEvents()->handlersMap;
+	auto events = LUNAEngine::SharedEvents();
 	const std::string& message = LuaStack<std::string>::Pop(luaVm, 1);
 
-	auto itHandlers = handlersMap.find(message);
-	if(itHandlers == handlersMap.end()) return 0;
+	auto itHandlers = events->handlersMap.find(message);
+	if(itHandlers == events->handlersMap.end()) return 0;
+
+	// Events is currently processing
+	bool nestedSend = events->processing;
+	events->processing = true;
 
 	// Count of passed params except message name
 	int paramsCount = lua_gettop(luaVm) - 1;
@@ -67,17 +71,40 @@ int LUNAEvents::LuaSend(lua_State* luaVm)
 
 	lua_pop(luaVm, 1); // Pop error handler from stack
 
+	// If it's root send, finish events processing
+	if(!nestedSend)
+	{
+		events->processing = false;
+		events->ProcessInternalActions();
+	}
+
 	return 0;
+}
+
+void LUNAEvents::ProcessInternalActions()
+{
+	for(const auto& action : internalActions) action();
+	internalActions.clear();
+}
+
+void LUNAEvents::RunInternalAction(const std::function<void()>& action)
+{
+	if(processing) internalActions.push_back(action);
+	else action();
 }
 
 // Subscribe given handler to message
 void LUNAEvents::Subscribe(const std::string& message, const LuaFunction& handler)
 {
-	handlersMap[message].push_back(handler);
+	auto& handlers = handlersMap[message];
+
+	RunInternalAction([&handlers, handler]() { handlers.push_back(handler); });
 }
 
 // Unsubscribe all messages for given message
 void LUNAEvents::UnsubscribeAll(const std::string& message)
 {
-	handlersMap[message].clear();
+	auto& handlers = handlersMap[message];
+
+	RunInternalAction([&handlers]() { handlers.clear(); });
 }
