@@ -31,6 +31,7 @@
 #include "lunaaudio.h"
 #include "lunascenes.h"
 #include "lunasizes.h"
+#include "lunaevents.h"
 #include "lunastrings.h"
 #include "lunadebug.h"
 #include "lunaconfig.h"
@@ -86,6 +87,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	graphics = new LUNAGraphics();
 	audio = new LUNAAudio();
 	scenes = new LUNAScenes();
+	events = new LUNAEvents();
 	strings = new LUNAStrings();
 
 #ifdef LUNA_DEBUG
@@ -133,6 +135,7 @@ void LUNAEngine::Deinitialize()
 	debug = nullptr;
 #endif
 
+	delete events;
 	delete lua;
 	delete files;
 	delete platformUtils;
@@ -143,6 +146,7 @@ void LUNAEngine::Deinitialize()
 	scenes = nullptr;
 	audio = nullptr;
 	sizes = nullptr;
+	events = nullptr;
 	strings = nullptr;
 	lua = nullptr;
 	files = nullptr;

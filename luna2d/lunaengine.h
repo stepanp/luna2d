@@ -50,6 +50,7 @@ class LUNAAssets;
 class LUNAGraphics;
 class LUNAScenes;
 class LUNASizes;
+class LUNAEvents;
 class LUNAStrings;
 class LUNADebug;
 class LUNAConfig;
@@ -77,6 +78,7 @@ private:
 	LUNAAudio* audio = nullptr;
 	LUNAScenes* scenes = nullptr;
 	LUNASizes* sizes = nullptr;
+	LUNAEvents* events = nullptr;
 	LUNAStrings* strings = nullptr;
 
 	LUNASdkApi* sdkApi = nullptr;
@@ -119,6 +121,7 @@ public:
 	inline static LUNAAudio* SharedAudio() { return Shared()->audio; }
 	inline static LUNAScenes* SharedScenes() { return Shared()->scenes; }
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
+	inline static LUNAEvents* SharedEvents() { return Shared()->events; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
 	inline static LUNASdkApi* SharedSdkApi() { return Shared()->sdkApi; }
 
