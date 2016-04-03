@@ -73,14 +73,14 @@ struct LuaStack<std::shared_ptr<T>>
 
 		// Get userdata type from metatable
 		lua_getfield(luaVm, index, "_typeId");
-		if(!lua_isnumber(luaVm, -1))
+		if(!lua_isuserdata(luaVm, -1))
 		{
 			lua_pop(luaVm, 1); // Remove userdata type from stack
 			return nullptr;
 		}
 
-		int userdataType = lua_tointeger(luaVm, -1);
-		int classType = T::_GetTypeId();
+		size_t userdataType = reinterpret_cast<size_t>(lua_touserdata(luaVm, -1));
+		size_t classType = LuaGetTypeId<T>();
 		lua_pop(luaVm, 1); // Remove userdata type from stack
 
 		// If userdata type and class type are different
@@ -100,13 +100,13 @@ struct LuaStack<std::shared_ptr<T>>
 				if(lua_isnil(luaVm, -1)) break;
 
 				lua_getfield(luaVm, -1, "_typeId");
-				if(!lua_isnumber(luaVm, -1))
+				if(!lua_isuserdata(luaVm, -1))
 				{
 					lua_pop(luaVm, 1); // Remove base class type from stack
 					break;
 				}
 
-				int baseClassType = lua_tointeger(luaVm, -1);
+				size_t baseClassType = reinterpret_cast<size_t>(lua_touserdata(luaVm, -1));
 				lua_pop(luaVm, 1); // Remove base class type from stack
 
 				if(baseClassType == classType)

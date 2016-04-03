@@ -58,7 +58,7 @@ public:
 		// Save userdata type to metatable
 		// For safe-casting from lua userdata to C++ object
 		// SEE: "luaptr.h"
-		SetField("_typeId", Class::_GetTypeId());
+		SetField<LuaLightUserdata>("_typeId", reinterpret_cast<LuaLightUserdata>(LuaGetTypeId<Class>()));
 
 		// Save metatable of base class in this table
 		// For support inheritance in lua and support polyphormism for casting from lua to C++ object

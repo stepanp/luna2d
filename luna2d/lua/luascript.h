@@ -81,4 +81,11 @@ public:
 	operator lua_State*();
 };
 
+template<typename T>
+size_t LuaGetTypeId()
+{
+	static char uniquePtr;
+	return reinterpret_cast<size_t>(&uniquePtr);
+}
+
 }
