@@ -190,7 +190,7 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int heig
 	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
 	connect(log, &LUNAQtLog::logError, this, &LUNAQtWidget::logError);
 
-	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(), new LUNAQtPrefs());
+	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(this), new LUNAQtPrefs());
 	LUNAEngine::Shared()->Initialize(width, height);
 
 	emit engineInitialized();

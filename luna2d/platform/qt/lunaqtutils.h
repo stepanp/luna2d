@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunaplatformutils.h"
+#include <QWidget>
 
 namespace luna2d{
 
@@ -33,12 +34,28 @@ namespace luna2d{
 class LUNAQtUtils : public LUNAPlatformUtils
 {
 public:
+	LUNAQtUtils(QWidget* parent);
+
+private:
+	QWidget* parent;
+
+public:
 	// Get system locale in "xx_XX" format
 	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
 	virtual std::string GetSystemLocale();
 
 	// Open given url in system browser
 	virtual void OpenUrl(const std::string& url);
+
+	// Show native dialog with "Ok" button
+	// "onClose" calls when dialog closed
+	virtual void ShowMessageDialog(const std::string& title, const std::string& message,
+		const std::function<void()>& onClose);
+
+	// Show native dialog with "Yes" and "No" buttons
+	// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
+	virtual void ShowConfirmDialog(const std::string& title, const std::string& message,
+		const std::function<void(bool)>& onClose);
 };
 
 }

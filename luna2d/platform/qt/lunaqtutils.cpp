@@ -25,8 +25,14 @@
 #include <QLocale>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QMessageBox>
 
 using namespace luna2d;
+
+LUNAQtUtils::LUNAQtUtils(QWidget* parent) :
+	parent(parent)
+{
+}
 
 // Get system locale in "xx_XX" format
 // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
@@ -39,4 +45,23 @@ std::string LUNAQtUtils::GetSystemLocale()
 void LUNAQtUtils::OpenUrl(const std::string& url)
 {
 	QDesktopServices::openUrl(QUrl(QString::fromStdString(url)));
+}
+
+// Show native dialog with "Ok" button
+// "onClose" calls when dialog closed
+void LUNAQtUtils::ShowMessageDialog(const std::string& title, const std::string& message,
+	const std::function<void()>& onClose)
+{
+	QMessageBox::information(parent, QString::fromStdString(title), QString::fromStdString(message));
+	if(onClose) onClose();
+}
+
+// Show native dialog with "Yes" and "No" buttons
+// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
+void LUNAQtUtils::ShowConfirmDialog(const std::string& title, const std::string& message,
+	const std::function<void(bool)>& onClose)
+{
+	auto result = QMessageBox::question(parent, QString::fromStdString(title), QString::fromStdString(message),
+		QMessageBox::Yes, QMessageBox::No);
+	if(onClose) onClose(result == QMessageBox::Yes);
 }
