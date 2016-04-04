@@ -245,12 +245,16 @@ static void BindEasing(LuaScript* lua, LuaTable& tblLuna)
 // Bind "luna.platform" module
 static void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 {
+	auto platformUtils = LUNAEngine::SharedPlatformUtils();
+
 	LuaTable tblPlatform(lua);
+	tblLuna.SetField("platform", tblPlatform);
 
 	tblPlatform.SetField("name", LUNA_PLATFORM_STRING);
-	tblPlatform.SetField("openUrl", LuaFunction(lua, LUNAEngine::SharedPlatformUtils(), &LUNAPlatformUtils::OpenUrl));
-
-	tblLuna.SetField("platform", tblPlatform);
+	tblPlatform.SetField("emulator", LUNA_PLATFORM == LUNA_PLATFORM_QT);
+	tblPlatform.SetField("openUrl", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::OpenUrl));
+	tblPlatform.SetField("showMessageDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::ShowMessageDialog));
+	tblPlatform.SetField("showConfirmDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::ShowConfirmDialog));
 }
 
 // Bind "luna.audio" module

@@ -192,4 +192,34 @@ struct LuaStack<LuaFunction>
 	}
 };
 
+template<typename ... Args>
+struct LuaStack<std::function<void(Args...)>>
+{
+	static std::function<void(Args...)> Pop(lua_State* luaVm, int index = -1)
+	{
+		LuaFunction fn = LuaStack<LuaFunction>::Pop(luaVm, index);
+
+		if(fn == nil) return std::function<void(Args...)>();
+
+		// Wrap "LuaFunction" with "std::function"
+		// to bind functions have "std::function" as arguments directly to lua
+		return [fn](Args ... args) { fn.CallVoid(args...); };
+	}
+};
+
+template<typename Ret, typename ... Args>
+struct LuaStack<std::function<Ret(Args...)>>
+{
+	static std::function<Ret(Args...)> Pop(lua_State* luaVm, int index = -1)
+	{
+		LuaFunction fn = LuaStack<LuaFunction>::Pop(luaVm, index);
+
+		if(fn == nil) return std::function<Ret(Args...)>();
+
+		// Wrap "LuaFunction" with "std::function"
+		// to bind functions have "std::function" as arguments directly to lua
+		return [fn](Args ... args) -> Ret { return fn.Call<Ret>(args...); };
+	}
+};
+
 }
