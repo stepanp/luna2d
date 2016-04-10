@@ -25,7 +25,9 @@ package com.stepanp.luna2d;
 
 import java.util.Locale;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
@@ -60,4 +62,128 @@ public class LunaUtils
 			Log.e(appName, "Cannot open url: " + url);
 		}
 	}
+
+	// Show native dialog with "Ok" button
+	public static void messageDialog(final String title, final String message)
+	{
+		final Activity activity = LunaActivity.getSharedActivity();
+
+		activity.runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setTitle(title);
+				builder.setMessage(message);
+
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						LunaGlView.getSharedGlView().queueEvent(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								onMessageDialogClosed();
+							}
+						});
+					}
+				});
+
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(DialogInterface dialog)
+					{
+						LunaGlView.getSharedGlView().queueEvent(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								onMessageDialogClosed();
+							}
+						});
+					}
+				});
+
+				builder.setCancelable(true);
+				builder.create().show();
+			}
+		});
+	}
+
+	// Show native dialog with "Yes" and "No" buttons
+	public static void confirmDialog(final String title, final String message)
+	{
+		final Activity activity = LunaActivity.getSharedActivity();
+
+		LunaActivity.getSharedActivity().runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setTitle(title);
+				builder.setMessage(message);
+
+				builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						LunaGlView.getSharedGlView().queueEvent(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								onConfirmDialogClosed(true);
+							}
+						});
+					}
+				});
+
+				builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						LunaGlView.getSharedGlView().queueEvent(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								onConfirmDialogClosed(false);
+							}
+						});
+					}
+				});
+
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener()
+				{
+					@Override
+					public void onCancel(DialogInterface dialog)
+					{
+						LunaGlView.getSharedGlView().queueEvent(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								onConfirmDialogClosed(false);
+							}
+						});
+					}
+				});
+
+				builder.setCancelable(true);
+				builder.create().show();
+			}
+		});
+	}
+
+	public static native void onMessageDialogClosed();
+
+	public static native void onConfirmDialogClosed(boolean isConfirmed);
 }

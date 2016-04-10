@@ -38,6 +38,22 @@ LUNAAndroidUtils::LUNAAndroidUtils()
 	// Get java wrapper method ids
 	javaGetSystemLocale = env->GetStaticMethodID(javaUtils, "getSystemLocale", "()Ljava/lang/String;");
 	javaOpenUrl = env->GetStaticMethodID(javaUtils, "openUrl", "(Ljava/lang/String;)V");
+	javaMessageDialog = env->GetStaticMethodID(javaUtils, "messageDialog", "(Ljava/lang/String;Ljava/lang/String;)V");
+	javaConfirmDialog = env->GetStaticMethodID(javaUtils, "confirmDialog", "(Ljava/lang/String;Ljava/lang/String;)V");
+}
+
+std::function<void()> LUNAAndroidUtils::PopMessageCallback()
+{
+	auto top = messageCallbacks.top();
+	messageCallbacks.pop();
+	return top;
+}
+
+std::function<void(bool)> LUNAAndroidUtils::PopConfirmCallback()
+{
+	auto top = confirmCallbacks.top();
+	confirmCallbacks.pop();
+	return top;
 }
 
 // Get system locale in "xx_XX" format
@@ -51,4 +67,42 @@ std::string LUNAAndroidUtils::GetSystemLocale()
 void LUNAAndroidUtils::OpenUrl(const std::string& url)
 {
 	jni::Env()->CallStaticVoidMethod(javaUtils, javaOpenUrl, jni::ToJString(url).j_str());
+}
+
+// Show native dialog with "Ok" button
+// "onClose" calls when dialog closed
+void LUNAAndroidUtils::MessageDialog(const std::string& title, const std::string& message,
+	const std::function<void()>& onClose)
+{
+	messageCallbacks.push(onClose);
+
+	jni::Env()->CallStaticVoidMethod(javaUtils, javaMessageDialog, 
+		jni::ToJString(title).j_str(), jni::ToJString(message).j_str());
+}
+
+// Show native dialog with "Yes" and "No" buttons
+// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
+void LUNAAndroidUtils::ConfirmDialog(const std::string& title, const std::string& message,
+	const std::function<void(bool)>& onClose)
+{
+	confirmCallbacks.push(onClose);
+
+	jni::Env()->CallStaticVoidMethod(javaUtils, javaConfirmDialog, 
+		jni::ToJString(title).j_str(), jni::ToJString(message).j_str());
+}
+
+LUNA_JNI_FUNC(void, LunaUtils, onMessageDialogClosed)(JNIEnv* env, jmethodID method)
+{
+	auto platformUtils = static_cast<LUNAAndroidUtils*>(LUNAEngine::SharedPlatformUtils());
+	auto onClose = platformUtils->PopMessageCallback();
+
+	if(onClose) onClose();
+}
+
+LUNA_JNI_FUNC(void, LunaUtils, onConfirmDialogClosed)(JNIEnv* env, jmethodID method, jboolean isConfirmed)
+{
+	auto platformUtils = static_cast<LUNAAndroidUtils*>(LUNAEngine::SharedPlatformUtils());
+	auto onClose = platformUtils->PopConfirmCallback();
+
+	if(onClose) onClose(isConfirmed);
 }
