@@ -86,7 +86,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 	// For same font size on all resolutions size
 	// scale font size to virtual screen resolution and sets default DPI
-	int fontSize = size / LUNAEngine::SharedSizes()->GetTextureScale();
+	int fontSize = std::floor(size / LUNAEngine::SharedSizes()->GetTextureScale());
 	FT_Set_Char_Size(face, PixelsToUnits(fontSize), 0, 0, 0);
 
 	// Select available chars
@@ -147,7 +147,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 		int charDescender = bmpHeight - face->glyph->bitmap_top;
 		int charW = UnitsToPixels(face->glyph->advance.x);
-		int charX = penX + face->glyph->bitmap_left;
+		int charX = penX + (face->glyph->bitmap_left > 0 ? face->glyph->bitmap_left : 0);
 		int charY = penY + maxH - bmpHeight - baseline + charDescender;
 
 		// Draw char bimtap to image
