@@ -203,7 +203,7 @@ struct LuaStack<std::function<void(Args...)>>
 
 		// Wrap "LuaFunction" with "std::function"
 		// to bind functions have "std::function" as arguments directly to lua
-		return [fn](Args ... args) { fn.CallVoid(args...); };
+		return [fn](const Args& ... args) { fn.CallVoid(args...); };
 	}
 };
 
@@ -218,7 +218,7 @@ struct LuaStack<std::function<Ret(Args...)>>
 
 		// Wrap "LuaFunction" with "std::function"
 		// to bind functions have "std::function" as arguments directly to lua
-		return [fn](Args ... args) -> Ret { return fn.Call<Ret>(args...); };
+		return [fn](const Args& ... args) -> Ret { return fn.Call<Ret>(args...); };
 	}
 };
 
