@@ -253,8 +253,8 @@ static void BindPlatform(LuaScript* lua, LuaTable& tblLuna)
 	tblPlatform.SetField("name", LUNA_PLATFORM_STRING);
 	tblPlatform.SetField("emulator", LUNA_PLATFORM == LUNA_PLATFORM_QT);
 	tblPlatform.SetField("openUrl", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::OpenUrl));
-	tblPlatform.SetField("showMessageDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::ShowMessageDialog));
-	tblPlatform.SetField("showConfirmDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::ShowConfirmDialog));
+	tblPlatform.SetField("messageDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::MessageDialog));
+	tblPlatform.SetField("confirmDialog", LuaFunction(lua, platformUtils, &LUNAPlatformUtils::ConfirmDialog));
 }
 
 // Bind "luna.audio" module
