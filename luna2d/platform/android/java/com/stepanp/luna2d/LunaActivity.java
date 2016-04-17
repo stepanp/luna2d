@@ -24,15 +24,24 @@
 package com.stepanp.luna2d;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import java.util.List;
 import java.util.ArrayList;
 import com.stepanp.luna2d.sdkapi.LunaActivityListener;
 
 public class LunaActivity extends Activity
-{	
-	protected LunaGlView glView;
-	protected ArrayList<LunaActivityListener> listeners;
+{
+	private LunaGlView glView;
+	private List<LunaActivityListener> listeners = new ArrayList<LunaActivityListener>();
+	private NetworkStateReceiver networkStateReceiver;
 
 	private static Activity sharedActivity = null;
 
@@ -62,7 +71,10 @@ public class LunaActivity extends Activity
 		
 		// Create OpenGL surface view
 		glView = new LunaGlView(this);
-		setContentView(glView);			
+		setContentView(glView);
+
+		// Create network state receiver if application has permission
+		createNetworkStateReciever();
 	}
 	
 	@Override
@@ -138,4 +150,53 @@ public class LunaActivity extends Activity
 			View.SYSTEM_UI_FLAG_FULLSCREEN |
 			View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);	
 	}
+
+	private void createNetworkStateReciever()
+	{
+		networkStateReceiver = new NetworkStateReceiver();
+		this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+	}
+
+	private class NetworkStateReceiver extends BroadcastReceiver
+	{
+		private boolean connected;
+
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			if(intent == null || intent.getExtras() == null) return;
+
+			ConnectivityManager manager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo netInfo = manager.getActiveNetworkInfo();
+
+			boolean prevConnected = connected;
+			connected = netInfo != null && netInfo.isAvailable();
+
+			if(prevConnected != connected)
+			{
+				if(connected)
+				{
+					// Run listeners with delay
+					// because at moment of receiving message about network becomes available
+					// network can be still unavailable
+					final Handler handler = new Handler();
+					handler.postDelayed(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							runListeners(connected);
+						}
+					},
+					100);
+				}
+				else runListeners(connected);
+			}
+		}
+
+		private void runListeners(boolean connected)
+		{
+			for(LunaActivityListener listener : listeners) listener.onNetworkStateChanged(LunaActivity.this, connected);
+		}
+	};
 }

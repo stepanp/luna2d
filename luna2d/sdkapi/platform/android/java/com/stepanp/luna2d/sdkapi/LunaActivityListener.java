@@ -39,5 +39,5 @@ public interface LunaActivityListener
 
 	public boolean onBackPressed(Activity acitivity);
 
-	public void onNetworkStateChanged(boolean connected);
+	public void onNetworkStateChanged(Activity acitivity, boolean connected);
 }
