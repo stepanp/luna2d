@@ -24,11 +24,14 @@
 package com.stepanp.luna2d.sdkapi;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import com.stepanp.luna2d.LunaActivity;
 import com.stepanp.luna2d.LunaGlView;
 
 public abstract class LunaBaseSdk
 {
+	private String logTag = "";
+
 	// Check for value with given name exists in config
 	public native boolean hasConfigValue(String name);
 
@@ -50,6 +53,46 @@ public abstract class LunaBaseSdk
 	public Activity getSharedActivity()
 	{
 		return LunaActivity.getSharedActivity();
+	}
+
+	// Subscribe given listener on game activity events (e.g. onPause/onResume)
+	public void addActivityListener(final LunaActivityListener listener)
+	{
+		final LunaActivity activity = (LunaActivity)LunaActivity.getSharedActivity();
+		activity.runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				activity.addListener(listener);
+			}
+		});
+	}
+
+	// Unsubscribe given listener from game activity events
+	public void removeActivityListener(final LunaActivityListener listener)
+	{
+		final LunaActivity activity = (LunaActivity)LunaActivity.getSharedActivity();
+		activity.runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				activity.removeListener(listener);
+			}
+		});
+	}
+
+	// Get string tag for logging
+	public String getLogTag()
+	{
+		if(logTag.isEmpty())
+		{
+			ApplicationInfo appInfo = getSharedActivity().getApplicationInfo();
+			logTag = (String)getSharedActivity().getPackageManager().getApplicationLabel(appInfo);
+		}
+
+		return logTag;
 	}
 
 	// Run given runnable in UI thread

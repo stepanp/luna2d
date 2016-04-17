@@ -26,15 +26,29 @@ package com.stepanp.luna2d;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import java.util.ArrayList;
+import com.stepanp.luna2d.sdkapi.LunaActivityListener;
 
 public class LunaActivity extends Activity
 {	
 	protected LunaGlView glView;
+	protected ArrayList<LunaActivityListener> listeners;
+
 	private static Activity sharedActivity = null;
 
 	public static Activity getSharedActivity()
 	{
 		return sharedActivity;
+	}
+
+	public void addListener(LunaActivityListener listener)
+	{
+		listeners.add(listener);
+	}
+
+	public void removeListener(LunaActivityListener listener)
+	{
+		listeners.remove(listener);
 	}
 	
 	@Override
@@ -51,18 +65,59 @@ public class LunaActivity extends Activity
 		setContentView(glView);			
 	}
 	
-	@Override 
-	protected void onPause()
+	@Override
+	public  void onPause()
 	{
 		super.onPause();
 		glView.onPause();
+
+		for(LunaActivityListener listener : listeners) listener.onPause(this);
 	}
 
 	@Override
-	protected void onResume()
+	public  void onResume()
 	{
 		super.onResume();
 		glView.onResume();
+
+		for(LunaActivityListener listener : listeners) listener.onResume(this);
+	}
+
+	@Override
+	public  void onStart()
+	{
+		super.onStart();
+
+		for(LunaActivityListener listener : listeners) listener.onStart(this);
+	}
+
+	@Override
+	public  void onStop()
+	{
+		super.onStop();
+
+		for(LunaActivityListener listener : listeners) listener.onStop(this);
+	}
+
+	@Override
+	public  void onDestroy()
+	{
+		super.onDestroy();
+
+		for(LunaActivityListener listener : listeners) listener.onDestroy(this);
+	}
+
+	@Override
+	public  void onBackPressed()
+	{
+		boolean processEvent = true;
+
+		for(LunaActivityListener listener : listeners)
+		{
+			if(listener.onBackPressed(this)) processEvent = false;
+		}
+
+		if(processEvent) super.onBackPressed();
 	}
 
 	@Override
