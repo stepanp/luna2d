@@ -47,7 +47,7 @@ bool LUNATextureAtlasLoader::Load(const std::string& filename)
 	return true;
 }
 
-void LUNATextureAtlasLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNATextureAtlasLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
 	// Make atlas table
 	LuaTable atlasTable(LUNAEngine::SharedLua());

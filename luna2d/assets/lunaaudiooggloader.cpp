@@ -125,7 +125,7 @@ bool LUNAAudioOggLoader::Load(const std::string& filename)
 	return true;
 }
 
-void LUNAAudioOggLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNAAudioOggLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
 	parentTable.SetField(name, source, true);
 }

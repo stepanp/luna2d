@@ -43,7 +43,7 @@ bool LUNAJsonLoader::Load(const std::string& filename)
 	return true;
 }
 
-void LUNAJsonLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNAJsonLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
 	parentTable.SetField(name, Json2Lua(json), true);
 }

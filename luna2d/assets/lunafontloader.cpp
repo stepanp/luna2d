@@ -82,7 +82,7 @@ bool LUNAFontLoader::Load(const std::string& filename)
 	return !fonts.empty();
 }
 
-void LUNAFontLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNAFontLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
 	LuaTable tblFont(LUNAEngine::SharedLua());
 	tblFont.MakeReadOnly();

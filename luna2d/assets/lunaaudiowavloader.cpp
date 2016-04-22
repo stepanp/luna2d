@@ -61,7 +61,7 @@ bool LUNAAudioWavLoader::Load(const std::string& filename)
 	return true;
 }
 
-void LUNAAudioWavLoader::PushToLua(const std::string& name, luna2d::LuaTable& parentTable)
+void LUNAAudioWavLoader::PushToLua(const std::string& name, LuaTable& parentTable)
 {
 	parentTable.SetField(name, source, true);
 }
