@@ -15,11 +15,11 @@ Cross-platform game engine for mobile platforms. Engine is aimed to write all ga
 * Windows Phone\RT: VS2013 Update 4+
 
 ## Tools
-All tools written in C++\Qt and supports same desktop platforms as engine.
+All tools written in C++\Qt and supports same desktop platforms as the engine.
 
 #### Emulator
-Emulator for useful testing games on desktop. Can run games in different screen resolutions. 
+Emulator for testing games on desktop. Can run games in different screen resolutions. 
 
 #### Pipeline
-Tool for automatic preparing graphical assets. Includes image resizer and texture packer. 
+A tool for automatic graphical assets preparation. Includes image resizer and texture packer. 
 Supports PSD using **[libqpsd](https://github.com/Code-ReaQtor/libqpsd)**.
