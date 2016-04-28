@@ -37,7 +37,6 @@
 //---------------------------------
 // Return with loggging error macro
 //---------------------------------
-#include "lunalog.h"
 #define LUNA_RETURN_ERR(...) \
 { \
 	luna2d::LUNAEngine::SharedLog()->Error(__VA_ARGS__); \
