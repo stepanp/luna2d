@@ -23,6 +23,10 @@
 
 #include "lunaevents.h"
 
+#define RUN_DELAYED_ACTION(FUNCTION_CALL) \
+	if(processing) delayedActions.push_back([=](){ FUNCTION_CALL; }); \
+	else FUNCTION_CALL
+
 using namespace luna2d;
 
 LUNAEvents::LUNAEvents()
@@ -32,7 +36,11 @@ LUNAEvents::LUNAEvents()
 
 	LuaTable tblEvents(lua);
 	tblEvents.SetField("subscribe", LuaFunction(lua, this, &LUNAEvents::Subscribe));
+	tblEvents.SetField("unsubscribe", LuaFunction(lua, this, &LUNAEvents::Unsubscribe));
 	tblEvents.SetField("unsubscribeAll", LuaFunction(lua, this, &LUNAEvents::UnsubscribeAll));
+	tblEvents.SetField("subscribeCustom", LuaFunction(lua, this, &LUNAEvents::SubscribeCustom));
+	tblEvents.SetField("unsubscribeCustom", LuaFunction(lua, this, &LUNAEvents::UnsubscribeCustom));
+	tblEvents.SetField("unsubscribeAllCustom", LuaFunction(lua, this, &LUNAEvents::UnsubscribeAllCustom));
 	tblEvents.SetField("send", &LUNAEvents::LuaSend);
 
 	tblLuna.SetField("events", tblEvents);
@@ -45,28 +53,38 @@ int LUNAEvents::LuaSend(lua_State* luaVm)
 	auto events = LUNAEngine::SharedEvents();
 	const std::string& message = LuaStack<std::string>::Pop(luaVm, 1);
 
-	auto itHandlers = events->handlersMap.find(message);
-	if(itHandlers == events->handlersMap.end()) return 0;
-
 	// Events is currently processing
 	bool nestedSend = events->processing;
 	events->processing = true;
 
-	// Count of passed params except message name
-	int paramsCount = lua_gettop(luaVm) - 1;
+	// Count of passed params
+	int paramsCount = lua_gettop(luaVm);
 
 	// Push error handler to stack
 	lua_pushcfunction(luaVm, &LuaScript::ErrorHandler);
 
-	const auto& handlers = itHandlers->second;
-	for(const auto& handler : handlers)
+	// Run custom handlers (runs for each message)
+	for(const auto& customHandler : events->customHandlers)
 	{
-		LuaStack<LuaFunction>::Push(luaVm, handler);
+		LuaStack<LuaFunction>::Push(luaVm, customHandler);
 
-		// Copy passed params and push them after handler
-		for(int i = 1; i <= paramsCount; i++) lua_pushvalue(luaVm, i + 1);
+		// Call function with all passed params
+		for(int i = 1; i <= paramsCount; i++) lua_pushvalue(luaVm, i);
+		lua_pcall(luaVm, paramsCount, 0, -(paramsCount + 2));
+	}
 
-		lua_pcall(luaVm, paramsCount, 0, paramsCount + 1);
+	// Run handlers for given message if exists
+	auto itHandlers = events->handlersMap.find(message);
+	if(itHandlers != events->handlersMap.end())
+	{
+		for(const auto& handler : itHandlers->second)
+		{
+			LuaStack<LuaFunction>::Push(luaVm, handler);
+
+			// Call function with all passed params except message name
+			for(int i = 2; i <= paramsCount; i++) lua_pushvalue(luaVm, i);
+			lua_pcall(luaVm, paramsCount - 1, 0, -(paramsCount + 1));
+		}
 	}
 
 	lua_pop(luaVm, 1); // Pop error handler from stack
@@ -75,36 +93,101 @@ int LUNAEvents::LuaSend(lua_State* luaVm)
 	if(!nestedSend)
 	{
 		events->processing = false;
-		events->ProcessInternalActions();
+		events->ProcessDelayedActions();
 	}
 
 	return 0;
 }
 
-void LUNAEvents::ProcessInternalActions()
+void LUNAEvents::ProcessDelayedActions()
 {
-	for(const auto& action : internalActions) action();
-	internalActions.clear();
+	for(const auto& action : delayedActions) action();
+	delayedActions.clear();
 }
 
-void LUNAEvents::RunInternalAction(const std::function<void()>& action)
+void LUNAEvents::DoSubscribe(const std::string& message, const LuaFunction& handler)
 {
-	if(processing) internalActions.push_back(action);
-	else action();
+	handlersMap[message].push_back(handler);
+}
+
+void LUNAEvents::DoUnsubscribe(const std::string& message, const LuaFunction& handler)
+{
+	auto it = handlersMap.find(message);
+	if(it == handlersMap.end()) LUNA_RETURN_ERR("Cannot unsubscribe event. Message \"%s\" not found", message.c_str());
+
+	auto& handlers = handlersMap[message];
+
+	auto findIt = std::find(handlers.begin(), handlers.end(), handler);
+	if(findIt != handlers.end()) handlers.erase(findIt);
+}
+
+void LUNAEvents::DoUnsubscribeAll(const std::string& message)
+{
+	handlersMap[message].clear();
+}
+
+void LUNAEvents::DoSubscribeCustom(const LuaFunction& handler)
+{
+	customHandlers.push_back(handler);
+}
+
+void LUNAEvents::DoUnsubscribeCustom(const LuaFunction& handler)
+{
+	auto findIt = std::find(customHandlers.begin(), customHandlers.end(), handler);
+	if(findIt != customHandlers.end()) customHandlers.erase(findIt);
+}
+
+void LUNAEvents::DoUnsubscribeAllCustom()
+{
+	customHandlers.erase(customHandlers.begin(), customHandlers.end());
 }
 
 // Subscribe given handler to message
-void LUNAEvents::Subscribe(const std::string& message, const LuaFunction& handler)
+LuaFunction LUNAEvents::Subscribe(const std::string& message, const LuaFunction& handler)
 {
-	auto& handlers = handlersMap[message];
+	if(!handler)
+	{
+		LUNA_LOGE("Cannot subscribe handler. Invalid handler value");
+		return nil;
+	}
 
-	RunInternalAction([&handlers, handler]() { handlers.push_back(handler); });
+	RUN_DELAYED_ACTION(DoSubscribe(message, handler));
+	return handler;
+}
+
+// Unsubsribe given handler from message
+void LUNAEvents::Unsubscribe(const std::string& message, const LuaFunction& handler)
+{
+	RUN_DELAYED_ACTION(DoUnsubscribe(message, handler));
 }
 
 // Unsubscribe all messages for given message
 void LUNAEvents::UnsubscribeAll(const std::string& message)
 {
-	auto& handlers = handlersMap[message];
+	RUN_DELAYED_ACTION(DoUnsubscribeAll(message));
+}
 
-	RunInternalAction([&handlers]() { handlers.clear(); });
+// Subscribe custom handler calling for each message
+LuaFunction LUNAEvents::SubscribeCustom(const LuaFunction& handler)
+{
+	if(!handler)
+	{
+		LUNA_LOGE("Cannot subscribe custom handler. Invalid handler value");
+		return nil;
+	}
+
+	RUN_DELAYED_ACTION(DoSubscribeCustom(handler));
+	return handler;
+}
+
+// Unsubscribe given custom handler
+void LUNAEvents::UnsubscribeCustom(const LuaFunction& handler)
+{
+	RUN_DELAYED_ACTION(DoUnsubscribeCustom(handler));
+}
+
+// Unsubscrive all custom handlers
+void LUNAEvents::UnsubscribeAllCustom()
+{
+	RUN_DELAYED_ACTION(DoUnsubscribeAllCustom());
 }

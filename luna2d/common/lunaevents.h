@@ -40,11 +40,13 @@ public:
 
 private:
 	std::unordered_map<std::string, std::vector<LuaFunction>> handlersMap;
+	std::vector<LuaFunction> customHandlers;
 
-	// To support any actions(e.g. subscribe/unsubscribe) with subsystem during run event handlers,
-	// actions runs after processing events during sending or runs immediately otherwise
-	// SEE: "ProcessInternalActions" and "RunInternalAction"
-	std::vector<std::function<void()>> internalActions;
+	// Some actions(Subscribe/unsubscribe/etc.) cannot be run during processing of event handlers
+	// So, actions invoked during processing event handlers stores in "delayedActions" list
+	// and runs after event handlers being processed.
+	// SEE: "ProcessDelayedActions" and "RUN_DELAYED_ACTION" macro in "lunaevents.cpp"
+	std::vector<std::function<void()>> delayedActions;
 	bool processing = false;
 
 private:
@@ -52,39 +54,63 @@ private:
 	// For maximize perfomance implemented as "lua_CFunction"
 	static int LuaSend(lua_State* luaVm);
 
-	void ProcessInternalActions();
+	void ProcessDelayedActions();
 
-	void RunInternalAction(const std::function<void()>& action);
+	void DoSubscribe(const std::string& message, const LuaFunction& handler);
+	void DoUnsubscribe(const std::string& message, const LuaFunction& handler);
+	void DoUnsubscribeAll(const std::string& message);
+	void DoSubscribeCustom(const LuaFunction& handler);
+	void DoUnsubscribeCustom(const LuaFunction& handler);
+	void DoUnsubscribeAllCustom();
 
 public:
 	// Subscribe given handler to message
-	void Subscribe(const std::string& message, const LuaFunction& handler);
+	LuaFunction Subscribe(const std::string& message, const LuaFunction& handler);
+
+	// Unsubsribe given handler from message
+	void Unsubscribe(const std::string& message, const LuaFunction& handler);
 
 	// Unsubscribe all messages for given message
 	void UnsubscribeAll(const std::string& message);
 
+	// Subscribe custom handler calling for each message
+	LuaFunction SubscribeCustom(const LuaFunction& handler);
+
+	// Unsubscribe given custom handler
+	void UnsubscribeCustom(const LuaFunction& handler);
+
+	// Unsubscrive all custom handlers
+	void UnsubscribeAllCustom();
+
 	// Send message with given params
 	template<typename ... Args>
-	void Send(const std::string& message, Args ... args)
+	void Send(const std::string& message, const Args& ... args)
 	{
-		auto itHandlers = handlersMap.find(message);
-		if(itHandlers == handlersMap.end()) return;
-
 		// Events is currently processing
 		bool nestedSend = processing;
 		processing = true;
 
-		const auto& handlers = itHandlers->second;
-		for(const auto& handler : handlers)
+		// Run custom handlers (runs for each message)
+		for(const auto& customHandler : customHandlers)
 		{
-			handler.CallVoid<Args ...>(args ...);
+			customHandler.CallVoid<const std::string&, const Args& ...>(message, args ...);
+		}
+
+		// Run handlers for given message if exists
+		auto itHandlers = handlersMap.find(message);
+		if(itHandlers == handlersMap.end())
+		{
+			for(const auto& handler : itHandlers->second)
+			{
+				handler.CallVoid<const Args& ...>(args ...);
+			}
 		}
 
 		// If it's root send, finish events processing
 		if(!nestedSend)
 		{
 			processing = false;
-			ProcessInternalActions();
+			ProcessDelayedActions();
 		}
 	}
 };
