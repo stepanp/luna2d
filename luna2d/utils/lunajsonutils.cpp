@@ -106,3 +106,91 @@ LuaTable luna2d::Json2Lua(const json11::Json& json)
 
 	return LuaTable();
 }
+
+// Serialize lua table to json array
+Json luna2d::Lua2JsonArray(const LuaTable& table)
+{
+	Json::array ret;
+
+	auto luaVm = table.GetRef()->GetLuaVm();
+
+	LuaStack<LuaTable>::Push(luaVm, table);
+	if(!lua_istable(luaVm, -1))
+	{
+		lua_pop(luaVm, 1);
+		return std::move(ret);
+	}
+
+	int count = lua_rawlen(luaVm, -1);
+	ret.reserve(count);
+
+	for(int i = 0; i < count; i++)
+	{
+		lua_rawgeti(luaVm, -1, i + 1);
+
+		switch(lua_type(luaVm, -1))
+		{
+		case LUA_TNIL:
+			ret.push_back(std::nullptr_t());
+			break;
+		case LUA_TNUMBER:
+			ret.push_back(LuaStack<float>::Pop(luaVm, -1));
+			break;
+		case LUA_TBOOLEAN:
+			ret.push_back(LuaStack<bool>::Pop(luaVm, -1));
+			break;
+		case LUA_TSTRING:
+			ret.push_back(LuaStack<std::string>::Pop(luaVm, -1));
+			break;
+		case LUA_TTABLE:
+			ret.push_back(Lua2Json(LuaStack<LuaTable>::Pop(luaVm, -1)));
+			break;
+		}
+
+		lua_pop(luaVm, 1);
+	}
+
+	lua_pop(luaVm, 1);
+
+	return std::move(ret);
+}
+
+// Serialize lua table to json object
+Json luna2d::Lua2JsonObject(const LuaTable& table)
+{
+	Json::object ret;
+
+	for(const auto& entry : table)
+	{
+		const auto& key = entry.first.ToString();
+		const auto& value = entry.second;
+
+		switch(value.GetType())
+		{
+		case LUA_TNIL:
+			ret[key] = std::nullptr_t();
+			break;
+		case LUA_TNUMBER:
+			ret[key] = value.ToFloat();
+			break;
+		case LUA_TBOOLEAN:
+			ret[key] = value.ToBool();
+			break;
+		case LUA_TSTRING:
+			ret[key] = value.ToString();
+			break;
+		case LUA_TTABLE:
+			ret[key] = Lua2Json(value.ToTable());
+			break;
+		}
+	}
+
+	return std::move(ret);
+}
+
+// Serialize table to json object
+Json luna2d::Lua2Json(const LuaTable& table)
+{
+	if(table.GetArrayCount() > 0) return Lua2JsonArray(table);
+	else return Lua2JsonObject(table);
+}
