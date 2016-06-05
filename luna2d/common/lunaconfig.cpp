@@ -126,6 +126,11 @@ bool LUNAConfig::Read()
 			if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
 			else LUNA_LOGE("Base height must be number");
 		}
+
+		else if(key == "debug_missedStrings")
+		{
+			debug_missedStrings = jsonConfig["debug_missedStrings"].bool_value();
+		}
 	}
 
 	customValues = jsonConfig;

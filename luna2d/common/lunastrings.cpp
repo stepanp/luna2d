@@ -25,6 +25,7 @@
 #include "lunafiles.h"
 #include "lunaplatformutils.h"
 #include "lunajsonutils.h"
+#include "lunaconfig.h"
 
 using namespace luna2d;
 using namespace json11;
@@ -57,11 +58,17 @@ LUNAStrings::LUNAStrings():
 
 	// "__index" metamethod handler for "luna.strings" table
 	// If string not found in table (i.e. string is not translated)
-	// return string value of key and highlight it with speical symbols
-	std::function<std::string(LuaNil, const std::string&)> index = [](LuaNil, const std::string& k) -> std::string
+	// by default return string value of key
+	// "debug_missedStrings" flag in config enables highlighting such strings with speical symbols
+	std::function<std::string(LuaNil,const std::string&)> index;
+	if(LUNAEngine::Shared()->GetConfig()->debug_missedStrings)
 	{
-		return "<" + k + ">";
-	};
+		index = [](LuaNil, const std::string& k) -> std::string { return "<" + k + ">"; };
+	}
+	else
+	{
+		index = [](LuaNil, const std::string& k) -> std::string { return k; };
+	}
 	tblStrings.GetMetatable().SetField("__index", LuaFunction(lua, index));
 
 	// Bind strings manager to lua
