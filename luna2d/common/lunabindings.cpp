@@ -308,6 +308,18 @@ static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 			return LuaAny(lua, prefs->GetFloat(name));
 		case LUNAPrefType::BOOL:
 			return LuaAny(lua, prefs->GetBool(name));
+
+		// Lua tables stored in prefs as serialized json string
+		case LUNAPrefType::TABLE:
+		{
+			std::string jsonStr = prefs->GetString(name);
+			std::string err;
+			json11::Json json = json11::Json::parse(jsonStr, err);
+
+			if(json == nullptr) return nil;
+
+			return LuaAny(lua, Json2Lua(json));
+		}
 		}
 
 		return nil;
@@ -360,6 +372,14 @@ static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 			prefs->SetBool(name, value.ToBool());
 			prefs->SetPrefType(name, LUNAPrefType::BOOL);
 			break;
+
+		// Lua tables serializes to json and stores in prefs as string
+		case LUA_TTABLE:
+		{
+			const auto& json = Lua2Json(value.ToTable());
+			prefs->SetString(name, json.dump());
+			prefs->SetPrefType(name, LUNAPrefType::STRING);
+		}
 		default:
 			break;
 		}

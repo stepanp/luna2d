@@ -37,7 +37,8 @@ enum class LUNAPrefType : int
 	STRING = 1,
 	INT = 2,
 	FLOAT = 3,
-	BOOL = 4
+	BOOL = 4,
+	TABLE = 5,
 };
 
 //----------------------------------------------------
