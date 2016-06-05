@@ -69,6 +69,24 @@ bool LuaObject::operator!=(const LuaNil&) const
 	return *ref.get() != nil;
 }
 
+bool LuaObject::operator==(const LuaObject& obj) const
+{
+	auto luaVm = ref->GetLuaVm();
+
+	LuaStack<LuaRef*>::Push(luaVm, ref.get());
+	LuaStack<LuaRef*>::Push(luaVm, obj.GetRef().get());
+
+	bool ret = lua_compare(luaVm, -1, -2, LUA_OPEQ) == 1;
+	lua_pop(luaVm, 2);
+
+	return ret;
+}
+
+bool LuaObject::operator!=(const LuaObject& obj) const
+{
+	return !operator==(obj);
+}
+
 LuaObject::operator bool() const
 {
 	return *ref.get() != nil;

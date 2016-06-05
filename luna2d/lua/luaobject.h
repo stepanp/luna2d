@@ -45,6 +45,8 @@ public:
 	std::shared_ptr<LuaRef> GetRef() const;
 	bool operator==(const LuaNil&) const;
 	bool operator!=(const LuaNil&) const;
+	bool operator==(const LuaObject& obj) const;
+	bool operator!=(const LuaObject& obj) const;
 	operator bool() const;
 	LuaObject operator=(const LuaObject& obj);
 };
