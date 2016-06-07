@@ -378,7 +378,7 @@ static void BindPrefs(LuaScript* lua, LuaTable& tblLuna)
 		{
 			const auto& json = Lua2Json(value.ToTable());
 			prefs->SetString(name, json.dump());
-			prefs->SetPrefType(name, LUNAPrefType::STRING);
+			prefs->SetPrefType(name, LUNAPrefType::TABLE);
 		}
 		default:
 			break;
