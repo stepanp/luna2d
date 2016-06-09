@@ -57,7 +57,7 @@ public:
 	void SetLocale(const std::string& locale);
 	void SetDefaultLocale(const std::string& locale);
 	bool HasLocale(const std::string& locale);
-	const std::unordered_set<std::string>& GetLocalesList();
+	const std::unordered_set<std::string>& GetLocalesList(); // Get list of available locales
 
 	std::string ParseLang(const std::string& locale); // Parse language from full locale
 	std::string ParseCountry(const std::string& locale); // Parse country from full locale

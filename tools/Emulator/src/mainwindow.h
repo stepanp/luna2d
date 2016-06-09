@@ -68,6 +68,7 @@ private:
 	void SetResolution(int resolutionIndex);
 	void OpenLogDialog();
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
+	void UpdateLanguagesMenu(); // Update "Settings/Game languages" menu
 	QString MakeScreenhotsFolder();
 
 public slots:
@@ -80,6 +81,7 @@ public slots:
 	void OnActionLog();
 	void OnActionWatcher();
 	void OnResolutionChanged();
+	void OnLanguageChanged();
 	void OnActionSettings();
 	void OnAbout();
 	void OnLogClosed();

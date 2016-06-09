@@ -34,6 +34,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QDesktopServices>
+#include "lunastrings.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -116,7 +117,7 @@ void MainWindow::SetupResolutionMenu()
 	{
 		auto& res = Settings::resolutions.at(i);
 
-		QAction *action = new QAction(format.arg(res.name).arg(res.width).arg(res.height), this);
+		QAction* action = new QAction(format.arg(res.name).arg(res.width).arg(res.height), this);
 		action->setCheckable(true);
 		action->setActionGroup(group);
 		action->setData(i);
@@ -184,6 +185,9 @@ void MainWindow::OpenGame(const QString &gamePath)
 	ui->actionSet_project->setEnabled(true);
 	UpdatePipelineMenu();
 
+	// Update "Settings/Language" menu
+	UpdateLanguagesMenu();
+
 	// Resize pixmap for screenshots
 	screenshotsPixmap = QPixmap(ui->centralWidget->size());
 	ui->actionTake_screenshot->setEnabled(true);
@@ -238,6 +242,48 @@ void MainWindow::UpdatePipelineMenu()
 
 	if(hasProject) ui->actionPipelineProject->setText(pipelineProject);
 	else ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+}
+
+// Update "Settings/Game languages" menu
+void MainWindow::UpdateLanguagesMenu()
+{
+	ui->menuLanguage->clear();
+
+	QActionGroup *group = new QActionGroup(this);
+
+	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
+
+	QAction* systemLanguage = new QAction("System", this);
+	systemLanguage->setCheckable(true);
+	systemLanguage->setChecked(true);
+	systemLanguage->setActionGroup(group);
+	systemLanguage->setData("system");
+	ui->menuLanguage->addAction(systemLanguage);
+	connect(systemLanguage, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
+
+	QAction* defaultLanguage = new QAction("Default", this);
+	defaultLanguage->setCheckable(true);
+	defaultLanguage->setActionGroup(group);
+	defaultLanguage->setData("default");
+	ui->menuLanguage->addAction(defaultLanguage);
+	connect(defaultLanguage, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
+
+	ui->menuLanguage->addSeparator();
+
+	QString format = "%1 (%2)";
+	for(const std::string& locale : strings->GetLocalesList())
+	{
+		QString localeCode = QString::fromStdString(locale);
+		QString languageName = QLocale::languageToString(QLocale(localeCode).language());
+
+		QAction* action = new QAction(format.arg(languageName).arg(localeCode), this);
+		action->setCheckable(true);
+		action->setActionGroup(group);
+		action->setData(localeCode);
+		ui->menuLanguage->addAction(action);
+
+		connect(action, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
+	}
 }
 
 QString MainWindow::MakeScreenhotsFolder()
@@ -353,6 +399,27 @@ void MainWindow::OnResolutionChanged()
 
 	// Relaunch game with new resolution
 	OnActionRestart();
+}
+
+void MainWindow::OnLanguageChanged()
+{
+	QAction* menuItem = qobject_cast<QAction*>(sender());
+	QString localeCode = menuItem->data().toString();
+	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
+
+	std::string locale;
+
+	if(localeCode == "system")
+	{
+		locale = strings->GetSystemLocale();
+		if(!strings->HasLocale(locale)) locale = strings->ParseLang(locale);
+		if(!strings->HasLocale(locale)) locale = strings->GetDefaultLocale();
+	}
+	else if(localeCode == "default") locale = strings->GetDefaultLocale();
+	else locale = localeCode.toStdString();
+
+	strings->SetLocale(locale);
+	menuItem->setChecked(true);
 }
 
 void MainWindow::OnActionSettings()

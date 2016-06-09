@@ -172,6 +172,7 @@ bool LUNAStrings::HasLocale(const std::string& locale)
 	return localesList.count(locale) == 1;
 }
 
+// Get list of available locales
 const std::unordered_set<std::string>& LUNAStrings::GetLocalesList()
 {
 	return localesList;

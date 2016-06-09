@@ -63,9 +63,16 @@
      <addaction name="separator"/>
      <addaction name="actionAdd_custom"/>
     </widget>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>Game language</string>
+     </property>
+    </widget>
     <addaction name="menuResolution"/>
+    <addaction name="menuLanguage"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -225,6 +232,16 @@
   <action name="actionOpen_screenshots_folder">
    <property name="text">
     <string>Open screenshots folder</string>
+   </property>
+  </action>
+  <action name="actionSystem">
+   <property name="text">
+    <string>System</string>
+   </property>
+  </action>
+  <action name="actionDefault">
+   <property name="text">
+    <string>Default</string>
    </property>
   </action>
  </widget>
