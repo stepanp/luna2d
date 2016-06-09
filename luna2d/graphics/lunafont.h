@@ -40,12 +40,18 @@ private:
 	std::shared_ptr<LUNATextureRegion> unknownChar;
 	int size;
 
+private:
+	const std::shared_ptr<LUNATextureRegion>& GetCharRegion(char32_t c);
+
 public:
 	void SetCharRegion(char32_t c, int x, int y, int width, int height); // Set texture region for given char
 	void SetUnknownCharRegion(int x, int y, int width, int height); // Set texture region for unknown char
 
 	std::weak_ptr<LUNATextureRegion> GetRegionForChar(char32_t c);
 	int GetSize();
+
+	float GetStringWidth(const std::string& string); // Get width of one-line string typed with this font
+	float GetStringHeight(const std::string& string); // Get height of one-line string typed with this font
 };
 
 }

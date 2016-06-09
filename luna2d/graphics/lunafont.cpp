@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunafont.h"
+#include "lunautf.h"
 
 using namespace luna2d;
 
@@ -29,6 +30,12 @@ LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size) :
 	texture(texture),
 	size(size)
 {
+}
+
+const std::shared_ptr<LUNATextureRegion>& LUNAFont::GetCharRegion(char32_t c)
+{
+	if(chars.count(c) == 0) return unknownChar; // If char not found return unknown char region
+	return chars[c];
 }
 
  // Set texture region for given char
@@ -45,11 +52,30 @@ void LUNAFont::SetUnknownCharRegion(int x, int y, int width, int height)
 
 std::weak_ptr<LUNATextureRegion> LUNAFont::GetRegionForChar(char32_t c)
 {
-	if(chars.count(c) == 0) return unknownChar; // If char not found return unknown char region
-	return chars[c];
+	return GetCharRegion(c);
 }
 
 int LUNAFont::GetSize()
 {
 	return size;
+}
+
+// Get width of one-line string typed with this font
+float LUNAFont::GetStringWidth(const std::string& string)
+{
+	float width = 0.0f;
+
+	for(auto c : utf::ToUtf32(string)) width += GetCharRegion(c)->GetWidthPoints();
+
+	return width;
+}
+
+// Get height of one-line string typed with this font
+float LUNAFont::GetStringHeight(const std::string& string)
+{
+	float maxHeight = 0.0f;
+
+	for(auto c : utf::ToUtf32(string)) maxHeight = std::max(maxHeight, GetCharRegion(c)->GetHeight());
+
+	return maxHeight;
 }

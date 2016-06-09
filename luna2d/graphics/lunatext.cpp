@@ -110,7 +110,7 @@ float LUNAText::GetHeight()
 {
 	if(sprites.empty()) return 0.0f;
 
-	float maxHeight = sprites[0]->GetHeight();
+	float maxHeight = 0.0f;
 	for(auto& spr : sprites) maxHeight = std::max(maxHeight, spr->GetHeight());
 
 	return maxHeight;

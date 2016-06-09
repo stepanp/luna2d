@@ -225,6 +225,8 @@ LUNAGraphics::LUNAGraphics()
 
 	LuaClass<LUNAFont> clsFont(lua);
 	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
+	clsFont.SetMethod("getStringWidth", &LUNAFont::GetStringWidth);
+	clsFont.SetMethod("getStringHeight", &LUNAFont::GetStringHeight);
 }
 
 LUNARenderer* LUNAGraphics::GetRenderer()
