@@ -226,13 +226,12 @@ void MainWindow::SetLanguage(QString localeCode)
 	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
 	std::string locale;
 
-	if(localeCode == "system")
+	if(localeCode == "system" || !strings->HasLocale(localeCode.toStdString()))
 	{
 		locale = strings->GetSystemLocale();
 		if(!strings->HasLocale(locale)) locale = strings->ParseLang(locale);
 		if(!strings->HasLocale(locale)) locale = strings->GetDefaultLocale();
 	}
-	else if(localeCode == "default") locale = strings->GetDefaultLocale();
 	else locale = localeCode.toStdString();
 
 	strings->SetLocale(locale);
@@ -291,13 +290,6 @@ void MainWindow::UpdateLanguagesMenu()
 	systemLanguage->setData("system");
 	ui->menuLanguage->addAction(systemLanguage);
 	connect(systemLanguage, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
-
-	QAction* defaultLanguage = new QAction("Default", this);
-	defaultLanguage->setCheckable(true);
-	defaultLanguage->setActionGroup(group);
-	defaultLanguage->setData("default");
-	ui->menuLanguage->addAction(defaultLanguage);
-	connect(defaultLanguage, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
 
 	ui->menuLanguage->addSeparator();
 
