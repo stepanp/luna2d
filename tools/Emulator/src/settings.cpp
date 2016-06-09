@@ -37,6 +37,7 @@ bool Settings::openLogWhenError = true;
 bool Settings::clearLogOnStart = true;
 bool Settings::showFps = true;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
+QHash<QString,QString> Settings::preferredLanguages = QHash<QString,QString>();
 
 void Settings::Load()
 {
@@ -88,8 +89,16 @@ void Settings::Load()
 	for(int i = 0; i < pipelineProjectsCount; i++)
 	{
 		settings.setArrayIndex(i);
-
 		Settings::pipelineProjects[settings.value("game").toString()] = settings.value("project").toString();
+	}
+	settings.endArray();
+
+	// Load pipeline projects paths
+	int preferredLanguagesCount = settings.beginReadArray("preferredLanguages");
+	for(int i = 0; i < preferredLanguagesCount; i++)
+	{
+		settings.setArrayIndex(i);
+		Settings::preferredLanguages[settings.value("game").toString()] = settings.value("language").toString();
 	}
 	settings.endArray();
 }
@@ -136,6 +145,18 @@ void Settings::Save()
 		i++;
 	}
 	settings.endArray();
+
+	// Save preferred languages paths
+	settings.beginWriteArray("preferredLanguages");
+	i = 0;
+	for(auto it = Settings::preferredLanguages.begin(); it != Settings::preferredLanguages.end(); it++)
+	{
+		settings.setArrayIndex(i);
+		settings.setValue("game", it.key());
+		settings.setValue("language", it.value());
+		i++;
+	}
+	settings.endArray();
 }
 
 static QString NormalizePath(const QString& path)
@@ -178,4 +199,17 @@ void Settings::SetPipelineProject(const QString& gameName, const QString& projec
 QString Settings::GetPipelineProject(const QString& gameName)
 {
 	return Settings::pipelineProjects[gameName];
+}
+
+// Set prederred language for given game
+void Settings::SetPreferredLanguage(const QString& gameName, const QString& language)
+{
+	Settings::preferredLanguages[gameName] = language;
+}
+
+// Get prederred language for given game
+QString Settings::GetPreferredLanguage(const QString& gameName)
+{
+	if(Settings::preferredLanguages.count(gameName) == 0) return "default";
+	return Settings::preferredLanguages[gameName];
 }

@@ -45,12 +45,15 @@ public:
 	static bool openLogWhenError; // Open log window when occurs log message with error
 	static bool clearLogOnStart; // Clear log when game stated
 	static bool showFps; // Show FPS in window caption
-	static QHash<QString,QString> pipelineProjects; // Pipeline projects attachet to game name
+	static QHash<QString,QString> pipelineProjects; // Pipeline projects attached to game
+	static QHash<QString,QString> preferredLanguages; // Preferred languages attached to game
 
 public:
 	static void Load();
 	static void Save();
 	static void AddRecentGame(const QString& gamePath);
-	static void SetPipelineProject(const QString& gameName, const QString& projectPath); // Set pipeline project form given game
-	static QString GetPipelineProject(const QString& gameName); // Get path to pipeline project form given game
+	static void SetPipelineProject(const QString& gameName, const QString& projectPath); // Set pipeline project for given game
+	static QString GetPipelineProject(const QString& gameName); // Get path to pipeline project for given game
+	static void SetPreferredLanguage(const QString& gameName, const QString& language); // Set prederred language for given game
+	static QString GetPreferredLanguage(const QString& gameName); // Get prederred language for given game
 };

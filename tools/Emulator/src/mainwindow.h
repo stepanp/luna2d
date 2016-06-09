@@ -66,6 +66,7 @@ private:
 	QString CheckGameDirectory(const QString& path); // Check given directory for it's valid game directory
 	void OpenGame(const QString& gamePath); // Launch game from given path
 	void SetResolution(int resolutionIndex);
+	void SetLanguage(QString localeCode);
 	void OpenLogDialog();
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
 	void UpdateLanguagesMenu(); // Update "Settings/Game languages" menu

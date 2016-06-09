@@ -185,8 +185,10 @@ void MainWindow::OpenGame(const QString &gamePath)
 	ui->actionSet_project->setEnabled(true);
 	UpdatePipelineMenu();
 
-	// Update "Settings/Language" menu
+	// Update game language
 	UpdateLanguagesMenu();
+	QString preferred = Settings::GetPreferredLanguage(curGameName);
+	if(preferred != "system") SetLanguage(preferred); // System locale sets by default at engine initialization
 
 	// Resize pixmap for screenshots
 	screenshotsPixmap = QPixmap(ui->centralWidget->size());
@@ -217,6 +219,35 @@ void MainWindow::SetResolution(int resolutionIndex)
 	MoveToCenter();
 
 	Settings::curResolution = resolutionIndex;
+}
+
+void MainWindow::SetLanguage(QString localeCode)
+{
+	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
+	std::string locale;
+
+	if(localeCode == "system")
+	{
+		locale = strings->GetSystemLocale();
+		if(!strings->HasLocale(locale)) locale = strings->ParseLang(locale);
+		if(!strings->HasLocale(locale)) locale = strings->GetDefaultLocale();
+	}
+	else if(localeCode == "default") locale = strings->GetDefaultLocale();
+	else locale = localeCode.toStdString();
+
+	strings->SetLocale(locale);
+
+	// Check item with given locale
+	for(auto menuItem : ui->menuLanguage->actions())
+	{
+		if(menuItem->data() == localeCode)
+		{
+			menuItem->setChecked(true);
+			break;
+		}
+	}
+
+	Settings::SetPreferredLanguage(curGameName, localeCode);
 }
 
 void MainWindow::OpenLogDialog()
@@ -403,23 +434,8 @@ void MainWindow::OnResolutionChanged()
 
 void MainWindow::OnLanguageChanged()
 {
-	QAction* menuItem = qobject_cast<QAction*>(sender());
-	QString localeCode = menuItem->data().toString();
-	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
-
-	std::string locale;
-
-	if(localeCode == "system")
-	{
-		locale = strings->GetSystemLocale();
-		if(!strings->HasLocale(locale)) locale = strings->ParseLang(locale);
-		if(!strings->HasLocale(locale)) locale = strings->GetDefaultLocale();
-	}
-	else if(localeCode == "default") locale = strings->GetDefaultLocale();
-	else locale = localeCode.toStdString();
-
-	strings->SetLocale(locale);
-	menuItem->setChecked(true);
+	QString localeCode = qobject_cast<QAction*>(sender())->data().toString();
+	SetLanguage(localeCode);
 }
 
 void MainWindow::OnActionSettings()
