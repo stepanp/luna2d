@@ -34,7 +34,7 @@ LUNAScenes::LUNAScenes() :
 	fnTouchMoved(nil),
 	fnTouchUp(nil)
 {
-	LuaScript *lua = LUNAEngine::SharedLua();
+	LuaScript* lua = LUNAEngine::SharedLua();
 
 	// Register "luna.scenes" module
 	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
@@ -69,6 +69,12 @@ void LUNAScenes::SetScene(const LuaTable& tblScene)
 	{
 		LUNA_LOGE("Scene hasn'n \"onRender\" method");
 		return;
+	}
+
+	if(tblCurScene)
+	{
+		auto fnLeave = tblCurScene.GetFunction("onLeave");
+		if(fnLeave) fnLeave.CallVoid(tblCurScene);
 	}
 
 	tblCurScene = tblScene;
