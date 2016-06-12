@@ -75,6 +75,9 @@ void LUNAScenes::SetScene(const LuaTable& tblScene)
 	{
 		auto fnLeave = tblCurScene.GetFunction("onLeave");
 		if(fnLeave) fnLeave.CallVoid(tblCurScene);
+
+		auto onEnter = tblScene.GetFunction("onEnter");
+		if(onEnter) onEnter.CallVoid(tblScene);
 	}
 
 	tblCurScene = tblScene;
