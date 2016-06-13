@@ -41,6 +41,8 @@ private:
 	std::u32string text; // Text in UTF-32 encoding
 	float x = 0;
 	float y = 0;
+	float scaleX = 1;
+	float scaleY = 1;
 	LUNAColor color = LUNAColor::WHITE;
 
 public:
@@ -51,6 +53,11 @@ public:
 	glm::vec2 GetPos();
 	void SetPos(float x, float y);
 	void SetColor(float r, float g, float b);
+	float GetScaleX();
+	float GetScaleY();
+	void SetScaleX(float scaleX);
+	void SetScaleY(float scaleY);
+	void SetScale(float scale);
 	LUNAColor GetColor();
 	void SetAlpha(float alpha);
 	float GetAlpha();

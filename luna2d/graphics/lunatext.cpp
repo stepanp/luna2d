@@ -63,6 +63,33 @@ void LUNAText::SetPos(float x, float y)
 	this->y = y;
 }
 
+float LUNAText::GetScaleX()
+{
+	return scaleX;
+}
+
+float LUNAText::GetScaleY()
+{
+	return scaleY;
+}
+
+void LUNAText::SetScaleX(float scaleX)
+{
+	this->scaleX = scaleX;
+}
+
+void LUNAText::SetScaleY(float scaleY)
+{
+	this->scaleY = scaleY;
+}
+
+void LUNAText::SetScale(float scale)
+{
+	SetScaleX(scale);
+	SetScaleY(scale);
+}
+
+
 void LUNAText::SetColor(float r, float g, float b)
 {
 	color.r = r / 255.0f;
@@ -155,13 +182,15 @@ void LUNAText::Render()
 	}
 
 	int offset = 0;
-	for(auto sprite : sprites)
+	for(auto& spr : sprites)
 	{
-		sprite->SetPos(x + offset, y);
-		sprite->SetColor(color.GetR(), color.GetG(), color.GetB());
-		sprite->SetAlpha(color.a);
-		sprite->Render();
+		spr->SetPos(x + offset, y);
+		spr->SetScaleX(scaleX);
+		spr->SetScaleY(scaleY);
+		spr->SetColor(color.GetR(), color.GetG(), color.GetB());
+		spr->SetAlpha(color.a);
+		spr->Render();
 
-		offset += std::roundf(sprite->GetWidth());
+		offset += std::roundf(spr->GetWidth() * spr->GetScaleX());
 	}
 }
