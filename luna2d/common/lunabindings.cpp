@@ -115,6 +115,7 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("frandom", LuaFunction(lua, &math::RandomFloat));
 	tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
+	tblMath.SetField("round", LuaFunction(lua, &std::roundf));
 
 	// Register metatable for "Vector2"
 	luaL_newmetatable(*lua, VECTOR2_METATABLE_NAME.c_str());
