@@ -63,5 +63,3 @@ HEADERS  += ui/mainwindow.h \
 	../../../thirdparty/RectangleBinPack/Rect.h
 
 FORMS    += mainwindow.ui
-
-QMAKE_MAC_SDK = macosx10.9
