@@ -35,6 +35,11 @@ LUNAQtWidget::LUNAQtWidget(QWidget* parent) :
 	QOpenGLWidget(parent)
 {
 	QApplication::instance()->installEventFilter(this);
+
+	// Set OpenGL version to 2.1 to maximize compatibility with OpenGL ES 2.0
+	QSurfaceFormat format;
+	format.setVersion(2,1);
+	QSurfaceFormat::setDefaultFormat(format);
 }
 
 LUNAQtWidget::~LUNAQtWidget()
@@ -63,13 +68,6 @@ float LUNAQtWidget::TranslateMouseY(int y)
 
 void LUNAQtWidget::initializeGL()
 {
-	QOpenGLContext* context = QOpenGLContext::currentContext();
-
-	// Set OpenGL version to 2.1 to maximize compatibility with OpenGL ES 2.0
-	QSurfaceFormat format = context->format();
-	format.setVersion(2,1);
-	context->setFormat(format);
-
 	// Set methods from current QOpenGLFunctions object as usual GL functions
 	// SEE "platform/qt/lunaqtgl.h"
 	LUNAQtGl::InitFunctions();
