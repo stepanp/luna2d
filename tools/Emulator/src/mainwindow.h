@@ -71,6 +71,7 @@ private:
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
 	void UpdateLanguagesMenu(); // Update "Settings/Game languages" menu
 	QString MakeScreenhotsFolder();
+	QString getPipelinePath();
 
 public slots:
 	void OnGlSurfaceInitialized();

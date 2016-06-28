@@ -320,6 +320,15 @@ QString MainWindow::MakeScreenhotsFolder()
 	return path;
 }
 
+QString MainWindow::getPipelinePath()
+{
+#ifdef Q_OS_MAC
+	return QApplication::applicationDirPath() + "/../../../../Pipeline/Pipeline.app/Contents/MacOS/Pipeline";
+#else
+	return QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
+#endif
+}
+
 void MainWindow::OnGlSurfaceInitialized()
 {
 	// Try open game from command line
@@ -482,10 +491,8 @@ void MainWindow::OnRunPipelineProject()
 	QString projectPath = Settings::GetPipelineProject(curGameName);
 	if(projectPath.isEmpty()) return;
 
-	QString pipelinePath = QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
 	QProcess pipeline;
-
-	pipeline.start(pipelinePath, { projectPath, "-u" });
+	pipeline.start(getPipelinePath(), { projectPath, "-u" });
 	pipeline.waitForFinished();
 }
 
@@ -500,10 +507,8 @@ void MainWindow::OnOpenInPipeline()
 	QString projectPath = Settings::GetPipelineProject(curGameName);
 	if(projectPath.isEmpty()) return;
 
-	QString pipelinePath = QApplication::applicationDirPath() + "/../Pipeline/Pipeline";
 	QProcess pipeline;
-
-	pipeline.startDetached(pipelinePath, { projectPath });
+	pipeline.startDetached(getPipelinePath(), { projectPath });
 }
 
 void MainWindow::OnSetPipelineProject()
