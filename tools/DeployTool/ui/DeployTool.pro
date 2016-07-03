@@ -41,5 +41,3 @@ HEADERS  += mainwindow.h \
     template.h
 
 FORMS    += mainwindow.ui
-
-QMAKE_MAC_SDK = macosx10.9
