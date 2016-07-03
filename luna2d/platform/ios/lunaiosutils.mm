@@ -39,3 +39,23 @@ void LUNAIosUtils::OpenUrl(const std::string& url)
 {
 	LUNA_LOGE("Method LUNAIosUtils::OpenUrl is not implemented");
 }
+
+// Show native dialog with "Ok" button
+// "onClose" calls when dialog closed
+void LUNAIosUtils::MessageDialog(const std::string& title, const std::string& message,
+	const std::function<void()>& onClose)
+{
+	LUNA_LOGE("Method LUNAIosUtils::MessageDialog is not implemented");
+	
+	if(onClose) onClose();
+}
+
+// Show native dialog with "Yes" and "No" buttons
+// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
+void LUNAIosUtils::ConfirmDialog(const std::string& title, const std::string& message,
+	const std::function<void(bool)>& onClose)
+{
+	LUNA_LOGE("Method LUNAIosUtils::ConfirmDialog is not implemented");
+	
+	if(onClose) onClose(false);
+}

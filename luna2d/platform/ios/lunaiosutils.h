@@ -39,6 +39,16 @@ public:
 
 	// Open given url in system browser
 	virtual void OpenUrl(const std::string& url);
+	
+	// Show native dialog with "Ok" button
+	// "onClose" calls when dialog closed
+	virtual void MessageDialog(const std::string& title, const std::string& message,
+		const std::function<void()>& onClose);
+	
+	// Show native dialog with "Yes" and "No" buttons
+	// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
+	virtual void ConfirmDialog(const std::string& title, const std::string& message,
+		const std::function<void(bool)>& onClose);
 };
 
 }
