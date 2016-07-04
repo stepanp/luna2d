@@ -95,6 +95,7 @@ public slots:
 	void OnSetPipelineProject();
 	void OnTakeScreenshot();
 	void OnOpenScreenshotsFolder();
+	void OnClearGamePrefs();
 
 public:
 	void closeEvent(QCloseEvent*);

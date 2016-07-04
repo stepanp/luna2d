@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuEngine">
@@ -110,8 +110,15 @@
      <addaction name="separator"/>
      <addaction name="actionOpen_screenshots_folder"/>
     </widget>
+    <widget class="QMenu" name="menuGame_preferences">
+     <property name="title">
+      <string>Game preferences</string>
+     </property>
+     <addaction name="actionClear_preferences"/>
+    </widget>
     <addaction name="menuPipeline"/>
     <addaction name="menuScreenshot"/>
+    <addaction name="menuGame_preferences"/>
    </widget>
    <addaction name="menuEngine"/>
    <addaction name="menuView"/>
@@ -242,6 +249,19 @@
   <action name="actionDefault">
    <property name="text">
     <string>Default</string>
+   </property>
+  </action>
+  <action name="actionClear_preferences">
+   <property name="text">
+    <string>Clear preferences</string>
+   </property>
+  </action>
+  <action name="actionClear_preferences_on_start">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Clear preferences on start</string>
    </property>
   </action>
  </widget>

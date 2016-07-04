@@ -35,6 +35,7 @@
 #include <QStandardPaths>
 #include <QDesktopServices>
 #include "lunastrings.h"
+#include "lunaprefs.h"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -80,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionSet_project, &QAction::triggered, this, &MainWindow::OnSetPipelineProject);
 	connect(ui->actionTake_screenshot, &QAction::triggered, this, &MainWindow::OnTakeScreenshot);
 	connect(ui->actionOpen_screenshots_folder, &QAction::triggered, this, &MainWindow::OnOpenScreenshotsFolder);
+	connect(ui->actionClear_preferences, &QAction::triggered, this, &MainWindow::OnClearGamePrefs);
 }
 
 MainWindow::~MainWindow()
@@ -542,6 +544,11 @@ void MainWindow::OnOpenScreenshotsFolder()
 {
 	QString path = MakeScreenhotsFolder();
 	QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+}
+
+void MainWindow::OnClearGamePrefs()
+{
+	ui->centralWidget->GetEngine()->SharedPrefs()->Clear();
 }
 
 void MainWindow::closeEvent(QCloseEvent*)
