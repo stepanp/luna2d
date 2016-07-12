@@ -24,6 +24,7 @@
 #include "lunaiosutils.h"
 #include "lunalog.h"
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 using namespace luna2d;
 
@@ -39,7 +40,9 @@ std::string LUNAIosUtils::GetSystemLocale()
 // Open given url in system browser
 void LUNAIosUtils::OpenUrl(const std::string& url)
 {
-	LUNA_LOGE("Method LUNAIosUtils::OpenUrl is not implemented");
+	NSURL* nsUrl = [NSURL URLWithString:[NSString stringWithUTF8String:url.c_str()]];
+	
+	if(![[UIApplication sharedApplication] openURL:nsUrl]) LUNA_LOGE("Cannot open url: %s", url.c_str());
 }
 
 // Show native dialog with "Ok" button
