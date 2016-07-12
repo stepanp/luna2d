@@ -97,7 +97,7 @@ void LUNAQtPrefs::SetBool(const std::string& name, bool value)
 }
 
 // Check for existing value
-bool LUNAQtPrefs::HasValue(const std::string &name)
+bool LUNAQtPrefs::HasValue(const std::string& name)
 {
 	QSettings settings(PREFS_ORGANIZATION_NAME, GetGameName());
 	return settings.contains(QString::fromStdString(name));
