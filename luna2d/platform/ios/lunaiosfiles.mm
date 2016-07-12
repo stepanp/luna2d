@@ -23,6 +23,7 @@
 
 #include "lunaiosfiles.h"
 #include "lunalog.h"
+#include "lunansstring.h"
 #include <cstdio>
 
 using namespace luna2d;
@@ -41,7 +42,7 @@ NSString* LUNAIosFiles::GetPathInLocation(const std::string& path, LUNAFileLocat
 	if(path != "/") ret = ret + path;
 	if(ret[ret.length() - 1] == '/') ret = ret.substr(0, ret.length() - 1);
 	
-	return [NSString stringWithUTF8String:ret.c_str()];
+	return ToNsString(ret);
 }
 
 // Get root folder for file location

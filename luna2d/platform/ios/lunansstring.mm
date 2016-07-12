@@ -21,46 +21,18 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosutils.h"
-#include "lunalog.h"
 #include "lunansstring.h"
-#import <UIKit/UIKit.h>
 
 using namespace luna2d;
 
-// Get system locale in "xx_XX" format
-// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
-std::string LUNAIosUtils::GetSystemLocale()
+// Convert std::string to NSString*
+NSString* luna2d::ToNsString(const std::string& str)
 {
-	std::string ret = FromNsString([[NSLocale preferredLanguages] objectAtIndex:0]);
-	std::replace(ret.begin(), ret.end(), '-', '_');
-	return ret;
+	return [NSString stringWithUTF8String:str.c_str()];
 }
 
-// Open given url in system browser
-void LUNAIosUtils::OpenUrl(const std::string& url)
+// Convert NSString* to std::string
+std::string luna2d::FromNsString(NSString* str)
 {
-	NSURL* nsUrl = [NSURL URLWithString:ToNsString(url)];
-	
-	if(![[UIApplication sharedApplication] openURL:nsUrl]) LUNA_LOGE("Cannot open url: %s", url.c_str());
-}
-
-// Show native dialog with "Ok" button
-// "onClose" calls when dialog closed
-void LUNAIosUtils::MessageDialog(const std::string& title, const std::string& message,
-	const std::function<void()>& onClose)
-{
-	LUNA_LOGE("Method LUNAIosUtils::MessageDialog is not implemented");
-	
-	if(onClose) onClose();
-}
-
-// Show native dialog with "Yes" and "No" buttons
-// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
-void LUNAIosUtils::ConfirmDialog(const std::string& title, const std::string& message,
-	const std::function<void(bool)>& onClose)
-{
-	LUNA_LOGE("Method LUNAIosUtils::ConfirmDialog is not implemented");
-	
-	if(onClose) onClose(false);
+	return [str UTF8String];
 }
