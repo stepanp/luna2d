@@ -28,9 +28,9 @@
 
 namespace luna2d{
 
-//---------------------------------
-// Preferences mplementaton for iOS
-//---------------------------------
+//----------------------------------
+// Preferences implementaton for iOS
+//----------------------------------
 class LUNAIosPrefs : public LUNAPrefs
 {
 public:

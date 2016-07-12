@@ -28,9 +28,9 @@
 
 namespace luna2d{
 
-//------------------------------------------------
-// Preferences mplementaton for Windows Phone / RT
-//------------------------------------------------
+//-------------------------------------------------
+// Preferences implementaton for Windows Phone / RT
+//-------------------------------------------------
 class LUNAWpPrefs : public LUNAPrefs
 {
 public:

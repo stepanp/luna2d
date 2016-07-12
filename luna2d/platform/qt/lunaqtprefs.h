@@ -30,9 +30,9 @@ namespace luna2d{
 
 const QString PREFS_ORGANIZATION_NAME = "luna2d";
 
-//--------------------------------
-// Preferences mplementaton for Qt
-//--------------------------------
+//---------------------------------
+// Preferences implementaton for Qt
+//---------------------------------
 class LUNAQtPrefs : public LUNAPrefs
 {
 private:

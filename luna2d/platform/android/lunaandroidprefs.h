@@ -28,9 +28,9 @@
 
 namespace luna2d{
 
-//-------------------------------------
-// Preferences mplementaton for Android
-//-------------------------------------
+//--------------------------------------
+// Preferences implementaton for Android
+//--------------------------------------
 class LUNAAndroidPrefs : public LUNAPrefs
 {
 public:
