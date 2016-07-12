@@ -23,6 +23,7 @@
 
 #include "lunaiosutils.h"
 #include "lunalog.h"
+#import <Foundation/Foundation.h>
 
 using namespace luna2d;
 
@@ -30,8 +31,9 @@ using namespace luna2d;
 // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
 std::string LUNAIosUtils::GetSystemLocale()
 {
-	LUNA_LOGE("Method LUNAIosUtils::GetSystemLocale is not implemented");
-	return "en";
+	std::string ret = [[[NSLocale preferredLanguages] objectAtIndex:0] UTF8String];
+	std::replace(ret.begin(), ret.end(), '-', '_');
+	return ret;
 }
 
 // Open given url in system browser
