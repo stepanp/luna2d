@@ -23,75 +23,55 @@
 
 #pragma once
 
-#include "lunaengine.h"
+#include "lunaprefs.h"
+#import <Foundation/Foundation.h>
 
 namespace luna2d{
 
 //---------------------------------
-// Each preference can has a type
-// For useful getting values in lua
+// Preferences mplementaton for iOS
 //---------------------------------
-enum class LUNAPrefType : int
-{
-	NONE = 0, // Type for preference not stored
-	STRING = 1,
-	INT = 2,
-	FLOAT = 3,
-	BOOL = 4,
-	TABLE = 5,
-};
-
-//----------------------------------------------------
-// Preferences interface
-// Utility for store preferences and simple game saves
-//----------------------------------------------------
-class LUNAPrefs
+class LUNAIosPrefs : public LUNAPrefs
 {
 public:
-	virtual ~LUNAPrefs() {}
+	LUNAIosPrefs();
+	
+private:
+	NSUserDefaults* prefs;
 
 public:
 	// Get string value from preferences
-	virtual std::string GetString(const std::string& name) = 0;
+	virtual std::string GetString(const std::string& name);
 
 	// Get int value from preferences
-	virtual int GetInt(const std::string& name) = 0;
+	virtual int GetInt(const std::string& name);
 
 	// Get float value from preferences
-	virtual float GetFloat(const std::string& name) = 0;
+	virtual float GetFloat(const std::string& name);
 
 	// Get bool value from preferences
-	virtual bool GetBool(const std::string& name) = 0;
+	virtual bool GetBool(const std::string& name);
 
 	// Set string value to preferences
-	virtual void SetString(const std::string& name, const std::string& value) = 0;
+	virtual void SetString(const std::string& name, const std::string& value);
 
 	// Set int value to preferences
-	virtual void SetInt(const std::string& name, int value) = 0;
+	virtual void SetInt(const std::string& name, int value);
 
 	// Set float value to preferences
-	virtual void SetFloat(const std::string& name, float value) = 0;
+	virtual void SetFloat(const std::string& name, float value);
 
 	// Set bool value to preferences
-	virtual void SetBool(const std::string& name, bool value) = 0;
+	virtual void SetBool(const std::string& name, bool value);
 
 	// Check for existing value
-	virtual bool HasValue(const std::string& name) = 0;
+	virtual bool HasValue(const std::string& name);
 
 	// Remove valuee from preferences
-	virtual void RemoveValue(const std::string& name) = 0;
+	virtual void RemoveValue(const std::string& name);
 
 	// Remove all values from preferences
-	virtual void Clear() = 0;
-
-	// Get type for preference
-	LUNAPrefType GetPrefType(const std::string& name);
-
-	// Set type for preference
-	void SetPrefType(const std::string& name, LUNAPrefType type);
-
-	// Remove type for preference
-	void RemovePrefType(const std::string& name);
+	virtual void Clear();
 };
 
 }
