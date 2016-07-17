@@ -1,0 +1,339 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FD424BB11D3450FB00D04922 /* luna2d.mm in Sources */ = {isa = PBXBuildFile; fileRef = FD424BB01D3450FB00D04922 /* luna2d.mm */; };
+		FD424BD11D34543D00D04922 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD01D34543D00D04922 /* UIKit.framework */; };
+		FD424BD31D34544500D04922 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD21D34544500D04922 /* GLKit.framework */; };
+		FD424BD51D34544900D04922 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD41D34544900D04922 /* OpenAL.framework */; };
+		FD424BD71D34544F00D04922 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD61D34544F00D04922 /* OpenGLES.framework */; };
+		FD424BD91D34545B00D04922 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD81D34545B00D04922 /* libz.tbd */; };
+		FD90884A1D36F09B00B892A9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD9088491D36F09B00B892A9 /* Images.xcassets */; };
+		FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */; };
+		FDD1EAF61D3B025500F58C6C /* game in Resources */ = {isa = PBXBuildFile; fileRef = FDD1EAF51D3B025500F58C6C /* game */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FD424B8F1D344FF400D04922 /* LUNA_PROJECT_NAME.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LUNA_PROJECT_NAME.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD424BB01D3450FB00D04922 /* luna2d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = luna2d.mm; sourceTree = "<group>"; };
+		FD424BD01D34543D00D04922 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FD424BD21D34544500D04922 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		FD424BD41D34544900D04922 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		FD424BD61D34544F00D04922 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		FD424BD81D34545B00D04922 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		FD9088491D36F09B00B892A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LUNA_PROJECT_NAME/Images.xcassets; sourceTree = "<group>"; };
+		FDD1EAEB1D3AFEF700F58C6C /* LUNA_PROJECT_NAME.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LUNA_PROJECT_NAME.xcodeproj; sourceTree = "<group>"; };
+		FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluna2d.a; path = .luna2d/libs/libluna2d.a; sourceTree = "<group>"; };
+		FDD1EAF51D3B025500F58C6C /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = .luna2d/assets/game; sourceTree = "<group>"; };
+		FDF94B151D3BC01E00BCBB25 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LUNA_PROJECT_NAME/Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FD424B8C1D344FF400D04922 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */,
+				FD424BD71D34544F00D04922 /* OpenGLES.framework in Frameworks */,
+				FD424BD51D34544900D04922 /* OpenAL.framework in Frameworks */,
+				FD424BD31D34544500D04922 /* GLKit.framework in Frameworks */,
+				FD424BD11D34543D00D04922 /* UIKit.framework in Frameworks */,
+				FD424BD91D34545B00D04922 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FD424B861D344FF400D04922 = {
+			isa = PBXGroup;
+			children = (
+				FDF94B151D3BC01E00BCBB25 /* Info.plist */,
+				FDD1EAF51D3B025500F58C6C /* game */,
+				FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */,
+				FDD1EAEB1D3AFEF700F58C6C /* LUNA_PROJECT_NAME.xcodeproj */,
+				FD9088491D36F09B00B892A9 /* Images.xcassets */,
+				FD424BD81D34545B00D04922 /* libz.tbd */,
+				FD424BD61D34544F00D04922 /* OpenGLES.framework */,
+				FD424BD41D34544900D04922 /* OpenAL.framework */,
+				FD424BD21D34544500D04922 /* GLKit.framework */,
+				FD424BD01D34543D00D04922 /* UIKit.framework */,
+				FD424BB01D3450FB00D04922 /* luna2d.mm */,
+				FD424B901D344FF400D04922 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FD424B901D344FF400D04922 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FD424B8F1D344FF400D04922 /* LUNA_PROJECT_NAME.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FDD1EAEC1D3AFEF700F58C6C /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FD424B8E1D344FF400D04922 /* LUNA_PROJECT_NAME */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FD424BAA1D344FF500D04922 /* Build configuration list for PBXNativeTarget "LUNA_PROJECT_NAME" */;
+			buildPhases = (
+				FD8C3A941D3AF12D0088DDB7 /* Run DeployTool */,
+				FD424B8B1D344FF400D04922 /* Sources */,
+				FD424B8C1D344FF400D04922 /* Frameworks */,
+				FD424B8D1D344FF400D04922 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LUNA_PROJECT_NAME;
+			productName = LUNA_PROJECT_NAME;
+			productReference = FD424B8F1D344FF400D04922 /* LUNA_PROJECT_NAME.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FD424B871D344FF400D04922 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "";
+				TargetAttributes = {
+					FD424B8E1D344FF400D04922 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = FD424B8A1D344FF400D04922 /* Build configuration list for PBXProject "LUNA_PROJECT_NAME" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FD424B861D344FF400D04922;
+			productRefGroup = FD424B901D344FF400D04922 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = FDD1EAEC1D3AFEF700F58C6C /* Products */;
+					ProjectRef = FDD1EAEB1D3AFEF700F58C6C /* LUNA_PROJECT_NAME.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				FD424B8E1D344FF400D04922 /* LUNA_PROJECT_NAME */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FD424B8D1D344FF400D04922 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDD1EAF61D3B025500F58C6C /* game in Resources */,
+				FD90884A1D36F09B00B892A9 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FD8C3A941D3AF12D0088DDB7 /* Run DeployTool */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"",
+			);
+			name = "Run DeployTool";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python ${SRCROOT}/.luna2d/update.py";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FD424B8B1D344FF400D04922 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD424BB11D3450FB00D04922 /* luna2d.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FD424BA81D344FF500D04922 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FD424BA91D344FF500D04922 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FD424BAB1D344FF500D04922 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = LUNA_PROJECT_NAME/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/.luna2d/libs",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = LUNA_BUNDLE_ID;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FD424BAC1D344FF500D04922 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = LUNA_PROJECT_NAME/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/.luna2d/libs",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = LUNA_BUNDLE_ID;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FD424B8A1D344FF400D04922 /* Build configuration list for PBXProject "LUNA_PROJECT_NAME" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD424BA81D344FF500D04922 /* Debug */,
+				FD424BA91D344FF500D04922 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FD424BAA1D344FF500D04922 /* Build configuration list for PBXNativeTarget "LUNA_PROJECT_NAME" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD424BAB1D344FF500D04922 /* Debug */,
+				FD424BAC1D344FF500D04922 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FD424B871D344FF400D04922 /* Project object */;
+}
