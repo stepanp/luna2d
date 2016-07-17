@@ -41,6 +41,7 @@ def main(args):
 	constants = {
 		"LUNA_PROJECT_NAME" : args.name,
 		"LUNA_PACKAGE_NAME" : args.package_name,
+		"LUNA_BUNDLE_ID" : args.bundle_id,
 	}
 
 	print("Creating project from template..")
@@ -66,7 +67,7 @@ def make_config_dir(args, luna2d_path):
 		"projectName" : args.name,
 		"platform" : args.platform,
 		"gamePath" : utils.normalize_slashes(os.path.relpath(args.game_path, args.project_path)),
-	    "luna2dPath": utils.normalize_slashes(luna2d_path),
+		"luna2dPath": utils.normalize_slashes(luna2d_path),
 	}
 
 	utils.save_json(build_config, config_dir + "/build.luna2d")
@@ -96,6 +97,7 @@ def parse_args():
 	parser.add_argument("--template", required=True)
 	parser.add_argument("--name", required=True)
 	parser.add_argument("--package_name", default="")
+	parser.add_argument("--bundle_id", default="")
 	parser.add_argument("--platform", required=True)
 	parser.add_argument("--strip_git", default=False)
 	parser.add_argument("--debug_clear_project", default=False)
