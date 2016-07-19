@@ -69,9 +69,7 @@ def update_assets(args, luna2d_path, config):
 	print("Compiling scripts..")
 	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
 		for item in files:
-
-			# Ignore hidden files
-			if item.startswith("."):
+			if not item.endsswith(".lua"):
 				continue
 
 			filename = os.path.realpath(str(os.path.join(root, item)))
