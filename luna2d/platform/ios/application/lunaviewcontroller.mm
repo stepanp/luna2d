@@ -27,6 +27,7 @@
 #import "lunaioslog.h"
 #import "lunaiosutils.h"
 #import "lunaiosprefs.h"
+#import "lunaiosservices.h"
 
 using namespace luna2d;
 
@@ -104,7 +105,7 @@ using namespace luna2d;
 	if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) std::swap(screenWidth, screenHeight);
 	
 	// Initialize engine
-	LUNAEngine::Shared()->Assemble(new LUNAIosFiles(), new LUNAIosLog(), new LUNAIosUtils(), new LUNAIosPrefs());
+	LUNAEngine::Shared()->Assemble(new LUNAIosFiles(), new LUNAIosLog(), new LUNAIosUtils(), new LUNAIosPrefs(), new LUNAIosServices());
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
 }
 
