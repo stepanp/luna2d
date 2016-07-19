@@ -28,9 +28,20 @@
 
 using namespace luna2d;
 
+// Bind "luna.sharing" module
+static void BindSharing(const std::shared_ptr<LUNASharing> sharing, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblShare(lua);
+	tblLuna.SetField("share", tblShare);
+
+	tblShare.SetField("text", LuaFunction(lua, sharing.get(), &LUNASharing::Text));
+}
+
 void luna2d::BindServices()
 {
 	auto lua = LUNAEngine::SharedLua();
 	auto tblLuna = lua->GetGlobalTable().GetTable("luna");
 	auto services = LUNAEngine::SharedServices();
+
+	BindSharing(services->GetSharing(), lua, tblLuna);
 }
