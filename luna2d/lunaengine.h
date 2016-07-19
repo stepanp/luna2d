@@ -55,6 +55,7 @@ class LUNAStrings;
 class LUNADebug;
 class LUNAConfig;
 
+class LUNAServices;
 class LUNASdkApi;
 
 class LUNAEngine
@@ -82,6 +83,7 @@ private:
 	LUNAStrings* strings = nullptr;
 
 	LUNASdkApi* sdkApi = nullptr;
+	LUNAServices* services = nullptr;
 
 #ifdef LUNA_DEBUG
 	LUNADebug* debug = nullptr;
@@ -92,7 +94,7 @@ private:
 
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
-	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs);
+	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs, LUNAServices* services);
 
 	void SetSdkApi(LUNASdkApi* sdkApi);
 
@@ -123,6 +125,7 @@ public:
 	inline static LUNASizes* SharedSizes() { return Shared()->sizes; }
 	inline static LUNAEvents* SharedEvents() { return Shared()->events; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
+	inline static LUNAServices* SharedServices() { return Shared()->services; }
 	inline static LUNASdkApi* SharedSdkApi() { return Shared()->sdkApi; }
 
 #ifdef LUNA_DEBUG

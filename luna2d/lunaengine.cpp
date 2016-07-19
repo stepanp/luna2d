@@ -37,6 +37,8 @@
 #include "lunaconfig.h"
 #include "lunamath.h"
 #include "lunabindings.h"
+#include "lunaservices.h"
+#include "lunabindservices.h"
 #include "lunasdkapi.h"
 #include "lunasdkapibind.h"
 
@@ -52,12 +54,13 @@ LUNAEngine::~LUNAEngine()
 }
 
 // Assemble engine with platform-specific modules. Must be called before "Iznitialize" method
-void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils, LUNAPrefs* prefs)
+void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *platformUtils, LUNAPrefs* prefs, LUNAServices* services)
 {
 	this->files = files;
 	this->log = log;
 	this->platformUtils = platformUtils;
 	this->prefs = prefs;
+	this->services = services;
 }
 
 void LUNAEngine::SetSdkApi(LUNASdkApi* sdkApi)
@@ -97,6 +100,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
+	BindServices();
 
 	if(sdkApi)
 	{
@@ -123,6 +127,7 @@ void LUNAEngine::Deinitialize()
 	config.reset();
 
 	delete sdkApi;
+	delete services;
 	delete assets;
 	delete graphics;
 	delete scenes;
@@ -152,6 +157,7 @@ void LUNAEngine::Deinitialize()
 	files = nullptr;
 	platformUtils = nullptr;
 	log = nullptr;
+	services = nullptr;
 	sdkApi = nullptr;
 
 	initialized = false;
