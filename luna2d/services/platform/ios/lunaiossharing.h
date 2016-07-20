@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunasharing.h"
+#import <UIKit/UIKit.h>
 
 namespace luna2d{
 
