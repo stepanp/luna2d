@@ -21,14 +21,18 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosservices.h"
-#include "lunaiossharing.h"
-#include "lunaiosstore.h"
+#pragma once
 
-using namespace luna2d;
+#include "lunastore.h"
+#import <UIKit/UIKit.h>
 
-LUNAIosServices::LUNAIosServices()
+namespace luna2d{
+
+class LUNAIosStore : public LUNAStore
 {
-	sharing = std::make_shared<LUNAIosSharing>();
-	store = std::make_shared<LUNAIosStore>();
+public:
+	// Open page of current application in store
+	virtual void OpenAppPage();
+};
+
 }

@@ -24,17 +24,27 @@
 #include "lunabindservices.h"
 #include "lunaservices.h"
 #include "lunasharing.h"
+#include "lunastore.h"
 #include "lunalua.h"
 
 using namespace luna2d;
 
 // Bind "luna.sharing" module
-static void BindSharing(const std::shared_ptr<LUNASharing> sharing, LuaScript* lua, LuaTable& tblLuna)
+static void BindSharing(const std::shared_ptr<LUNASharing>& sharing, LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblShare(lua);
 	tblLuna.SetField("share", tblShare);
 
 	tblShare.SetField("text", LuaFunction(lua, sharing.get(), &LUNASharing::Text));
+}
+
+// Bind "luna.store" module
+static void BindStore(const std::shared_ptr<LUNAStore>& store, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblStore(lua);
+	tblLuna.SetField("store", tblStore);
+
+	tblStore.SetField("openAppPage", LuaFunction(lua, store.get(), &LUNAStore::OpenAppPage));
 }
 
 void luna2d::BindServices()
@@ -44,4 +54,5 @@ void luna2d::BindServices()
 	auto services = LUNAEngine::SharedServices();
 
 	BindSharing(services->GetSharing(), lua, tblLuna);
+	BindStore(services->GetStore(), lua, tblLuna);
 }

@@ -21,14 +21,18 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosservices.h"
-#include "lunaiossharing.h"
 #include "lunaiosstore.h"
+#include "lunansstring.h"
+#include "lunalog.h"
 
 using namespace luna2d;
 
-LUNAIosServices::LUNAIosServices()
+// Open page of current application in store
+void LUNAIosStore::OpenAppPage()
 {
-	sharing = std::make_shared<LUNAIosSharing>();
-	store = std::make_shared<LUNAIosStore>();
+	NSString* appName = [NSString stringWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
+	NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.com/app/%@",
+									   [appName stringByReplacingOccurrencesOfString:@" " withString:@""]]];
+	[[UIApplication sharedApplication] openURL:url];
 }
+

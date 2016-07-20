@@ -31,9 +31,6 @@ namespace luna2d{
 class LUNAIosSharing : public LUNASharing
 {
 public:
-	LUNAIosSharing();
-
-public:
 	// Share given text using system sharing dialog
 	virtual void Text(const std::string& text);
 };
