@@ -23,10 +23,12 @@
 
 #include "lunaqtservices.h"
 #include "lunaqtsharing.h"
+#include "lunaqtstore.h"
 
 using namespace luna2d;
 
 LUNAQtServices::LUNAQtServices()
 {
 	sharing = std::make_shared<LUNAQtSharing>();
+	store = std::make_shared<LUNAQtStore>();
 }

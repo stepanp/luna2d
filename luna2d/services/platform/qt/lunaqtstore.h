@@ -21,19 +21,17 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaservices.h"
-#include "lunasharing.h"
+#pragma once
+
 #include "lunastore.h"
 
-using namespace luna2d;
+namespace luna2d{
 
-std::shared_ptr<LUNASharing> LUNAServices::GetSharing()
+class LUNAQtStore : public LUNAStore
 {
-	return sharing;
-}
+public:
+	// Open page of current application in store
+	virtual void OpenAppPage();
+};
 
-std::shared_ptr<LUNAStore> LUNAServices::GetStore()
-{
-	return store;
 }
-

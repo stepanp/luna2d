@@ -25,11 +25,6 @@
 
 using namespace luna2d;
 
-LUNAQtSharing::LUNAQtSharing()
-{
-
-}
-
 // Share given text using system sharing dialog
 void LUNAQtSharing::Text(const std::string& text)
 {
