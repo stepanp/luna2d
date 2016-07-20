@@ -21,10 +21,10 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#pragma once
+
 #include <string>
 #import <Foundation/Foundation.h>
-
-#pragma once
 
 //--------------------------------------------------------
 // Functions for casting between std::string and NSString*
