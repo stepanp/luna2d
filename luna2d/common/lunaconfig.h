@@ -25,7 +25,7 @@
 
 #include "lunaengine.h"
 #include "lunastringenum.h"
-#include "lunajsonutils.h"
+#include <json11.hpp>
 
 namespace luna2d{
 

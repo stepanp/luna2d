@@ -26,6 +26,7 @@
 #include "lunalog.h"
 #include "lunafiles.h"
 #include "lunasizes.h"
+#include "lunajsonutils.h"
 
 using namespace luna2d;
 using namespace json11;

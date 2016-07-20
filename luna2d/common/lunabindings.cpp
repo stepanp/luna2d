@@ -24,7 +24,7 @@
 #include "lunabindings.h"
 #include "lunaengine.h"
 #include "lunaconfig.h"
-#include "lunalua.h"
+#include "lunajsonutils.h"
 #include "lunaaudio.h"
 #include "lunaplatformutils.h"
 #include "lunaprefs.h"
