@@ -67,13 +67,16 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}/debug
 )
 
-foreach(DIR ${LUNA2D_DIRS})
-	aux_source_directory(${DIR} LUNA2D_SOURCES)
-	file (GLOB TEMP "${DIR}/*.h")
+macro(IncludeFolder FOLDER)
+	aux_source_directory(${FOLDER} LUNA2D_SOURCES)
+	file (GLOB TEMP "${FOLDER}/*.h")
 	list(APPEND LUNA2D_HEADERS ${TEMP})
-endforeach()
+	include_directories(${FOLDER})
+endmacro()
 
-include_directories(${LUNA2D_DIRS})
+foreach(DIR ${LUNA2D_DIRS})
+	IncludeFolder(${DIR})
+endforeach()
 
 
 # Thirdparty sources
@@ -169,17 +172,9 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 	string(REPLACE "-O3" "-Os" CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 
 	# luna2d iOS source
-	set(LUNA2D_IOS_DIR ${LUNA2D_DIR}/platform/ios)
-	include_directories(${LUNA2D_IOS_DIR})
-	aux_source_directory(${LUNA2D_IOS_DIR} LUNA2D_SOURCES)
-	file (GLOB LUNA2D_IOS_HEADERS "${LUNA2D_IOS_DIR}/*.h")
-	list(APPEND LUNA2D_HEADERS ${LUNA2D_IOS_HEADERS})
-
-	set(LUNA2D_IOS_APP_DIR ${LUNA2D_IOS_DIR}/application)
-	include_directories(${LUNA2D_IOS_APP_DIR})
-	aux_source_directory(${LUNA2D_IOS_APP_DIR} LUNA2D_SOURCES)
-	file (GLOB LUNA2D_IOS_APP_HEADERS "${LUNA2D_IOS_APP_DIR}/*.h")
-	list(APPEND LUNA2D_HEADERS ${LUNA2D_IOS_APP_HEADERS})
+	IncludeFolder(${LUNA2D_DIR}/platform/ios)
+	IncludeFolder(${LUNA2D_DIR}/platform/ios/application)
+	IncludeFolder(${LUNA2D_DIR}/services/platform/ios/protocols) 
 
 	# Make source groups
 	foreach(DIR ${LUNA2D_DIRS})
@@ -193,9 +188,6 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
 		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
-
-	source_group("luna2d\\platform\\ios" ${LUNA2D_IOS_DIR})
-	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_IOS_APP_DIR})
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
