@@ -49,5 +49,6 @@ id LUNAIosServices::LoadService(const std::string& name)
 
 void LUNAIosServices::LoadServices()
 {
-
+	std::shared_ptr<LUNAIosAds> ads = std::static_pointer_cast<LUNAIosAds>(GetAds());
+	ads->LoadServices();
 }

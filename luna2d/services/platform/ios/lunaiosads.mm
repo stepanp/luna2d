@@ -22,5 +22,11 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaiosads.h"
+#import "lunaiosadsservice.h"
 
 using namespace luna2d;
+
+void LUNAIosAds::LoadServices()
+{
+	
+}

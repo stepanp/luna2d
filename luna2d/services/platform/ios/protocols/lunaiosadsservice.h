@@ -21,16 +21,6 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
-#include "lunaads.h"
-
-namespace luna2d{
-
-class LUNAIosAds : public LUNAAds
-{
-public:
-	void LoadServices();
-};
-
-}
+@protocol LUNAAdsService
+	
+@end
