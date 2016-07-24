@@ -101,6 +101,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	RunEmbeddedScripts();
 	DoBindings();
 	BindServices();
+	services->LoadServices();
 
 	if(sdkApi)
 	{

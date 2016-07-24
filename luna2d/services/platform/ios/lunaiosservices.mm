@@ -24,6 +24,8 @@
 #include "lunaiosservices.h"
 #include "lunaiossharing.h"
 #include "lunaiosstore.h"
+#include "lunansstring.h"
+#include "lunalog.h"
 
 using namespace luna2d;
 
@@ -31,4 +33,19 @@ LUNAIosServices::LUNAIosServices()
 {
 	sharing = std::make_shared<LUNAIosSharing>();
 	store = std::make_shared<LUNAIosStore>();
+}
+
+// Dynamically create instance of serivice by given class name
+id LUNAIosServices::LoadService(const std::string& name)
+{
+	id obj = [[NSClassFromString(ToNsString(name)) alloc] init];
+	
+	if(!obj) LUNA_LOGE("Error with loading service. Class with name \"%s\" not found", name.c_str());
+	
+	return obj;
+}
+
+void LUNAIosServices::LoadServices()
+{
+
 }

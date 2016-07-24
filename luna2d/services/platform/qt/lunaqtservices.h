@@ -31,6 +31,9 @@ class LUNAQtServices : public LUNAServices
 {
 public:
 	LUNAQtServices();
+
+public:
+	virtual void LoadServices();
 };
 
 }
