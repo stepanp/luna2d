@@ -27,6 +27,7 @@
 
 namespace luna2d{
 
+class LUNAAds;
 class LUNASharing;
 class LUNAStore;
 
@@ -36,11 +37,13 @@ public:
 	virtual ~LUNAServices() {}
 
 protected:
+	std::shared_ptr<LUNAAds> ads;
 	std::shared_ptr<LUNASharing> sharing;
 	std::shared_ptr<LUNAStore> store;
 
 public:
 	virtual void LoadServices() = 0;
+	std::shared_ptr<LUNAAds> GetAds();
 	std::shared_ptr<LUNASharing> GetSharing();
 	std::shared_ptr<LUNAStore> GetStore();
 };

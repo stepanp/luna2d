@@ -22,10 +22,16 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaservices.h"
+#include "lunaads.h"
 #include "lunasharing.h"
 #include "lunastore.h"
 
 using namespace luna2d;
+
+std::shared_ptr<LUNAAds> LUNAServices::GetAds()
+{
+	return ads;
+}
 
 std::shared_ptr<LUNASharing> LUNAServices::GetSharing()
 {

@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaiosservices.h"
+#include "lunaiosads.h"
 #include "lunaiossharing.h"
 #include "lunaiosstore.h"
 #include "lunansstring.h"
@@ -31,6 +32,7 @@ using namespace luna2d;
 
 LUNAIosServices::LUNAIosServices()
 {
+	ads = std::make_shared<LUNAIosAds>();
 	sharing = std::make_shared<LUNAIosSharing>();
 	store = std::make_shared<LUNAIosStore>();
 }

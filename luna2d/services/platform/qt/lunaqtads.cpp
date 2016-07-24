@@ -21,21 +21,6 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaqtservices.h"
 #include "lunaqtads.h"
-#include "lunaqtsharing.h"
-#include "lunaqtstore.h"
 
 using namespace luna2d;
-
-LUNAQtServices::LUNAQtServices()
-{
-	ads = std::make_shared<LUNAQtAds>();
-	sharing = std::make_shared<LUNAQtSharing>();
-	store = std::make_shared<LUNAQtStore>();
-}
-
-void LUNAQtServices::LoadServices()
-{
-
-}
