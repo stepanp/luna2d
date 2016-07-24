@@ -21,22 +21,14 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosservices.h"
-#include "lunaiosads.h"
-#include "lunaiossharing.h"
-#include "lunaiosstore.h"
+#pragma once
 
-using namespace luna2d;
+#include "lunaengine.h"
+#import <Foundation/Foundation.h>
 
-LUNAIosServices::LUNAIosServices()
-{
-	ads = std::make_shared<LUNAIosAds>();
-	sharing = std::make_shared<LUNAIosSharing>();
-	store = std::make_shared<LUNAIosStore>();
-}
+namespace luna2d{
+	
+// Dynamically create instance of serivice by given class name
+id LoadService(const std::string& name, Protocol* proto);
 
-void LUNAIosServices::LoadServices()
-{
-	std::shared_ptr<LUNAIosAds> ads = std::static_pointer_cast<LUNAIosAds>(GetAds());
-	ads->LoadServices();
 }

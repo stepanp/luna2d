@@ -32,10 +32,6 @@ class LUNAIosServices : public LUNAServices
 public:
 	LUNAIosServices();
 	
-private:
-	// Dynamically create instance of serivice by given class name
-	id LoadService(const std::string& name);
-	
 public:
 	virtual void LoadServices();
 };
