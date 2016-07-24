@@ -72,6 +72,11 @@ macro(IncludeFolder FOLDER)
 	file (GLOB TEMP "${FOLDER}/*.h")
 	list(APPEND LUNA2D_HEADERS ${TEMP})
 	include_directories(${FOLDER})
+
+	list(FIND LUNA2D_DIRS ${FOLDER} TEMP_INDEX)
+	if(NOT {$TEMP_INDEX} EQUAL "-1")
+		list(APPEND LUNA2D_DIRS ${FOLDER})
+	endif()
 endmacro()
 
 foreach(DIR ${LUNA2D_DIRS})
@@ -148,11 +153,7 @@ if(${PLATFROM_NAME} STREQUAL "qt")
 	find_package(Qt5OpenGL REQUIRED)
 
 	# luna2d Qt source
-	set(LUNA2D_QT_DIR ${LUNA2D_DIR}/platform/qt)
-	include_directories(${LUNA2D_QT_DIR})
-	aux_source_directory(${LUNA2D_QT_DIR} LUNA2D_SOURCES)
-	file (GLOB LUNA2D_QT_HEADERS "${LUNA2D_QT_DIR}/*.h")
-	list(APPEND LUNA2D_HEADERS ${LUNA2D_QT_HEADERS})
+	IncludeFolder(${LUNA2D_DIR}/platform/qt)
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME})
 
@@ -188,10 +189,6 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 		STRING(REPLACE "/" "\\" GROUP_NAME ${GROUP_NAME})		
 		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
-
-	source_group("luna2d\\platform\\ios" ${LUNA2D_IOS_DIR})
-	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_IOS_APP_DIR})
-	source_group("luna2d\\serivices\\platform\\ios\\protocols" ${LUNA2D_DIR}/services/platform/ios/protocols)
 
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
