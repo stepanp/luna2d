@@ -189,6 +189,10 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 		source_group(${GROUP_NAME} ${DIR})
 	endforeach()
 
+	source_group("luna2d\\platform\\ios" ${LUNA2D_IOS_DIR})
+	source_group("luna2d\\platform\\ios\\application" ${LUNA2D_IOS_APP_DIR})
+	source_group("luna2d\\serivices\\platform\\ios\\protocols" ${LUNA2D_DIR}/services/platform/ios/protocols)
+
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
 	set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/lib/${PLATFROM_NAME}/${BUILD_TYPE_NAME})
