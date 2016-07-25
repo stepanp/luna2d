@@ -53,8 +53,6 @@ using namespace luna2d;
 	{
 		[EAGLContext setCurrentContext:nil];
 	}
-	
-	[super dealloc];
 }
 
 - (void)didReceiveMemoryWarning
