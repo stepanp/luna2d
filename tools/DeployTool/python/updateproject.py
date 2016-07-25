@@ -67,22 +67,38 @@ def update_assets(args, luna2d_path, config):
 	strip_unused_resolutions(assets_path, config)
 
 	print("Compiling scripts..")
+
+	if args.platform == "ios":
+		use_64bit = True
+
 	for root, subFolder, files in os.walk(assets_path + "/game/scripts"):
 		for item in files:
 			if not item.endswith(".lua"):
 				continue
 
 			filename = os.path.realpath(str(os.path.join(root, item)))
-			outFilename = filename + "c"
+			compile_script(filename, compiler_path, use_64bit)
 
-			subprocess.call([compiler_path,
-				"-s",
-				"-o",
-				outFilename,
-				filename])
+def compile_script(filename, compiler_path, use_64bit):
+	out_filename = filename + "c"
 
-			os.remove(filename)
-			os.rename(outFilename, filename)
+	subprocess.call([compiler_path,
+					 "-s",
+					 "-o",
+					 out_filename,
+					 filename])
+
+	# Additionally compile scripts to 64-bit bytecode for devices with arm64
+	if use_64bit:
+		subprocess.call([compiler_path + "64",
+						 "-s",
+						 "-o",
+						 filename + "64",
+						 filename])
+
+	os.remove(filename)
+	os.rename(out_filename, filename)
+
 
 # Remove assets with resolution not specifed in config
 def strip_unused_resolutions(assets_path, config):
