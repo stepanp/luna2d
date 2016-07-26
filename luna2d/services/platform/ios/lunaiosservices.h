@@ -30,9 +30,6 @@ namespace luna2d{
 class LUNAIosServices : public LUNAServices
 {
 public:
-	LUNAIosServices();
-	
-public:
 	virtual void LoadServices();
 };
 
