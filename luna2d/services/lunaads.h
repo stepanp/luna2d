@@ -29,6 +29,19 @@ class LUNAAds
 {
 public:
 	virtual ~LUNAAds() {}
+	
+public:
+	// Show interstitial
+	virtual void ShowInterstital() = 0;
+	
+	// Show rewarded video
+	virtual void ShowRewardedVideo() = 0;
+	
+	// Called when video has been succesfully viewed
+	void OnRewardedVideoSuccess();
+	
+	// Called when video has been dismissed or in case of error
+	void OnRewardedVideoFail();
 };
 
 }

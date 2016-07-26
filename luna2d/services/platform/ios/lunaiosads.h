@@ -24,13 +24,24 @@
 #pragma once
 
 #include "lunaads.h"
+#import "lunaiosadsservice.h"
 
 namespace luna2d{
 
 class LUNAIosAds : public LUNAAds
 {
 public:
-	void LoadServices();
+	LUNAIosAds();
+	
+private:
+	id service = nullptr;
+	
+public:
+	// Show interstitial
+	virtual void ShowInterstital();
+	
+	// Show rewarded video
+	virtual void ShowRewardedVideo();
 };
 
 }

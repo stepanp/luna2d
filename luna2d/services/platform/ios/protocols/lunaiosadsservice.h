@@ -21,6 +21,23 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-@protocol LUNAAdsService
+@protocol LUNAIosAdsDelegate
+
+// Should be called when video has been succesfully viewed
+-(void) onRewardedVideoSuccess;
+
+// Should be called when video has been dismissed or in case of error
+-(void) onRewardedVideoFail;
+
+@end
+
+
+@protocol LUNAIosAdsService
+
+// Should display interstitial
+-(void) showInterstitial;
+
+// Should display rewarded video
+-(void) showRewardedVideo;
 	
 @end

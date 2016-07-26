@@ -21,8 +21,6 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "lunasharing.h"
 
 using namespace luna2d;

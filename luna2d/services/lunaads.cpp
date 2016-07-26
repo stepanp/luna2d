@@ -21,8 +21,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "lunaads.h"
+#include "lunalua.h"
 
 using namespace luna2d;
+
+static LuaTable GetAdsTable()
+{
+	return LUNAEngine::SharedLua()->GetGlobalTable().GetTable("luna").GetTable("ads");
+}
+
+// Called when video has been succesfully viewed
+void LUNAAds::OnRewardedVideoSuccess()
+{
+	auto tblAds = GetAdsTable();
+	auto fnSuccess = tblAds.GetFunction("onRewardedVideoSuccess");
+	
+	if(fnSuccess) fnSuccess.CallVoid();
+}
+
+// Called when video has been dismissed or in case of error
+void LUNAAds::OnRewardedVideoFail()
+{
+	auto tblAds = GetAdsTable();
+	auto fnFail = tblAds.GetFunction("onRewardedVideoFail");
+	
+	if(fnFail) fnFail.CallVoid();
+}

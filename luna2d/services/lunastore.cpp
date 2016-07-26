@@ -21,8 +21,6 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "lunastore.h"
 
 using namespace luna2d;

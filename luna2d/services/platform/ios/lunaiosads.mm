@@ -22,11 +22,23 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaiosads.h"
-#import "lunaiosadsservice.h"
+#include "lunaiosserviceutils.h"
 
 using namespace luna2d;
 
-void LUNAIosAds::LoadServices()
+LUNAIosAds::LUNAIosAds()
 {
-	
+	service = luna2d::LoadService("testlib", @protocol(LUNAIosAdsService));
+}
+
+// Show interstitial
+void LUNAIosAds::ShowInterstital()
+{
+	[service showInterstitial];
+}
+
+// Show rewarded video
+void LUNAIosAds::ShowRewardedVideo()
+{
+	[service showRewardedVideo];
 }
