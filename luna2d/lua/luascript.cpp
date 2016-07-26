@@ -28,6 +28,8 @@
 
 using namespace luna2d;
 
+static const bool IS_64BIT_ARCH = sizeof(size_t) == 8; // Is currently binary built for 64-bit architecture
+
 LuaScript::LuaScript()
 {
 	Open();
@@ -125,16 +127,19 @@ bool LuaScript::DoFile(const std::string& filename)
 		return false;
 	}
 
-	lua_pcall(luaVm, 0, LUA_MULTRET, -2); // Call with using eror handler
+	lua_pcall(luaVm, 0, LUA_MULTRET, -2); // Call with using error handler
 	return true;
 }
 
 // Load file without run
 bool LuaScript::LoadFile(const std::string& filename)
 {
+	// On 64-bit platforms try load file with 64-bit bytecode version if it exists
+	bool use64bit = IS_64BIT_ARCH && LUNAEngine::SharedFiles()->IsExists(filename + "64");
+
 	// "luaL_dofile" cannot open file from assets(e.g. in .apk)
 	// Because load file as buffer and do file using "luaL_loadbuffer"
-	std::string buffer = LUNAEngine::SharedFiles()->ReadFileToString(filename);
+	std::string buffer = LUNAEngine::SharedFiles()->ReadFileToString(use64bit ? filename + "64" : filename);
 	if(buffer.empty()) return false;
 
 	luaL_loadbuffer(luaVm, buffer.c_str(), buffer.size(), filename.c_str());

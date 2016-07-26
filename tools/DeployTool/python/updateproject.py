@@ -68,6 +68,7 @@ def update_assets(args, luna2d_path, config):
 
 	print("Compiling scripts..")
 
+	use_64bit = False
 	if args.platform == "ios":
 		use_64bit = True
 
