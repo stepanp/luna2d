@@ -42,10 +42,10 @@ protected:
 	std::shared_ptr<LUNAStore> store;
 
 public:
-	virtual void LoadServices() = 0;
 	std::shared_ptr<LUNAAds> GetAds();
 	std::shared_ptr<LUNASharing> GetSharing();
 	std::shared_ptr<LUNAStore> GetStore();
+	virtual void LoadServices() = 0;
 };
 
 }

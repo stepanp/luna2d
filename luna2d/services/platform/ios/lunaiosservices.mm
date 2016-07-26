@@ -28,15 +28,9 @@
 
 using namespace luna2d;
 
-LUNAIosServices::LUNAIosServices()
+void LUNAIosServices::LoadServices()
 {
 	ads = std::make_shared<LUNAIosAds>();
 	sharing = std::make_shared<LUNAIosSharing>();
 	store = std::make_shared<LUNAIosStore>();
-}
-
-void LUNAIosServices::LoadServices()
-{
-	std::shared_ptr<LUNAIosAds> ads = std::static_pointer_cast<LUNAIosAds>(GetAds());
-	ads->LoadServices();
 }
