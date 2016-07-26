@@ -24,3 +24,15 @@
 #include "lunaqtads.h"
 
 using namespace luna2d;
+
+// Show interstitial
+void LUNAQtAds::ShowInterstital()
+{
+
+}
+
+// Show rewarded video
+void LUNAQtAds::ShowRewardedVideo()
+{
+
+}
