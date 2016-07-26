@@ -28,7 +28,7 @@
 
 using namespace luna2d;
 
-static const bool IS_64BIT_ARCH = sizeof(size_t) == 8; // Is currently binary built for 64-bit architecture
+static const bool IS_64BIT_ARCH = sizeof(size_t) == 8; // Is current binary built for 64-bit architecture
 
 LuaScript::LuaScript()
 {
