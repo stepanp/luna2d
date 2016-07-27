@@ -33,4 +33,6 @@ void LUNAQtServices::LoadServices()
 	ads = std::make_shared<LUNAQtAds>();
 	sharing = std::make_shared<LUNAQtSharing>();
 	store = std::make_shared<LUNAQtStore>();
+
+	ads->LoadServices();
 }

@@ -24,24 +24,31 @@
 #pragma once
 
 #include "lunaads.h"
-#import "lunaiosadsservice.h"
 
 namespace luna2d{
-
-class LUNAIosAds : public LUNAAds
+	
+class LUNAIosAdsService : public LUNAAdsService
 {
 public:
-	LUNAIosAds();
+	LUNAIosAdsService(id service);
 	
 private:
-	id service = nullptr;
+	id service;
 	
 public:
 	// Show interstitial
 	virtual void ShowInterstital();
-	
+		
 	// Show rewarded video
 	virtual void ShowRewardedVideo();
+};
+
+	
+class LUNAIosAds : public LUNAAds
+{
+public:
+	// Load service instance by name
+	virtual std::shared_ptr<LUNAAdsService> LoadService(const std::string& name);
 };
 
 }

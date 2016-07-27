@@ -31,6 +31,28 @@ static LuaTable GetAdsTable()
 	return LUNAEngine::SharedLua()->GetGlobalTable().GetTable("luna").GetTable("ads");
 }
 
+// Load services from config
+void LUNAAds::LoadServices()
+{
+	service = LoadService("testlib");
+}
+
+// Show interstitial
+void LUNAAds::ShowInterstital()
+{
+	if(!service) return;
+
+	service->ShowInterstital();
+}
+
+// Show rewarded video
+void LUNAAds::ShowRewardedVideo()
+{
+	if(!service) return;
+
+	service->ShowRewardedVideo();
+}
+
 // Called when video has been succesfully viewed
 void LUNAAds::OnRewardedVideoSuccess()
 {

@@ -32,7 +32,7 @@
 @end
 
 
-@protocol LUNAIosAdsService
+@protocol LUNAIosAdsServiceProtocol
 
 // Should display interstitial
 -(void) showInterstitial;

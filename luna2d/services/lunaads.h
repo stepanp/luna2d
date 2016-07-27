@@ -25,17 +25,40 @@
 
 namespace luna2d{
 
+class LUNAAdsService
+{
+public:
+	virtual ~LUNAAdsService() {}
+
+public:
+	// Show interstitial
+	virtual void ShowInterstital() = 0;
+
+	// Show rewarded video
+	virtual void ShowRewardedVideo() = 0;
+};
+
+
 class LUNAAds
 {
 public:
 	virtual ~LUNAAds() {}
 	
+private:
+	std::shared_ptr<LUNAAdsService> service;
+
 public:
+	// Load service instance by name
+	virtual std::shared_ptr<LUNAAdsService> LoadService(const std::string& name) = 0;
+
+	// Load services from config
+	void LoadServices();
+
 	// Show interstitial
-	virtual void ShowInterstital() = 0;
+	void ShowInterstital();
 	
 	// Show rewarded video
-	virtual void ShowRewardedVideo() = 0;
+	void ShowRewardedVideo();
 	
 	// Called when video has been succesfully viewed
 	void OnRewardedVideoSuccess();

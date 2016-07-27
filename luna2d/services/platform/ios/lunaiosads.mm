@@ -23,22 +23,34 @@
 
 #include "lunaiosads.h"
 #include "lunaiosserviceutils.h"
+#import "lunaiosadsservice.h"
 
 using namespace luna2d;
 
-LUNAIosAds::LUNAIosAds()
+LUNAIosAdsService::LUNAIosAdsService(id service) :
+	service(service)
 {
-	service = luna2d::LoadService("testlib", @protocol(LUNAIosAdsService));
 }
 
 // Show interstitial
-void LUNAIosAds::ShowInterstital()
+void LUNAIosAdsService::ShowInterstital()
 {
 	[service showInterstitial];
 }
 
 // Show rewarded video
-void LUNAIosAds::ShowRewardedVideo()
+void LUNAIosAdsService::ShowRewardedVideo()
 {
 	[service showRewardedVideo];
+}
+
+
+// Load service instance by name
+std::shared_ptr<LUNAAdsService> LUNAIosAds::LoadService(const std::string& name)
+{
+	id service = luna2d::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
+	
+	if(!service) return nullptr;
+	
+	return std::make_shared<LUNAIosAdsService>(service);
 }

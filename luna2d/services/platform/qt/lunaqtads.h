@@ -30,11 +30,8 @@ namespace luna2d{
 class LUNAQtAds : public LUNAAds
 {
 public:
-	// Show interstitial
-	virtual void ShowInterstital();
-
-	// Show rewarded video
-	virtual void ShowRewardedVideo();
+	// Load service instance by name
+	virtual std::shared_ptr<LUNAAdsService> LoadService(const std::string& name);
 };
 
 }

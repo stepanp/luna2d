@@ -33,4 +33,6 @@ void LUNAIosServices::LoadServices()
 	ads = std::make_shared<LUNAIosAds>();
 	sharing = std::make_shared<LUNAIosSharing>();
 	store = std::make_shared<LUNAIosStore>();
+	
+	ads->LoadServices();
 }

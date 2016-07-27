@@ -25,14 +25,8 @@
 
 using namespace luna2d;
 
-// Show interstitial
-void LUNAQtAds::ShowInterstital()
+// Load service instance by name
+std::shared_ptr<LUNAAdsService> LUNAQtAds::LoadService(const std::string& name)
 {
-
-}
-
-// Show rewarded video
-void LUNAQtAds::ShowRewardedVideo()
-{
-
+	return nullptr;
 }

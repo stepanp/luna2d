@@ -37,7 +37,7 @@ static void BindAds(const std::shared_ptr<LUNAAds>& ads, LuaScript* lua, LuaTabl
 	tblLuna.SetField("ads", tblAds);
 	
 	tblAds.SetField("showInterstitial", LuaFunction(lua, ads.get(), &LUNAAds::ShowInterstital));
-	tblAds.SetField("showRewaredVideo", LuaFunction(lua, ads.get(), &LUNAAds::ShowRewardedVideo));
+	tblAds.SetField("showRewardedVideo", LuaFunction(lua, ads.get(), &LUNAAds::ShowRewardedVideo));
 }
 
 // Bind "luna.sharing" module
