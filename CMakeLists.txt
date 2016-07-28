@@ -175,7 +175,7 @@ elseif(${PLATFROM_NAME} STREQUAL "ios")
 	# luna2d iOS source
 	IncludeFolder(${LUNA2D_DIR}/platform/ios)
 	IncludeFolder(${LUNA2D_DIR}/platform/ios/application)
-	IncludeFolder(${LUNA2D_DIR}/services/platform/ios/protocols) 
+	IncludeFolder(${LUNA2D_DIR}/services/platform/ios/api) 
 
 	# Make source groups
 	foreach(DIR ${LUNA2D_DIRS})
