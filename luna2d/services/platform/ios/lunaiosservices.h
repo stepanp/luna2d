@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunaservices.h"
+#import <Foundation/Foundation.h>
 
 namespace luna2d{
 
@@ -31,6 +32,10 @@ class LUNAIosServices : public LUNAServices
 {
 public:
 	virtual void LoadServices();
+	
+public:
+	// Dynamically create instance of serivice by given class name
+	static id LoadService(const std::string& name, Protocol* proto);
 };
 
 }

@@ -25,6 +25,9 @@
 #include "lunaiosads.h"
 #include "lunaiossharing.h"
 #include "lunaiosstore.h"
+#include "lunansstring.h"
+#include "lunalog.h"
+#import <objc/runtime.h>
 
 using namespace luna2d;
 
@@ -35,4 +38,24 @@ void LUNAIosServices::LoadServices()
 	store = std::make_shared<LUNAIosStore>();
 	
 	ads->LoadServices();
+}
+
+// Dynamically create instance of serivice by given class name
+id LUNAIosServices::LoadService(const std::string& name, Protocol* proto)
+{
+	id obj = [[NSClassFromString(ToNsString(name)) alloc] init];
+	
+	if(!obj)
+	{
+		LUNA_LOGE("Error with loading service. Class with name \"%s\" not found", name.c_str());
+		return nil;
+	}
+	
+	if(![obj conformsToProtocol:proto])
+	{
+		LUNA_LOGE("Error with loading service. Class with name \"%s\" isn't conform for protocol \"%s\"", name.c_str(), protocol_getName(proto));
+		return nil;
+	}
+	
+	return obj;
 }
