@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaiosads.h"
-#include "lunaiosserviceutils.h"
+#include "lunaiosservices.h"
 #import "lunaiosadsserviceprotocol.h"
 
 using namespace luna2d;
@@ -30,6 +30,15 @@ using namespace luna2d;
 LUNAIosAdsService::LUNAIosAdsService(id service) :
 	service(service)
 {
+	[service setOnRewardedVideoSuccess: [this]()
+	{
+		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoSuccess();
+	}];
+	
+	[service setOnRewardedVideoFail: [this]()
+	{
+		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
+	}];
 }
 
 // Show interstitial
@@ -48,7 +57,7 @@ void LUNAIosAdsService::ShowRewardedVideo()
 // Load service instance by name
 std::shared_ptr<LUNAAdsService> LUNAIosAds::LoadService(const std::string& name)
 {
-	id service = luna2d::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
+	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
 	
 	if(!service) return nullptr;
 	

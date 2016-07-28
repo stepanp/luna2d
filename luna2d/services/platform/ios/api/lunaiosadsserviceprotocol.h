@@ -21,18 +21,15 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-@protocol LUNAIosAdsDelegate
-
-// Should be called when video has been succesfully viewed
--(void) onRewardedVideoSuccess;
-
-// Should be called when video has been dismissed or in case of error
--(void) onRewardedVideoFail;
-
-@end
-
-
 @protocol LUNAIosAdsServiceProtocol
+
+typedef void (^Callback)();
+
+// Set callback calling when video has been succesfully viewed
+-(void) setOnRewardedVideoSuccess: (Callback) callback;
+
+// SSet callback calling when video has been dismissed or in case of error
+-(void) setOnRewardedVideoFail: (Callback) callback;
 
 // Should display interstitial
 -(void) showInterstitial;
