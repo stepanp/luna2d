@@ -21,36 +21,47 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosads.h"
-#include "lunaiosserviceutils.h"
-#import "lunaiosadsserviceprotocol.h"
+#import "lunaiosservicesapi.h"
+#include "lunaconfig.h"
+#include "lunansstring.h"
 
 using namespace luna2d;
 
-LUNAIosAdsService::LUNAIosAdsService(id service) :
-	service(service)
+@implementation LUNAIosServicesApi
+
+// Check for config has value with given name
++(BOOL) hasConfigValue: (NSString*) name
 {
+	auto config = LUNAEngine::Shared()->GetConfig();
+	return !config->GetCustomValues()[FromNsString(name)].is_null();
 }
 
-// Show interstitial
-void LUNAIosAdsService::ShowInterstital()
+// Get string value from config
++(NSString*) getConfigString: (NSString*) name
 {
-	[service showInterstitial];
+	auto config = LUNAEngine::Shared()->GetConfig();
+	return ToNsString(config->GetCustomValues()[FromNsString(name)].string_value());
 }
 
-// Show rewarded video
-void LUNAIosAdsService::ShowRewardedVideo()
+// Get int value from config
++(int) getConfigInt: (NSString*) name
 {
-	[service showRewardedVideo];
+	auto config = LUNAEngine::Shared()->GetConfig();
+	return config->GetCustomValues()[FromNsString(name)].number_value();
 }
 
-
-// Load service instance by name
-std::shared_ptr<LUNAAdsService> LUNAIosAds::LoadService(const std::string& name)
+// Get float value from config
++(float) getConfigFloat: (NSString*) name
 {
-	id service = luna2d::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
-	
-	if(!service) return nullptr;
-	
-	return std::make_shared<LUNAIosAdsService>(service);
+	auto config = LUNAEngine::Shared()->GetConfig();
+	return config->GetCustomValues()[FromNsString(name)].number_value();
 }
+
+// Get bool value from config
++(BOOL) getConfigBool: (NSString*) name
+{
+	auto config = LUNAEngine::Shared()->GetConfig();
+	return config->GetCustomValues()[FromNsString(name)].bool_value();
+}
+
+@end

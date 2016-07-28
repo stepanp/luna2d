@@ -21,36 +21,23 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosads.h"
-#include "lunaiosserviceutils.h"
-#import "lunaiosadsserviceprotocol.h"
+#import <Foundation/Foundation.h>
 
-using namespace luna2d;
+@interface LUNAIosServicesApi : NSObject
 
-LUNAIosAdsService::LUNAIosAdsService(id service) :
-	service(service)
-{
-}
+// Check for config has value with given name
++(BOOL) hasConfigValue: (NSString*) name;
 
-// Show interstitial
-void LUNAIosAdsService::ShowInterstital()
-{
-	[service showInterstitial];
-}
+// Get string value from config
++(NSString*) getConfigString: (NSString*) name;
 
-// Show rewarded video
-void LUNAIosAdsService::ShowRewardedVideo()
-{
-	[service showRewardedVideo];
-}
+// Get int value from config
++(int) getConfigInt: (NSString*) name;
 
+// Get float value from config
++(float) getConfigFloat: (NSString*) name;
 
-// Load service instance by name
-std::shared_ptr<LUNAAdsService> LUNAIosAds::LoadService(const std::string& name)
-{
-	id service = luna2d::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
-	
-	if(!service) return nullptr;
-	
-	return std::make_shared<LUNAIosAdsService>(service);
-}
+// Get bool value from config
++(BOOL) getConfigBool: (NSString*) name;
+
+@end
