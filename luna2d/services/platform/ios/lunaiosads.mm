@@ -23,7 +23,7 @@
 
 #include "lunaiosads.h"
 #include "lunaiosservices.h"
-#import "lunaiosadsserviceprotocol.h"
+#import "lunaiosadsprotocol.h"
 
 using namespace luna2d;
 
@@ -57,7 +57,7 @@ void LUNAIosAdsService::ShowRewardedVideo()
 // Load service instance by name
 std::shared_ptr<LUNAAdsService> LUNAIosAds::LoadService(const std::string& name)
 {
-	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosAdsServiceProtocol));
+	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosAdsProtocol));
 	
 	if(!service) return nullptr;
 	
