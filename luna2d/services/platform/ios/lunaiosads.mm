@@ -30,13 +30,15 @@ using namespace luna2d;
 LUNAIosAdsService::LUNAIosAdsService(id service) :
 	service(service)
 {
-	[service setOnRewardedVideoSuccess: [this]()
+	[service setOnRewardedVideoSuccess: ^(void)
 	{
+		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoSuccess();
 	}];
 	
-	[service setOnRewardedVideoFail: [this]()
+	[service setOnRewardedVideoFail: ^(void)
 	{
+		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 	}];
 }
@@ -51,6 +53,7 @@ void LUNAIosAdsService::ShowInterstital()
 void LUNAIosAdsService::ShowRewardedVideo()
 {
 	[service showRewardedVideo];
+	LUNAEngine::Shared()->OnPause();
 }
 
 
