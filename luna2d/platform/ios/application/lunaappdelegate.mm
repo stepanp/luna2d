@@ -23,6 +23,9 @@
 
 #import "lunaappdelegare.h"
 #import "lunaviewcontroller.h"
+#include "lunaengine.h"
+
+using namespace luna2d;
 
 @interface LUNAAppDelegate ()
 
@@ -37,6 +40,16 @@
 	[self.window makeKeyAndVisible];
 	
 	return YES;
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+	LUNAEngine::Shared()->OnPause();
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	LUNAEngine::Shared()->OnResume();
 }
 
 @end
