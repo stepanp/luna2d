@@ -28,6 +28,37 @@
 
 using namespace luna2d;
 
+//--------------------------------------------
+// Delegate for handling messages from dialogs
+//--------------------------------------------
+@interface DialogDelegate : NSObject <UIAlertViewDelegate>
+
+@property (copy) void (^callback)(bool);
+
+- (id)initWithCallback: (void (^)(bool)) callback;
+- (void)alertView: (UIAlertView*)alertView didDismissWithButtonIndex: (NSInteger)buttonIndex;
+
+@end
+
+@implementation DialogDelegate
+
+- (id)initWithCallback: (void (^)(bool)) callback
+{
+	self = [super init];
+	
+	self.callback = callback;
+	
+	return self;
+}
+
+- (void)alertView: (UIAlertView*)alertView didDismissWithButtonIndex: (NSInteger)buttonIndex
+{
+	self.callback(buttonIndex == 0);
+}
+
+@end
+
+
 // Get system locale in "xx_XX" format
 // Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
 std::string LUNAIosUtils::GetSystemLocale()
@@ -50,9 +81,13 @@ void LUNAIosUtils::OpenUrl(const std::string& url)
 void LUNAIosUtils::MessageDialog(const std::string& title, const std::string& message,
 	const std::function<void()>& onClose)
 {
-	LUNA_LOGE("Method LUNAIosUtils::MessageDialog is not implemented");
-	
-	if(onClose) onClose();
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ToNsString(title)
+		message:ToNsString(message)
+		delegate:[[DialogDelegate alloc] initWithCallback:[onClose](bool) { if(onClose) onClose(); }]
+		cancelButtonTitle:@"Ok"
+		otherButtonTitles:nil];
+
+	[alert show];
 }
 
 // Show native dialog with "Yes" and "No" buttons
@@ -60,7 +95,23 @@ void LUNAIosUtils::MessageDialog(const std::string& title, const std::string& me
 void LUNAIosUtils::ConfirmDialog(const std::string& title, const std::string& message,
 	const std::function<void(bool)>& onClose)
 {
-	LUNA_LOGE("Method LUNAIosUtils::ConfirmDialog is not implemented");
+	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:ToNsString(title)
+		message:ToNsString(message)
+		delegate:[[DialogDelegate alloc] initWithCallback:[onClose](bool isConfirmed) { if(onClose) onClose(isConfirmed); }]
+		cancelButtonTitle:@"Yes"
+		otherButtonTitles:@"No", nil];
 	
-	if(onClose) onClose(false);
+	[alert show];
 }
+
+// Show native dialog with loading indicator
+void LUNAIosUtils::ShowLoadingIndicator(const std::string& title)
+{
+	if(loadingDialog) return;
+	
+	loadingDialog = [[UIAlertView alloc] initWithTitle:ToNsString(title)
+		message:nil
+		delegate:nil
+		cancelButtonTitle:nil
+		otherButtonTitles:nil];
+	
