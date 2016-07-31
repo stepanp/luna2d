@@ -24,7 +24,6 @@
 #include "lunaiosutils.h"
 #include "lunalog.h"
 #include "lunansstring.h"
-#import <UIKit/UIKit.h>
 
 using namespace luna2d;
 
@@ -104,14 +103,23 @@ void LUNAIosUtils::ConfirmDialog(const std::string& title, const std::string& me
 	[alert show];
 }
 
-// Show native dialog with loading indicator
-void LUNAIosUtils::ShowLoadingIndicator(const std::string& title)
+// Show/hide loading indicator over game view
+void LUNAIosUtils::ShowLoadingIndicator(bool show)
 {
-	if(loadingDialog) return;
-	
-	loadingDialog = [[UIAlertView alloc] initWithTitle:ToNsString(title)
-		message:nil
-		delegate:nil
-		cancelButtonTitle:nil
-		otherButtonTitles:nil];
-	
+	if(show && !loadingIndicator)
+	{
+		UIViewController* rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+		
+		loadingIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		loadingIndicator.center = CGPointMake([[UIScreen mainScreen] bounds].size.width / 2, [[UIScreen mainScreen] bounds].size.height / 2);
+		loadingIndicator.transform = CGAffineTransformMakeScale(2.0f, 2.0f);
+		[loadingIndicator startAnimating];
+		
+		[rootViewController.view addSubview:loadingIndicator];
+	}
+	else if(!show && loadingIndicator)
+	{
+		[loadingIndicator removeFromSuperview];
+		loadingIndicator = nullptr;
+	}
+}

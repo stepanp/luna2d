@@ -24,6 +24,8 @@
 #pragma once
 
 #include "platform/lunaplatformutils.h"
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 namespace luna2d{
 
@@ -32,6 +34,9 @@ namespace luna2d{
 //-------------------------------------
 class LUNAIosUtils : public LUNAPlatformUtils
 {
+private:
+	UIActivityIndicatorView* loadingIndicator = nullptr;
+	
 public:
 	// Get system locale in "xx_XX" format
 	// Where "xx" is ISO-639 language code, and "XX" is ISO-3166 country code
@@ -49,6 +54,9 @@ public:
 	// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
 	virtual void ConfirmDialog(const std::string& title, const std::string& message,
 		const std::function<void(bool)>& onClose);
+	
+	// Show/hide loading indicator over game view
+	virtual void ShowLoadingIndicator(bool show);
 };
 
 }

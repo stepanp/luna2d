@@ -23,6 +23,7 @@
 
 #include "lunaiosads.h"
 #include "lunaiosservices.h"
+#include "lunaplatformutils.h"
 #import "lunaiosadsprotocol.h"
 
 using namespace luna2d;
@@ -32,12 +33,14 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 {
 	[service setOnRewardedVideoSuccess: ^(void)
 	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
 		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoSuccess();
 	}];
 	
 	[service setOnRewardedVideoFail: ^(void)
 	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
 		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 	}];
@@ -53,6 +56,7 @@ void LUNAIosAdsService::ShowInterstital()
 void LUNAIosAdsService::ShowRewardedVideo()
 {
 	[service showRewardedVideo];
+	LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(true);
 	LUNAEngine::Shared()->OnPause();
 }
 
