@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaqtutils.h"
+#include "lunalog.h"
 #include <QLocale>
 #include <QDesktopServices>
 #include <QUrl>
@@ -89,4 +90,10 @@ void LUNAQtUtils::ConfirmDialog(const std::string& title, const std::string& mes
 	}
 
 	messageBox->open();
+}
+
+// Show/hide loading indicator over game view
+void LUNAQtUtils::ShowLoadingIndicator(bool show)
+{
+	LUNA_LOGE("Method LUNAQtUtils::ShowLoadingIndicator is not implemented");
 }

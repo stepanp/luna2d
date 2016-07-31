@@ -56,6 +56,9 @@ public:
 	// "onClose" calls with "true" when "Yes" button pressed, and with "false" otherwise
 	virtual void ConfirmDialog(const std::string& title, const std::string& message,
 		const std::function<void(bool)>& onClose);
+
+	// Show/hide loading indicator over game view
+	virtual void ShowLoadingIndicator(bool show);
 };
 
 }
