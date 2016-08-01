@@ -23,6 +23,7 @@
 
 #include "lunaads.h"
 #include "lunalua.h"
+#include "lunaconfig.h"
 
 using namespace luna2d;
 
@@ -34,7 +35,12 @@ static LuaTable GetAdsTable()
 // Load services from config
 void LUNAAds::LoadServices()
 {
-	service = LoadService("testlib");
+	auto config = LUNAEngine::Shared()->GetConfig();
+	std::string serviceName = config->GetCustomValues()["adsService"].string_value();
+	
+	if(serviceName.empty()) return;
+	
+	service = LoadService(serviceName);
 }
 
 // Show interstitial
