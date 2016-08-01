@@ -44,6 +44,17 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 	}];
+	
+	[service setOnRewardedVideoError: ^(void)
+	 {
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
+		LUNAEngine::SharedPlatformUtils()->MessageDialog("Error", "Cannot load rewarded video",
+			[]()
+			{
+				LUNAEngine::Shared()->OnResume();
+				LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
+			});
+	 }];
 }
 
 // Show interstitial

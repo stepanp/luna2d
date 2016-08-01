@@ -26,8 +26,11 @@
 // Set callback calling when video has been succesfully viewed
 -(void) setOnRewardedVideoSuccess: (void (^)()) callback;
 
-// Set callback calling when video has been dismissed or in case of error
+// Set callback calling when video has been dismissed
 -(void) setOnRewardedVideoFail: (void (^)()) callback;
+
+// Set callback calling when video cause error
+-(void) setOnRewardedVideoError: (void (^)()) callback;
 
 // Should display interstitial
 -(void) showInterstitial;
