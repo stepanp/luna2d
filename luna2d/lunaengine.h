@@ -101,7 +101,7 @@ public:
 	void Initialize(int screenWidth, int screenHeight);
 	void Deinitialize();
 	std::shared_ptr<const LUNAConfig> GetConfig();
-	std::string GetGameName(); // Get name of runned game
+	std::string GetGameName(); // Get name of running game
 	void RunEmbeddedScripts();
 	bool IsInitialized();
 
