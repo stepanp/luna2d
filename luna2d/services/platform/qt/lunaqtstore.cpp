@@ -25,8 +25,14 @@
 
 using namespace luna2d;
 
-// Open page of current application in store
-void LUNAQtStore::OpenAppPage()
+// Get url to page of game in store
+std::string LUNAQtStore::GetUrl()
+{
+	return "";
+}
+
+// Open page of game in store
+void LUNAQtStore::OpenPage()
 {
 
 }

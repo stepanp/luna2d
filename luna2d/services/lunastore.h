@@ -31,8 +31,11 @@ public:
 	virtual ~LUNAStore() {}
 
 public:
-	// Open page of current application in store
-	virtual void OpenAppPage() = 0;
+	// Get url to page of game in store
+	virtual std::string GetUrl() = 0;
+
+	// Open page of game in store
+	virtual void OpenPage() = 0;
 };
 
 }

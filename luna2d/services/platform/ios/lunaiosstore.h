@@ -31,8 +31,11 @@ namespace luna2d{
 class LUNAIosStore : public LUNAStore
 {
 public:
-	// Open page of current application in store
-	virtual void OpenAppPage();
+	// Get url to page of game in store
+	virtual std::string GetUrl();
+	
+	// Open page of game in store
+	virtual void OpenPage();
 };
 
 }

@@ -27,12 +27,23 @@
 
 using namespace luna2d;
 
-// Open page of current application in store
-void LUNAIosStore::OpenAppPage()
+// Get url to page of game in store
+std::string LUNAIosStore::GetUrl()
+{
+	NSString* appName = [NSString stringWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
+	NSString* url = [NSString stringWithFormat:@"https://appstore.com/%@",
+		[[appName stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString]];
+
+	return FromNsString(url);
+}
+
+// Open page of game in store
+void LUNAIosStore::OpenPage()
 {
 	NSString* appName = [NSString stringWithString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]];
 	NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.com/app/%@",
-									   [appName stringByReplacingOccurrencesOfString:@" " withString:@""]]];
+		[appName stringByReplacingOccurrencesOfString:@" " withString:@""]]];
 	[[UIApplication sharedApplication] openURL:url];
 }
+
 

@@ -55,7 +55,8 @@ static void BindStore(const std::shared_ptr<LUNAStore>& store, LuaScript* lua, L
 	LuaTable tblStore(lua);
 	tblLuna.SetField("store", tblStore);
 
-	tblStore.SetField("openAppPage", LuaFunction(lua, store.get(), &LUNAStore::OpenAppPage));
+	tblStore.SetField("getUrl", LuaFunction(lua, store.get(), &LUNAStore::GetUrl));
+	tblStore.SetField("openPage", LuaFunction(lua, store.get(), &LUNAStore::OpenPage));
 }
 
 void luna2d::BindServices()
