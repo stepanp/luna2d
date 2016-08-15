@@ -128,12 +128,12 @@ void LUNAParticleSystem::Stop()
 
 void LUNAParticleSystem::Update(float dt)
 {
-	bool allFinished = false;
+	bool allFinished = true;
 
 	for(auto& emitter : emitters)
 	{
 		emitter->Update(dt);
-		if(!emitter->IsFinished()) allFinished = true;
+		if(!emitter->IsFinished()) allFinished = false;
 	}
 
 	if(allFinished && running)
