@@ -24,6 +24,7 @@
 #include "lunaiosads.h"
 #include "lunaiosservices.h"
 #include "lunaplatformutils.h"
+#include "lunalog.h"
 #import "lunaiosadsprotocol.h"
 
 using namespace luna2d;
@@ -34,6 +35,7 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 	[service setOnRewardedVideoSuccess: ^(void)
 	{
 		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
+		LUNAEngine::Shared()->EnablePauseHandling(true);
 		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoSuccess();
 	}];
@@ -41,20 +43,22 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 	[service setOnRewardedVideoFail: ^(void)
 	{
 		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
+		LUNAEngine::Shared()->EnablePauseHandling(true);
 		LUNAEngine::Shared()->OnResume();
 		LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 	}];
 	
 	[service setOnRewardedVideoError: ^(void)
-	 {
+	{
 		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
 		LUNAEngine::SharedPlatformUtils()->MessageDialog("Error", "Cannot load rewarded video",
 			[]()
 			{
+				LUNAEngine::Shared()->EnablePauseHandling(true);
 				LUNAEngine::Shared()->OnResume();
 				LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 			});
-	 }];
+	}];
 }
 
 // Show interstitial
@@ -69,6 +73,9 @@ void LUNAIosAdsService::ShowRewardedVideo()
 	[service showRewardedVideo];
 	LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(true);
 	LUNAEngine::Shared()->OnPause();
+	
+	// Protect game from resuming by operating system
+	LUNAEngine::Shared()->EnablePauseHandling(false);
 }
 
 

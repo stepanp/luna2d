@@ -91,6 +91,7 @@ private:
 
 	std::shared_ptr<LUNAConfig> config;
 	bool initialized = false;
+	bool enablePauseHandling = true;
 
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
@@ -104,6 +105,9 @@ public:
 	std::string GetGameName(); // Get name of running game
 	void RunEmbeddedScripts();
 	bool IsInitialized();
+
+	// Enable/disable handling OnPause/OnResume events
+	void EnablePauseHandling(bool enable);
 
 	void MainLoop();
 	void OnPause();

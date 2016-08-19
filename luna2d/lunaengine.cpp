@@ -187,6 +187,12 @@ bool LUNAEngine::IsInitialized()
 	return initialized;
 }
 
+// Enable/disable handling OnPause/OnResume events
+void LUNAEngine::EnablePauseHandling(bool enable)
+{
+	enablePauseHandling = enable;
+}
+
 void LUNAEngine::MainLoop()
 {
 	graphics->OnUpdate();
@@ -194,12 +200,16 @@ void LUNAEngine::MainLoop()
 
 void LUNAEngine::OnPause()
 {
+	if(!enablePauseHandling) return;
+
 	graphics->OnPause();
 	audio->OnPause();
 }
 
 void LUNAEngine::OnResume()
 {
+	if(!enablePauseHandling) return;
+
 	graphics->OnResume();
 	audio->OnResume();
 }
