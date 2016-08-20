@@ -25,6 +25,7 @@
 #include "lunaiosads.h"
 #include "lunaiossharing.h"
 #include "lunaiosstore.h"
+#include "lunaiosleaderboards.h"
 #include "lunansstring.h"
 #include "lunalog.h"
 #import <objc/runtime.h>
@@ -36,6 +37,7 @@ void LUNAIosServices::LoadServices()
 	ads = std::make_shared<LUNAIosAds>();
 	sharing = std::make_shared<LUNAIosSharing>();
 	store = std::make_shared<LUNAIosStore>();
+	leaderboards = std::make_shared<LUNAIosLeaderboards>();
 	
 	ads->LoadServices();
 }

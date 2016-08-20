@@ -43,3 +43,7 @@ std::shared_ptr<LUNAStore> LUNAServices::GetStore()
 	return store;
 }
 
+std::shared_ptr<LUNALeaderboards> LUNAServices::GetLeaderboards()
+{
+	return leaderboards;
+}

@@ -21,34 +21,19 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunaqtleaderboards.h"
+#include "lunalog.h"
 
-#include "lunaengine.h"
+using namespace luna2d;
 
-namespace luna2d{
-
-class LUNAAds;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-
-class LUNAServices
+// Submit score to leadearboard
+void LUNAQtLeaderboards::SubmitScore(int score)
 {
-public:
-	virtual ~LUNAServices() {}
+	LUNA_LOG("SSOQUA %d", score);
+}
 
-protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
-
-public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	virtual void LoadServices() = 0;
-};
+// Open leadearboards popup
+void LUNAQtLeaderboards::Open()
+{
 
 }

@@ -26,6 +26,7 @@
 #include "lunaads.h"
 #include "lunasharing.h"
 #include "lunastore.h"
+#include "lunaleaderboards.h"
 #include "lunalua.h"
 
 using namespace luna2d;
@@ -59,6 +60,16 @@ static void BindStore(const std::shared_ptr<LUNAStore>& store, LuaScript* lua, L
 	tblStore.SetField("openPage", LuaFunction(lua, store.get(), &LUNAStore::OpenPage));
 }
 
+// Bind "luna.leaderboards" module
+static void BindLeaderboards(const std::shared_ptr<LUNALeaderboards>& leaderboards, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblLeaderboards(lua);
+	tblLuna.SetField("leaderboards", tblLeaderboards);
+
+	tblLeaderboards.SetField("submitScore", LuaFunction(lua, leaderboards.get(), &LUNALeaderboards::SubmitScore));
+	tblLeaderboards.SetField("open", LuaFunction(lua, leaderboards.get(), &LUNALeaderboards::Open));
+}
+
 void luna2d::BindServices()
 {
 	auto lua = LUNAEngine::SharedLua();
@@ -68,4 +79,5 @@ void luna2d::BindServices()
 	BindAds(services->GetAds(), lua, tblLuna);
 	BindSharing(services->GetSharing(), lua, tblLuna);
 	BindStore(services->GetStore(), lua, tblLuna);
+	BindLeaderboards(services->GetLeaderboards(), lua, tblLuna);
 }
