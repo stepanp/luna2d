@@ -13,6 +13,8 @@
 		FD424BD51D34544900D04922 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD41D34544900D04922 /* OpenAL.framework */; };
 		FD424BD71D34544F00D04922 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD61D34544F00D04922 /* OpenGLES.framework */; };
 		FD424BD91D34545B00D04922 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD81D34545B00D04922 /* libz.tbd */; };
+		FD6DB46A1D68CDDB00048ED6 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6DB4691D68CDDB00048ED6 /* GameKit.framework */; };
+		FD9D5B131D4CDBCA00AE62A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */; };
 		FD90884A1D36F09B00B892A9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD9088491D36F09B00B892A9 /* Images.xcassets */; };
 		FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */; };
 		FDD1EAF61D3B025500F58C6C /* game in Resources */ = {isa = PBXBuildFile; fileRef = FDD1EAF51D3B025500F58C6C /* game */; };
@@ -26,6 +28,8 @@
 		FD424BD41D34544900D04922 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		FD424BD61D34544F00D04922 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		FD424BD81D34545B00D04922 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		FD6DB4691D68CDDB00048ED6 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		FD9088491D36F09B00B892A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LUNA_PROJECT_NAME/Images.xcassets; sourceTree = "<group>"; };
 		FDD1EAEB1D3AFEF700F58C6C /* LUNA_PROJECT_NAME.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LUNA_PROJECT_NAME.xcodeproj; sourceTree = "<group>"; };
 		FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libluna2d.a; path = .luna2d/libs/libluna2d.a; sourceTree = "<group>"; };
@@ -43,6 +47,8 @@
 				FD424BD51D34544900D04922 /* OpenAL.framework in Frameworks */,
 				FD424BD31D34544500D04922 /* GLKit.framework in Frameworks */,
 				FD424BD11D34543D00D04922 /* UIKit.framework in Frameworks */,
+				FD6DB46A1D68CDDB00048ED6 /* GameKit.framework in Frameworks */,
+				FD9D5B131D4CDBCA00AE62A8 /* CoreGraphics.framework in Frameworks */,
 				FD424BD91D34545B00D04922 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +69,8 @@
 				FD424BD41D34544900D04922 /* OpenAL.framework */,
 				FD424BD21D34544500D04922 /* GLKit.framework */,
 				FD424BD01D34543D00D04922 /* UIKit.framework */,
+				FD6DB4691D68CDDB00048ED6 /* GameKit.framework */,
+				FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */,
 				FD424BB01D3450FB00D04922 /* luna2d.mm */,
 				FD424B901D344FF400D04922 /* Products */,
 			);
