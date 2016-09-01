@@ -53,7 +53,7 @@ public:
 	static LUNAColor Hex(int hex, float a = 1.0f); // From hex format(0xRRGGBB), alpha is optional
 
 	// Frequently used colors
-	static LUNAColor WHITE, BLACK, GRAY, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE;
+	static LUNAColor WHITE, BLACK, GRAY, RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, TRANSPARENT;
 };
 
 

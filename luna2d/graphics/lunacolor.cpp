@@ -99,3 +99,4 @@ LUNAColor LUNAColor::BLUE = RgbFloat(0, 0, 1);
 LUNAColor LUNAColor::YELLOW = RgbFloat(1, 1, 0);
 LUNAColor LUNAColor::CYAN = RgbFloat(0, 1, 1);
 LUNAColor LUNAColor::PURPLE = RgbFloat(1, 0, 1);
+LUNAColor LUNAColor::TRANSPARENT = RgbFloat(1, 1, 1, 0.0f);
