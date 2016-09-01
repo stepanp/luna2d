@@ -29,7 +29,7 @@ using namespace luna2d;
 // Submit score to leadearboard
 void LUNAQtLeaderboards::SubmitScore(int score)
 {
-	LUNA_LOG("SSOQUA %d", score);
+
 }
 
 // Open leadearboards popup
