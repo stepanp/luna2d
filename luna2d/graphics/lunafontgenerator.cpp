@@ -145,10 +145,11 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 		// Skip all empty chars except space
 		if((bmpWidth == 0 || bmpHeight == 0) && c != ' ') continue;
 
-		int charDescender = bmpHeight - face->glyph->bitmap_top;
 		int charW = UnitsToPixels(face->glyph->advance.x);
+		int charH = std::min(bmpHeight, maxH);
+		int charDescender = charH - face->glyph->bitmap_top;
 		int charX = penX + (face->glyph->bitmap_left > 0 ? face->glyph->bitmap_left : 0);
-		int charY = penY + maxH - bmpHeight - baseline + charDescender;
+		int charY = penY + maxH - charH - baseline + charDescender;
 
 		// Draw char bimtap to image
 		image.DrawRawBuffer(charX, charY, bmp.buffer, bmpWidth, bmpHeight, LUNAColorType::ALPHA);
@@ -159,6 +160,10 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	}
 
 	if(image.IsEmpty()) return nullptr;
+
+	// Crop empty space in texture if possible
+	int croppedHeight = math::NearestPowerOfTwo(penY + maxH);
+	if(croppedHeight < image.GetHeight()) image.SetSize(image.GetWidth(), croppedHeight);
 
 	// Create texture from generated image
 	auto texture = std::make_shared<LUNATexture>(image);
