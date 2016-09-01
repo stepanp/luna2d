@@ -41,7 +41,7 @@ const std::u32string LATIN_CHARS = LUNA_UTF32("qwertyuiopasdfghjklzxcvbnmQWERTYU
 const std::u32string CYRILLIC_CHARS = LUNA_UTF32("йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ");
 const std::u32string COMMON_CHARS = LUNA_UTF32(" !@#$%^&*()-+=!№?<>[]{}:;,.\\/|`~'\"_©");
 const std::u32string NUMBER_CHARS = LUNA_UTF32("1234567890");
-const int CHAR_PADDING = 2; // Size of padding between chars(in pixels)
+const int CHAR_PADDING = 3; // Size of padding between chars(in pixels)
 
 //----------------------------------------------
 // Util for generate bitmap fonts using FreeType
