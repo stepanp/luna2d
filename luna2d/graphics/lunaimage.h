@@ -67,6 +67,9 @@ public:
 	bool Load(const std::string& filename, const LUNAImageFormat& format,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
 
+	// Set pixmap size without stretching image
+	void SetSize(int width, int height);
+
 	void SetPixel(int x, int y, const LUNAColor& color);
 	LUNAColor GetPixel(int x, int y) const;
 

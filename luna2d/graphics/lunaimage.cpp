@@ -111,6 +111,27 @@ bool LUNAImage::Load(const std::string& filename, const LUNAImageFormat& format,
 	return format.Decode(fileData, data, width, height, colorType);
 }
 
+// Set pixmap size without stretching image
+void LUNAImage::SetSize(int width, int height)
+{
+	if(width <= 0 || height <= 0) return;
+
+	if(this->width == width)
+	{
+		data.resize(width * height * BytesPerPixel(colorType));
+	}
+	else
+	{
+		std::vector<unsigned char> newData(width * height * BytesPerPixel(colorType));
+		data.swap(newData);
+
+		DrawBuffer(0, 0, newData, this->width, this->height, colorType);
+	}
+
+	this->width = width;
+	this->height = height;
+}
+
 void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
@@ -190,21 +211,33 @@ void LUNAImage::DrawBuffer(int x, int y,
 {
 	DrawRawBuffer(x, y, buffer.data(), bufferWidth, bufferHeight, bufferColorType);
 }
+
 // Draw image from given raw buffer to this image
 // Width and height of buffer in pixels
 // Color type of given buffer should be same as image color type
 void LUNAImage::DrawRawBuffer(int x, int y,
 	const unsigned char* buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType)
 {
-	if(bufferColorType != colorType || x < 0 || y < 0 ||
-		x + bufferWidth > width || y + bufferHeight > height) return;
+	if(bufferColorType != colorType) return;
 
-	int rowLen = bufferWidth * BytesPerPixel(bufferColorType);
+	int sourceX = x < 0 ? -x : 0;
+	int sourceY = y < 0 ? -y : 0;
+	int sourceWidth = bufferWidth - sourceX;
+	int sourceHeight = bufferHeight - sourceY;
 
-	for(int row = 0; row < bufferHeight; row++)
+	if(width - x < sourceWidth) sourceWidth = width - x;
+	if(height - y < sourceHeight) sourceHeight = height - y;
+
+	if(sourceWidth <= 0 || sourceHeight <= 0) return;
+
+	int rowX = sourceX * BytesPerPixel(bufferColorType);
+	int rowLen = sourceWidth * BytesPerPixel(bufferColorType);
+	int rowFullLen = bufferWidth * BytesPerPixel(bufferColorType);
+
+	for(int row = 0; row < sourceHeight; row++)
 	{
-		int pos = CoordsToPos(x, y + row);
-		int bufferPos = row * rowLen;
+		int bufferPos = (row + sourceY) * rowFullLen + rowX;
+		int pos = CoordsToPos(x + sourceX, y + sourceY + row);
 
 		memcpy(&data[pos], &buffer[bufferPos], rowLen);
 	}
