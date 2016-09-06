@@ -70,6 +70,8 @@ void LUNAEngine::SetSdkApi(LUNASdkApi* sdkApi)
 
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 {
+	if(initialized) return;
+
 	// Read config file
 	config = std::make_shared<LUNAConfig>();
 	if(!config->Read())
@@ -115,6 +117,8 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 
 void LUNAEngine::Run()
 {
+	if(!initialized) return;
+
 	// Run main lua script
 	if(!lua->DoFile("scripts/main.lua")) LUNA_RETURN_ERR("\"main.lua\" not found. Stop running");
 

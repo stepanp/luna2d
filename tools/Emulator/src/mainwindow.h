@@ -59,12 +59,16 @@ private:
 	QString curGamePath; // Path to current opened game
 	QString curGameName; // Name of current opened game
 	QPixmap screenshotsPixmap; // Pixmap to taking screnshots
+	ScreenOrientation curScreenOrientation = ScreenOrientation::LANDSCAPE; // Current screen orientation
 
 private:
 	void SetupRecentGames(); // Setup recent games menu
 	void SetupResolutionMenu(); // Setup resolution menu
 	QString CheckGameDirectory(const QString& path); // Check given directory for it's valid game directory
 	void OpenGame(const QString& gamePath); // Launch game from given path
+	void CloseGame();
+	void SetScreenOrientation(ScreenOrientation orientation);
+	Resolution GetResolution(int resolutionIndex);
 	void SetResolution(int resolutionIndex);
 	void SetLanguage(QString localeCode);
 	void OpenLogDialog();

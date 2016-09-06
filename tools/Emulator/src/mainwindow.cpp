@@ -34,6 +34,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QDesktopServices>
+#include <json11.hpp>
 #include "lunastrings.h"
 #include "lunaprefs.h"
 
@@ -117,7 +118,7 @@ void MainWindow::SetupResolutionMenu()
 
 	for(int i = 0; i < Settings::resolutions.size(); i++)
 	{
-		auto& res = Settings::resolutions.at(i);
+		auto res = GetResolution(i);
 
 		QAction* action = new QAction(format.arg(res.name).arg(res.width).arg(res.height), this);
 		action->setCheckable(true);
@@ -174,10 +175,36 @@ void MainWindow::OpenGame(const QString &gamePath)
 		if(logDlg) logDlg->Clear();
 	}
 
+	// Load config before intializing engine to select screen orientation
+	QFile configFile(gamePath + "/" + QString::fromStdString(luna2d::CONFIG_FILENAME));
+	if(configFile.open(QIODevice::ReadOnly))
+	{
+		QTextStream configText(&configFile);
+		std::string configData = configText.readAll().toStdString();
+		std::string err;
+
+		auto jsonConfig = json11::Json::parse(configData, err, json11::JsonParse::COMMENTS);
+		if(err.empty())
+		{
+			auto gameScreenOrientation = ScreenOrientation::LANDSCAPE;
+
+			auto jsonOrientation = jsonConfig["orientation"].string_value();
+			if(jsonOrientation == "portrait") gameScreenOrientation = ScreenOrientation::PORTRAIT;
+
+			SetScreenOrientation(gameScreenOrientation);
+		}
+	}
+
 	// Initialize engine
-	auto& resolution = Settings::resolutions.at(Settings::curResolution);
+	auto resolution = GetResolution(Settings::curResolution);
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height);
+
+	if(!ui->centralWidget->IsEngineInitialized())
+	{
+		CloseGame();
+		return;
+	}
 
 	// Update window title
 	curGameName = ui->centralWidget->GetGameName();
@@ -200,9 +227,41 @@ void MainWindow::OpenGame(const QString &gamePath)
 	ui->centralWidget->RunGame();
 }
 
+void MainWindow::CloseGame()
+{
+	ui->centralWidget->DeinitializeEngine();
+	curGamePath = QString::null;
+	ui->actionRestart_game->setEnabled(false);
+	ui->actionClose_game->setEnabled(false);
+	ui->actionRun_project->setEnabled(false);
+	ui->actionRun_project_restart->setEnabled(false);
+	ui->actionOpen_in_Pipeline->setEnabled(false);
+	ui->actionSet_project->setEnabled(false);
+	ui->actionTake_screenshot->setEnabled(false);
+	Settings::gameWasOpened = false;
+
+	setWindowTitle(WINDOW_TITLE);
+	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+}
+
+void MainWindow::SetScreenOrientation(ScreenOrientation orientation)
+{
+	if(curScreenOrientation == orientation) return;
+
+	curScreenOrientation = orientation;
+	SetResolution(Settings::curResolution);
+}
+
+Resolution MainWindow::GetResolution(int resolutionIndex)
+{
+	Resolution resolution = Settings::resolutions.at(resolutionIndex);
+	if(curScreenOrientation == ScreenOrientation::PORTRAIT) std::swap(resolution.width, resolution.height);
+	return resolution;
+}
+
 void MainWindow::SetResolution(int resolutionIndex)
 {
-	const Resolution &resolution = Settings::resolutions.at(resolutionIndex);
+	const Resolution &resolution = GetResolution(resolutionIndex);
 
 	int wndWidth = resolution.width;
 	int wndHeight = resolution.height;
@@ -286,8 +345,6 @@ void MainWindow::UpdateLanguagesMenu()
 
 	QActionGroup *group = new QActionGroup(this);
 
-	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
-
 	QAction* systemLanguage = new QAction("System", this);
 	systemLanguage->setCheckable(true);
 	systemLanguage->setChecked(true);
@@ -299,6 +356,8 @@ void MainWindow::UpdateLanguagesMenu()
 	ui->menuLanguage->addSeparator();
 
 	QString format = "%1 (%2)";
+	auto strings = ui->centralWidget->GetEngine()->SharedStrings();
+
 	for(const std::string& locale : strings->GetLocalesList())
 	{
 		QString localeCode = QString::fromStdString(locale);
@@ -382,19 +441,7 @@ void MainWindow::OnActionRestart()
 
 void MainWindow::OnActionClose()
 {
-	ui->centralWidget->DeinitializeEngine();
-	curGamePath = QString::null;
-	ui->actionRestart_game->setEnabled(false);
-	ui->actionClose_game->setEnabled(false);
-	ui->actionRun_project->setEnabled(false);
-	ui->actionRun_project_restart->setEnabled(false);
-	ui->actionOpen_in_Pipeline->setEnabled(false);
-	ui->actionSet_project->setEnabled(false);
-	ui->actionTake_screenshot->setEnabled(false);
-	Settings::gameWasOpened = false;
-
-	setWindowTitle(WINDOW_TITLE);
-	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+	CloseGame();
 }
 
 void MainWindow::OnRecentGame()

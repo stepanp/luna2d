@@ -26,6 +26,12 @@
 
 #include <QString>
 
+enum class ScreenOrientation
+{
+	PORTRAIT,
+	LANDSCAPE
+};
+
 struct Resolution
 {
 	Resolution(int width, int height, QString name, bool bullitin = false) :

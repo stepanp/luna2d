@@ -32,6 +32,7 @@ INCLUDEPATH += ../../../luna2d \
         ../../../luna2d/platform/ \
 		../../../luna2d/platform/qt/ \
 		../../../thirdparty/lua/ \
+        ../../../thirdparty/json11/ \
 		../../../luna2d/utils/ \
 		../../../luna2d/debug/
 
