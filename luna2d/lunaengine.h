@@ -96,15 +96,15 @@ private:
 public:
 	// Assemble engine with platform-specific modules. Must be called before "Initialize" method
 	void Assemble(LUNAFiles* files, LUNALog* log, LUNAPlatformUtils* platformUtils, LUNAPrefs* prefs, LUNAServices* services);
-
-	void SetSdkApi(LUNASdkApi* sdkApi);
-
 	void Initialize(int screenWidth, int screenHeight);
+	void Run();
 	void Deinitialize();
 	std::shared_ptr<const LUNAConfig> GetConfig();
 	std::string GetGameName(); // Get name of running game
 	void RunEmbeddedScripts();
 	bool IsInitialized();
+
+	void SetSdkApi(LUNASdkApi* sdkApi);
 
 	// Enable/disable handling OnPause/OnResume events
 	void EnablePauseHandling(bool enable);

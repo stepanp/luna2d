@@ -201,6 +201,11 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath)
 	InitializeEngine(gamePath, wndSize.width(), wndSize.height());
 }
 
+void LUNAQtWidget::RunGame()
+{
+	LUNAEngine::Shared()->Run();
+}
+
 void LUNAQtWidget::DeinitializeEngine()
 {
 	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->Deinitialize();

@@ -56,6 +56,7 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screen
 	LUNAEngine::Shared()->Assemble(files, log, platformUtils, prefs);
 	LUNAEngine::Shared()->SetSdkApi(sdkApi);
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
+	LUNAEngine::Shared()->Run();
 }
 
 LUNA_JNI_FUNC(void, LunaNative, reloadAssets)(JNIEnv* env, jclass cls)

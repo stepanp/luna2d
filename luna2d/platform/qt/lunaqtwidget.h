@@ -72,6 +72,7 @@ public:
 	bool IsEngineInitialized();
 	void InitializeEngine(const QString& gamePath, int width, int height);
 	void InitializeEngine(const QString& gamePath);
+	void RunGame();
 	void DeinitializeEngine();
 	void PauseEngine();
 	void ResumeEngine();

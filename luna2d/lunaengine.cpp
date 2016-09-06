@@ -110,18 +110,21 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 		sdkApi->LoadModules();
 	}
 
+	initialized = true;
+}
+
+void LUNAEngine::Run()
+{
 	// Run main lua script
-	if(!lua->DoFile("scripts/main.lua"))
-	{
-		LUNA_LOGE("\"main.lua\" not found. Stop initializing");
-		return;
-	}
+	if(!lua->DoFile("scripts/main.lua")) LUNA_RETURN_ERR("\"main.lua\" not found. Stop running");
 
 	// Call "luna.main" function
-	LuaFunction fnMain = tblLuna.GetFunction("main");
-	if(fnMain != nil) fnMain.CallVoid();
-
-	initialized = true;
+	auto tblLuna = lua->GetGlobalTable().GetTable("luna");
+	if(tblLuna)
+	{
+		auto fnMain = tblLuna.GetFunction("main");
+		if(fnMain) fnMain.CallVoid();
+	}
 }
 
 void LUNAEngine::Deinitialize()

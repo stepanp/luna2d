@@ -174,7 +174,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 		if(logDlg) logDlg->Clear();
 	}
 
-	// Launch game
+	// Initialize engine
 	auto& resolution = Settings::resolutions.at(Settings::curResolution);
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height);
@@ -195,6 +195,9 @@ void MainWindow::OpenGame(const QString &gamePath)
 	// Resize pixmap for screenshots
 	screenshotsPixmap = QPixmap(ui->centralWidget->size());
 	ui->actionTake_screenshot->setEnabled(true);
+
+	// Launch game
+	ui->centralWidget->RunGame();
 }
 
 void MainWindow::SetResolution(int resolutionIndex)

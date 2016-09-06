@@ -105,6 +105,7 @@ using namespace luna2d;
 	// Initialize engine
 	LUNAEngine::Shared()->Assemble(new LUNAIosFiles(), new LUNAIosLog(), new LUNAIosUtils(), new LUNAIosPrefs(), new LUNAIosServices());
 	LUNAEngine::Shared()->Initialize(screenWidth, screenHeight);
+	LUNAEngine::Shared()->Run();
 }
 
 - (void)tearDownGL
