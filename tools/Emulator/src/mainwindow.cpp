@@ -59,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->actionSet_project->setEnabled(false);
 	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
 	ui->actionTake_screenshot->setEnabled(false);
+	ui->actionClear_preferences->setEnabled(false);
+	UpdateLanguagesMenu();
 
 	// Set placeholder image to engine widget
 	ui->centralWidget->SetPlaceholderImage(QImage(":/images/placeholder_image.png"));
@@ -167,6 +169,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 	curGamePath = gamePath;
 	ui->actionRestart_game->setEnabled(true);
 	ui->actionClose_game->setEnabled(true);
+	ui->actionClear_preferences->setEnabled(true);
 
 	// Clear log
 	if(Settings::clearLogOnStart)
@@ -238,10 +241,14 @@ void MainWindow::CloseGame()
 	ui->actionOpen_in_Pipeline->setEnabled(false);
 	ui->actionSet_project->setEnabled(false);
 	ui->actionTake_screenshot->setEnabled(false);
+	ui->actionClear_preferences->setEnabled(false);
+	ui->menuLanguage->setEnabled(false);
 	Settings::gameWasOpened = false;
 
 	setWindowTitle(WINDOW_TITLE);
 	ui->actionPipelineProject->setText(MENU_NO_PIPELINE_PROJECT);
+
+	UpdateLanguagesMenu();
 }
 
 void MainWindow::SetScreenOrientation(ScreenOrientation orientation)
@@ -350,8 +357,11 @@ void MainWindow::UpdateLanguagesMenu()
 	systemLanguage->setChecked(true);
 	systemLanguage->setActionGroup(group);
 	systemLanguage->setData("system");
+	systemLanguage->setEnabled(ui->centralWidget->IsEngineInitialized());
 	ui->menuLanguage->addAction(systemLanguage);
 	connect(systemLanguage, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
+
+	if(!ui->centralWidget->IsEngineInitialized()) return;
 
 	ui->menuLanguage->addSeparator();
 
@@ -371,6 +381,8 @@ void MainWindow::UpdateLanguagesMenu()
 
 		connect(action, &QAction::triggered, this, &MainWindow::OnLanguageChanged);
 	}
+
+	ui->menuLanguage->setEnabled(true);
 }
 
 QString MainWindow::MakeScreenhotsFolder()
