@@ -87,7 +87,7 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	LuaTable tblLuna(lua);
 	tblGlobal.SetField("luna", tblLuna);
 
-	sizes = new LUNASizes(screenWidth, screenHeight, config.get());
+	sizes = new LUNASizes(screenWidth, screenHeight, config);
 	assets = new LUNAAssets();
 	graphics = new LUNAGraphics();
 	audio = new LUNAAudio();
@@ -223,19 +223,19 @@ void LUNAEngine::OnResume()
 
 void LUNAEngine::OnTouchDown(float x, float y, int touchIndex)
 {
-	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
+	glm::vec2 pos = graphics->Unproject(glm::vec2(x, y));
 	scenes->OnTouchDown(pos.x, pos.y, touchIndex);
 }
 
 void LUNAEngine::OnTouchMoved(float x, float y, int touchIndex)
 {
-	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
+	glm::vec2 pos = graphics->Unproject(glm::vec2(x, y));
 	scenes->OnTouchMoved(pos.x, pos.y, touchIndex);
 }
 
 void LUNAEngine::OnTouchUp(float x, float y, int touchIndex)
 {
-	glm::vec2 pos = sizes->ScreenToVirtual(glm::vec2(x, y));
+	glm::vec2 pos = graphics->Unproject(glm::vec2(x, y));
 	scenes->OnTouchUp(pos.x, pos.y, touchIndex);
 }
 

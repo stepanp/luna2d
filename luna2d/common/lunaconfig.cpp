@@ -31,9 +31,70 @@
 using namespace luna2d;
 using namespace json11;
 
-LUNAConfig::LUNAConfig()
+void LUNAConfig::ReadScreenOrientation(const json11::Json& jsonConfig)
 {
-	resolutions = { DEFAULT_RESOLUTION };
+	auto jsonOrientation = jsonConfig["orientation"];
+	if(jsonOrientation.is_null()) return;
+
+	std::string orientationStr = jsonOrientation.string_value();
+	if(ORIENTATION.HasKey(orientationStr)) orientation = ORIENTATION.FromString(orientationStr);
+	else LUNA_LOGE("Incorrect orientation \"%s\"", orientationStr.c_str());
+}
+
+void LUNAConfig::ReadResolutions(const json11::Json& jsonConfig)
+{
+	auto jsonResolutions = jsonConfig["resolutions"].array_items();
+	std::vector<std::string> parsedResolutions;
+
+	// Parse resolutions from config
+	for(auto item : jsonResolutions)
+	{
+		std::string res = item.string_value();
+
+		if(RESOLUTIONS_TABLE.count(res) == 0)
+		{
+			LUNA_LOGE("Unsupported resolution \"%s\"", res.c_str());
+			continue;
+		}
+
+		parsedResolutions.push_back(res);
+	}
+
+	// Replace default resolutions list with resolutions from config
+	if(!parsedResolutions.empty()) resolutions.swap(parsedResolutions);
+}
+
+void LUNAConfig::ReadScaleMode(const json11::Json& jsonConfig)
+{
+	auto jsonScaleMode = jsonConfig["scaleMode"];
+	if(jsonScaleMode.is_null()) return;
+
+	std::string scaleModeStr = jsonScaleMode.string_value();
+	if(!SCALE_MODE.HasKey(scaleModeStr)) LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
+	else scaleMode = SCALE_MODE.FromString(scaleModeStr);
+}
+
+void LUNAConfig::ReadGameAreaWidth(const json11::Json& jsonConfig)
+{
+	auto jsonGameAreaWidth = jsonConfig["gameAreaWidth"];
+	if(jsonGameAreaWidth.is_null()) return;
+
+	if(jsonGameAreaWidth.is_number()) gameAreaWidth = jsonGameAreaWidth.int_value();
+	else LUNA_LOGE("Game area width must be number");
+}
+
+void LUNAConfig::ReadGameAreaHeight(const json11::Json& jsonConfig)
+{
+	auto jsonGameAreaHeight = jsonConfig["gameAreaHeight"];
+	if(jsonGameAreaHeight.is_null()) return;
+
+	if(jsonGameAreaHeight.is_number()) gameAreaHeight = jsonGameAreaHeight.int_value();
+	else LUNA_LOGE("Game area height must be number");
+}
+
+void LUNAConfig::ReadDebugValues(const json11::Json& jsonConfig)
+{
+	debug_missedStrings = jsonConfig["debug_missedStrings"].bool_value();
 }
 
 const Json& LUNAConfig::GetCustomValues() const
@@ -72,67 +133,16 @@ bool LUNAConfig::Read()
 		return false;
 	}
 
-	// Fetch predefined values
-	for(auto& entry : jsonConfig.object_items())
-	{
-		auto& key = entry.first;
+	ReadScreenOrientation(jsonConfig);
 
-		if(key == "name") continue;
+	// Set default game area size for portrait mode if it set
+	if(orientation == LUNAOrientation::PORTRAIT) std::swap(gameAreaWidth, gameAreaHeight);
 
-		else if(key == "orientation")
-		{
-			std::string orientationStr = jsonConfig["orientation"].string_value();
-			if(ORIENTATION.HasKey(orientationStr)) orientation = ORIENTATION.FromString(orientationStr);
-			else LUNA_LOGE("Incorrect orientation \"%s\"", orientationStr.c_str());
-		}
-
-		else if(key == "resolutions")
-		{
-			auto jsonResolutions = jsonConfig["resolutions"].array_items();
-			std::vector<std::string> parsedResolutions;
-
-			// Parse resolutions from config
-			for(auto item : jsonResolutions)
-			{
-				std::string res = item.string_value();
-
-				if(RESOLUTIONS_TABLE.count(res) == 0)
-				{
-					LUNA_LOGE("Unsupported resolution \"%s\"", res.c_str());
-					continue;
-				}
-
-				parsedResolutions.push_back(res);
-			}
-
-			// Replace default resolutions list with resolutions from config
-			if(!parsedResolutions.empty()) resolutions.swap(parsedResolutions);
-		}
-
-		else if(key == "scaleMode")
-		{
-			std::string scaleModeStr = jsonConfig["scaleMode"].string_value();
-			if(!SCALE_MODE.HasKey(scaleModeStr)) LUNA_LOGE("Unsupported scale mode \"%s\"", scaleModeStr.c_str());
-			else scaleMode = SCALE_MODE.FromString(scaleModeStr);
-		}
-
-		else if(key == "baseWidth")
-		{
-			if(jsonConfig["baseWidth"].is_number()) baseWidth = jsonConfig["baseWidth"].int_value();
-			else LUNA_LOGE("Base width must be number");
-		}
-
-		else if(key == "baseHeight")
-		{
-			if(jsonConfig["baseHeight"].is_number()) baseHeight = jsonConfig["baseHeight"].int_value();
-			else LUNA_LOGE("Base height must be number");
-		}
-
-		else if(key == "debug_missedStrings")
-		{
-			debug_missedStrings = jsonConfig["debug_missedStrings"].bool_value();
-		}
-	}
+	ReadResolutions(jsonConfig);
+	ReadScaleMode(jsonConfig);
+	ReadGameAreaWidth(jsonConfig);
+	ReadGameAreaHeight(jsonConfig);
+	ReadDebugValues(jsonConfig);
 
 	customValues = jsonConfig;
 

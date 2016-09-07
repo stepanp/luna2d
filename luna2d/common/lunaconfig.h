@@ -25,6 +25,7 @@
 
 #include "lunaengine.h"
 #include "lunastringenum.h"
+#include "lunaresolutions.h"
 #include <json11.hpp>
 
 namespace luna2d{
@@ -43,40 +44,41 @@ const LUNAStringEnum<LUNAOrientation> ORIENTATION =
 
 enum class LUNAScaleMode
 {
-	FIT_TO_HEIGHT_LEFT,
-	FIT_TO_HEIGHT_RIGHT,
-	FIT_TO_HEIGHT_CENTER,
-	FIT_TO_WIDTH_TOP,
-	FIT_TO_WIDTH_BOTTOM,
-	FIT_TO_WIDTH_CENTER,
+	STRETCH_BY_WIDTH,
+	STRETCH_BY_HEIGHT,
+	FIT_TO_WIDTH,
+	FIT_TO_HEIGHT
 };
 
 const LUNAStringEnum<LUNAScaleMode> SCALE_MODE =
 {
-	"fitToHeightLeft",
-	"fitToHeightRight",
-	"fitToHeightCenter",
-	"fitToWidthTop",
-	"fitToWidthBottom",
-	"fitToWidthCenter",
+	"stretchByWidth",
+	"stretchByHeight",
+	"fitToWidth",
+	"fitToHeight",
 };
 
 class LUNAConfig
 {
 public:
-	LUNAConfig();
-
-public:
 	std::string gameName;
 	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
-	LUNAScaleMode scaleMode = LUNAScaleMode::FIT_TO_HEIGHT_LEFT;
-	std::vector<std::string> resolutions;
-	int baseWidth = 480;
-	int baseHeight = BASE_SIZE;
-	bool debug_missedStrings = false; // Highlight non-translated strings
+	std::vector<std::string> resolutions = { DEFAULT_RESOLUTION };
+	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH_BY_WIDTH;
+	int gameAreaWidth = 480;
+	int gameAreaHeight = 320;
+	bool debug_missedStrings = false;
 
 private:
 	json11::Json customValues;
+
+private:
+	void ReadScreenOrientation(const json11::Json& jsonConfig);
+	void ReadResolutions(const json11::Json& jsonConfig);
+	void ReadScaleMode(const json11::Json& jsonConfig);
+	void ReadGameAreaWidth(const json11::Json& jsonConfig);
+	void ReadGameAreaHeight(const json11::Json& jsonConfig);
+	void ReadDebugValues(const json11::Json& jsonConfig);
 
 public:
 	const json11::Json& GetCustomValues() const;

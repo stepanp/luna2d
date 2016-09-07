@@ -23,9 +23,9 @@
 
 #include "lunabindings.h"
 #include "lunaengine.h"
-#include "lunaconfig.h"
 #include "lunajsonutils.h"
 #include "lunaaudio.h"
+#include "lunasizes.h"
 #include "lunaplatformutils.h"
 #include "lunaprefs.h"
 #include "lunatimer.h"
@@ -402,6 +402,24 @@ static void BindConfig(LuaScript* lua, LuaTable& tblLuna)
 	tblLuna.SetField("config", Json2Lua(config->GetCustomValues()));
 }
 
+// Bind "luna.sizes" module
+static void BindSizes(LuaScript* lua, LuaTable& tblLuna)
+{
+	auto sizes = LUNAEngine::SharedSizes();
+
+	LuaTable tblSizes(lua);
+	tblLuna.SetField("sizes", tblSizes);
+
+	tblSizes.SetField("getResolutionName", LuaFunction(lua, sizes, &LUNASizes::GetResolutionSuffix));
+	tblSizes.SetField("getAspectRatio", LuaFunction(lua, sizes, &LUNASizes::GetAspectRatio));
+	tblSizes.SetField("getPhysicalScreenWidth", LuaFunction(lua, sizes, &LUNASizes::GetPhysicalScreenWidth));
+	tblSizes.SetField("getPhysicalScreenHeight", LuaFunction(lua, sizes, &LUNASizes::GetPhysicalScreenHeight));
+	tblSizes.SetField("getScreenWidth", LuaFunction(lua, sizes, &LUNASizes::GetScreenWidth));
+	tblSizes.SetField("getScreenHeight", LuaFunction(lua, sizes, &LUNASizes::GetScreenHeight));
+	tblSizes.SetField("getGameAreaWidth", LuaFunction(lua, sizes, &LUNASizes::GetGameAreaWidth));
+	tblSizes.SetField("getGameAreaHeight", LuaFunction(lua, sizes, &LUNASizes::GetGameAreaHeight));
+}
+
 // Bind common classes and functions to lua
 // Bindings for some subsystems(graphics, assets, etc.) declated in subsystem constructors
 // SEE: "lunagraphics.cpp", "lunassets.cpp"
@@ -420,4 +438,5 @@ void luna2d::DoBindings()
 	BindAudio(lua, tblLuna);
 	BindPrefs(lua, tblLuna);
 	BindConfig(lua, tblLuna);
+	BindSizes(lua, tblLuna);
 }

@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunarenderer.h"
+#include "lunagraphics.h"
 #include "lunasizes.h"
 #include "lunalog.h"
 #include "lunaassets.h"
@@ -107,9 +108,8 @@ void LUNARenderer::EnableScissor(float x, float y, float width, float height)
 {
 	Render();
 
-	auto sizes = LUNAEngine::SharedSizes();
-	auto pos = sizes->VirtualToScreen(glm::vec2(x, y));
-	auto size = sizes->VirtualToScreen(glm::vec2(x + width, y + height));
+	auto pos = LUNAEngine::SharedGraphics()->Project(glm::vec2(x, y));
+	auto size = LUNAEngine::SharedGraphics()->Project(glm::vec2(x + width, y + height));
 	size -= pos;
 
 	glEnable(GL_SCISSOR_TEST);

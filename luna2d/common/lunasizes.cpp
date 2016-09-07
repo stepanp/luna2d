@@ -23,85 +23,63 @@
 
 #include "lunasizes.h"
 #include "lunaconfig.h"
-#include "lunalua.h"
-#include <cmath>
-#include <cfloat>
+#include "lunacamera.h"
+#include "lunamath.h"
+#include "lunaresolutions.h"
 
 using namespace luna2d;
 
-LUNASizes::LUNASizes(int screenWidth, int screenHeight, LUNAConfig* config)
+LUNASizes::LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const std::shared_ptr<const LUNAConfig>& config)
 {
-	physicalWidth = screenWidth;
-	physicalHeight = screenHeight;
-	scaleMode = config->scaleMode;
-	baseWidth = config->baseWidth;
-	baseHeight = config->baseHeight;
+	this->physicalScreenWidth = physicalScreenWidth;
+	this->physicalScreenHeight = physicalScreenHeight;
+	this->gameAreaWidth = config->gameAreaWidth;
+	this->gameAreaHeight = config->gameAreaHeight;
+	this->scaleMode = config->scaleMode;
+	this->aspectRatio = physicalScreenWidth / (float)physicalScreenHeight;
 
-	// Portrait
-	if(config->orientation == LUNAOrientation::PORTRAIT)
-	{
-		aspectRatio = physicalHeight / (float)physicalWidth;
-		scaleFactor = physicalWidth / (float)BASE_SIZE;
-		virtualWidth = BASE_SIZE;
-		virtualHeight = (int)(BASE_SIZE * aspectRatio);
-	}
-
-	// Landscape
-	else
-	{
-		aspectRatio = physicalWidth / (float)physicalHeight;
-		scaleFactor = physicalHeight / (float)BASE_SIZE;
-
-		if(scaleMode >= LUNAScaleMode::FIT_TO_WIDTH_TOP)
-		{
-			virtualWidth = baseWidth;
-			virtualHeight = (int)(virtualWidth / aspectRatio);
-		}
-		else
-		{
-			virtualWidth = (int)(BASE_SIZE * aspectRatio);
-			virtualHeight = BASE_SIZE;
-		}
-	}
-
+	ApplyScaleMode(scaleMode);
 	SelectResolution(config);
+
 	textureScale = BASE_SIZE / (float)LUNASizes::GetHeightForResolution(resolutionSuffix);
-	BuildTransformMatrix();
-
-	LuaScript *lua = LUNAEngine::SharedLua();
-	LuaTable tblLuna = lua->GetGlobalTable().GetTable("luna");
-
-	LuaTable tblSizes(lua);
-	LuaFunction fnGetVirtualWidth(lua, this, &LUNASizes::GetVirtualScreenWidth);
-	LuaFunction fnGetVirtualHeight(lua, this, &LUNASizes::GetVirtualScreenHeight);
-
-	tblSizes.SetField("getResolutionName", LuaFunction(lua, this, &LUNASizes::GetResolutionSuffix));
-	tblSizes.SetField("getAspectRatio", LuaFunction(lua, this, &LUNASizes::GetAspectRatio));
-	tblSizes.SetField("getPhysicalScreenWidth", LuaFunction(lua, this, &LUNASizes::GetPhysicalScreenWidth));
-	tblSizes.SetField("getPhysicalScreenHeight", LuaFunction(lua, this, &LUNASizes::GetPhysicalScreenHeight));
-	tblSizes.SetField("getVirtualScreenWidth", fnGetVirtualWidth);
-	tblSizes.SetField("getVirtualScreenHeight", fnGetVirtualHeight);
-	tblSizes.SetField("getBaseScreenWidth", LuaFunction(lua, this, &LUNASizes::GetBaseScreenWidth));
-	tblSizes.SetField("getBaseScreenHeight", LuaFunction(lua, this, &LUNASizes::GetBaseScreenHeight));
-
-	// getScreenWidth/getScreenHeight is aliases for getVirtualScreenWidth/getVirtualScreenHeight
-	tblSizes.SetField("getScreenWidth", fnGetVirtualWidth);
-	tblSizes.SetField("getScreenHeight", fnGetVirtualHeight);
-
-	tblLuna.SetField("sizes", tblSizes);
 }
 
-void LUNASizes::SelectResolution(LUNAConfig *config)
+void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
+{
+	switch(scaleMode)
+	{
+	case LUNAScaleMode::STRETCH_BY_WIDTH:
+		screenHeight = gameAreaHeight;
+		screenWidth = (int)(gameAreaHeight * aspectRatio);
+		gameAreaWidth = screenWidth;
+		break;
+	case LUNAScaleMode::STRETCH_BY_HEIGHT:
+		screenWidth = gameAreaWidth;
+		screenHeight = (int)(gameAreaWidth / aspectRatio);
+		gameAreaHeight = screenHeight;
+		break;
+	case LUNAScaleMode::FIT_TO_WIDTH:
+		screenWidth = gameAreaWidth;
+		screenHeight = (int)(gameAreaWidth / aspectRatio);
+		break;
+	case LUNAScaleMode::FIT_TO_HEIGHT:
+		screenHeight = gameAreaHeight;
+		screenWidth = (int)(gameAreaHeight * aspectRatio);
+		break;
+	};
+}
+
+// Select nearest texture resolution to screen resolution
+void LUNASizes::SelectResolution(const std::shared_ptr<const LUNAConfig>& config)
 {
 	int count = config->resolutions.size();
-	float minDiff = FLT_MAX;
+	int minDiff = INT_MAX;
 	int index = -1;
 
 	for(int i = 0; i < count; i++)
 	{
 		int height = RESOLUTIONS_TABLE.at(config->resolutions[i]);
-		float resScaleFactor = height / (float)BASE_SIZE;
-		float diff = std::fabs(resScaleFactor - scaleFactor);
+		int diff = std::fabs(physicalScreenHeight - height);
 
 		if(diff < minDiff)
 		{
@@ -113,107 +91,55 @@ void LUNASizes::SelectResolution(LUNAConfig *config)
 	resolutionSuffix = config->resolutions[index];
 }
 
-// Build transformation matrix by scale mode
-void LUNASizes::BuildTransformMatrix()
+// Make instance of camera for renderer
+std::shared_ptr<LUNACamera> LUNASizes::MakeCamera()
 {
-	float left = 0.0f;
-	float right = 0.0f;
-	float bottom = 0.0f;
-	float top = 0.0f;
+	auto camera = std::make_shared<LUNACamera>(screenWidth, screenHeight);
+	camera->SetPos(gameAreaWidth / 2.0f, gameAreaHeight / 2.0f);
 
-	// Build transformation matrix by scale mode
-	switch(scaleMode)
-	{
-	case LUNAScaleMode::FIT_TO_HEIGHT_LEFT:
-		right = virtualWidth;
-		top = virtualHeight;
-		break;
-	case LUNAScaleMode::FIT_TO_HEIGHT_RIGHT:
-		{
-			float leftOffset = virtualWidth - baseWidth;
-			left = -leftOffset;
-			right = virtualWidth - leftOffset;
-			top = virtualHeight;
-		}
-		break;
-	case LUNAScaleMode::FIT_TO_HEIGHT_CENTER:
-		{
-			float leftOffset = (virtualWidth - baseWidth) / 2;
-			left = -leftOffset;
-			right = virtualWidth - leftOffset;
-			top = virtualHeight;
-		}
-		break;
-	case LUNAScaleMode::FIT_TO_WIDTH_TOP:
-		{
-			float bottomOffset = baseHeight - virtualHeight;
-			bottom = bottomOffset;
-			right = virtualWidth;
-			top = virtualHeight + bottomOffset;
-		}
-		break;
-	case LUNAScaleMode::FIT_TO_WIDTH_BOTTOM:
-		right = virtualWidth;
-		top = virtualHeight;
-		break;
-	case LUNAScaleMode::FIT_TO_WIDTH_CENTER:
-		{
-			float bottomOffset = (baseHeight - virtualHeight) / 2;
-			bottom = bottomOffset;
-			right = virtualWidth;
-			top = virtualHeight + bottomOffset;
-		}
-		break;
-	}
-
-	transformMatrix = glm::ortho(left, right, bottom, top);
+	return camera;
 }
 
-// Get transformation matrix for renderer
-const glm::mat4& LUNASizes::GetTransformMatrix()
-{
-	return transformMatrix;
-}
-
-std::string LUNASizes::GetResolutionSuffix()
+// Get suffix for current resoltion
+const std::string& LUNASizes::GetResolutionSuffix()
 {
 	return resolutionSuffix;
 }
 
-// Get physical screen width
+// Get physical screen width (in pixels)
 int LUNASizes::GetPhysicalScreenWidth()
 {
-	return physicalWidth;
+	return physicalScreenWidth;
 }
 
-// Get physical screen height
+// Get physical screen height (in pixels)
 int LUNASizes::GetPhysicalScreenHeight()
 {
-	return physicalHeight;
+	return physicalScreenHeight;
 }
 
-// Get virtual screen width
-int LUNASizes::GetVirtualScreenWidth()
+// Get screen width (in points)
+int LUNASizes::GetScreenWidth()
 {
-	return virtualWidth;
+	return screenWidth;
 }
 
-// Get virtual screen height
-int LUNASizes::GetVirtualScreenHeight()
+// Get screen height (in points)
+int LUNASizes::GetScreenHeight()
 {
-	return virtualHeight;
+	return screenHeight;
 }
 
-// Get base screen width
-int LUNASizes::GetBaseScreenWidth()
+// Get game area width (in points)
+int LUNASizes::GetGameAreaWidth()
 {
-	return baseWidth;
+	return gameAreaWidth;
 }
 
-// Get base screen height
-int LUNASizes::GetBaseScreenHeight()
+// Get game area height (in points)
+int LUNASizes::GetGameAreaHeight()
 {
-	return baseHeight;
+	return gameAreaHeight;
 }
 
 // Get aspect ratio
@@ -222,34 +148,10 @@ float LUNASizes::GetAspectRatio()
 	return aspectRatio;
 }
 
-// Get scale ratio between virtual and physical resolutions
-float LUNASizes::GetScaleFactor()
-{
-	return scaleFactor;
-}
-
-// Get scale ratio between virtual and texture resolutions
+// Get scale ratio between screen resolution (in points) and texture resolution (in pixels)
 float LUNASizes::GetTextureScale()
 {
 	return textureScale;
-}
-
-// Convert coorditates from virtual resolution to physical screen resolution
-glm::vec2 LUNASizes::VirtualToScreen(glm::vec2 pos)
-{
-	glm::vec3 transformedPos = glm::project(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), transformMatrix,
-		glm::vec4(0, 0, physicalWidth, physicalHeight));
-
-	return glm::vec2(transformedPos.x, transformedPos.y);
-}
-
-// Convert coorditates from physical screen resolution to virtual resolution
-glm::vec2 LUNASizes::ScreenToVirtual(glm::vec2 pos)
-{
-	glm::vec3 transformedPos = glm::unProject(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), transformMatrix,
-		glm::vec4(0, 0, physicalWidth, physicalHeight));
-
-	return glm::vec2(transformedPos.x, transformedPos.y);
 }
 
 // Get scale mode
