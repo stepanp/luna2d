@@ -210,6 +210,6 @@ void Settings::SetPreferredLanguage(const QString& gameName, const QString& lang
 // Get prederred language for given game
 QString Settings::GetPreferredLanguage(const QString& gameName)
 {
-	if(Settings::preferredLanguages.count(gameName) == 0) return "default";
+	if(Settings::preferredLanguages.count(gameName) == 0) return "system";
 	return Settings::preferredLanguages[gameName];
 }
