@@ -135,8 +135,12 @@ bool LUNAConfig::Read()
 
 	ReadScreenOrientation(jsonConfig);
 
-	// Set default game area size for portrait mode if it set
-	if(orientation == LUNAOrientation::PORTRAIT) std::swap(gameAreaWidth, gameAreaHeight);
+	// Set default config values for portrait mode if it set
+	if(orientation == LUNAOrientation::PORTRAIT)
+	{
+		std::swap(gameAreaWidth, gameAreaHeight);
+		scaleMode = LUNAScaleMode::STRETCH_BY_HEIGHT;
+	}
 
 	ReadResolutions(jsonConfig);
 	ReadScaleMode(jsonConfig);
