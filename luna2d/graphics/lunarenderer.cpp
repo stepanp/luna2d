@@ -108,8 +108,9 @@ void LUNARenderer::EnableScissor(float x, float y, float width, float height)
 {
 	Render();
 
-	auto pos = LUNAEngine::SharedGraphics()->Project(glm::vec2(x, y));
-	auto size = LUNAEngine::SharedGraphics()->Project(glm::vec2(x + width, y + height));
+	const auto& camera = LUNAEngine::SharedGraphics()->GetCamera();
+	auto pos = camera->Project(glm::vec2(x, y));
+	auto size = camera->Project(glm::vec2(x + width, y + height));
 	size -= pos;
 
 	glEnable(GL_SCISSOR_TEST);

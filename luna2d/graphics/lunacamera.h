@@ -54,6 +54,12 @@ public:
 	const glm::vec2& GetPos();
 	void SetPos(float x, float y);
 	const glm::mat4& GetMatrix();
+
+	// Convert coordinates from camera to physical screen
+	glm::vec2 Project(const glm::vec2& pos);
+
+	// Convert coordinates from physical screen to camera
+	glm::vec2 Unproject(const glm::vec2& pos);
 };
 
 }

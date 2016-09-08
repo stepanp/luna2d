@@ -46,19 +46,12 @@ private:
 
 public:
 	LUNARenderer* GetRenderer();
-	std::shared_ptr<LUNACamera> GetCamera();
+	const std::shared_ptr<LUNACamera>& GetCamera();
 	int GetFps();
 	float GetDeltaTime();
 	int GetRenderCalls();
 	int GetRenderedVertexes();
 	void SetBackgroundColor(float r, float g, float b);
-
-	// Convert coordinates from camera to physical screen
-	glm::vec2 Project(glm::vec2 pos);
-
-	// Convert coordinates from physical screen to camera
-	glm::vec2 Unproject(glm::vec2 pos);
-
 	bool IsPaused();
 	void OnPause();
 	void OnResume();

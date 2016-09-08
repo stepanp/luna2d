@@ -228,7 +228,7 @@ LUNARenderer* LUNAGraphics::GetRenderer()
 	return &renderer;
 }
 
-std::shared_ptr<LUNACamera> LUNAGraphics::GetCamera()
+const std::shared_ptr<LUNACamera>& LUNAGraphics::GetCamera()
 {
 	return camera;
 }
@@ -256,28 +256,6 @@ int LUNAGraphics::GetRenderedVertexes()
 void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 {	
 	renderer.SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
-}
-
-// Convert coordinates from camera to physical screen
-glm::vec2 LUNAGraphics::Project(glm::vec2 pos)
-{
-	auto sizes = LUNAEngine::SharedSizes();
-
-	glm::vec3 transformedPos = glm::project(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), camera->GetMatrix(),
-		glm::vec4(0, 0, sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight()));
-
-	return glm::vec2(transformedPos.x, transformedPos.y);
-}
-
-// Convert coordinates from physical screen to camera
-glm::vec2 LUNAGraphics::Unproject(glm::vec2 pos)
-{
-	auto sizes = LUNAEngine::SharedSizes();
-
-	glm::vec3 transformedPos = glm::unProject(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), camera->GetMatrix(),
-		glm::vec4(0, 0, sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight()));
-
-	return glm::vec2(transformedPos.x, transformedPos.y);
 }
 
 bool LUNAGraphics::IsPaused()

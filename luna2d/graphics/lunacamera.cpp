@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunacamera.h"
+#include "lunasizes.h"
 
 using namespace luna2d;
 
@@ -77,7 +78,29 @@ void LUNACamera::SetPos(float x, float y)
 	UpdateMatrix();
 }
 
-const glm::mat4&LUNACamera::GetMatrix()
+const glm::mat4& LUNACamera::GetMatrix()
 {
 	return matrix;
+}
+
+// Convert coordinates from camera to physical screen
+glm::vec2 LUNACamera::Project(const glm::vec2& pos)
+{
+	auto sizes = LUNAEngine::SharedSizes();
+
+	glm::vec3 transformedPos = glm::project(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), matrix,
+		glm::vec4(0, 0, sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight()));
+
+	return glm::vec2(transformedPos.x, transformedPos.y);
+}
+
+// Convert coordinates from physical screen to camera
+glm::vec2 LUNACamera::Unproject(const glm::vec2& pos)
+{
+	auto sizes = LUNAEngine::SharedSizes();
+
+	glm::vec3 transformedPos = glm::unProject(glm::vec3(pos.x, pos.y, 0.0f), glm::mat4(1.0f), matrix,
+		glm::vec4(0, 0, sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight()));
+
+	return glm::vec2(transformedPos.x, transformedPos.y);
 }
