@@ -38,7 +38,7 @@ public:
 private:
 	int physicalScreenWidth, physicalScreenHeight; // Physical screen resolution (in pixels)
 	int screenWidth, screenHeight; // Screen resolution (in points)
-	int gameAreaWidth, gameAreaHeight; // Game area size (in points)
+	int contentWidth, contentHeight; // Content size (in points)
 	float textureScale;
 	float aspectRatio;
 	std::string resolutionSuffix;
@@ -69,11 +69,11 @@ public:
 	// Get screen height (in points)
 	int GetScreenHeight();
 
-	// Get game area width (in points)
-	int GetGameAreaWidth();
+	// Get content width (in points)
+	int GetContentWidth();
 
-	// Get game area height (in points)
-	int GetGameAreaHeight();
+	// Get content height (in points)
+	int GetContentHeight();
 
 	// Get aspect ratio
 	float GetAspectRatio();

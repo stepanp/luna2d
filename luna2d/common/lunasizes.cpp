@@ -33,8 +33,8 @@ LUNASizes::LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const st
 {
 	this->physicalScreenWidth = physicalScreenWidth;
 	this->physicalScreenHeight = physicalScreenHeight;
-	this->gameAreaWidth = config->gameAreaWidth;
-	this->gameAreaHeight = config->gameAreaHeight;
+	this->contentWidth = config->contentWidth;
+	this->contentHeight = config->contentHeight;
 	this->scaleMode = config->scaleMode;
 	this->aspectRatio = physicalScreenWidth / (float)physicalScreenHeight;
 
@@ -49,22 +49,22 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
 	switch(scaleMode)
 	{
 	case LUNAScaleMode::STRETCH_BY_WIDTH:
-		screenHeight = gameAreaHeight;
-		screenWidth = (int)(gameAreaHeight * aspectRatio);
-		gameAreaWidth = screenWidth;
+		screenHeight = contentHeight;
+		screenWidth = (int)(contentHeight * aspectRatio);
+		contentWidth = screenWidth;
 		break;
 	case LUNAScaleMode::STRETCH_BY_HEIGHT:
-		screenWidth = gameAreaWidth;
-		screenHeight = (int)(gameAreaWidth / aspectRatio);
-		gameAreaHeight = screenHeight;
+		screenWidth = contentWidth;
+		screenHeight = (int)(contentWidth / aspectRatio);
+		contentHeight = screenHeight;
 		break;
 	case LUNAScaleMode::FIT_TO_WIDTH:
-		screenWidth = gameAreaWidth;
-		screenHeight = (int)(gameAreaWidth / aspectRatio);
+		screenWidth = contentWidth;
+		screenHeight = (int)(contentWidth / aspectRatio);
 		break;
 	case LUNAScaleMode::FIT_TO_HEIGHT:
-		screenHeight = gameAreaHeight;
-		screenWidth = (int)(gameAreaHeight * aspectRatio);
+		screenHeight = contentHeight;
+		screenWidth = (int)(contentHeight * aspectRatio);
 		break;
 	};
 }
@@ -95,7 +95,7 @@ void LUNASizes::SelectResolution(const std::shared_ptr<const LUNAConfig>& config
 std::shared_ptr<LUNACamera> LUNASizes::MakeCamera()
 {
 	auto camera = std::make_shared<LUNACamera>(screenWidth, screenHeight);
-	camera->SetPos(gameAreaWidth / 2.0f, gameAreaHeight / 2.0f);
+	camera->SetPos(contentWidth / 2.0f, contentHeight / 2.0f);
 
 	return camera;
 }
@@ -130,16 +130,16 @@ int LUNASizes::GetScreenHeight()
 	return screenHeight;
 }
 
-// Get game area width (in points)
-int LUNASizes::GetGameAreaWidth()
+// Get content width (in points)
+int LUNASizes::GetContentWidth()
 {
-	return gameAreaWidth;
+	return contentWidth;
 }
 
-// Get game area height (in points)
-int LUNASizes::GetGameAreaHeight()
+// Get content height (in points)
+int LUNASizes::GetContentHeight()
 {
-	return gameAreaHeight;
+	return contentHeight;
 }
 
 // Get aspect ratio

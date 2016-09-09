@@ -65,8 +65,8 @@ public:
 	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
 	std::vector<std::string> resolutions = { DEFAULT_RESOLUTION };
 	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH_BY_WIDTH;
-	int gameAreaWidth = 480;
-	int gameAreaHeight = 320;
+	int contentWidth = 480;
+	int contentHeight = 320;
 	bool debug_missedStrings = false;
 
 private:
@@ -76,8 +76,8 @@ private:
 	void ReadScreenOrientation(const json11::Json& jsonConfig);
 	void ReadResolutions(const json11::Json& jsonConfig);
 	void ReadScaleMode(const json11::Json& jsonConfig);
-	void ReadGameAreaWidth(const json11::Json& jsonConfig);
-	void ReadGameAreaHeight(const json11::Json& jsonConfig);
+	void ReadContentWidth(const json11::Json& jsonConfig);
+	void ReadContentHeight(const json11::Json& jsonConfig);
 	void ReadDebugValues(const json11::Json& jsonConfig);
 
 public:

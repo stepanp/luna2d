@@ -74,22 +74,22 @@ void LUNAConfig::ReadScaleMode(const json11::Json& jsonConfig)
 	else scaleMode = SCALE_MODE.FromString(scaleModeStr);
 }
 
-void LUNAConfig::ReadGameAreaWidth(const json11::Json& jsonConfig)
+void LUNAConfig::ReadContentWidth(const json11::Json& jsonConfig)
 {
-	auto jsonGameAreaWidth = jsonConfig["gameAreaWidth"];
-	if(jsonGameAreaWidth.is_null()) return;
+	auto jsonContentWidth = jsonConfig["contentWidth"];
+	if(jsonContentWidth.is_null()) return;
 
-	if(jsonGameAreaWidth.is_number()) gameAreaWidth = jsonGameAreaWidth.int_value();
-	else LUNA_LOGE("Game area width must be number");
+	if(jsonContentWidth.is_number()) contentWidth = jsonContentWidth.int_value();
+	else LUNA_LOGE("Content width must be number");
 }
 
-void LUNAConfig::ReadGameAreaHeight(const json11::Json& jsonConfig)
+void LUNAConfig::ReadContentHeight(const json11::Json& jsonConfig)
 {
-	auto jsonGameAreaHeight = jsonConfig["gameAreaHeight"];
-	if(jsonGameAreaHeight.is_null()) return;
+	auto jsonContentHeight = jsonConfig["contentHeight"];
+	if(jsonContentHeight.is_null()) return;
 
-	if(jsonGameAreaHeight.is_number()) gameAreaHeight = jsonGameAreaHeight.int_value();
-	else LUNA_LOGE("Game area height must be number");
+	if(jsonContentHeight.is_number()) contentHeight = jsonContentHeight.int_value();
+	else LUNA_LOGE("Content height must be number");
 }
 
 void LUNAConfig::ReadDebugValues(const json11::Json& jsonConfig)
@@ -138,14 +138,14 @@ bool LUNAConfig::Read()
 	// Set default config values for portrait mode if it set
 	if(orientation == LUNAOrientation::PORTRAIT)
 	{
-		std::swap(gameAreaWidth, gameAreaHeight);
+		std::swap(contentWidth, contentHeight);
 		scaleMode = LUNAScaleMode::STRETCH_BY_HEIGHT;
 	}
 
 	ReadResolutions(jsonConfig);
 	ReadScaleMode(jsonConfig);
-	ReadGameAreaWidth(jsonConfig);
-	ReadGameAreaHeight(jsonConfig);
+	ReadContentWidth(jsonConfig);
+	ReadContentHeight(jsonConfig);
 	ReadDebugValues(jsonConfig);
 
 	customValues = jsonConfig;
