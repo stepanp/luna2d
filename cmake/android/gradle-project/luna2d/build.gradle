@@ -28,7 +28,7 @@ android {
 			if(outputFile != null && outputFile.name.endsWith('.aar')) {
 				def buildType = "${variant.buildType.name}"
 				def relativeOutputPath = "${outputFile.parent}/../../../../../../../lib/android/${buildType}"
-                def outputPath = new File(relativeOutputPath).getCanonicalPath()
+				def outputPath = new File(relativeOutputPath).getCanonicalPath()
 				def name = "${archivesBaseName}"
 
 				if(buildType == "debug") {
