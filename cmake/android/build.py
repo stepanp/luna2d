@@ -9,7 +9,8 @@ BUILD_TYPE = sys.argv[1] if len(sys.argv) > 1 else "Release"
 ARCHS = ["armeabi-v7a", "armeabi", "x86"]
 
 for arch in ARCHS:
-	BUILD_PATH = LUNA2D_PATH + "build/android/" + BUILD_TYPE.lower() + "/" + arch
+	BUILD_PATH = os.path.realpath(LUNA2D_PATH + "build/android/" + BUILD_TYPE.lower() + "/" + arch)
+
 	if not os.path.exists(BUILD_PATH):
 		os.makedirs(BUILD_PATH)
 
