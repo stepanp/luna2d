@@ -91,6 +91,13 @@ void LUNAAndroidUtils::ConfirmDialog(const std::string& title, const std::string
 		jni::ToJString(title).j_str(), jni::ToJString(message).j_str());
 }
 
+// Show/hide loading indicator over game view
+void LUNAAndroidUtils::ShowLoadingIndicator(bool show)
+{
+	LUNA_LOGE("Method LUNAAndroidUtils::ShowLoadingIndicator is not implemented");
+}
+
+
 LUNA_JNI_FUNC(void, LunaUtils, onMessageDialogClosed)(JNIEnv* env, jmethodID method)
 {
 	auto platformUtils = static_cast<LUNAAndroidUtils*>(LUNAEngine::SharedPlatformUtils());
