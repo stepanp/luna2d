@@ -46,6 +46,8 @@ WatcherDialog::WatcherDialog(LUNAQtWidget* engineWidget, QWidget* parent) :
 
 	// Set stretch sections in header of fields table
 	ui->tableFields->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	ui->tableFields->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
+	ui->tableFields->setColumnWidth(2, 20);
 	ui->tableFields->setEnabled(false);
 
 	if(engineWidget->IsEngineInitialized()) AttachWatcher();
@@ -164,6 +166,9 @@ void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::stri
 
 		ui->tableFields->setCellWidget(row, 1, checkBox);
 	}
+
+	UserDataWidget<QCheckBox>* checkRemember = new UserDataWidget<QCheckBox>(this);
+	ui->tableFields->setCellWidget(row, 2, checkRemember);
 
 	// Sort items in table widget by name,
 	// Because order of itens in lua hash tables is not defined
