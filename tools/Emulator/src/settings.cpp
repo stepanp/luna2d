@@ -38,6 +38,8 @@ bool Settings::clearLogOnStart = true;
 bool Settings::showFps = true;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 QHash<QString,QString> Settings::preferredLanguages = QHash<QString,QString>();
+QRect Settings::logRect;
+QRect Settings::watcherRect;
 
 void Settings::Load()
 {
@@ -49,6 +51,8 @@ void Settings::Load()
 	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
 	clearLogOnStart = settings.value("clearLogOnStart", clearLogOnStart).toBool();
 	showFps = settings.value("showFps", showFps).toBool();
+	logRect = settings.value("logRect").toRect();
+	watcherRect = settings.value("watcherRect").toRect();
 
 	// Load recent games
 	int recentGamesCount = settings.beginReadArray("recentGames");
@@ -113,6 +117,8 @@ void Settings::Save()
 	settings.setValue("openLogWhenError", openLogWhenError);
 	settings.setValue("clearLogOnStart", clearLogOnStart);
 	settings.setValue("showFps", showFps);
+	settings.setValue("logRect", logRect);
+	settings.setValue("watcherRect", watcherRect);
 
 	// Save recent games
 	settings.beginWriteArray("recentGames");

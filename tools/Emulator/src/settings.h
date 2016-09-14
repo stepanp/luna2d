@@ -28,6 +28,7 @@
 #include <QStringList>
 #include <QVector>
 #include <QHash>
+#include <QRect>
 
 const QString ORGANIZATION_NAME = "luna2d";
 const QString APP_NAME = "Emulator";
@@ -47,6 +48,7 @@ public:
 	static bool showFps; // Show FPS in window caption
 	static QHash<QString,QString> pipelineProjects; // Pipeline projects attached to game
 	static QHash<QString,QString> preferredLanguages; // Preferred languages attached to game
+	static QRect logRect, watcherRect; // Positions of tool windows (log, watcher)
 
 public:
 	static void Load();

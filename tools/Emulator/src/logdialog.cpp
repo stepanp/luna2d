@@ -48,6 +48,10 @@ LogDialog::LogDialog(LogStorage* logStorage, QWidget *parent) :
 
 LogDialog::~LogDialog()
 {
+	Settings::logRect.setTopLeft(pos());
+	Settings::logRect.setSize(size());
+	Settings::Save();
+
 	delete ui;
 }
 

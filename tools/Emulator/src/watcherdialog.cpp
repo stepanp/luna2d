@@ -23,6 +23,7 @@
 
 #include "watcherdialog.h"
 #include "ui_watcherdialog.h"
+#include "settings.h"
 #include "lunaengine.h"
 #include "lunadebug.h"
 #include <cfloat>
@@ -58,6 +59,11 @@ WatcherDialog::WatcherDialog(LUNAQtWidget* engineWidget, QWidget* parent) :
 WatcherDialog::~WatcherDialog()
 {
 	DetachWatcher();
+
+	Settings::watcherRect.setTopLeft(pos());
+	Settings::watcherRect.setSize(size());
+	Settings::Save();
+
 	delete ui;
 }
 

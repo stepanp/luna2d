@@ -323,12 +323,20 @@ void MainWindow::SetLanguage(QString localeCode)
 void MainWindow::OpenLogDialog()
 {
 	logDlg = new LogDialog(logStorage, this);
-	logDlg->show();
-	connect(logDlg, &QDialog::rejected, this, &MainWindow::OnLogClosed);
 
+	connect(logDlg, &QDialog::rejected, this, &MainWindow::OnLogClosed);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logDlg, &LogDialog::OnLogInfo);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logDlg, &LogDialog::OnLogWarning);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logDlg, &LogDialog::OnLogError);
+
+	const auto& rect = Settings::logRect;
+	if(!rect.isNull())
+	{
+		logDlg->move(rect.topLeft());
+		logDlg->resize(rect.size());
+	}
+
+	logDlg->show();
 }
 
 // Update "Tools/Pipeline" menu
@@ -477,8 +485,16 @@ void MainWindow::OnActionWatcher()
 	if(ui->actionWatcher->isChecked())
 	{
 		watcherDlg = new WatcherDialog(ui->centralWidget, this);
-		watcherDlg->show();
 		connect(watcherDlg, &QDialog::rejected, this, &MainWindow::OnWatcherClosed);
+
+		const auto& rect = Settings::watcherRect;
+		if(!rect.isNull())
+		{
+			watcherDlg->move(rect.topLeft());
+			watcherDlg->resize(rect.size());
+		}
+
+		watcherDlg->show();
 	}
 	else
 	{
@@ -531,12 +547,14 @@ void MainWindow::OnAbout()
 
 void MainWindow::OnLogClosed()
 {
+	delete logDlg;
 	logDlg = nullptr;
 	ui->actionLog->setChecked(false);
 }
 
 void MainWindow::OnWatcherClosed()
 {
+	delete watcherDlg;
 	watcherDlg = nullptr;
 	ui->actionWatcher->setChecked(false);
 }
