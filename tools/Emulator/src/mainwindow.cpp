@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui(new Ui::MainWindow),
 	logStorage(new LogStorage()),
 	logDlg(nullptr),
+	watcherDlg(nullptr),
 	curGamePath(QString::null)
 {
 	ui->setupUi(this);
@@ -228,6 +229,14 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	// Launch game
 	ui->centralWidget->RunGame();
+
+	// Apply saved watcher values
+	// TODO: Refactor it
+	if(!watcherDlg && Settings::watcherValues.count(curGameName) > 0)
+	{
+		auto tempWatcherDlg = new WatcherDialog(ui->centralWidget, this);
+		delete tempWatcherDlg;
+	}
 }
 
 void MainWindow::CloseGame()

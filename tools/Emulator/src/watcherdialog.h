@@ -28,6 +28,7 @@
 #include <QDialog>
 #include <QPair>
 #include <QString>
+#include <QCheckBox>
 
 namespace Ui {
 class WatcherDialog;
@@ -44,12 +45,14 @@ public:
 
 public:
 	std::string table, field;
+	QCheckBox* checkRemember;
 
 public:
-	void SetUserData(const std::string& table, const std::string& field)
+	void SetUserData(const std::string& table, const std::string& field, QCheckBox* checkRemember = nullptr)
 	{
 		this->table = table;
 		this->field = field;
+		this->checkRemember = checkRemember;
 	}
 };
 
@@ -69,11 +72,13 @@ private:
 private:
 	void AttachWatcher();
 	void DetachWatcher();
+	void RememberValue(const std::string& tableName, const std::string& fieldName, bool remember);
 
 private slots:
 	void OnStringFieldChanged(const QString& value);
 	void OnNumberFieldChanged(double value);
 	void OnBoolFieldChanged(bool value);
+	void OnRememberValueChanged(bool checked);
 
 public slots:
 	void OnEngineInitialized();

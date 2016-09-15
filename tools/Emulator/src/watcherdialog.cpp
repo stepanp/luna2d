@@ -30,7 +30,6 @@
 #include <QLabel>
 #include <QDoubleSpinBox>
 #include <QLineEdit>
-#include <QCheckBox>
 #include <QStringList>
 
 using namespace luna2d;
@@ -89,22 +88,46 @@ void WatcherDialog::DetachWatcher()
 	ui->tableFields->setEnabled(false);
 }
 
+void WatcherDialog::RememberValue(const std::string& tableName, const std::string& fieldName, bool remember)
+{
+	if(remember)
+	{
+		Settings::SetWatcherValue(engineWidget->GetGameName(),
+			QString::fromStdString(tableName), QString::fromStdString(fieldName),
+			watcher->GetValue(tableName, fieldName).To<QVariant>());
+	}
+	else
+	{
+		Settings::RemoveWatcherValue(engineWidget->GetGameName(),
+			QString::fromStdString(tableName), QString::fromStdString(fieldName));
+	}
+}
+
 void WatcherDialog::OnStringFieldChanged(const QString &value)
 {
 	UserDataWidget<QLineEdit>* edit = static_cast<UserDataWidget<QLineEdit>*>(sender());
 	watcher->SetValue(edit->table, edit->field, LuaAny(LUNAEngine::SharedLua(), value));
+	if(edit->checkRemember->isChecked()) RememberValue(edit->table, edit->field, true);
 }
 
 void WatcherDialog::OnNumberFieldChanged(double value)
 {
 	UserDataWidget<QDoubleSpinBox>* spinBox = static_cast<UserDataWidget<QDoubleSpinBox>*>(sender());
 	watcher->SetValue(spinBox->table, spinBox->field, LuaAny(LUNAEngine::SharedLua(), (float)value));
+	if(spinBox->checkRemember->isChecked()) RememberValue(spinBox->table, spinBox->field, true);
 }
 
 void WatcherDialog::OnBoolFieldChanged(bool value)
 {
 	UserDataWidget<QCheckBox>* checkBox = static_cast<UserDataWidget<QCheckBox>*>(sender());
 	watcher->SetValue(checkBox->table, checkBox->field, LuaAny(LUNAEngine::SharedLua(), value));
+	if(checkBox->checkRemember->isChecked()) RememberValue(checkBox->table, checkBox->field, true);
+}
+
+void WatcherDialog::OnRememberValueChanged(bool checked)
+{
+	UserDataWidget<QCheckBox>* checkRemember = static_cast<UserDataWidget<QCheckBox>*>(sender());
+	RememberValue(checkRemember->table, checkRemember->field, checked);
 }
 
 void WatcherDialog::OnEngineInitialized()
@@ -132,6 +155,22 @@ void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::stri
 	if(type == LUA_TNIL || type == LUA_TTABLE || type == LUA_TFUNCTION ||
 			type == LUA_TLIGHTUSERDATA || type == LUA_TUSERDATA) return;
 
+	// Try load saved value
+	auto qValue = Settings::GetWatcherValue(engineWidget->GetGameName(),
+		QString::fromStdString(tableName), QString::fromStdString(fieldName));
+	bool valueSaved = !qValue.isNull();
+
+	if(valueSaved)
+	{
+		// Apply saved value
+		watcher->SetValue(tableName, fieldName, LuaAny(LUNAEngine::SharedLua(), qValue));
+	}
+	else
+	{
+		// Use read value
+		qValue = value.To<QVariant>();
+	}
+
 	// Insert new row with field
 	int row = ui->tableFields->rowCount();
 	ui->tableFields->insertRow(row);
@@ -139,12 +178,19 @@ void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::stri
 	// Set field name
 	ui->tableFields->setItem(row, 0, new QTableWidgetItem(QString::fromStdString(fieldName)));
 
+	// Add "remember value" check box
+	UserDataWidget<QCheckBox>* checkRemember = new UserDataWidget<QCheckBox>(this);
+	checkRemember->SetUserData(tableName, fieldName);
+	checkRemember->setChecked(valueSaved);
+	connect(checkRemember, &QCheckBox::toggled, this, &WatcherDialog::OnRememberValueChanged);
+	ui->tableFields->setCellWidget(row, 2, checkRemember);
+
 	// Add widget for field value
 	if(type == LUA_TSTRING)
 	{
 		UserDataWidget<QLineEdit>* edit = new UserDataWidget<QLineEdit>(this);
-		edit->setText(value.To<QString>());
-		edit->SetUserData(tableName, fieldName);
+		edit->setText(qValue.toString());
+		edit->SetUserData(tableName, fieldName, checkRemember);
 		connect(edit, &QLineEdit::textChanged, this, &WatcherDialog::OnStringFieldChanged);
 
 		ui->tableFields->setCellWidget(row, 1, edit);
@@ -155,9 +201,9 @@ void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::stri
 		UserDataWidget<QDoubleSpinBox>* spinBox = new UserDataWidget<QDoubleSpinBox>(this);
 		spinBox->setMinimum(-DBL_MAX);
 		spinBox->setMaximum(DBL_MAX);
-		spinBox->setValue(value.ToFloat());
+		spinBox->setValue(qValue.toFloat());
 		spinBox->setSingleStep(0.5);
-		spinBox->SetUserData(tableName, fieldName);
+		spinBox->SetUserData(tableName, fieldName, checkRemember);
 		connect(spinBox, SIGNAL(valueChanged(double)), this, SLOT(OnNumberFieldChanged(double)));
 
 		ui->tableFields->setCellWidget(row, 1, spinBox);
@@ -166,15 +212,12 @@ void WatcherDialog::OnFieldChanged(const std::string& tableName, const std::stri
 	else if(type == LUA_TBOOLEAN)
 	{
 		UserDataWidget<QCheckBox>* checkBox = new UserDataWidget<QCheckBox>(this);
-		checkBox->setChecked(value.ToBool());
-		checkBox->SetUserData(tableName, fieldName);
+		checkBox->setChecked(qValue.toBool());
+		checkBox->SetUserData(tableName, fieldName, checkRemember);
 		connect(checkBox, &QCheckBox::toggled, this, &WatcherDialog::OnBoolFieldChanged);
 
 		ui->tableFields->setCellWidget(row, 1, checkBox);
 	}
-
-	UserDataWidget<QCheckBox>* checkRemember = new UserDataWidget<QCheckBox>(this);
-	ui->tableFields->setCellWidget(row, 2, checkRemember);
 
 	// Sort items in table widget by name,
 	// Because order of itens in lua hash tables is not defined

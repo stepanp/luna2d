@@ -62,6 +62,8 @@ TableHook LUNAWatcher::SetHook(LuaTable table, const std::string& name)
 	meta.SetField("__newindex", LuaFunction(LUNAEngine::SharedLua(), this, &LUNAWatcher::OnNewIndex));
 	meta.SetField("__watcherId", name);
 
+	hooks[name] = hook;
+
 	// Fetch all fields of table
 	FetchTable(table, name);
 
@@ -106,7 +108,7 @@ void LUNAWatcher::AddTable(const std::string& name, LuaTable table)
 		return;
 	}
 
-	hooks[name] = SetHook(table, name);
+	SetHook(table, name);
 	if(listener) listener->OnTableAdded(name);
 }
 
@@ -122,12 +124,20 @@ void LUNAWatcher::RemoveTable(const std::string &name)
 	if(listener) listener->OnTableRemoved(name);
 }
 
+LuaAny LUNAWatcher::GetValue(const std::string& tableName, const std::string& fieldName)
+{
+	if(hooks.count(tableName) == 0) return nil;
+
+	TableHook& hook = hooks[tableName];
+	return hook.table.GetField<LuaAny>(fieldName);
+}
+
 void LUNAWatcher::SetValue(const std::string& tableName, const std::string& fieldName, LuaAny value)
 {
 	if(hooks.count(tableName) > 0)
 	{
 		TableHook& hook = hooks[tableName];
-		hook.table.SetField(fieldName.c_str(), value, true);
+		hook.table.SetField(fieldName, value, true);
 	}
 }
 

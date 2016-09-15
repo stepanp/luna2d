@@ -27,6 +27,7 @@
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_QT
 	#include <QString>
+	#include <QVariant>
 #endif
 
 namespace luna2d{
@@ -127,23 +128,6 @@ struct LuaStack<const char*>
 	}
 };
 
-#if LUNA_PLATFORM == LUNA_PLATFORM_QT
-template<>
-struct LuaStack<QString>
-{
-	static void Push(lua_State* luaVm, const QString& arg)
-	{
-		lua_pushstring(luaVm, arg.toUtf8());
-	}
-
-	static QString Pop(lua_State* luaVm, int index = -1)
-	{
-		if(!lua_isstring(luaVm, index)) return QString("");
-		return QString(lua_tostring(luaVm, index));
-	}
-};
-#endif
-
 template<>
 struct LuaStack<lua_CFunction>
 {
@@ -231,5 +215,64 @@ struct LuaStack<std::unordered_set<T>>
 		}
 	}
 };
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_QT
+template<>
+struct LuaStack<QString>
+{
+	static void Push(lua_State* luaVm, const QString& arg)
+	{
+		lua_pushstring(luaVm, arg.toUtf8());
+	}
+
+	static QString Pop(lua_State* luaVm, int index = -1)
+	{
+		if(!lua_isstring(luaVm, index)) return QString("");
+		return QString(lua_tostring(luaVm, index));
+	}
+};
+
+template<>
+struct LuaStack<QVariant>
+{
+	static void Push(lua_State* luaVm, const QVariant& arg)
+	{
+		switch(arg.type())
+		{
+		case QMetaType::Bool:
+			LuaStack<bool>::Push(luaVm, arg.toBool());
+			break;
+		case QMetaType::Int:
+			LuaStack<int>::Push(luaVm, arg.toInt());
+			break;
+		case QMetaType::Float:
+			LuaStack<float>::Push(luaVm, arg.toFloat());
+			break;
+		case QMetaType::QString:
+			LuaStack<QString>::Push(luaVm, arg.toString());
+			break;
+		default:
+			lua_pushnil(luaVm);
+		}
+	}
+
+	static QVariant Pop(lua_State* luaVm, int index = -1)
+	{
+		int type = lua_type(luaVm, index);
+
+		switch(type)
+		{
+		case LUA_TBOOLEAN:
+			return LuaStack<bool>::Pop(luaVm, index);
+		case LUA_TNUMBER:
+			return LuaStack<float>::Pop(luaVm, index);
+		case LUA_TSTRING:
+			return LuaStack<QString>::Pop(luaVm, index);
+		}
+
+		return {};
+	}
+};
+#endif
 
 }

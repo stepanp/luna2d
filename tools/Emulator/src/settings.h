@@ -29,10 +29,18 @@
 #include <QVector>
 #include <QHash>
 #include <QRect>
+#include <QVariant>
 
 const QString ORGANIZATION_NAME = "luna2d";
 const QString APP_NAME = "Emulator";
 const int MAX_RECENT_GAMES = 10;
+
+struct WatcherValue
+{
+	QString tableName;
+	QString valueName;
+	QVariant value;
+};
 
 class Settings
 {
@@ -48,6 +56,7 @@ public:
 	static bool showFps; // Show FPS in window caption
 	static QHash<QString,QString> pipelineProjects; // Pipeline projects attached to game
 	static QHash<QString,QString> preferredLanguages; // Preferred languages attached to game
+	static QHash<QString,QVector<WatcherValue>> watcherValues; // Saved watcher values attached to game
 	static QRect logRect, watcherRect; // Positions of tool windows (log, watcher)
 
 public:
@@ -58,4 +67,7 @@ public:
 	static QString GetPipelineProject(const QString& gameName); // Get path to pipeline project for given game
 	static void SetPreferredLanguage(const QString& gameName, const QString& language); // Set prederred language for given game
 	static QString GetPreferredLanguage(const QString& gameName); // Get prederred language for given game
+	static QVariant GetWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName);
+	static void SetWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName, const QVariant& value);
+	static void RemoveWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName);
 };

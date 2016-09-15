@@ -64,6 +64,7 @@ public:
 	void SetListener(LUNAWatcherListener* listener);
 	void AddTable(const std::string& name, LuaTable table);
 	void RemoveTable(const std::string& name);
+	LuaAny GetValue(const std::string& tableName, const std::string& fieldName);
 	void SetValue(const std::string& tableName, const std::string& fieldName, LuaAny value);
 	void FetchAllTables(); // Force fetch field of all tables in watcher
 };

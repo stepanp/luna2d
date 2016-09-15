@@ -38,6 +38,7 @@ bool Settings::clearLogOnStart = true;
 bool Settings::showFps = true;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 QHash<QString,QString> Settings::preferredLanguages = QHash<QString,QString>();
+QHash<QString,QVector<WatcherValue>> Settings::watcherValues = QHash<QString,QVector<WatcherValue>>();
 QRect Settings::logRect;
 QRect Settings::watcherRect;
 
@@ -97,12 +98,35 @@ void Settings::Load()
 	}
 	settings.endArray();
 
-	// Load pipeline projects paths
+	// Load preferred languages
 	int preferredLanguagesCount = settings.beginReadArray("preferredLanguages");
 	for(int i = 0; i < preferredLanguagesCount; i++)
 	{
 		settings.setArrayIndex(i);
 		Settings::preferredLanguages[settings.value("game").toString()] = settings.value("language").toString();
+	}
+	settings.endArray();
+
+	// Load watcher values
+	int watcherValuesCount = settings.beginReadArray("watcherValuesByGame");
+	for(int i = 0; i < watcherValuesCount; i++)
+	{
+		settings.setArrayIndex(i);
+		auto gameName = settings.value("game").toString();
+
+		int valuesCount = settings.beginReadArray("watcherValues");
+		for(int j = 0; j < valuesCount; j++)
+		{
+			settings.setArrayIndex(j);
+
+			auto tableName = settings.value("tableName").toString();
+			auto valueName = settings.value("valueName").toString();
+			auto value = settings.value("value");
+
+			Settings::watcherValues[gameName].push_back({ tableName, valueName, value });
+		}
+
+		settings.endArray();
 	}
 	settings.endArray();
 }
@@ -152,7 +176,7 @@ void Settings::Save()
 	}
 	settings.endArray();
 
-	// Save preferred languages paths
+	// Save preferred languages
 	settings.beginWriteArray("preferredLanguages");
 	i = 0;
 	for(auto it = Settings::preferredLanguages.begin(); it != Settings::preferredLanguages.end(); it++)
@@ -160,6 +184,30 @@ void Settings::Save()
 		settings.setArrayIndex(i);
 		settings.setValue("game", it.key());
 		settings.setValue("language", it.value());
+		i++;
+	}
+	settings.endArray();
+
+	// Save watcher values
+	settings.beginWriteArray("watcherValuesByGame");
+	i = 0;
+	for(auto it = Settings::watcherValues.begin(); it != Settings::watcherValues.end(); it++)
+	{
+		settings.setArrayIndex(i);
+		settings.setValue("game", it.key());
+
+		settings.beginWriteArray("watcherValues");
+		int j = 0;
+		for(const auto& watcherValue : it.value())
+		{
+			settings.setArrayIndex(j);
+			settings.setValue("tableName", watcherValue.tableName);
+			settings.setValue("valueName", watcherValue.valueName);
+			settings.setValue("value", watcherValue.value);
+			j++;
+		}
+
+		settings.endArray();
 		i++;
 	}
 	settings.endArray();
@@ -218,4 +266,47 @@ QString Settings::GetPreferredLanguage(const QString& gameName)
 {
 	if(Settings::preferredLanguages.count(gameName) == 0) return "system";
 	return Settings::preferredLanguages[gameName];
+}
+
+QVariant Settings::GetWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName)
+{
+	if(Settings::watcherValues.count(gameName) == 0) return {};
+
+	for(const auto& watcherValue : Settings::watcherValues[gameName])
+	{
+		if(watcherValue.tableName == tableName && watcherValue.valueName == valueName) return watcherValue.value;
+	}
+
+	return {};
+}
+
+void Settings::SetWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName, const QVariant& value)
+{
+	for(auto& watcherValue : Settings::watcherValues[gameName])
+	{
+		if(watcherValue.tableName == tableName && watcherValue.valueName == valueName)
+		{
+			watcherValue.value = value;
+			return;
+		}
+	}
+
+	Settings::watcherValues[gameName].push_back({ tableName, valueName, value });
+}
+
+void Settings::RemoveWatcherValue(const QString& gameName, const QString& tableName, const QString& valueName)
+{
+	if(Settings::watcherValues.count(gameName) == 0) return;
+
+	auto& watcherValues = Settings::watcherValues[gameName];
+	for(int i = 0; i < watcherValues.size(); i++)
+	{
+		const auto& watcherValue = watcherValues[i];
+
+		if(watcherValue.tableName == tableName && watcherValue.valueName == valueName)
+		{
+			watcherValues.remove(i);
+			return;
+		}
+	}
 }
