@@ -235,6 +235,12 @@ void MainWindow::OpenGame(const QString &gamePath)
 	if(!watcherDlg && Settings::watcherValues.count(curGameName) > 0)
 	{
 		auto tempWatcherDlg = new WatcherDialog(ui->centralWidget, this);
+		const auto& rect = Settings::watcherRect;
+		if(!rect.isNull())
+		{
+			tempWatcherDlg->move(rect.topLeft());
+			tempWatcherDlg->resize(rect.size());
+		}
 		delete tempWatcherDlg;
 	}
 }
