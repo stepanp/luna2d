@@ -112,6 +112,16 @@ void Pipeline::RunTask(Task* task)
 		sourceImages.push_back(QPair<QString,QImage>(fileInfo.completeBaseName(), image));
 	}
 
+	// Sort images by size descending
+	std::sort(sourceImages.begin(), sourceImages.end(),
+		[](const QPair<QString,QImage>& img1, const QPair<QString,QImage>& img2)
+		{
+			int total1 = img1.second.width() + img1.second.height();
+			int total2 = img2.second.width() + img2.second.height();
+
+			return total1 > total2;
+		});
+
 	if(task->resize) ResizeStage(sourceImages, task);
 	else
 	{
