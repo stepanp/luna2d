@@ -27,25 +27,33 @@
 
 using namespace luna2d;
 
-LUNAShader::LUNAShader(const char *vertexSource, const char *fragmentSource)
+LUNAShader::LUNAShader(const std::string& vertexSource, const std::string& fragmentSource)
 {
-	program = CreateProgram(vertexSource, fragmentSource);
+	CreateProgram(vertexSource, fragmentSource);
 	FetchDefaultAttributes();
 }
 
 LUNAShader::~LUNAShader()
 {
-	//glDeleteShader(program);
+	if(!program) return;
+
+	Unbind();
+	glDetachShader(program, vertexShader);
+	glDeleteShader(vertexShader);
+	glDetachShader(program, fragmentShader);
+	glDeleteShader(fragmentShader);
+	glDeleteProgram(program);
 }
 
 // Load and compile shader
-GLuint LUNAShader::LoadShader(GLenum shaderType, const char *source)
+GLuint LUNAShader::LoadShader(GLenum shaderType, const std::string& source)
 {
 	GLuint shader = glCreateShader(shaderType);
 
 	if(shader)
 	{
-		glShaderSource(shader, 1, &source, 0);
+		const char* cSource = source.c_str();
+		glShaderSource(shader, 1, &cSource, nullptr);
 		glCompileShader(shader);
 
 		GLint compileStatus = GL_FALSE;
@@ -73,16 +81,17 @@ GLuint LUNAShader::LoadShader(GLenum shaderType, const char *source)
 	return shader;
 }
 
-// Link vertex and fragment shaders to shader program
-GLuint LUNAShader::CreateProgram(const char *vertexSource, const char *fragmentSource)
+// Link vertex and fragment shaders into shader program
+void LUNAShader::CreateProgram(const std::string& vertexSource, const std::string& fragmentSource)
 {
-	GLuint vertexShader = LoadShader(GL_VERTEX_SHADER, vertexSource);
-	if(!vertexShader) return 0;
+	vertexShader = LoadShader(GL_VERTEX_SHADER, vertexSource);
+	if(!vertexShader) return;
 
-	GLuint fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragmentSource);
-	if(!fragmentShader) return 0;
+	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragmentSource);
+	if(!fragmentShader) return;
 
-	GLuint program = glCreateProgram();
+	program = glCreateProgram();
+
 	if(program)
 	{
 		glAttachShader(program, vertexShader);
@@ -106,13 +115,14 @@ GLuint LUNAShader::CreateProgram(const char *vertexSource, const char *fragmentS
 			}
 
 			glDeleteProgram(program);
+			vertexShader = 0;
+			fragmentShader = 0;
 			program = 0;
 		}
 	}
-
-	return program;
 }
 
+// Fetch default attributes and uniforms
 void LUNAShader::FetchDefaultAttributes()
 {
 	a_position = glGetAttribLocation(program, "a_position");
@@ -120,6 +130,16 @@ void LUNAShader::FetchDefaultAttributes()
 	a_texCoords = glGetAttribLocation(program, "a_texCoords");
 	u_transformMatrix = glGetUniformLocation(program, "u_transformMatrix");
 	u_texture = glGetUniformLocation(program, "u_texture");
+}
+
+bool LUNAShader::HasColorAttribute()
+{
+	return a_color != -1;
+}
+
+bool LUNAShader::HasTexture()
+{
+	return u_texture != -1 && a_texCoords != -1;
 }
 
 void LUNAShader::Bind()
@@ -132,26 +152,26 @@ void LUNAShader::Unbind()
 	glUseProgram(0);
 }
 
-void LUNAShader::SetPositionAttribute(float *vertexArray)
+void LUNAShader::SetPositionAttribute(const std::vector<float>& vertexArray)
 {
 	glEnableVertexAttribArray(a_position);
-	glVertexAttribPointer(a_position, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray);
+	glVertexAttribPointer(a_position, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), &vertexArray[0]);
 }
 
-void LUNAShader::SetColorAttribute(float *vertexArray)
+void LUNAShader::SetColorAttribute(const std::vector<float>& vertexArray)
 {
-	if(a_color == -1) return;
+	if(!HasColorAttribute()) return;
 
 	glEnableVertexAttribArray(a_color);
-	glVertexAttribPointer(a_color, 4, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 2);
+	glVertexAttribPointer(a_color, 4, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), &vertexArray[0] + 2);
 }
 
-void LUNAShader::SetTexCoordsAttribute(float *vertexArray)
+void LUNAShader::SetTexCoordsAttribute(const std::vector<float>& vertexArray)
 {
-	if(a_texCoords == -1) return;
+	if(!HasTexture()) return;
 
 	glEnableVertexAttribArray(a_texCoords);
-	glVertexAttribPointer(a_texCoords, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), vertexArray + 6);
+	glVertexAttribPointer(a_texCoords, 2, GL_FLOAT, GL_FALSE, RENDER_ELEMENT_PER_VERTEX * sizeof(float), &vertexArray[0] + 6);
 }
 
 void LUNAShader::SetTransformMatrix(const glm::mat4& matrix)
@@ -159,11 +179,11 @@ void LUNAShader::SetTransformMatrix(const glm::mat4& matrix)
 	glUniformMatrix4fv(u_transformMatrix, 1, GL_FALSE, &matrix[0][0]);
 }
 
-void LUNAShader::SetTextureUniform(LUNATexture *texture)
+void LUNAShader::SetTextureUniform(const LUNATexture& texture)
 {
-	if(u_texture == -1) return;
+	if(!HasTexture()) return;
 
 	glActiveTexture(GL_TEXTURE0);
-	texture->Bind();
+	texture.Bind();
 	glUniform1i(u_texture, 0);
 }

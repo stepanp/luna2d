@@ -76,44 +76,44 @@ void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
 }
 
 // Get sizes in pixels
-int LUNATexture::GetWidth()
+int LUNATexture::GetWidth() const
 {
 	return width;
 }
 
-int LUNATexture::GetHeight()
+int LUNATexture::GetHeight() const
 {
 	return height;
 }
 
 // Get sizes in game points (scaled to virtual resoultion)
-float LUNATexture::GetWidthPoints()
+float LUNATexture::GetWidthPoints() const
 {
 	return std::floor(width * LUNAEngine::SharedSizes()->GetTextureScale());
 }
 
-float LUNATexture::GetHeightPoints()
+float LUNATexture::GetHeightPoints() const
 {
 	return std::floor(height * LUNAEngine::SharedSizes()->GetTextureScale());
 }
 
-GLuint LUNATexture::GetId()
+GLuint LUNATexture::GetId() const
 {
 	return id;
 }
 
 // Check for texture is valid. Can be invalid after lost GL context
-bool LUNATexture::IsValid()
+bool LUNATexture::IsValid() const
 {
 	return glIsTexture(id) == GL_TRUE;
 }
 
-void LUNATexture::Bind()
+void LUNATexture::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void LUNATexture::Unbind()
+void LUNATexture::Unbind() const
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -198,9 +198,10 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 {
 	Render();
 	curMaterial = nullptr;
+	int vertexCount = 2;
 
 	// Position
-	float vertexes[] =
+	vertexBatch =
 	{
 		x1, y1,
 		color.r, color.g, color.b, color.a,
@@ -211,10 +212,16 @@ void LUNARenderer::RenderLine(float x1, float y1, float x2, float y2, const LUNA
 	};
 
 	primitivesShader->Bind();
-	primitivesShader->SetPositionAttribute(vertexes);
-	primitivesShader->SetColorAttribute(vertexes);
+	primitivesShader->SetPositionAttribute(vertexBatch);
+	primitivesShader->SetColorAttribute(vertexBatch);
 	primitivesShader->SetTransformMatrix(camera->GetMatrix());
-	glDrawArrays(GL_LINES, 0, 2);
+	glDrawArrays(GL_LINES, 0, vertexCount);
+
+	vertexBatch.clear();
+	renderedVertexes += vertexCount;
+	renderCalls++;
+
+	LUNA_CHECK_GL_ERROR();
 }
 
 void LUNARenderer::BeginRender()
@@ -257,11 +264,11 @@ void LUNARenderer::Render()
 	auto texture = curMaterial->texture.lock();
 
 	shader->Bind();
-	shader->SetPositionAttribute(vertexBatch.data());
-	shader->SetColorAttribute(vertexBatch.data());
-	shader->SetTexCoordsAttribute(vertexBatch.data());
+	shader->SetPositionAttribute(vertexBatch);
+	shader->SetColorAttribute(vertexBatch);
+	shader->SetTexCoordsAttribute(vertexBatch);
 	shader->SetTransformMatrix(camera->GetMatrix());
-	shader->SetTextureUniform(texture.get());
+	shader->SetTextureUniform(*texture);
 
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 

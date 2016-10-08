@@ -26,41 +26,51 @@
 #include "lunatexture.h"
 #include "lunaglm.h"
 
-// Default attribute names
-#define LUNA_ATTRIBUTE_POSITION "a_position"
-#define LUNA_ATTRIBUTE_COLOR "a_color"
-#define LUNA_ATTRIBUTE_TEX_COORDS "a_texCoords"
-
 namespace luna2d{
 
 class LUNAShader
 {
 public:
-	LUNAShader(const char *vertexSource, const char *fragmentSource);
+	LUNAShader(const std::string& vertexSource, const std::string& fragmentSource);
 	~LUNAShader();
 
 private:
-	GLuint program;
-	GLint a_position, a_color, a_texCoords, u_transformMatrix, u_texture; // Default attributes
+	GLuint program = 0;
+	GLuint vertexShader = 0;
+	GLuint fragmentShader = 0;
+
+	// Default attributes
+	GLint a_position = -1;
+	GLint a_color = -1;
+	GLint a_texCoords = -1;
+	GLint u_transformMatrix = -1;
+	GLint u_texture = -1;
 
 private:
-	GLuint LoadShader(GLenum shaderType, const char *source); // Load and compile shader
-	GLuint CreateProgram(const char *vertexSource, const char *fragmentSource); // Link vertex and fragment shaders to shader program
+	// Load and compile shader
+	GLuint LoadShader(GLenum shaderType, const std::string& source);
+
+	// Link vertex and fragment shaders into shader program
+	void CreateProgram(const std::string& vertexSource, const std::string& fragmentSource);
+
+	// Fetch default attributes and uniforms
 	void FetchDefaultAttributes();
 
 public:
-	void SetPositionAttribute(float *vertexArray);
-	void SetColorAttribute(float *vertexArray);
-	void SetTexCoordsAttribute(float *vertexArray);
+	bool HasColorAttribute();
+	bool HasTexture();
+	void SetPositionAttribute(const std::vector<float>& vertexArray);
+	void SetColorAttribute(const std::vector<float>& vertexArray);
+	void SetTexCoordsAttribute(const std::vector<float>& vertexArray);
 	void SetTransformMatrix(const glm::mat4& matrix);
-	void SetTextureUniform(LUNATexture *texture);
+	void SetTextureUniform(const LUNATexture& texture);
 
 	void Bind();
 	void Unbind();
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 public:
-	inline void Reload(const char *vertexSource, const char *fragmentSource)
+	inline void Reload(const std::string& vertexSource, const std::string& fragmentSource)
 	{
 		program = CreateProgram(vertexSource, fragmentSource);
 		FetchDefaultAttributes();

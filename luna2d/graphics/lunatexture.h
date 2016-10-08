@@ -48,17 +48,17 @@ private:
 
 public:
 	// Get sizes in pixels
-	int GetWidth();
-	int GetHeight();	
+	int GetWidth() const;
+	int GetHeight() const;
 
 	// Get sizes in game points (scaled to virtual resoultion)
-	float GetWidthPoints();
-	float GetHeightPoints();
+	float GetWidthPoints() const;
+	float GetHeightPoints() const;
 
-	GLuint GetId();
-	bool IsValid(); // Check for texture is valid. Can be invalid after loss GL context
-	void Bind();
-	void Unbind();
+	GLuint GetId() const;
+	bool IsValid() const; // Check for texture is valid. Can be invalid after loss GL context
+	void Bind() const;
+	void Unbind() const;
 
 // Reload texture when application lost OpenGL context
 // SEE: "lunaassets.h"
