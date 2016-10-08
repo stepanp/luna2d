@@ -28,11 +28,13 @@
 
 namespace luna2d{
 
-class LUNAShader
+class LUNAShader : public LUNAAsset
 {
+	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAShader)
+
 public:
 	LUNAShader(const std::string& vertexSource, const std::string& fragmentSource);
-	~LUNAShader();
+	virtual ~LUNAShader();
 
 private:
 	GLuint program = 0;
@@ -57,6 +59,7 @@ private:
 	void FetchDefaultAttributes();
 
 public:
+	bool IsValid();
 	bool HasColorAttribute();
 	bool HasTexture();
 	void SetPositionAttribute(const std::vector<float>& vertexArray);

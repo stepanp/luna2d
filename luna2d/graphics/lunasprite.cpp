@@ -147,6 +147,8 @@ void LUNASprite::SetTextureRegion(const std::weak_ptr<LUNATextureRegion>& region
 
 void LUNASprite::SetShader(const std::weak_ptr<LUNAShader>& shader)
 {
+	if(shader.expired()) LUNA_RETURN_ERR("Attempt set invalid shader to sprite");
+
 	material.shader = shader;
 }
 
@@ -277,7 +279,7 @@ void LUNASprite::SetScale(float scale)
 
 void LUNASprite::Render()
 {
-	if(material.texture.expired())
+	if(material.texture.expired() || material.shader.expired())
 	{
 		LUNA_LOGE("Attempt to render invalid sprite");
 		return;

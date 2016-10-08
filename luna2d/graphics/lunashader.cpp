@@ -132,6 +132,11 @@ void LUNAShader::FetchDefaultAttributes()
 	u_texture = glGetUniformLocation(program, "u_texture");
 }
 
+bool LUNAShader::IsValid()
+{
+	return glIsProgram(program);
+}
+
 bool LUNAShader::HasColorAttribute()
 {
 	return a_color != -1;

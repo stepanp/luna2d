@@ -75,6 +75,7 @@ LUNAGraphics::LUNAGraphics() :
 	clsSprite.SetConstructor<const LuaAny&>();
 	clsSprite.SetMethod("setTexture", &LUNASprite::SetTexture);
 	clsSprite.SetMethod("setTextureRegion", &LUNASprite::SetTextureRegion);
+	clsSprite.SetMethod("setShader", &LUNASprite::SetShader);
 	clsSprite.SetMethod("getBlendingMode", &LUNASprite::GetBlendingMode);
 	clsSprite.SetMethod("setBlendingMode", &LUNASprite::SetBlendingMode);
 	clsSprite.SetMethod("getX", &LUNASprite::GetX);
@@ -205,6 +206,8 @@ LUNAGraphics::LUNAGraphics() :
 	clsTexture.SetMethod("getHeight", &LUNATexture::GetHeight);
 	clsTexture.SetMethod("getWidthPoints", &LUNATexture::GetWidthPoints);
 	clsTexture.SetMethod("getHeightPoints", &LUNATexture::GetHeightPoints);
+
+	LuaClass<LUNAShader> clsShader(lua);
 
 	LuaClass<LUNATextureRegion> clsTextureRegion(lua);
 	clsTextureRegion.SetMethod("getTexture", &LUNATextureRegion::GetTexture);

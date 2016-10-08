@@ -25,6 +25,7 @@
 #include "lunagraphics.h"
 #include "lunasizes.h"
 #include "lunatextureatlasloader.h"
+#include "lunashaderloader.h"
 #include "lunafontloader.h"
 #include "lunajsonloader.h"
 #include "lunaaudiowavloader.h"
@@ -114,6 +115,9 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 	std::string ext = files->GetExtension(path);
 	if(ext == "atlas" || ext == "font") return true;
 
+	// Shader loading starts from vertex shader file
+	if(ext == "frag") return true;
+
 	// Ignore files with different from current resolution suffix
 	std::string suffix = files->SplitSuffix(files->GetBasename(path)).second;
 	if(!suffix.empty() && suffix != LUNAEngine::SharedSizes()->GetResolutionSuffix()) return true;
@@ -139,6 +143,7 @@ std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
 	else if(ext == "json") return std::make_shared<LUNAJsonLoader>();
 	else if(ext == "wav") return std::make_shared<LUNAAudioWavLoader>();
 	else if(ext == "ogg") return std::make_shared<LUNAAudioOggLoader>();
+	else if(ext == "vert") return std::make_shared<LUNAShaderLoader>();
 
 	return nullptr;
 }
