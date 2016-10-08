@@ -35,9 +35,9 @@ LUNARenderer::LUNARenderer()
 	vertexBatch.reserve(RENDER_RESERVE_BATCH * RENDER_ELEMENT_PER_VERTEX);
 
 	// Initialize default shaders
-	defaultShader = std::make_shared<LUNAShader>(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-	primitivesShader = std::make_shared<LUNAShader>(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
-	fontShader = std::make_shared<LUNAShader>(LUNA_FONT_VERT_SHADER, LUNA_FONT_FRAG_SHADER);
+	defaultShader = std::make_shared<LUNAShader>(DEFAULT_VERT_SHADER, DEFAULT_FRAG_SHADER);
+	primitivesShader = std::make_shared<LUNAShader>(PRIMITIVES_VERT_SHADER, PRIMITIVES_FRAG_SHADER);
+	fontShader = std::make_shared<LUNAShader>(FONT_VERT_SHADER, FONT_FRAG_SHADER);
 
 	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
 }

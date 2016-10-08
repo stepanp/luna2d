@@ -26,18 +26,11 @@
 //--------------------------------------
 // Fragment shader for render primitives
 //--------------------------------------
-#define LUNA_PRIMITIVES_FRAG_SHADER \
-"#ifdef GL_ES \n\
-precision mediump float; \n\
-#define LOWP lowp \n\
-#else \n\
-#define LOWP \n\
-#endif \n\
-\
-varying LOWP vec4 v_color; \n\
-\
-void main() \n\
-{ \n\
-	gl_FragColor = v_color; \n\
-}"
+const std::string PRIMITIVES_FRAG_SHADER =
+R"(varying lowp vec4 v_color;
+
+void main()
+{
+	gl_FragColor = v_color;
+})";
 

@@ -26,19 +26,19 @@
 //----------------------
 // Default vertex shader
 //----------------------
-#define LUNA_DEFAULT_VERT_SHADER \
-"uniform mat4 u_transformMatrix; \n\
-\
-attribute vec4 a_position; \n\
-attribute vec4 a_color; \n\
-attribute vec2 a_texCoords; \n\
-\
-varying vec4 v_color; \n\
-varying vec2 v_texCoords; \n\
-\
-void main() \n\
-{ \n\
-	v_color = a_color; \n\
-	v_texCoords = a_texCoords; \n\
-	gl_Position = u_transformMatrix * a_position; \n\
-}"
+const std::string DEFAULT_VERT_SHADER =
+R"(uniform mat4 u_transformMatrix;
+
+attribute vec4 a_position;
+attribute vec4 a_color;
+attribute vec2 a_texCoords;
+
+varying vec4 v_color;
+varying vec2 v_texCoords;
+
+void main()
+{
+	v_color = a_color;
+	v_texCoords = a_texCoords;
+	gl_Position = u_transformMatrix * a_position;
+})";

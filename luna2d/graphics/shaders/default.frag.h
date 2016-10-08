@@ -26,21 +26,14 @@
 //------------------------
 // Default fragment shader
 //------------------------
-#define LUNA_DEFAULT_FRAG_SHADER \
-"#ifdef GL_ES \n\
-precision mediump float; \n\
-#define LOWP lowp \n\
-#else \n\
-#define LOWP \n\
-#endif \n\
-\
-uniform sampler2D u_texture; \n\
-\
-varying LOWP vec4 v_color; \n\
-varying vec2 v_texCoords; \n\
-\
-void main() \n\
-{ \n\
-	gl_FragColor = v_color * texture2D(u_texture, v_texCoords); \n\
-}"
+const std::string DEFAULT_FRAG_SHADER =
+R"(uniform sampler2D u_texture;
+
+varying lowp vec4 v_color;
+varying vec2 v_texCoords;
+
+void main()
+{
+	gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
+})";
 

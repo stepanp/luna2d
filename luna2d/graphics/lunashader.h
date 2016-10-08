@@ -28,6 +28,15 @@
 
 namespace luna2d{
 
+const std::string GLES_DEFINES =
+R"(#ifdef GL_ES
+precision mediump float;
+#else
+#define lowp
+#endif
+
+)";
+
 class LUNAShader : public LUNAAsset
 {
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAShader)

@@ -87,7 +87,10 @@ void LUNAShader::CreateProgram(const std::string& vertexSource, const std::strin
 	vertexShader = LoadShader(GL_VERTEX_SHADER, vertexSource);
 	if(!vertexShader) return;
 
-	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fragmentSource);
+	// Append default preprocessor directives with GLES constants
+	std::string esFragmentSource = GLES_DEFINES + fragmentSource;
+
+	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, esFragmentSource);
 	if(!fragmentShader) return;
 
 	program = glCreateProgram();

@@ -26,17 +26,17 @@
 //------------------------------------
 // Vertex shader for render primitives
 //------------------------------------
-#define LUNA_PRIMITIVES_VERT_SHADER \
-"uniform mat4 u_transformMatrix; \n\
-\
-attribute vec4 a_position; \n\
-attribute vec4 a_color; \n\
-\
-varying vec4 v_color; \n\
-\
-void main() \n\
-{ \n\
-	v_color = a_color; \n\
-	gl_Position = u_transformMatrix * a_position; \n\
-}"
+const std::string PRIMITIVES_VERT_SHADER =
+R"(uniform mat4 u_transformMatrix;
+
+attribute vec4 a_position;
+attribute vec4 a_color;
+
+varying vec4 v_color;
+
+void main()
+{
+	v_color = a_color;
+	gl_Position = u_transformMatrix * a_position;
+})";
 
