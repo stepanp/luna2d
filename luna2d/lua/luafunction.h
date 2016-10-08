@@ -137,6 +137,17 @@ public:
 		ref->Hold(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
 	}
 
+	template<typename Ret, typename Class, typename ... Args>
+	void Bind(Ret (Class::*method)(Args ...) const)
+	{
+		lua_State *luaVm = ref->GetLuaVm();
+
+		PushProxy(luaVm, new LuaConstClassProxy<Ret, Class, Args...>(method));
+		lua_pushcclosure(luaVm, LuaConstClassProxy<Ret, Class, Args...>::Callback, 1);
+
+		ref->Hold(luaVm, luaL_ref(luaVm, LUA_REGISTRYINDEX));
+	}
+
 	// Call function and get return value
 	template<typename Ret, typename ... Args>
 	Ret Call(const Args& ... args) const

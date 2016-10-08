@@ -181,6 +181,14 @@ public:
 		fn.Bind<Ret, Class, Args...>(method);
 		SetField(name, fn, true);
 	}
+
+	template<typename Ret, typename ... Args>
+	void SetMethod(const std::string& name, Ret (Class::*method)(Args ...) const)
+	{
+		LuaFunction fn(ref->GetLuaVm());
+		fn.Bind<Ret, Class, Args...>(method);
+		SetField(name, fn, true);
+	}
 };
 
 // Use same implementation of LuaStack as for LuaTable

@@ -291,4 +291,91 @@ public:
 };
 
 
+template<typename Ret, typename Class, typename ... Args>
+class LuaConstClassProxy : public LuaProxy
+{
+	typedef LuaConstClassProxy<Ret, Class, Args...> Proxy;
+	typedef Ret (Class::*Method)(Args ...) const;
+
+public:
+	LuaConstClassProxy(Method method)
+	{
+		this->method = method;
+	}
+
+private:
+	Method method;
+
+public:
+	static int Callback(lua_State* luaVm)
+	{
+		// Pop pointer to proxy object from stack
+		if(!lua_isuserdata(luaVm, lua_upvalueindex(1))) return 0;
+		Proxy* proxy = *static_cast<Proxy**>(lua_touserdata(luaVm, lua_upvalueindex(1)));
+
+		// Get pointer to object from first method param
+		std::shared_ptr<Class> obj = LuaStack<std::shared_ptr<Class>>::Pop(luaVm, 1);
+		if(!obj)
+		{
+			LUNA_LOGE("First argument is not valid userdata. Possibly method called through \".\" instead of \":\" operator?");
+			return 0;
+		}
+
+		// Call method
+		LuaStack<Ret>::Push(luaVm, Call(obj.get(), proxy->method, luaVm, LUNAMakeIndexList<Args...>()));
+
+		return 1; // Count of return values
+	}
+
+	template<size_t ... Index>
+	static Ret Call(Class* obj, Method method, lua_State* luaVm, LUNAIndexList<Index ...>)
+	{
+		return (obj->*method)(LuaStack<Args>::Pop(luaVm, Index + 2) ...);
+	}
+};
+
+
+template<typename Class, typename ... Args>
+class LuaConstClassProxy<void, Class, Args ...> : public LuaProxy
+{
+	typedef LuaConstClassProxy<void, Class, Args...> Proxy;
+	typedef void (Class::*Method)(Args ...) const;
+
+public:
+	LuaConstClassProxy(Method method)
+	{
+		this->method = method;
+	}
+
+private:
+	Method method;
+
+public:
+	static int Callback(lua_State* luaVm)
+	{
+		// Pop pointer to proxy object from stack
+		if(!lua_isuserdata(luaVm, lua_upvalueindex(1))) return 0;
+		Proxy* proxy = *static_cast<Proxy**>(lua_touserdata(luaVm, lua_upvalueindex(1)));
+
+		// Get pointer to object from first method param
+		std::shared_ptr<Class> obj = LuaStack<std::shared_ptr<Class>>::Pop(luaVm, 1);
+		if(!obj)
+		{
+			LUNA_LOGE("First argument is not valid userdata. Possibly method called through \".\" instead of \":\" operator?");
+			return 0;
+		}
+
+		// Call method
+		Call(obj.get(), proxy->method, luaVm, LUNAMakeIndexList<Args...>());
+
+		return 0; // No return value
+	}
+
+	template<size_t ... Index>
+	static void Call(Class* obj, Method method, lua_State* luaVm, LUNAIndexList<Index ...>)
+	{
+		(obj->*method)(LuaStack<Args>::Pop(luaVm, Index + 2) ...);
+	}
+};
+
 }
