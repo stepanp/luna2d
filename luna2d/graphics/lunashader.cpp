@@ -29,7 +29,7 @@ using namespace luna2d;
 
 LUNAShader::LUNAShader(const std::string& vertexSource, const std::string& fragmentSource)
 {
-	CreateProgram(vertexSource, fragmentSource);
+	CreateGlProgram(vertexSource, fragmentSource);
 	FetchDefaultAttributes();
 }
 
@@ -82,7 +82,7 @@ GLuint LUNAShader::LoadShader(GLenum shaderType, const std::string& source)
 }
 
 // Link vertex and fragment shaders into shader program
-void LUNAShader::CreateProgram(const std::string& vertexSource, const std::string& fragmentSource)
+void LUNAShader::CreateGlProgram(const std::string& vertexSource, const std::string& fragmentSource)
 {
 	vertexShader = LoadShader(GL_VERTEX_SHADER, vertexSource);
 	if(!vertexShader) return;
@@ -128,6 +128,8 @@ void LUNAShader::CreateProgram(const std::string& vertexSource, const std::strin
 // Fetch default attributes and uniforms
 void LUNAShader::FetchDefaultAttributes()
 {
+	if(!IsValid()) return;
+
 	a_position = glGetAttribLocation(program, "a_position");
 	a_color = glGetAttribLocation(program, "a_color");
 	a_texCoords = glGetAttribLocation(program, "a_texCoords");

@@ -79,7 +79,7 @@ public:
 		this->cached = cached;
 	}
 
-	virtual void Reload()
+	inline virtual void Reload()
 	{
 		if(reloadPath.empty()) return;
 

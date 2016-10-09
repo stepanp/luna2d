@@ -36,6 +36,11 @@ bool LUNAShaderLoader::Load(const std::string& filename)
 
 	shader = std::make_shared<LUNAShader>(vertexSource, fragmentSource);
 
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Set reload path for shader
+	shader->SetReloadPath(filename);
+#endif
+
 	return shader->IsValid();
 }
 

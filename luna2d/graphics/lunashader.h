@@ -62,7 +62,7 @@ private:
 	GLuint LoadShader(GLenum shaderType, const std::string& source);
 
 	// Link vertex and fragment shaders into shader program
-	void CreateProgram(const std::string& vertexSource, const std::string& fragmentSource);
+	void CreateGlProgram(const std::string& vertexSource, const std::string& fragmentSource);
 
 	// Fetch default attributes and uniforms
 	void FetchDefaultAttributes();
@@ -81,12 +81,41 @@ public:
 	void Unbind();
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+private:
+	std::string reloadPath;
+
 public:
+	inline void SetReloadPath(const std::string& path)
+	{
+		reloadPath = path;
+		LUNAEngine::SharedAssets()->SetAssetReloadable(this, true);
+	}
+
+	inline virtual void Reload()
+	{
+		if(reloadPath.empty()) return;
+
+		auto files = LUNAEngine::SharedFiles();
+		std::string vertexSource = files->ReadFileToString(reloadPath);
+		std::string fragmentSource = files->ReadFileToString(files->ReplaceExtension(reloadPath, "frag"));
+
+		if(!vertexSource.empty() && !fragmentSource.empty())
+		{
+			CreateGlProgram(vertexSource, fragmentSource);
+			FetchDefaultAttributes();
+
+			if(IsValid()) return;
+		}
+
+		LUNA_LOGE("Cannot reload shader from path \"%s\"", reloadPath.c_str());
+	}
+
 	inline void Reload(const std::string& vertexSource, const std::string& fragmentSource)
 	{
-		program = CreateProgram(vertexSource, fragmentSource);
+		CreateGlProgram(vertexSource, fragmentSource);
 		FetchDefaultAttributes();
 	}
+
 #endif
 };
 

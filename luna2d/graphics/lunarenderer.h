@@ -111,11 +111,11 @@ public:
 // SEE: "lunaassets.h"
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 public:
-	inline void ReloadDefaultShader()
+	inline void ReloadDefaultShaders()
 	{
-		defaultShader->Reload(LUNA_DEFAULT_VERT_SHADER, LUNA_DEFAULT_FRAG_SHADER);
-		primitivesShader->Reload(LUNA_PRIMITIVES_VERT_SHADER, LUNA_PRIMITIVES_FRAG_SHADER);
-		fontShader->Reload(LUNA_FONT_VERT_SHADER, LUNA_FONT_FRAG_SHADER);
+		defaultShader->Reload(DEFAULT_VERT_SHADER, DEFAULT_FRAG_SHADER);
+		primitivesShader->Reload(PRIMITIVES_VERT_SHADER, PRIMITIVES_FRAG_SHADER);
+		fontShader->Reload(FONT_VERT_SHADER, FONT_FRAG_SHADER);
 	}
 #endif
 };
