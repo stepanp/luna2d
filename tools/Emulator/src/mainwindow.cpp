@@ -290,6 +290,13 @@ void MainWindow::SetResolution(int resolutionIndex)
 	int screenWidth = QApplication::desktop()->availableGeometry().width() - SCREEN_MARGIN;
 	int screenHeight = QApplication::desktop()->availableGeometry().height() - SCREEN_MARGIN;
 
+	// Use original resolution on HDPI displays if scaling disabled
+	if(!Settings::scaleHdpiResolution)
+	{
+		wndWidth /= devicePixelRatio();
+		wndHeight /= devicePixelRatio();
+	}
+
 	// Downscale window if emulator resolution large than screen resolution
 	if(wndWidth > screenWidth || wndHeight + ui->menuBar->height() > screenHeight)
 	{
@@ -543,14 +550,20 @@ void MainWindow::OnActionSettings()
 	uiDialog.openLastGame->setChecked(Settings::openLastGame);
 	uiDialog.openLogWhenError->setChecked(Settings::openLogWhenError);
 	uiDialog.showFps->setChecked(Settings::showFps);
+	uiDialog.scaleHdpiResolution->setChecked(Settings::scaleHdpiResolution);
+	uiDialog.scaleHdpiResolution->setEnabled(devicePixelRatio() > 1);
 
 	if(dialog.exec())
 	{
+		bool updateResolution = Settings::scaleHdpiResolution != uiDialog.scaleHdpiResolution->isChecked();
+
 		Settings::openLastGame = uiDialog.openLastGame->isChecked();
 		Settings::openLogWhenError = uiDialog.openLogWhenError->isChecked();
 		Settings::showFps = uiDialog.showFps->isChecked();
+		Settings::scaleHdpiResolution = uiDialog.scaleHdpiResolution->isChecked();
 		Settings::Save();
 
+		if(updateResolution) SetResolution(Settings::curResolution);
 		if(!Settings::showFps) setWindowTitle(WINDOW_TITLE_NAME.arg(curGameName));
 	}
 }

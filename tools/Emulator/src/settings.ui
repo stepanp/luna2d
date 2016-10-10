@@ -35,7 +35,38 @@
    <string>Settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="1">
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="showFps">
+     <property name="text">
+      <string>Show FPS in window caption</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QCheckBox" name="openLogWhenError">
+     <property name="text">
+      <string>Open log window automatically when error occurs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QCheckBox" name="openLastGame">
+     <property name="text">
+      <string>Launch last recent game on startup</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -48,34 +79,10 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QCheckBox" name="openLastGame">
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="scaleHdpiResolution">
      <property name="text">
-      <string>Launch last recent game on startup</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QCheckBox" name="openLogWhenError">
-     <property name="text">
-      <string>Open log window automatically when error occurs</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QCheckBox" name="showFps">
-     <property name="text">
-      <string>Show FPS in window caption</string>
+      <string>Scale game resolution on HDPI displays</string>
      </property>
     </widget>
    </item>

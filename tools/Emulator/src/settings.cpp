@@ -30,6 +30,7 @@
 QStringList Settings::recentGames = QStringList();
 bool Settings::openLastGame = true;
 bool Settings::gameWasOpened = false;
+bool Settings::scaleHdpiResolution = true;
 QVector<Resolution> Settings::resolutions = QVector<Resolution>();
 int Settings::curResolution = 0;
 int Settings::bullitinCount = 0;
@@ -48,6 +49,7 @@ void Settings::Load()
 
 	openLastGame = settings.value("openLastGame", openLastGame).toBool();
 	gameWasOpened = settings.value("gameWasOpened", gameWasOpened).toBool();
+	scaleHdpiResolution = settings.value("scaleHdpiResolution", gameWasOpened).toBool();
 	curResolution = settings.value("curResolution", curResolution).toInt();
 	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
 	clearLogOnStart = settings.value("clearLogOnStart", clearLogOnStart).toBool();
@@ -137,6 +139,7 @@ void Settings::Save()
 
 	settings.setValue("openLastGame", openLastGame);
 	settings.setValue("gameWasOpened", gameWasOpened);
+	settings.setValue("scaleHdpiResolution", scaleHdpiResolution);
 	settings.setValue("curResolution", curResolution);
 	settings.setValue("openLogWhenError", openLogWhenError);
 	settings.setValue("clearLogOnStart", clearLogOnStart);

@@ -86,6 +86,9 @@ void LUNAQtWidget::paintGL()
 {
 	// Stretch rendered image to window size
 	QSize wndSize = size();
+	wndSize.setWidth(wndSize.width() * devicePixelRatio());
+	wndSize.setHeight(wndSize.height() * devicePixelRatio());
+
 	glViewport(0, 0, wndSize.width(), wndSize.height());
 
 	if(LUNAEngine::Shared()->IsInitialized())

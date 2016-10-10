@@ -48,6 +48,7 @@ public:
 	static QStringList recentGames; // List of recent games
 	static bool openLastGame; // Open last game on startup
 	static bool gameWasOpened; // Is game was opened before closing
+	static bool scaleHdpiResolution; // Scale game resolution on HDPI displays
 	static QVector<Resolution> resolutions;
 	static int curResolution; // Index of current resolution in "resolutions" vector
 	static int bullitinCount; // Count of bullit-in resolutions
