@@ -25,7 +25,7 @@
 
 using namespace luna2d;
 
-int LuaVector2::Construct(lua_State *luaVm)
+int LuaVec2::Construct(lua_State *luaVm)
 {
 	int argsCount = lua_gettop(luaVm);
 
@@ -47,7 +47,7 @@ int LuaVector2::Construct(lua_State *luaVm)
 }
 
 // Add given vector to this vector
-int LuaVector2::Add(lua_State *luaVm)
+int LuaVec2::Add(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -58,7 +58,7 @@ int LuaVector2::Add(lua_State *luaVm)
 }
 
 // Substract given vector from this vector
-int LuaVector2::Sub(lua_State *luaVm)
+int LuaVec2::Sub(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -69,7 +69,7 @@ int LuaVector2::Sub(lua_State *luaVm)
 }
 
 // Multiple this vector to scalar
-int LuaVector2::Scale(lua_State *luaVm)
+int LuaVec2::Scale(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	float scale = LuaStack<float>::Pop(luaVm, 2);
@@ -80,7 +80,7 @@ int LuaVector2::Scale(lua_State *luaVm)
 }
 
 // Rotate this vector to given angle (in degrees)
-int LuaVector2::Rotate(lua_State *luaVm)
+int LuaVec2::Rotate(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	float angle = LuaStack<float>::Pop(luaVm, 2);
@@ -91,7 +91,7 @@ int LuaVector2::Rotate(lua_State *luaVm)
 }
 
 // Rotate this vector to given angle (in radians)
-int LuaVector2::Rotater(lua_State* luaVm)
+int LuaVec2::Rotater(lua_State* luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	float angle = LuaStack<float>::Pop(luaVm, 2);
@@ -102,7 +102,7 @@ int LuaVector2::Rotater(lua_State* luaVm)
 }
 
 // Normalize this vector
-int LuaVector2::Nor(lua_State *luaVm)
+int LuaVec2::Nor(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	LuaStack<glm::vec2>::Set(luaVm, glm::normalize(vec), 1);
@@ -111,7 +111,7 @@ int LuaVector2::Nor(lua_State *luaVm)
 }
 
 // Make perpendicular of this vector
-int LuaVector2::Perp(lua_State *luaVm)
+int LuaVec2::Perp(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	LuaStack<glm::vec2>::Set(luaVm, glm::vec2(-vec.y, vec.x), 1);
@@ -120,7 +120,7 @@ int LuaVector2::Perp(lua_State *luaVm)
 }
 
 // Get angle of this vector (in degrees)
-int LuaVector2::Angle(lua_State *luaVm)
+int LuaVec2::Angle(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 
@@ -134,7 +134,7 @@ int LuaVector2::Angle(lua_State *luaVm)
 }
 
 // Get angle of this vector (in radians)
-int LuaVector2::Angler(lua_State* luaVm)
+int LuaVec2::Angler(lua_State* luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 
@@ -148,7 +148,7 @@ int LuaVector2::Angler(lua_State* luaVm)
 }
 
 // Get lenght of this vector
-int LuaVector2::Len(lua_State *luaVm)
+int LuaVec2::Len(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	LuaStack<float>::Push(luaVm, glm::length(vec));
@@ -156,7 +156,7 @@ int LuaVector2::Len(lua_State *luaVm)
 }
 
 // Get squared lenght of this vector
-int LuaVector2::LenSqr(lua_State *luaVm)
+int LuaVec2::LenSqr(lua_State *luaVm)
 {
 	glm::vec2 vec = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	LuaStack<float>::Push(luaVm, glm::length2(vec));
@@ -164,7 +164,7 @@ int LuaVector2::LenSqr(lua_State *luaVm)
 }
 
 // Get distance between this and given vectors
-int LuaVector2::Dist(lua_State* luaVm)
+int LuaVec2::Dist(lua_State* luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -174,7 +174,7 @@ int LuaVector2::Dist(lua_State* luaVm)
 }
 
 // Get squared distance between this and given vectors
-int LuaVector2::DistSqr(lua_State* luaVm)
+int LuaVec2::DistSqr(lua_State* luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -184,7 +184,7 @@ int LuaVector2::DistSqr(lua_State* luaVm)
 }
 
 // Get cross prodict between this and given vectors
-int LuaVector2::Cross(lua_State *luaVm)
+int LuaVec2::Cross(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -194,7 +194,7 @@ int LuaVector2::Cross(lua_State *luaVm)
 }
 
 // Get dot prodict between this and given vectors
-int LuaVector2::Dot(lua_State *luaVm)
+int LuaVec2::Dot(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
 	glm::vec2 vec2 = LuaStack<glm::vec2>::Pop(luaVm, 2);
@@ -204,7 +204,7 @@ int LuaVector2::Dot(lua_State *luaVm)
 }
 
 // Make copy of this vector
-int LuaVector2::Copy(lua_State *luaVm)
+int LuaVec2::Copy(lua_State *luaVm)
 {
 	LuaStack<glm::vec2>::Push(luaVm, LuaStack<glm::vec2>::Pop(luaVm, 1));
 	return 1;

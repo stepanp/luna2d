@@ -117,28 +117,28 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 	tblMath.SetField("round", LuaFunction(lua, &std::roundf));
 
-	// Register metatable for "Vector2"
+	// Register metatable for "Vec2"
 	luaL_newmetatable(*lua, VECTOR2_METATABLE_NAME.c_str());
 	LuaTable tblVector2(*lua, luaL_ref(*lua, LUA_REGISTRYINDEX));
 	tblVector2.SetField("__index", tblVector2);
-	tblVector2.SetField("add", &LuaVector2::Add);
-	tblVector2.SetField("sub", &LuaVector2::Sub);
-	tblVector2.SetField("scale", &LuaVector2::Scale);
-	tblVector2.SetField("rotate", &LuaVector2::Rotate);
-	tblVector2.SetField("nor", &LuaVector2::Nor);
-	tblVector2.SetField("perp", &LuaVector2::Perp);
-	tblVector2.SetField("angle", &LuaVector2::Angle);
-	tblVector2.SetField("len", &LuaVector2::Len);
-	tblVector2.SetField("lenSqr", &LuaVector2::LenSqr);
-	tblVector2.SetField("dist", &LuaVector2::Dist);
-	tblVector2.SetField("distSqr", &LuaVector2::DistSqr);
-	tblVector2.SetField("cross", &LuaVector2::Cross);
-	tblVector2.SetField("dot", &LuaVector2::Dot);
-	tblVector2.SetField("copy", &LuaVector2::Copy);
-	tblMath.SetField("Vector2", tblVector2);
+	tblVector2.SetField("add", &LuaVec2::Add);
+	tblVector2.SetField("sub", &LuaVec2::Sub);
+	tblVector2.SetField("scale", &LuaVec2::Scale);
+	tblVector2.SetField("rotate", &LuaVec2::Rotate);
+	tblVector2.SetField("nor", &LuaVec2::Nor);
+	tblVector2.SetField("perp", &LuaVec2::Perp);
+	tblVector2.SetField("angle", &LuaVec2::Angle);
+	tblVector2.SetField("len", &LuaVec2::Len);
+	tblVector2.SetField("lenSqr", &LuaVec2::LenSqr);
+	tblVector2.SetField("dist", &LuaVec2::Dist);
+	tblVector2.SetField("distSqr", &LuaVec2::DistSqr);
+	tblVector2.SetField("cross", &LuaVec2::Cross);
+	tblVector2.SetField("dot", &LuaVec2::Dot);
+	tblVector2.SetField("copy", &LuaVec2::Copy);
+	tblMath.SetField("Vec2", tblVector2);
 
 	LuaTable metaVector2(lua);
-	metaVector2.SetField("__call", &LuaVector2::Construct);
+	metaVector2.SetField("__call", &LuaVec2::Construct);
 	tblVector2.SetMetatable(metaVector2);
 
 	// Register constructor for "Rect"
