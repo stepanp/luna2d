@@ -99,7 +99,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	debug = new LUNADebug();
 #endif
 
-	math::InitializeRandom();
 	RunEmbeddedScripts();
 	DoBindings();
 

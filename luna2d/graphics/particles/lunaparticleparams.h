@@ -29,6 +29,7 @@
 #include "lunarange.h"
 #include "lunastringenum.h"
 #include "lunacolor.h"
+#include "lunaeasing.h"
 
 namespace luna2d{
 

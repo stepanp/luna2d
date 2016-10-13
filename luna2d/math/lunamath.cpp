@@ -22,28 +22,68 @@
 //-----------------------------------------------------------------------------
 
 #include "lunamath.h"
-#include <stdlib.h>
-#include <time.h>
+#include "lunalog.h"
+#include <random>
 
 using namespace luna2d;
 using namespace luna2d::math;
 
-void luna2d::math::InitializeRandom()
-{
-	srand((unsigned int)time(0));
-}
+static std::default_random_engine RANDOM_GENERATOR;
 
-// Generate random float number in range [a,b]
+// Generate random float number with uniform distribution in range [a,b]
 float luna2d::math::RandomFloat(float a, float b)
 {
-	float percent = (float)(rand() % 101) / 100;
-	return a + (b - a) * percent;
+	std::uniform_real_distribution<float> distribution(a, b);
+	return distribution(RANDOM_GENERATOR);
 }
 
-// Generate random integer in range [a,b]
+// Generate random float number with normal distribution in range [a,b]
+float luna2d::math::RandomFloatNormal(float a, float b)
+{
+	float dist = b - a;
+	std::normal_distribution<float> distribution(a + dist / 2.0f, dist / 2.0f);
+	return std::min(std::max(distribution(RANDOM_GENERATOR), a), b);
+}
+
+// Generate random float number with piecewise linear distribution
+float luna2d::math::RandomFloatPiecewise(const std::vector<float>& intervals, const std::vector<float>& weights)
+{
+	if(intervals.empty() || intervals.size() != weights.size())
+	{
+		LUNA_LOGE("Incorrect intervals or weights for piecewise linear random distribution");
+		return 0;
+	}
+
+	std::piecewise_linear_distribution<float> distribution(intervals.begin(), intervals.end(), weights.begin());
+	return distribution(RANDOM_GENERATOR);
+}
+
+// Generate random integer number with uniform distribution in range [a,b]
 int luna2d::math::RandomInt(int a, int b)
 {
-	return a + rand() % ((b + 1) - a);
+	std::uniform_int_distribution<int> distribution(a, b);
+	return distribution(RANDOM_GENERATOR);
+}
+
+// Generate random integer number with normal distribution in range [a,b]
+int luna2d::math::RandomIntNormal(int a, int b)
+{
+	int dist = b - a;
+	std::normal_distribution<int> distribution(a + dist / 2.0f, dist / 2.0f);
+	return std::min(std::max(distribution(RANDOM_GENERATOR), a), b);
+}
+
+// Generate random integer number with piecewise linear distribution
+int luna2d::math::RandomIntPiecewise(const std::vector<int>& intervals, const std::vector<int>& weights)
+{
+	if(intervals.empty() || intervals.size() != weights.size())
+	{
+		LUNA_LOGE("Incorrect intervals or weights for piecewise linear random distribution");
+		return 0;
+	}
+
+	std::piecewise_linear_distribution<int> distribution(intervals.begin(), intervals.end(), weights.begin());
+	return distribution(RANDOM_GENERATOR);
 }
 
 // Calculate average value of given vector
@@ -78,13 +118,13 @@ bool luna2d::math::IsPowerOfTwo(int value)
 	return (value != 0) && ((value & (value - 1)) == 0);
 }
 
-// Interpolation between "a" and "b" by time "t". "t" must be in range[0,1]
+// Interpolation between "a" and "b" by time "t". "t" must be in range [0,1]
 float luna2d::math::Lerp(float a, float b, float t)
 {
 	return a + (b - a) * t;
 }
 
-// Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
+// Interpolation between "a" and "b" using given easing. "t" must be in range [0,1]
 float luna2d::math::EaseLerp(float a, float b, float t, const std::function<float(float)>& easing)
 {
 	return a + (b - a) * easing(t);

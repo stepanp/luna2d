@@ -24,7 +24,6 @@
 #pragma once
 
 #include "lunaengine.h"
-#include "lunaeasing.h"
 #include <cmath>
 
 // On some compilers, M_PI constant isn't defined
@@ -42,17 +41,43 @@ namespace luna2d{ namespace math{
 const float DEGREES_TO_RADIANS = M_PI / 180.0f;
 const float RADIANS_TO_DEGREES = 180.0f / M_PI;
 
-void InitializeRandom();
-float RandomFloat(float a, float b);  // Generate random float number in range [a,b]
-int RandomInt(int a, int b); // Generate random integer in range [a,b]
-float Avg(const std::vector<float>& values); // Calculate average value of given vector
-float DegreesToRadians(float degrees); // Conver degrees to radians
-float RadiansToDegrees(float radians); // Conver radians to degrees
-int NearestPowerOfTwo(int value); // Get nearest power of two size to given value
-bool IsPowerOfTwo(int value); // Check value for power of two
-float Lerp(float a, float b, float t); // Interpolation between "a" and "b" by time "t". "t" must be in range[0,1]
+// Generate random float number with uniform distribution in range [a,b]
+float RandomFloat(float a, float b);
 
-// Interpolation between "a" and "b" using given easing. "t" must be in range[0,1]
+// Generate random float number with normal distribution in range [a,b]
+float RandomFloatNormal(float a, float b);
+
+// Generate random float number with piecewise linear distribution
+float RandomFloatPiecewise(const std::vector<float>& intervals, const std::vector<float>& weights);
+
+// Generate random integer number with uniform distribution in range [a,b]
+int RandomInt(int a, int b);
+
+// Generate random integer number with normal distribution in range [a,b]
+int RandomIntNormal(int a, int b);
+
+// Generate random integer number with piecewise linear distribution
+int RandomIntPiecewise(const std::vector<int>& intervals, const std::vector<int>& weights);
+
+// Calculate average value of given vector
+float Avg(const std::vector<float>& values);
+
+// Conver degrees to radians
+float DegreesToRadians(float degrees);
+
+// Conver radians to degrees
+float RadiansToDegrees(float radians);
+
+// Get nearest power of two size to given value
+int NearestPowerOfTwo(int value);
+
+// Check value for power of two
+bool IsPowerOfTwo(int value);
+
+// Interpolation between "a" and "b" by time "t". "t" must be in range [0,1]
+float Lerp(float a, float b, float t);
+
+// Interpolation between "a" and "b" using given easing. "t" must be in range [0,1]
 float EaseLerp(float a, float b, float t, const std::function<float(float)>& easing);
 
 }}
