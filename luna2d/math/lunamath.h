@@ -53,12 +53,6 @@ float RandomFloatPiecewise(const std::vector<float>& intervals, const std::vecto
 // Generate random integer number with uniform distribution in range [a,b]
 int RandomInt(int a, int b);
 
-// Generate random integer number with normal distribution in range [a,b]
-int RandomIntNormal(int a, int b);
-
-// Generate random integer number with piecewise linear distribution
-int RandomIntPiecewise(const std::vector<int>& intervals, const std::vector<int>& weights);
-
 // Calculate average value of given vector
 float Avg(const std::vector<float>& values);
 

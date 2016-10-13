@@ -115,8 +115,6 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("randomFloat", LuaFunction(lua, &math::RandomFloat));
 	tblMath.SetField("randomFloatNormal", LuaFunction(lua, &math::RandomFloatNormal));
 	tblMath.SetField("randomFloatPiecewise", LuaFunction(lua, &math::RandomFloatPiecewise));
-	tblMath.SetField("randomNormal", LuaFunction(lua, &math::RandomIntNormal));
-	tblMath.SetField("randomPiecewise", LuaFunction(lua, &math::RandomIntPiecewise));
 	tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 	tblMath.SetField("round", LuaFunction(lua, &std::roundf));

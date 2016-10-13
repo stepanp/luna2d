@@ -65,27 +65,6 @@ int luna2d::math::RandomInt(int a, int b)
 	return distribution(RANDOM_GENERATOR);
 }
 
-// Generate random integer number with normal distribution in range [a,b]
-int luna2d::math::RandomIntNormal(int a, int b)
-{
-	int dist = b - a;
-	std::normal_distribution<int> distribution(a + dist / 2.0f, dist / 2.0f);
-	return std::min(std::max(distribution(RANDOM_GENERATOR), a), b);
-}
-
-// Generate random integer number with piecewise linear distribution
-int luna2d::math::RandomIntPiecewise(const std::vector<int>& intervals, const std::vector<int>& weights)
-{
-	if(intervals.empty() || intervals.size() != weights.size())
-	{
-		LUNA_LOGE("Incorrect intervals or weights for piecewise linear random distribution");
-		return 0;
-	}
-
-	std::piecewise_linear_distribution<int> distribution(intervals.begin(), intervals.end(), weights.begin());
-	return distribution(RANDOM_GENERATOR);
-}
-
 // Calculate average value of given vector
 float luna2d::math::Avg(const std::vector<float>& values)
 {
