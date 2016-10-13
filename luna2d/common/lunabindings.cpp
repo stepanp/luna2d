@@ -117,6 +117,9 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 	tblMath.SetField("round", LuaFunction(lua, &std::roundf));
 
+	std::function<float(float,float,float)> fnClamp = [](float v, float a, float b) { return std::min(std::max(v, a), b); };
+	tblMath.SetField("clamp", LuaFunction(lua, fnClamp));
+
 	// Register metatable for "Vec2"
 	luaL_newmetatable(*lua, VECTOR2_METATABLE_NAME.c_str());
 	LuaTable tblVector2(*lua, luaL_ref(*lua, LUA_REGISTRYINDEX));
