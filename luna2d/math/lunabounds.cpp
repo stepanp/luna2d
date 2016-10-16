@@ -157,10 +157,13 @@ LUNAAABBBounds::LUNAAABBBounds(float width, float height) :
 
 void LUNAAABBBounds::UpdateBoudingBox()
 {
+	cachedBBox.width = width * std::abs(scale.x);
+	cachedBBox.height = height * std::abs(scale.y);
 	cachedBBox.x = pos.x + origin.x * scale.x;
 	cachedBBox.y = pos.y + origin.y * scale.y;
-	cachedBBox.width = width * scale.x;
-	cachedBBox.height = height * scale.y;
+
+	if(scale.x < 0) cachedBBox.x -= cachedBBox.width;
+	if(scale.y < 0) cachedBBox.y -= cachedBBox.height;
 }
 
 float LUNAAABBBounds::GetWidth()
