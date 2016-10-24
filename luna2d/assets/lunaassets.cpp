@@ -231,6 +231,8 @@ void LUNAAssets::LoadFolder(const std::string& path, bool recursive)
 		if(files->IsFile(fullPath)) DoLoadFile(fullPath);
 		else if(recursive) LoadFolder(fullPath, recursive);
 	}
+
+	LUNAEngine::SharedGraphics()->ResetLastTime();
 }
 
 // Load specifed asset file
@@ -261,6 +263,8 @@ void LUNAAssets::Load(const std::string& path)
 
 	// Try load file with suffix
 	DoLoadFile(suffixPath);
+
+	LUNAEngine::SharedGraphics()->ResetLastTime();
 }
 
 // Unload specifed asset

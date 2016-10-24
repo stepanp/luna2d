@@ -44,6 +44,7 @@ LUNAGraphics::LUNAGraphics() :
 	framesCount = 0;
 	lastFrames = 0;
 	deltaTime = 0;
+	movAvgDelta = TARGET_DELTA_TIME;
 
 	// Bind "luna.graphics" module
 	LuaScript *lua = LUNAEngine::SharedLua();
@@ -226,6 +227,12 @@ LUNAGraphics::LUNAGraphics() :
 	clsFont.SetMethod("getStringHeight", &LUNAFont::GetStringHeight);
 }
 
+double LUNAGraphics::SmoothDeltaTime(double deltaTime)
+{
+	movAvgDelta = (deltaTime + movAvgDelta * (30 - 1)) / 30;
+	return movAvgDelta;
+}
+
 LUNARenderer* LUNAGraphics::GetRenderer()
 {
 	return &renderer;
@@ -256,6 +263,11 @@ int LUNAGraphics::GetRenderedVertexes()
 	return renderer.GetRenderedVertexes();
 }
 
+void LUNAGraphics::ResetLastTime()
+{
+	lastTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
+}
+
 void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 {	
 	renderer.SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
@@ -275,7 +287,7 @@ void LUNAGraphics::OnPause()
 void LUNAGraphics::OnResume()
 {
 	paused = false;
-	lastTime = LUNAEngine::SharedPlatformUtils()->GetSystemTime();
+	ResetLastTime();
 	LUNAEngine::SharedScenes()->OnResume();
 }
 
@@ -289,6 +301,8 @@ void LUNAGraphics::OnUpdate()
 	lastTime = curTime;
 
 	if(deltaTime > MAX_DELTA) deltaTime = MAX_DELTA;
+
+	deltaTime = SmoothDeltaTime(deltaTime);
 
 	// Calculate FPS
 	fpsTime += deltaTime;

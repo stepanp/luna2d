@@ -28,6 +28,7 @@
 namespace luna2d{
 
 const float MAX_DELTA = 1.0f / 10.0f; // 10 FPS
+const float TARGET_DELTA_TIME = 1.0f / 60.0f;
 
 class LUNAGraphics
 {
@@ -39,10 +40,13 @@ private:
 	std::shared_ptr<LUNACamera> camera;
 
 	// For calculating delta time and FPS
-	double lastTime, fpsTime, deltaTime;
+	double lastTime, fpsTime, deltaTime, movAvgDelta;
 	int framesCount, lastFrames;
 	LUNAColor backColor; // Background color
 	bool paused = false;
+
+private:
+	double SmoothDeltaTime(double deltaTime);
 
 public:
 	LUNARenderer* GetRenderer();
@@ -51,6 +55,7 @@ public:
 	float GetDeltaTime();
 	int GetRenderCalls();
 	int GetRenderedVertexes();
+	void ResetLastTime();
 	void SetBackgroundColor(float r, float g, float b);
 	bool IsPaused();
 	void OnPause();
