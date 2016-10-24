@@ -29,6 +29,7 @@ namespace luna2d{
 
 const float MAX_DELTA = 1.0f / 10.0f; // 10 FPS
 const float TARGET_DELTA_TIME = 1.0f / 60.0f;
+const int MOV_AVG_PERIOD = 30;
 
 class LUNAGraphics
 {

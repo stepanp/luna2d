@@ -229,7 +229,8 @@ LUNAGraphics::LUNAGraphics() :
 
 double LUNAGraphics::SmoothDeltaTime(double deltaTime)
 {
-	movAvgDelta = (deltaTime + movAvgDelta * (30 - 1)) / 30;
+	movAvgDelta = (deltaTime + movAvgDelta * (MOV_AVG_PERIOD - 1)) / MOV_AVG_PERIOD;
+
 	return movAvgDelta;
 }
 
