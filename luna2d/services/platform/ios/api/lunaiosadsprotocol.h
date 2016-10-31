@@ -33,6 +33,12 @@
 -(void) setOnRewardedVideoError: (void (^)()) callback;
 
 // Should display interstitial
+-(BOOL) isInterstitialReady;
+
+// Should display rewarded video
+-(BOOL) isRewardedVideoReady;
+
+// Should display interstitial
 -(void) showInterstitial;
 
 // Should display rewarded video

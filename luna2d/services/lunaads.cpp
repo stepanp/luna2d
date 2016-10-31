@@ -43,6 +43,22 @@ void LUNAAds::LoadServices()
 	service = LoadService(serviceName);
 }
 
+// Check for interstitial is downloaded ready to showing
+bool LUNAAds::IsInterstitalReady()
+{
+	if(!service) return false;
+
+	return service->IsInterstitalReady();
+}
+
+// Check for rewarded video is downloaded ready to showing
+bool LUNAAds::IsRewardedVideoReady()
+{
+	if(!service) return false;
+
+	return service->IsRewardedVideoReady();
+}
+
 // Show interstitial
 void LUNAAds::ShowInterstital()
 {

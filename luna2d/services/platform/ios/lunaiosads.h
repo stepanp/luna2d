@@ -36,6 +36,12 @@ private:
 	id service;
 	
 public:
+	// Check for interstitial is downloaded ready to showing
+	virtual bool IsInterstitalReady();
+	
+	// Check for video is downloaded ready to showing
+	virtual bool IsRewardedVideoReady();
+	
 	// Show interstitial
 	virtual void ShowInterstital();
 		

@@ -31,6 +31,12 @@ public:
 	virtual ~LUNAAdsService() {}
 
 public:
+	// Check for interstitial is downloaded ready to showing
+	virtual bool IsInterstitalReady() = 0;
+
+	// Check for video is downloaded ready to showing
+	virtual bool IsRewardedVideoReady() = 0;
+
 	// Show interstitial
 	virtual void ShowInterstital() = 0;
 
@@ -53,6 +59,12 @@ public:
 
 	// Load services from config
 	void LoadServices();
+
+	// Check for interstitial is downloaded ready to showing
+	bool IsInterstitalReady();
+
+	// Check for rewarded video is downloaded ready to showing
+	bool IsRewardedVideoReady();
 
 	// Show interstitial
 	void ShowInterstital();

@@ -61,6 +61,18 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 	}];
 }
 
+// Check for interstitial is downloaded ready to showing
+bool LUNAIosAdsService::IsInterstitalReady()
+{
+	return [service isInterstitialReady];
+}
+
+// Check for video is downloaded ready to showing
+bool LUNAIosAdsService::IsRewardedVideoReady()
+{
+	return [service isRewardedVideoReady];
+}
+
 // Show interstitial
 void LUNAIosAdsService::ShowInterstital()
 {
