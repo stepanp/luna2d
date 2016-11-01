@@ -70,6 +70,9 @@ void Settings::Load()
 	resolutions.push_back(Resolution(480, 320, "HVGA", true));
 	resolutions.push_back(Resolution(800, 480, "WVGA", true));
 	resolutions.push_back(Resolution(960, 540, "qHD", true));
+	resolutions.push_back(Resolution(960, 640, "iPhone", true));
+	resolutions.push_back(Resolution(1136, 640, "iPhone 5", true));
+	resolutions.push_back(Resolution(1334, 750, "iPhone 6", true));
 	resolutions.push_back(Resolution(1280, 720, "HD", true));
 	resolutions.push_back(Resolution(1024, 768, "iPad", true));
 	resolutions.push_back(Resolution(1920, 1080, "FullHD", true));
