@@ -223,8 +223,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 	QString preferred = Settings::GetPreferredLanguage(curGameName);
 	if(preferred != "system") SetLanguage(preferred); // System locale sets by default at engine initialization
 
-	// Resize pixmap for screenshots
-	screenshotsPixmap = QPixmap(ui->centralWidget->size());
+	// Update screenshots menu
 	ui->actionTake_screenshot->setEnabled(true);
 
 	// Launch game
@@ -310,6 +309,19 @@ void MainWindow::SetResolution(int resolutionIndex)
 
 	setFixedSize(wndWidth, wndHeight + ui->menuBar->height()); // Consider menubar height
 	MoveToCenter();
+
+	// Resize pixmap for screenshots
+	qreal pixelRatio = ui->centralWidget->devicePixelRatioF();
+	if(pixelRatio > 1.0 && !Settings::scaleHdpiResolution)
+	{
+		screenshotsPixmap = QPixmap(ui->centralWidget->size() * pixelRatio);
+		screenshotsPixmap.setDevicePixelRatio(pixelRatio);
+	}
+	else
+	{
+		screenshotsPixmap = QPixmap(ui->centralWidget->size());
+		screenshotsPixmap.setDevicePixelRatio(1.0);
+	}
 
 	Settings::curResolution = resolutionIndex;
 }

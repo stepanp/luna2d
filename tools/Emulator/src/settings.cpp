@@ -49,7 +49,7 @@ void Settings::Load()
 
 	openLastGame = settings.value("openLastGame", openLastGame).toBool();
 	gameWasOpened = settings.value("gameWasOpened", gameWasOpened).toBool();
-	scaleHdpiResolution = settings.value("scaleHdpiResolution", gameWasOpened).toBool();
+	scaleHdpiResolution = settings.value("scaleHdpiResolution", scaleHdpiResolution).toBool();
 	curResolution = settings.value("curResolution", curResolution).toInt();
 	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
 	clearLogOnStart = settings.value("clearLogOnStart", clearLogOnStart).toBool();
