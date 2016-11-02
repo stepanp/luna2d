@@ -307,7 +307,10 @@ void MainWindow::SetResolution(int resolutionIndex)
 		wndHeight = std::round((float)wndHeight * scale);
 	}
 
-	setFixedSize(wndWidth, wndHeight + ui->menuBar->height()); // Consider menubar height
+	// Consider menubar height
+	wndHeight += ui->menuBar->isNativeMenuBar() ? 0 : ui->menuBar->height();
+
+	setFixedSize(wndWidth, wndHeight);
 	MoveToCenter();
 
 	// Resize pixmap for screenshots
