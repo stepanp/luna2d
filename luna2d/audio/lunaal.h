@@ -23,31 +23,12 @@
 
 #pragma once
 
-#include "lunaassets.h"
-#include "lunalua.h"
-#include "lunaal.h"
-
-namespace luna2d{
-
-class LUNAAudioSource : public LUNAAsset
-{
-	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAAudioSource)
-
-public:
-	LUNAAudioSource(std::vector<unsigned char>& data, int sampleRate, int sampleSize, int channelsCount);
-	virtual ~LUNAAudioSource();
-
-private:
-	ALuint id = 0;
-	int sampleRate = 0;
-	int sampleSize = 0;
-	int channelsCount = 0;
-
-public:
-	ALuint GetId();
-	int GetSampleRate();
-	int GetSampleSize();
-	int GetChannelsCount();
-};
-
-}
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	#define AL_ALEXT_PROTOTYPES
+	#include <al.h>
+	#include <alc.h>
+	#include <alext.h>
+#else
+	#include <al.h>
+	#include <alc.h>
+#endif

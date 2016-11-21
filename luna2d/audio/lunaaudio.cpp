@@ -273,11 +273,19 @@ void LUNAAudio::OnPause()
 {
 	musicPlayer->OnPause();
 	for(auto& player : players) player->OnPause();
+
+#ifdef ALC_SOFT_pause_device
+	alcDevicePauseSOFT(device);
+#endif
 }
 
 // Resume audio when engine is resuming
 void LUNAAudio::OnResume()
 {
+#ifdef ALC_SOFT_pause_device
+	alcDeviceResumeSOFT(device);
+#endif
+
 	musicPlayer->OnResume();
 	for(auto& player : players) player->OnResume();
 }
