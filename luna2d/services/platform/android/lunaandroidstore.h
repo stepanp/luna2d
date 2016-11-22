@@ -24,11 +24,20 @@
 #pragma once
 
 #include "lunastore.h"
+#include "lunaandroidjni.h"
 
 namespace luna2d{
 
 class LUNAAndroidStore : public LUNAStore
 {
+public:
+	LUNAAndroidStore();
+
+private:
+	jclass javaStore;
+	jmethodID javaGetUrl;
+	jmethodID javaOpenPage;
+
 public:
 	// Get url to page of game in store
 	virtual std::string GetUrl();

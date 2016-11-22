@@ -21,32 +21,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaandroidstore.h"
+package com.stepanp.luna2d.services;
 
-using namespace luna2d;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 
-LUNAAndroidStore::LUNAAndroidStore()
+import com.stepanp.luna2d.LunaActivity;
+
+public class LunaStore
 {
-	jni::Env env;
+    // Get url to page of game in store
+    public static String getUrl()
+    {
+        String appPackage = LunaActivity.getSharedActivity().getPackageName();
+        String url = "https://play.google.com/store/apps/details?id=" + appPackage;
 
-	// Get ref to java wrapper class
-	jclass localRef = env->FindClass("com/stepanp/luna2d/services/LunaStore");
-	javaStore = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
-	env->DeleteLocalRef(localRef);
+        return url;
+    }
 
-	// Get java wrapper method ids
-	javaGetUrl = env->GetStaticMethodID(javaStore, "getUrl", "()Ljava/lang/String;");
-	javaOpenPage = env->GetStaticMethodID(javaStore, "openPage", "()V");
-}
-
-// Get url to page of game in store
-std::string LUNAAndroidStore::GetUrl()
-{
-	return jni::FromJString(jni::Env()->CallStaticObjectMethod(javaStore, javaGetUrl));
-}
-
-// Open page of game in store
-void LUNAAndroidStore::OpenPage()
-{
-	jni::Env()->CallStaticVoidMethod(javaStore, javaOpenPage);
+    // Open page of game in store
+    public static void openPage()
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getUrl()));
+        LunaActivity.getSharedActivity().startActivity(intent);
+    }
 }
