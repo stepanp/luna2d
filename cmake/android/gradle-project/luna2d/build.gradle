@@ -15,7 +15,8 @@ android {
 		main {
 			java.srcDirs = [
 					"src/main/../../../../../../luna2d/platform/android/java",
-					"src/main/../../../../../../luna2d/sdkapi/platform/android/java"]
+					"src/main/../../../../../../luna2d/sdkapi/platform/android/java",
+                    "src/main/../../../../../../luna2d/services/platform/android/java"]
 			resources.srcDirs  = ["src/main/res"]
 			manifest.srcFile 'src/main/AndroidManifest.xml'
 		}

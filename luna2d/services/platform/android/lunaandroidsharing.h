@@ -24,11 +24,19 @@
 #pragma once
 
 #include "lunasharing.h"
+#include "lunaandroidjni.h"
 
 namespace luna2d{
 
 class LUNAAndroidSharing : public LUNASharing
 {
+public:
+	LUNAAndroidSharing();
+
+private:
+	jclass javaSharing;
+	jmethodID javaText;
+
 public:
 	// Share given text using system sharing dialog
 	virtual void Text(const std::string& text);

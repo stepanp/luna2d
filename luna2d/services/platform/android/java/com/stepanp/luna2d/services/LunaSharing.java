@@ -21,25 +21,23 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaandroidsharing.h"
+package com.stepanp.luna2d.services;
 
-using namespace luna2d;
+import android.app.Activity;
+import android.content.Intent;
+import com.stepanp.luna2d.LunaActivity;
 
-LUNAAndroidSharing::LUNAAndroidSharing()
+public class LunaSharing
 {
-	jni::Env env;
+    // Share given text using system sharing dialog
+	public static void text(String text)
+    {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.setType("text/plain");
 
-	// Get ref to java wrapper class
-	jclass localRef = env->FindClass("com/stepanp/luna2d/services/LunaSharing");
-	javaSharing = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
-	env->DeleteLocalRef(localRef);
-
-	// Get java wrapper method ids
-	javaText = env->GetStaticMethodID(javaSharing, "text", "(Ljava/lang/String;)V");
-}
-
-// Share given text using system sharing dialog
-void LUNAAndroidSharing::Text(const std::string& text)
-{
-	jni::Env()->CallStaticVoidMethod(javaSharing, javaText, jni::ToJString(text).j_str());
+        Activity activity = LunaActivity.getSharedActivity();
+        activity.startActivity(Intent.createChooser(intent, null));
+    }
 }
