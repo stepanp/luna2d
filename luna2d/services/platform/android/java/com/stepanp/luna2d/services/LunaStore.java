@@ -23,11 +23,8 @@
 
 package com.stepanp.luna2d.services;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
-
 import com.stepanp.luna2d.LunaActivity;
 
 public class LunaStore
