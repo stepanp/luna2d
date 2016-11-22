@@ -29,15 +29,15 @@ import com.stepanp.luna2d.LunaActivity;
 
 public class LunaSharing
 {
-    // Share given text using system sharing dialog
+	// Share given text using system sharing dialog
 	public static void text(String text)
-    {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, text);
-        intent.setType("text/plain");
+	{
+		Intent intent = new Intent();
+		intent.setAction(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_TEXT, text);
+		intent.setType("text/plain");
 
-        Activity activity = LunaActivity.getSharedActivity();
-        activity.startActivity(Intent.createChooser(intent, null));
-    }
+		Activity activity = LunaActivity.getSharedActivity();
+		activity.startActivity(Intent.createChooser(intent, null));
+	}
 }

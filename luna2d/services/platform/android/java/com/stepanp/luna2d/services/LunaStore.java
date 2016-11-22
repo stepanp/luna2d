@@ -29,19 +29,19 @@ import com.stepanp.luna2d.LunaActivity;
 
 public class LunaStore
 {
-    // Get url to page of game in store
-    public static String getUrl()
-    {
-        String appPackage = LunaActivity.getSharedActivity().getPackageName();
-        String url = "https://play.google.com/store/apps/details?id=" + appPackage;
+	// Get url to page of game in store
+	public static String getUrl()
+	{
+		String appPackage = LunaActivity.getSharedActivity().getPackageName();
+		String url = "https://play.google.com/store/apps/details?id=" + appPackage;
 
-        return url;
-    }
+		return url;
+	}
 
-    // Open page of game in store
-    public static void openPage()
-    {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getUrl()));
-        LunaActivity.getSharedActivity().startActivity(intent);
-    }
+	// Open page of game in store
+	public static void openPage()
+	{
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getUrl()));
+		LunaActivity.getSharedActivity().startActivity(intent);
+	}
 }
