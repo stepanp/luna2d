@@ -72,6 +72,7 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
 // Select nearest texture resolution to screen resolution
 void LUNASizes::SelectResolution(const std::shared_ptr<const LUNAConfig>& config)
 {
+	int screenSize = config->orientation == LUNAOrientation::PORTRAIT ? physicalScreenWidth : physicalScreenHeight;
 	int count = config->resolutions.size();
 	int minDiff = INT_MAX;
 	int index = -1;
@@ -79,7 +80,7 @@ void LUNASizes::SelectResolution(const std::shared_ptr<const LUNAConfig>& config
 	for(int i = 0; i < count; i++)
 	{
 		int height = RESOLUTIONS_TABLE.at(config->resolutions[i]);
-		int diff = std::fabs(physicalScreenHeight - height);
+		int diff = std::fabs(screenSize - height);
 
 		if(diff < minDiff)
 		{
