@@ -57,6 +57,7 @@ LUNAGraphics::LUNAGraphics() :
 	tblGraphics.SetField("getRenderedVertexes", LuaFunction(lua, this, &LUNAGraphics::GetRenderedVertexes));
 	tblGraphics.SetField("getCamera", LuaFunction(lua, this, &LUNAGraphics::GetCamera));
 	tblGraphics.SetField("setBackgroundColor", LuaFunction(lua, this, &LUNAGraphics::SetBackgroundColor));
+	tblGraphics.SetField("getDefaultShader", LuaFunction(lua, &renderer, &LUNARenderer::GetDefaultShader));
 	tblGraphics.SetField("enableScissor", LuaFunction(lua, &renderer, &LUNARenderer::EnableScissor));
 	tblGraphics.SetField("disableScissor", LuaFunction(lua, &renderer, &LUNARenderer::DisableScissor));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, &renderer, &LUNARenderer::EnableDebugRender));
