@@ -24,11 +24,20 @@
 #pragma once
 
 #include "lunaleaderboards.h"
+#include "lunaandroidjni.h"
 
 namespace luna2d{
 
 class LUNAAndroidLeaderboards : public LUNALeaderboards
 {
+public:
+	LUNAAndroidLeaderboards();
+
+private:
+	jclass javaLeaderboards;
+	jmethodID javaSubmitScore;
+	jmethodID javaOpen;
+
 public:
 	// Submit score to leadearboard
 	virtual void SubmitScore(int score);

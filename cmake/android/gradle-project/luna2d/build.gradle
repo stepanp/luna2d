@@ -15,7 +15,6 @@ android {
 		main {
 			java.srcDirs = [
 					"src/main/../../../../../../luna2d/platform/android/java",
-					"src/main/../../../../../../luna2d/sdkapi/platform/android/java",
 					"src/main/../../../../../../luna2d/services/platform/android/java"]
 			resources.srcDirs  = ["src/main/res"]
 			manifest.srcFile 'src/main/AndroidManifest.xml'
@@ -64,4 +63,5 @@ android {
 
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile 'com.google.android.gms:play-services-games:10.0.1'
 }

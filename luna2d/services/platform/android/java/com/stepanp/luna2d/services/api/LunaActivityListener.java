@@ -21,36 +21,23 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaandroidleaderboards.h"
-#include "lunalog.h"
+package com.stepanp.luna2d.services.api;
 
-using namespace luna2d;
+import android.app.Activity;
 
-LUNAAndroidLeaderboards::LUNAAndroidLeaderboards()
+public interface LunaActivityListener
 {
-	jni::Env env;
+	public void onStart(Activity activity);
 
-	// Get ref to java wrapper class
-	jclass localRef = env->FindClass("com/stepanp/luna2d/services/LunaLeaderboards");
-	javaLeaderboards = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
-	env->DeleteLocalRef(localRef);
+	public void onResume(Activity activity);
 
-	// Get java wrapper method ids
-	javaSubmitScore = env->GetStaticMethodID(javaLeaderboards, "text", "(I)V");
-	javaOpen = env->GetStaticMethodID(javaLeaderboards, "text", "()V");
+	public void onPause(Activity activity);
 
-	jmethodID javaInit = env->GetStaticMethodID(javaLeaderboards, "init", "()V");
-	env->CallStaticVoidMethod(javaLeaderboards, javaInit);
-}
+	public void onStop(Activity activity);
 
-// Submit score to leadearboard
-void LUNAAndroidLeaderboards::SubmitScore(int score)
-{
-	jni::Env()->CallStaticVoidMethod(javaLeaderboards, javaSubmitScore, score);
-}
+	public void onDestroy(Activity activity);
 
-// Open leadearboards popup
-void LUNAAndroidLeaderboards::Open()
-{
-	jni::Env()->CallStaticVoidMethod(javaLeaderboards, javaOpen);
+	public boolean onBackPressed(Activity acitivity);
+
+	public void onNetworkStateChanged(Activity acitivity, boolean connected);
 }

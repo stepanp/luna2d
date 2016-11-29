@@ -35,7 +35,7 @@ import android.os.Handler;
 import android.view.View;
 import java.util.List;
 import java.util.ArrayList;
-import com.stepanp.luna2d.sdkapi.LunaActivityListener;
+import com.stepanp.luna2d.services.api.LunaActivityListener;
 
 public class LunaActivity extends Activity
 {
