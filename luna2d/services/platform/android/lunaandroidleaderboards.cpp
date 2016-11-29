@@ -22,7 +22,6 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidleaderboards.h"
-#include "lunalog.h"
 
 using namespace luna2d;
 
@@ -36,8 +35,8 @@ LUNAAndroidLeaderboards::LUNAAndroidLeaderboards()
 	env->DeleteLocalRef(localRef);
 
 	// Get java wrapper method ids
-	javaSubmitScore = env->GetStaticMethodID(javaLeaderboards, "text", "(I)V");
-	javaOpen = env->GetStaticMethodID(javaLeaderboards, "text", "()V");
+	javaSubmitScore = env->GetStaticMethodID(javaLeaderboards, "submitScore", "(I)V");
+	javaOpen = env->GetStaticMethodID(javaLeaderboards, "open", "()V");
 
 	jmethodID javaInit = env->GetStaticMethodID(javaLeaderboards, "init", "()V");
 	env->CallStaticVoidMethod(javaLeaderboards, javaInit);

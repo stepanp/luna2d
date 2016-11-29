@@ -45,13 +45,13 @@ void LUNAAndroidServices::LoadServices()
 // Realizations of "LunaServices.getConfig*" Java-metods
 // SEE "com.stepanp.luna2d.services.LunaServices"
 //------------------------------------------------------
-LUNA_JNI_FUNC_PACKAGE(bool, services, LunaServices, hasConfigValue)(JNIEnv* env, jmethodID method, jstring jName)
+LUNA_JNI_FUNC_PACKAGE(bool, services_api, LunaServicesApi, hasConfigValue)(JNIEnv* env, jclass cls, jstring jName)
 {
 	auto name = jni::FromJString(jName);
 	return !LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].is_null();
 }
 
-LUNA_JNI_FUNC_PACKAGE(jstring, services, LunaServices, getConfigString)(JNIEnv* env, jmethodID method, jstring jName)
+LUNA_JNI_FUNC_PACKAGE(jstring, services_api, LunaServicesApi, getConfigString)(JNIEnv* env, jclass cls, jstring jName)
 {
 	auto name = jni::FromJString(jName);
 	auto string = LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].string_value();
@@ -59,19 +59,19 @@ LUNA_JNI_FUNC_PACKAGE(jstring, services, LunaServices, getConfigString)(JNIEnv* 
 	return jni::Env()->NewStringUTF(string.c_str());
 }
 
-LUNA_JNI_FUNC_PACKAGE(int, services, LunaServices, getConfigInt)(JNIEnv* env, jmethodID method, jstring jName)
+LUNA_JNI_FUNC_PACKAGE(int, services_api, LunaServicesApi, getConfigInt)(JNIEnv* env, jclass cls, jstring jName)
 {
 	auto name = jni::FromJString(jName);
 	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].number_value();
 }
 
-LUNA_JNI_FUNC_PACKAGE(float, services, LunaServices, getConfigFloat)(JNIEnv* env, jmethodID method, jstring jName)
+LUNA_JNI_FUNC_PACKAGE(float, services_api, LunaServicesApi, getConfigFloat)(JNIEnv* env, jclass cls, jstring jName)
 {
 	auto name = jni::FromJString(jName);
 	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].number_value();
 }
 
-LUNA_JNI_FUNC_PACKAGE(bool, services, LunaServices, getConfigBool)(JNIEnv* env, jmethodID method, jstring jName)
+LUNA_JNI_FUNC_PACKAGE(bool, services_api, LunaServicesApi, getConfigBool)(JNIEnv* env, jclass cls, jstring jName)
 {
 	auto name = jni::FromJString(jName);
 	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].bool_value();
