@@ -26,6 +26,7 @@ package com.stepanp.luna2d.services;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import com.stepanp.luna2d.services.api.LunaServicesApi;
 import com.stepanp.luna2d.services.api.LunaActivityListener;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,9 +37,10 @@ public class LunaLeaderboards
 {
 	public static void init()
 	{
-		Activity activity = LunaServicesApi.getSharedActivity();
+		leaderboardId = LunaServicesApi.getConfigString("leaderboardId");
+		if(leaderboardId.isEmpty()) return;
 
-		apiClient = new GoogleApiClient.Builder(activity)
+		apiClient = new GoogleApiClient.Builder(LunaServicesApi.getSharedActivity())
 				.addConnectionCallbacks(connectionListener)
 				.addApi(Games.API).addScope(Games.SCOPE_GAMES)
 				.build();
@@ -47,6 +49,7 @@ public class LunaLeaderboards
 	}
 
 	private static GoogleApiClient apiClient;
+	private static String leaderboardId;
 
 	private static boolean isSigned()
 	{
@@ -56,9 +59,10 @@ public class LunaLeaderboards
 	// Submit score to leadearboard
 	public static void submitScore(int score)
 	{
+		if(leaderboardId.isEmpty()) Log.e(LunaServicesApi.getLogTag(), "\"leaderboardId\" must be set in config to submit score");
 		if(!isSigned()) return;
 		
-		Games.Leaderboards.submitScore(LunaLeaderboards.apiClient, "", score);
+		Games.Leaderboards.submitScore(LunaLeaderboards.apiClient, leaderboardId, score);
 	}
 
 	// Open leadearboards popup

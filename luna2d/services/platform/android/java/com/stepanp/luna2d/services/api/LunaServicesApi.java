@@ -24,11 +24,14 @@
 package com.stepanp.luna2d.services.api;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import com.stepanp.luna2d.LunaActivity;
 import com.stepanp.luna2d.LunaGlView;
 
 public class LunaServicesApi
 {
+	private static String logTag = "";
+
 	// Check for value with given name exists in config
 	public static native boolean hasConfigValue(String name);
 
@@ -78,6 +81,18 @@ public class LunaServicesApi
 				activity.removeListener(listener);
 			}
 		});
+	}
+
+	// Get string tag for logging
+	public static String getLogTag()
+	{
+		if(logTag.isEmpty())
+		{
+			ApplicationInfo appInfo = getSharedActivity().getApplicationInfo();
+			logTag = (String)getSharedActivity().getPackageManager().getApplicationLabel(appInfo);
+		}
+
+		return logTag;
 	}
 
 	// Run given runnable in UI thread
