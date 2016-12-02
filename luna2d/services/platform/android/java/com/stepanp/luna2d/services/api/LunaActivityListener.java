@@ -24,6 +24,7 @@
 package com.stepanp.luna2d.services.api;
 
 import android.app.Activity;
+import android.content.Intent;
 
 public interface LunaActivityListener
 {
@@ -40,4 +41,6 @@ public interface LunaActivityListener
 	public boolean onBackPressed(Activity acitivity);
 
 	public void onNetworkStateChanged(Activity acitivity, boolean connected);
+
+	public void onActivityResult(int requestCode, int resultCode, Intent intent);
 }

@@ -133,6 +133,14 @@ public class LunaActivity extends Activity
 	}
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
+		super.onActivityResult(requestCode, resultCode, intent);
+
+		for(LunaActivityListener listener : listeners) listener.onActivityResult(requestCode, resultCode, intent);
+	}
+
+	@Override
 	public void onWindowFocusChanged(boolean hasFocus)
 	{
 		super.onWindowFocusChanged(hasFocus);
