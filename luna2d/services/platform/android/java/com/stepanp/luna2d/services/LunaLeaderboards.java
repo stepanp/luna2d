@@ -24,32 +24,46 @@
 package com.stepanp.luna2d.services;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.example.games.basegameutils.BaseGameUtils;
 import com.stepanp.luna2d.services.api.LunaServicesApi;
 import com.stepanp.luna2d.services.api.LunaActivityListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.games.Games;
 
 public class LunaLeaderboards
 {
+	private static final int RC_SIGN_IN = 9001;
+	private static final int RC_UNUSED = 5001;
+
 	public static void init()
 	{
 		leaderboardId = LunaServicesApi.getConfigString("leaderboardId");
 		if(leaderboardId.isEmpty()) return;
 
 		apiClient = new GoogleApiClient.Builder(LunaServicesApi.getSharedActivity())
+				.addOnConnectionFailedListener(connectionFailedListener)
 				.addConnectionCallbacks(connectionListener)
 				.addApi(Games.API).addScope(Games.SCOPE_GAMES)
 				.build();
 
+		if(apiClient == null) return;
+
 		LunaServicesApi.addActivityListener(activityListener);
+		apiClient.connect();
 	}
 
 	private static GoogleApiClient apiClient;
 	private static String leaderboardId;
+	private static boolean resolvingConnectionFailure = false;
+	private static boolean notConnected = false;
 
 	private static boolean isSigned()
 	{
@@ -71,7 +85,7 @@ public class LunaLeaderboards
 		if(!isSigned()) return;
 
 		Activity activity = LunaServicesApi.getSharedActivity();
-		activity.startActivity(Games.Leaderboards.getAllLeaderboardsIntent(apiClient));
+		activity.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(apiClient), RC_UNUSED);
 	}
 
 
@@ -90,12 +104,29 @@ public class LunaLeaderboards
 		}
 	};
 
+	private static OnConnectionFailedListener connectionFailedListener = new OnConnectionFailedListener()
+	{
+		@Override
+		public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+		{
+			if(resolvingConnectionFailure) return;
+
+			resolvingConnectionFailure = true;
+			if(!BaseGameUtils.resolveConnectionFailure(LunaServicesApi.getSharedActivity(), apiClient,
+					connectionResult, RC_SIGN_IN, ""))
+			{
+				resolvingConnectionFailure = false;
+				notConnected = true;
+			}
+		}
+	};
+
 	private static LunaActivityListener activityListener = new LunaActivityListener()
 	{
 		@Override
 		public void onStart(Activity activity)
 		{
-			if(apiClient != null) apiClient.connect();
+			if(apiClient != null && !notConnected) apiClient.connect();
 		}
 
 		@Override
@@ -132,6 +163,16 @@ public class LunaLeaderboards
 		public void onNetworkStateChanged(Activity acitivity, boolean connected)
 		{
 
+		}
+
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent intent)
+		{
+			if (requestCode == RC_SIGN_IN)
+			{
+				resolvingConnectionFailure = false;
+				if (resultCode == Activity.RESULT_OK) apiClient.connect();
+			}
 		}
 	};
 }
