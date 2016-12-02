@@ -25,12 +25,12 @@ package com.stepanp.luna2d.services;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.example.games.basegameutils.BaseGameUtils;
 import com.stepanp.luna2d.services.api.LunaServicesApi;
 import com.stepanp.luna2d.services.api.LunaActivityListener;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -112,13 +112,28 @@ public class LunaLeaderboards
 			if(resolvingConnectionFailure) return;
 
 			resolvingConnectionFailure = true;
-			if(!BaseGameUtils.resolveConnectionFailure(LunaServicesApi.getSharedActivity(), apiClient,
-					connectionResult, RC_SIGN_IN, ""))
+			if(!resolveConnectionFailure(connectionResult))
 			{
 				resolvingConnectionFailure = false;
 				notConnected = true;
 			}
 		}
+
+        private boolean resolveConnectionFailure(ConnectionResult result)
+        {
+            if(!result.hasResolution()) return false;
+
+            try
+            {
+                result.startResolutionForResult(LunaServicesApi.getSharedActivity(), RC_SIGN_IN);
+                return true;
+            }
+            catch (IntentSender.SendIntentException e)
+            {
+                apiClient.connect();
+                return false;
+            }
+        }
 	};
 
 	private static LunaActivityListener activityListener = new LunaActivityListener()
