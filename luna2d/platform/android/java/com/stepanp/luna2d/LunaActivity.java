@@ -74,7 +74,7 @@ public class LunaActivity extends Activity
 		setContentView(glView);
 
 		// Create network state receiver if application has permission
-		createNetworkStateReciever();
+		// createNetworkStateReciever();
 	}
 	
 	@Override

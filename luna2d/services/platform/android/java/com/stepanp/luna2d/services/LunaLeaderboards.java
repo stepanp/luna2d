@@ -186,7 +186,8 @@ public class LunaLeaderboards
 			if (requestCode == RC_SIGN_IN)
 			{
 				resolvingConnectionFailure = false;
-				if (resultCode == Activity.RESULT_OK) apiClient.connect();
+				if(resultCode == Activity.RESULT_OK) apiClient.connect();
+				else notConnected = true;
 			}
 		}
 	};

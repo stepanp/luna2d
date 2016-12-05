@@ -21,50 +21,21 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+package com.stepanp.luna2d.services.api;
 
-#include "lunaads.h"
-#include "lunaandroidjni.h"
-
-namespace luna2d{
-
-class LUNAAndroidAdsService : public LUNAAdsService
+public abstract class LunaAdsSerivce
 {
-public:
-	LUNAAndroidAdsService(const std::string& javaClassPath);
-	
-private:
-	jclass javaClass = nullptr;
-	jobject javaObject = nullptr;
-	jmethodID javaIsInterstitalReady = nullptr;
-	jmethodID javaIsRewardedVideoReady = nullptr;
-	jmethodID javaShowInterstital = nullptr;
-	jmethodID javaShowRewardedVideo = nullptr;
-	bool isLoaded = false;
+	public abstract boolean isInterstitalReady();
 
-public:
-	// Check for java part of ads service was loaded successufully
-	bool IsLoaded();
+	public abstract boolean isRewardedVideoReady();
 
-	// Check for interstitial is downloaded ready to showing
-	virtual bool IsInterstitalReady();
-	
-	// Check for video is downloaded ready to showing
-	virtual bool IsRewardedVideoReady();
-	
-	// Show interstitial
-	virtual void ShowInterstital();
-		
-	// Show rewarded video
-	virtual void ShowRewardedVideo();
-};
+	public abstract void showInterstitial();
 
+	public abstract void showRewardedVideo();
 
-class LUNAAndroidAds : public LUNAAds
-{
-public:
-	// Load service instance by name
-	virtual std::shared_ptr<LUNAAdsService> LoadService(const std::string& name);
-};
+	protected native void onRewardedVideoSuccess();
 
+	protected native void onRewardedVideoFail();
+
+	protected native void onRewardedVideoError();
 }
