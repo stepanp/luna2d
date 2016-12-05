@@ -39,8 +39,6 @@
 #include "lunabindings.h"
 #include "lunaservices.h"
 #include "lunabindservices.h"
-#include "lunasdkapi.h"
-#include "lunasdkapibind.h"
 
 using namespace luna2d;
 
@@ -61,11 +59,6 @@ void LUNAEngine::Assemble(LUNAFiles *files, LUNALog *log, LUNAPlatformUtils *pla
 	this->platformUtils = platformUtils;
 	this->prefs = prefs;
 	this->services = services;
-}
-
-void LUNAEngine::SetSdkApi(LUNASdkApi* sdkApi)
-{
-	this->sdkApi = sdkApi;
 }
 
 void LUNAEngine::Initialize(int screenWidth, int screenHeight)
@@ -105,12 +98,6 @@ void LUNAEngine::Initialize(int screenWidth, int screenHeight)
 	services->LoadServices();
 	BindServices();
 
-	if(sdkApi)
-	{
-		BindSdkApi();
-		sdkApi->LoadModules();
-	}
-
 	initialized = true;
 }
 
@@ -134,7 +121,6 @@ void LUNAEngine::Deinitialize()
 {
 	config.reset();
 
-	delete sdkApi;
 	delete services;
 	delete assets;
 	delete graphics;
@@ -166,7 +152,6 @@ void LUNAEngine::Deinitialize()
 	platformUtils = nullptr;
 	log = nullptr;
 	services = nullptr;
-	sdkApi = nullptr;
 
 	initialized = false;
 }

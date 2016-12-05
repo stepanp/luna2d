@@ -56,7 +56,6 @@ class LUNADebug;
 class LUNAConfig;
 
 class LUNAServices;
-class LUNASdkApi;
 
 class LUNAEngine
 {
@@ -82,7 +81,6 @@ private:
 	LUNAEvents* events = nullptr;
 	LUNAStrings* strings = nullptr;
 
-	LUNASdkApi* sdkApi = nullptr;
 	LUNAServices* services = nullptr;
 
 #ifdef LUNA_DEBUG
@@ -103,8 +101,6 @@ public:
 	std::string GetGameName(); // Get name of running game
 	void RunEmbeddedScripts();
 	bool IsInitialized();
-
-	void SetSdkApi(LUNASdkApi* sdkApi);
 
 	// Enable/disable handling OnPause/OnResume events
 	void EnablePauseHandling(bool enable);
@@ -130,7 +126,6 @@ public:
 	inline static LUNAEvents* SharedEvents() { return Shared()->events; }
 	inline static LUNAStrings* SharedStrings() { return Shared()->strings; }
 	inline static LUNAServices* SharedServices() { return Shared()->services; }
-	inline static LUNASdkApi* SharedSdkApi() { return Shared()->sdkApi; }
 
 #ifdef LUNA_DEBUG
 	inline static LUNADebug* SharedDebug() { return Shared()->debug; }
