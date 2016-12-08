@@ -90,6 +90,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/Box2D
 	${THIRDPARTY_DIR}/freetype
 	${THIRDPARTY_DIR}/json11
+	${THIRDPARTY_DIR}/libpng/arm
 	${THIRDPARTY_DIR}/libpng
 	${THIRDPARTY_DIR}/utf8cpp
 	${THIRDPARTY_DIR}/libzip
@@ -107,6 +108,7 @@ aux_source_directory(${THIRDPARTY_DIR}/lua THIRDPARTY_SOURCES)
 list(REMOVE_ITEM THIRDPARTY_SOURCES ${THIRDPARTY_DIR}/lua/luac.c)
 
 # libpng
+aux_source_directory(${THIRDPARTY_DIR}/libpng/arm THIRDPARTY_SOURCES)
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
 
 # Box2D
