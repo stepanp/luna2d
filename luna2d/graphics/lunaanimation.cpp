@@ -66,7 +66,11 @@ void LUNAAnimation::SetFrameTime(float frameTime)
 int LUNAAnimation::GetCurFrame()
 {
 	if(frames.empty()) return 0;
+
 	float totalTime = frameTime * frames.size();
+
+	if(totalTime < std::numeric_limits<float>::epsilon()) return 0;
+
 	return std::floor((time / totalTime) * frames.size());
 }
 
