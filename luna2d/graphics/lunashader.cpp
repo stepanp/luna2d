@@ -27,6 +27,20 @@
 
 using namespace luna2d;
 
+const std::string GLES_PRECISIONS =
+R"(#ifndef GL_ES
+#define lowp
+#define mediump
+#define highp
+#endif
+)";
+
+const std::string GLES_DEFAULT_PRECISION =
+R"(#ifdef GL_ES
+precision mediump float;
+#endif
+)";
+
 LUNAShader::LUNAShader(const std::string& vertexSource, const std::string& fragmentSource)
 {
 	CreateGlProgram(vertexSource, fragmentSource);
@@ -84,13 +98,10 @@ GLuint LUNAShader::LoadShader(GLenum shaderType, const std::string& source)
 // Link vertex and fragment shaders into shader program
 void LUNAShader::CreateGlProgram(const std::string& vertexSource, const std::string& fragmentSource)
 {
-	vertexShader = LoadShader(GL_VERTEX_SHADER, vertexSource);
+	vertexShader = LoadShader(GL_VERTEX_SHADER, PreprocessVertex(vertexSource));
 	if(!vertexShader) return;
 
-	// Append default preprocessor directives with GLES constants
-	std::string esFragmentSource = GLES_DEFINES + fragmentSource;
-
-	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, esFragmentSource);
+	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, PreprocessFragment(fragmentSource));
 	if(!fragmentShader) return;
 
 	program = glCreateProgram();
@@ -135,6 +146,18 @@ void LUNAShader::FetchDefaultAttributes()
 	a_texCoords = glGetAttribLocation(program, "a_texCoords");
 	u_transformMatrix = glGetUniformLocation(program, "u_transformMatrix");
 	u_texture = glGetUniformLocation(program, "u_texture");
+}
+
+// Add default preprocessor directives to vertex shader source
+std::string LUNAShader::PreprocessVertex(const std::string& source)
+{
+	return GLES_PRECISIONS + source;
+}
+
+// Add default preprocessor directives to fragment shader source
+std::string LUNAShader::PreprocessFragment(const std::string& source)
+{
+	return GLES_DEFAULT_PRECISION + GLES_PRECISIONS + source;
 }
 
 bool LUNAShader::IsValid()

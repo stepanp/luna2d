@@ -28,15 +28,6 @@
 
 namespace luna2d{
 
-const std::string GLES_DEFINES =
-R"(#ifdef GL_ES
-precision mediump float;
-#else
-#define lowp
-#endif
-
-)";
-
 class LUNAShader : public LUNAAsset
 {
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAShader)
@@ -66,6 +57,12 @@ private:
 
 	// Fetch default attributes and uniforms
 	void FetchDefaultAttributes();
+
+	// Add default preprocessor directives to vertex shader source
+	std::string PreprocessVertex(const std::string& source);
+
+	// Add default preprocessor directives to fragment shader source
+	std::string PreprocessFragment(const std::string& source);
 
 public:
 	bool IsValid();
