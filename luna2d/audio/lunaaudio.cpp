@@ -182,14 +182,16 @@ void LUNAAudio::StopMusic()
 }
 
 // Play sound from given source
-void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source)
+void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume)
 {
 	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
+	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
 
 	auto player = FindFreePlayer();
 	if(!player) LUNA_RETURN_ERR("Cannot play audio source. All audio players are used");
 
 	player->SetSource(source.lock()->GetId());
+	player->SetVolume(soundVolume * volume);
 	player->Play();
 }
 

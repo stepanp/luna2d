@@ -89,7 +89,7 @@ public:
 	void StopMusic();
 
 	// Play sound from given audio source
-	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source);
+	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume = 1.0f);
 
 	// Stop all currently playing sounds
 	void StopAllSounds();

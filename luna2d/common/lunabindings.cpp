@@ -272,7 +272,6 @@ static void BindAudio(LuaScript* lua, LuaTable& tblLuna)
 	tblAudio.SetField("isMusicPlaying", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::IsMusicPlaying));
 	tblAudio.SetField("playMusic", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::PlayMusic));
 	tblAudio.SetField("stopMusic", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::StopMusic));
-	tblAudio.SetField("playSound", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::PlaySound));
 	tblAudio.SetField("stopAllSounds", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::StopAllSounds));
 	tblAudio.SetField("getMusicVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::GetMusicVolume));
 	tblAudio.SetField("setMusicVolume", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::SetMusicVolume));
@@ -282,6 +281,16 @@ static void BindAudio(LuaScript* lua, LuaTable& tblLuna)
 	tblAudio.SetField("muteMusic", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::MuteMusic));
 	tblAudio.SetField("isSoundMuted", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::IsSoundMuted));
 	tblAudio.SetField("muteSound", LuaFunction(lua, LUNAEngine::SharedAudio(), &LUNAAudio::MuteSound));
+
+	std::function<void(const std::weak_ptr<LUNAAudioSource>&,const LuaAny&)> fnPlaySound =
+		[](const std::weak_ptr<LUNAAudioSource>& source, const LuaAny& volume)
+		{
+			// Make volume param optional
+			float volumeValue = volume.GetType() == LUA_TNUMBER ? volume.ToFloat() : 1.0f;
+			LUNAEngine::SharedAudio()->PlaySound(source, volumeValue);
+		};
+
+	tblAudio.SetField("playSound", LuaFunction(lua, fnPlaySound));
 
 	// Bind audio source
 	LuaClass<LUNAAudioSource> clsAudioSource(lua);
