@@ -113,7 +113,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	image.Fill(LUNAColor::Rgb(255, 255, 255, 0));
 
 	// Draw placeholder for unknown char
-	image.FillRectangle(0, 0, maxW, maxH, LUNAColor::WHITE);
+	image.FillRectangle(0, 0, maxW - 1, maxH, LUNAColor::WHITE);
 
 	std::vector<CharRegion> charRegions;
 	int penX = maxW;
