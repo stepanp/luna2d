@@ -66,6 +66,14 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
 		screenHeight = contentHeight;
 		screenWidth = (int)(contentHeight * aspectRatio);
 		break;
+	case LUNAScaleMode::MIN_WIDTH:
+		if(contentHeight * aspectRatio < contentWidth) ApplyScaleMode(LUNAScaleMode::FIT_TO_WIDTH);
+		else ApplyScaleMode(LUNAScaleMode::STRETCH_BY_WIDTH);
+		break;
+	case LUNAScaleMode::MIN_HEIGHT:
+		if(contentWidth / aspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT_TO_HEIGHT);
+		else ApplyScaleMode(LUNAScaleMode::STRETCH_BY_HEIGHT);
+		break;
 	};
 }
 

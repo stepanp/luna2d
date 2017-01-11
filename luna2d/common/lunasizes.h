@@ -36,13 +36,13 @@ public:
 	LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const std::shared_ptr<const LUNAConfig>& config);
 
 private:
-	int physicalScreenWidth, physicalScreenHeight; // Physical screen resolution (in pixels)
-	int screenWidth, screenHeight; // Screen resolution (in points)
-	int contentWidth, contentHeight; // Content size (in points)
-	float textureScale;
-	float aspectRatio;
+	int physicalScreenWidth = 0, physicalScreenHeight = 0; // Physical screen resolution (in pixels)
+	int screenWidth = 0, screenHeight = 0; // Screen resolution (in points)
+	int contentWidth = 0, contentHeight = 0; // Content size (in points)
+	float textureScale = 0.0f;
+	float aspectRatio = 0.0f;
 	std::string resolutionSuffix;
-	LUNAScaleMode scaleMode;
+	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH_BY_WIDTH;
 
 private:
 	void ApplyScaleMode(LUNAScaleMode scaleMode);

@@ -47,7 +47,9 @@ enum class LUNAScaleMode
 	STRETCH_BY_WIDTH,
 	STRETCH_BY_HEIGHT,
 	FIT_TO_WIDTH,
-	FIT_TO_HEIGHT
+	FIT_TO_HEIGHT,
+	MIN_WIDTH,
+	MIN_HEIGHT,
 };
 
 const LUNAStringEnum<LUNAScaleMode> SCALE_MODE =
@@ -56,6 +58,8 @@ const LUNAStringEnum<LUNAScaleMode> SCALE_MODE =
 	"stretchByHeight",
 	"fitToWidth",
 	"fitToHeight",
+	"minWidth",
+	"minHeight",
 };
 
 class LUNAConfig
