@@ -109,6 +109,10 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 // Bind extension for standard lua "math" module
 static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 {
+	// Initialize random generator using in lua vm
+	srand(time(0));
+	rand();
+
 	// Register additional math functions in standard lua "math" module
 	LuaTable tblMath = lua->GetGlobalTable().GetTable("math");
 
