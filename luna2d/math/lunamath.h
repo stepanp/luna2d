@@ -24,6 +24,7 @@
 #pragma once
 
 #include "lunaengine.h"
+#include "lunaglm.h"
 #include <cmath>
 
 // On some compilers, M_PI constant isn't defined
@@ -73,5 +74,14 @@ float Lerp(float a, float b, float t);
 
 // Interpolation between "a" and "b" using given easing. "t" must be in range [0,1]
 float EaseLerp(float a, float b, float t, const std::function<float(float)>& easing);
+
+// Get midpoint between two given vectors
+glm::vec2 Midpoint(const glm::vec2& vec1, const glm::vec2& vec2);
+
+// Get angle between given vectors (in degrees)
+float AngleBetween(const glm::vec2& vec1, const glm::vec2& vec2);
+
+// Get angle between given vectors (in radians)
+float AngleBetweenr(const glm::vec2& vec1, const glm::vec2& vec2);
 
 }}

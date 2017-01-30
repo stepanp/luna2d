@@ -122,6 +122,9 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("avg", LuaFunction(lua, &math::Avg));
 	tblMath.SetField("lerp", LuaFunction(lua, &math::Lerp));
 	tblMath.SetField("round", LuaFunction(lua, &std::roundf));
+	tblMath.SetField("midpoint", LuaFunction(lua, &math::Midpoint));
+	tblMath.SetField("angleBetween", LuaFunction(lua, &math::AngleBetween));
+	tblMath.SetField("angleBetweenr", LuaFunction(lua, &math::AngleBetweenr));
 
 	std::function<float(float,float,float)> fnClamp = [](float v, float a, float b) { return std::min(std::max(v, a), b); };
 	tblMath.SetField("clamp", LuaFunction(lua, fnClamp));

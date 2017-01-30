@@ -108,3 +108,24 @@ float luna2d::math::EaseLerp(float a, float b, float t, const std::function<floa
 {
 	return a + (b - a) * easing(t);
 }
+
+// Get midpoint between two given vectors
+glm::vec2 luna2d::math::Midpoint(const glm::vec2& vec1, const glm::vec2& vec2)
+{
+	return (vec1 + vec2) * 0.5f;
+}
+
+// Get angle between given vectors (in degrees)
+float luna2d::math::AngleBetween(const glm::vec2& vec1, const glm::vec2& vec2)
+{
+	return glm::degrees(AngleBetweenr(vec1, vec2));
+}
+
+// Get angle between given vectors (in radians)
+float luna2d::math::AngleBetweenr(const glm::vec2& vec1, const glm::vec2& vec2)
+{
+	glm::vec2 angleVec = vec1 - vec2;
+
+	if(glm::epsilonEqual(angleVec.x, angleVec.y, GLM_EPSILON)) return 0.0f;
+	else return glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(angleVec));
+}
