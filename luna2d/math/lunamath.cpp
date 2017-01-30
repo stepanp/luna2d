@@ -126,6 +126,8 @@ float luna2d::math::AngleBetweenr(const glm::vec2& vec1, const glm::vec2& vec2)
 {
 	glm::vec2 angleVec = vec1 - vec2;
 
-	if(glm::epsilonEqual(angleVec.x, angleVec.y, GLM_EPSILON)) return 0.0f;
-	else return glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(angleVec));
+	if(glm::all(glm::lessThan(glm::abs(angleVec), glm::vec2(GLM_EPSILON))))
+		return 0.0f;
+	else
+		return glm::orientedAngle(glm::vec2(1.0f, 0.0f), glm::normalize(angleVec));
 }
