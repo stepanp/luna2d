@@ -183,7 +183,7 @@ int LuaVec2::DistSqr(lua_State* luaVm)
 	return 1;
 }
 
-// Get cross prodict between this and given vectors
+// Get cross product between this and given vectors
 int LuaVec2::Cross(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);
@@ -193,7 +193,7 @@ int LuaVec2::Cross(lua_State *luaVm)
 	return 1;
 }
 
-// Get dot prodict between this and given vectors
+// Get dot product between this and given vectors
 int LuaVec2::Dot(lua_State *luaVm)
 {
 	glm::vec2 vec1 = LuaStack<glm::vec2>::Pop(luaVm, 1);

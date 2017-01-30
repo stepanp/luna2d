@@ -51,8 +51,8 @@ public:
 	static int LenSqr(lua_State* luaVm); // Get squared lenght of this vector
 	static int Dist(lua_State* luaVm); // Get distance between this and given vectors
 	static int DistSqr(lua_State* luaVm); // Get squared distance between this and given vectors
-	static int Cross(lua_State* luaVm); // Get cross prodict between this and given vectors
-	static int Dot(lua_State* luaVm); // Get dot prodict between this and given vectors
+	static int Cross(lua_State* luaVm); // Get cross product between this and given vectors
+	static int Dot(lua_State* luaVm); // Get dot product between this and given vectors
 	static int Copy(lua_State* luaVm); // Make copy of this vector
 };
 
