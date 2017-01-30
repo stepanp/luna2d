@@ -134,9 +134,11 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblVector2.SetField("sub", &LuaVec2::Sub);
 	tblVector2.SetField("scale", &LuaVec2::Scale);
 	tblVector2.SetField("rotate", &LuaVec2::Rotate);
+	tblVector2.SetField("rotater", &LuaVec2::Rotater);
 	tblVector2.SetField("nor", &LuaVec2::Nor);
 	tblVector2.SetField("perp", &LuaVec2::Perp);
 	tblVector2.SetField("angle", &LuaVec2::Angle);
+	tblVector2.SetField("angler", &LuaVec2::Angler);
 	tblVector2.SetField("len", &LuaVec2::Len);
 	tblVector2.SetField("lenSqr", &LuaVec2::LenSqr);
 	tblVector2.SetField("dist", &LuaVec2::Dist);
