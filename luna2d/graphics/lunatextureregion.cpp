@@ -87,10 +87,10 @@ float LUNATextureRegion::GetHeight()
 // Get sizes in game points (scaled to virtual resoultion)
 float LUNATextureRegion::GetWidthPoints()
 {
-	return std::floor(GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
+	return std::roundf(GetWidth() * LUNAEngine::SharedSizes()->GetTextureScale());
 }
 
 float LUNATextureRegion::GetHeightPoints()
 {
-	return std::floor(GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
+	return std::roundf(GetHeight() * LUNAEngine::SharedSizes()->GetTextureScale());
 }
