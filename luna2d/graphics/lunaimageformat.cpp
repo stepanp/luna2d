@@ -21,23 +21,21 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "lunaimageformat.h"
-#include <png.h>
 
-namespace luna2d{
+using namespace luna2d;
 
-class LUNAPngFormat : public LUNAImageFormat
+// Get number of bytes per pixel for given color type
+int luna2d::GetBytesPerPixel(LUNAColorType colorType)
 {
-public:
-	// SEE: "LUNAImageFormat::Decode"
-	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int& outWidth, int& outHeight, LUNAColorType& outColorType) const;
-
-	// SEE: "LUNAImageFormat::Encode"
-	virtual bool Encode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int width, int height, LUNAColorType colorType) const;
-};
-
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return 4;
+	case LUNAColorType::RGB:
+		return 3;
+	case LUNAColorType::ALPHA:
+		return 1;
+	}
 }
+

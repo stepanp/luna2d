@@ -38,9 +38,16 @@ struct LUNAPngData
 // Callback for read png from buffer instead of file
 static void ReadPngFromBuffer(png_structp pngPtr, png_bytep data, png_size_t size)
 {
-	LUNAPngData *pngData = static_cast<LUNAPngData*>(png_get_io_ptr(pngPtr));
+	LUNAPngData* pngData = static_cast<LUNAPngData*>(png_get_io_ptr(pngPtr));
 	memcpy(data, pngData->data + pngData->offset, size);
 	pngData->offset += size;
+}
+
+// Callback for write png to buffer instead of file
+static void WritePngToBuffer(png_structp pngPtr, png_bytep data, png_size_t size)
+{
+	std::vector<unsigned char>* outData = static_cast<std::vector<unsigned char>*>(png_get_io_ptr(pngPtr));
+	outData->insert(outData->end(), data, data + size);
 }
 
 // SEE: "LUNAImageFormat::Decode"
@@ -88,7 +95,10 @@ bool LUNAPngFormat::Decode(const std::vector<unsigned char>& inData, std::vector
 	outData.resize(dataSize);
 
 	// Set pointers to read decompressed image to output data buffer
-	for(int i = 0;i < height;i++) rowPointers[i] = &outData[0] + (i * rowBytes);
+	for(int i = 0; i < height; i++)
+	{
+		rowPointers[i] = &outData[0] + (i * rowBytes);
+	}
 
 	// Read image data to output buffer by row pointers
 	png_read_image(pngPtr, rowPointers);
@@ -101,6 +111,64 @@ bool LUNAPngFormat::Decode(const std::vector<unsigned char>& inData, std::vector
 	// Return values
 	outWidth = width;
 	outHeight = height;
+
+	return true;
+}
+
+// SEE: "LUNAImageFormat::Encode"
+bool LUNAPngFormat::Encode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
+	int width, int height, LUNAColorType colorType) const
+{
+	png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+	if(!pngPtr) return false;
+
+	png_infop infoPtr = png_create_info_struct(pngPtr);
+	if(!infoPtr)
+	{
+		png_destroy_write_struct(&pngPtr, nullptr);
+		return false;
+	}
+
+	if(setjmp(png_jmpbuf(pngPtr)))
+	{
+		png_destroy_write_struct(&pngPtr, &infoPtr);
+		return false;
+	}
+
+	// Set custrom function to writing file
+	png_set_write_fn(pngPtr, &outData, &WritePngToBuffer, nullptr);
+
+	png_uint_32 pngColorType = PNG_COLOR_TYPE_RGBA;
+	switch(colorType)
+	{
+	case LUNAColorType::RGB:
+		pngColorType = PNG_COLOR_TYPE_RGB;
+		break;
+	case LUNAColorType::RGBA:
+		pngColorType = PNG_COLOR_TYPE_RGBA;
+		break;
+	default:
+		{
+			LUNA_LOGE("Unsupported png color type");
+			png_destroy_write_struct(&pngPtr, &infoPtr);
+			return false;
+		}
+	}
+
+	png_set_IHDR(pngPtr, infoPtr, width, height, 8, pngColorType,
+		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+
+	std::vector<png_bytep> rows(height);
+	for (int i = 0; i < height; i++)
+	{
+		rows[i] = const_cast<png_bytep>(&inData[i * width * GetBytesPerPixel(colorType)]);
+	}
+
+	png_write_info(pngPtr, infoPtr);
+	png_set_rows(pngPtr, infoPtr, &rows[0]);
+	png_write_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, nullptr);
+
+	png_destroy_write_struct(&pngPtr, &infoPtr);
 
 	return true;
 }

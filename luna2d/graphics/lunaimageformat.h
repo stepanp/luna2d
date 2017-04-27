@@ -38,6 +38,9 @@ enum class LUNAColorType
 	ALPHA = 3,
 };
 
+// Get number of bytes per pixel for given color type
+int GetBytesPerPixel(LUNAColorType colorType);
+
 //---------------------------
 // Interface for image format
 //---------------------------
@@ -47,15 +50,25 @@ public:
 	virtual ~LUNAImageFormat() {}
 
 public:
-	// Decode raw image data to uncompressed bitmap data
+	// Decode compressed image data to raw bitmap data
 	// Params:
-	// "inData" - Input image data buffer
-	// "outData" - Output decoded data buffer
+	// "inData" - Input buffer with decoded image data
+	// "outData" - Output buffer for raw bitmap data
 	// "outWidth" - Output width of image
 	// "outHeight" - Output height of image
 	// "outColorType" - Output color type of image
 	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
 		int& outWidth, int& outHeight, LUNAColorType& outColorType) const = 0;
+
+	// Encode raw bitmap data to compressed image data
+	// Params:
+	// "inData" - Input buffer with raw bitmap data
+	// "outData" - Output buffer for decoded data
+	// "width" - Width of input image
+	// "height" - Height of input image
+	// "colorType" - Color type of input image
+	virtual bool Encode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
+		int width, int height, LUNAColorType colorType) const = 0;
 };
 
 }
