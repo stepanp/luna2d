@@ -50,6 +50,7 @@ static void BindSharing(const std::shared_ptr<LUNASharing>& sharing, LuaScript* 
 	tblLuna.SetField("share", tblShare);
 
 	tblShare.SetField("text", LuaFunction(lua, sharing.get(), &LUNASharing::Text));
+	tblShare.SetField("image", LuaFunction(lua, sharing.get(), &LUNASharing::Image));
 }
 
 // Bind "luna.store" module

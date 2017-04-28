@@ -26,11 +26,9 @@
 
 using namespace luna2d;
 
-// Share given text using system sharing dialog
-void LUNAIosSharing::Text(const std::string& text)
+void LUNAIosSharing::DoShare(NSArray* dataToShare)
 {
 	UIViewController* rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-	NSArray* dataToShare = @[ToNsString(text)];
 	
 	auto bounds = [[UIScreen mainScreen] bounds];
 	auto rect = CGRectMake(bounds.size.width / 2, bounds.size.height / 2, 0, 0);
@@ -41,4 +39,19 @@ void LUNAIosSharing::Text(const std::string& text)
 	shareController.popoverPresentationController.permittedArrowDirections = 0;
 	
 	[rootViewController presentViewController:shareController animated:YES completion:nil];
+}
+
+// Share given text using system sharing dialog
+void LUNAIosSharing::Text(const std::string& text)
+{
+	NSArray* dataToShare = @[ToNsString(text)];
+	DoShare(dataToShare);
+}
+
+// Share given image witg given text using system sharing dialog
+// Image should be located in "LUNAFileLocation::APP_FOLDER"
+void LUNAIosSharing::Image(const std::string& filename, const std::string& text)
+{
+	NSArray* dataToShare = @[ToNsString(text)];
+	DoShare(dataToShare);
 }
