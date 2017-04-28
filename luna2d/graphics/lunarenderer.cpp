@@ -129,10 +129,14 @@ void LUNARenderer::DisableScissor()
 // Read screen pixels into instance of "LUNAImage"
 std::shared_ptr<LUNAImage> LUNARenderer::ReadPixels()
 {
-	int width = LUNAEngine::SharedSizes()->GetPhysicalScreenWidth();
-	int height = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight();
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	int width = viewport[2];
+	int height = viewport[3];
 
 	std::vector<unsigned char> data(width * height * GetBytesPerPixel(LUNAColorType::RGB));
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, &data[0]);
 
 	auto image = std::make_shared<LUNAImage>(width, height, LUNAColorType::RGB, data);

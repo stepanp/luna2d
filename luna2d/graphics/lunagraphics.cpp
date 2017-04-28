@@ -275,6 +275,12 @@ void LUNAGraphics::SetBackgroundColor(float r, float g, float b)
 	renderer.SetBackgroundColor(LUNAColor::RgbFloat(r / 255.0f, g / 255.0f, b / 255.0f));
 }
 
+// Run given action after render current frame
+void LUNAGraphics::RunAfterRender(const std::function<void()>& action)
+{
+	afterRenderActions.push_back(action);
+}
+
 bool LUNAGraphics::IsPaused()
 {
 	return paused;
@@ -322,4 +328,7 @@ void LUNAGraphics::OnUpdate()
 	renderer.BeginRender();
 	LUNAEngine::SharedScenes()->OnRender();
 	renderer.EndRender();
+
+	for(const auto& action : afterRenderActions) action();
+	afterRenderActions.clear();
 }

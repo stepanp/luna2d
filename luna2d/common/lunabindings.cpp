@@ -78,8 +78,12 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	// Take screenshot image to application folder
 	std::function<void(const std::string&)> fnTakeScreenshot = [](const std::string& filename)
 	{
-		auto image = LUNAEngine::SharedGraphics()->GetRenderer()->ReadPixels();
-		image->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+		// Take screenshot when current frame will be completely rendered
+		LUNAEngine::SharedGraphics()->RunAfterRender([filename]()
+		{
+			auto image = LUNAEngine::SharedGraphics()->GetRenderer()->ReadPixels();
+			image->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+		});
 	};
 	tblUtils.SetField("takeScreenshot", LuaFunction(lua, fnTakeScreenshot));
 

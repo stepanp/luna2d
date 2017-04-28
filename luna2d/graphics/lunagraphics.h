@@ -46,6 +46,8 @@ private:
 	LUNAColor backColor; // Background color
 	bool paused = false;
 
+	std::vector<std::function<void()>> afterRenderActions; // Actions running after render current frame
+
 private:
 	double SmoothDeltaTime(double deltaTime);
 
@@ -58,6 +60,7 @@ public:
 	int GetRenderedVertexes();
 	void ResetLastTime();
 	void SetBackgroundColor(float r, float g, float b);
+	void RunAfterRender(const std::function<void()>& action); // Run given action after render current frame
 	bool IsPaused();
 	void OnPause();
 	void OnResume();

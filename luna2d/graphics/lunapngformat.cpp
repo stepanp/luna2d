@@ -155,6 +155,8 @@ bool LUNAPngFormat::Encode(const std::vector<unsigned char>& inData, std::vector
 		}
 	}
 
+	outData.clear();
+
 	png_set_IHDR(pngPtr, infoPtr, width, height, 8, pngColorType,
 		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
@@ -165,8 +167,8 @@ bool LUNAPngFormat::Encode(const std::vector<unsigned char>& inData, std::vector
 	}
 
 	png_write_info(pngPtr, infoPtr);
-	png_set_rows(pngPtr, infoPtr, &rows[0]);
-	png_write_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, nullptr);
+	png_write_image(pngPtr, &rows[0]);
+	png_write_end(pngPtr, infoPtr);
 
 	png_destroy_write_struct(&pngPtr, &infoPtr);
 
