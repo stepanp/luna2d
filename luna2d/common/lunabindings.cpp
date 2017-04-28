@@ -25,6 +25,7 @@
 #include "lunaengine.h"
 #include "lunajsonutils.h"
 #include "lunaaudio.h"
+#include "lunagraphics.h"
 #include "lunasizes.h"
 #include "lunaplatformutils.h"
 #include "lunaprefs.h"
@@ -37,6 +38,7 @@
 #include "math/lunasplines.h"
 #include "math/lunaeasing.h"
 #include "math/lunabounds.h"
+#include "lunapngformat.h"
 
 using namespace luna2d;
 
@@ -72,6 +74,14 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 {
 	LuaTable tblUtils(lua);
 	tblLuna.SetField("utils", tblUtils);
+
+	// Take screenshot image to application folder
+	std::function<void(const std::string&)> fnTakeScreenshot = [](const std::string& filename)
+	{
+		auto image = LUNAEngine::SharedGraphics()->GetRenderer()->ReadPixels();
+		image->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+	};
+	tblUtils.SetField("takeScreenshot", LuaFunction(lua, fnTakeScreenshot));
 
 	// Register "ChanceTable" class
 	lua->DoString(LUNA_CHANCE_TABLE);

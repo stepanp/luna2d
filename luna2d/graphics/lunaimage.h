@@ -46,6 +46,9 @@ public:
 	// Constuct image from given data
 	LUNAImage(int width, int height, LUNAColorType colorType, const std::vector<unsigned char>& data);
 
+	// Constuct image from given data without copy
+	LUNAImage(int width, int height, LUNAColorType colorType, std::vector<unsigned char>&& data);
+
 	// Constructor with loading
 	LUNAImage(const std::string& filename, const LUNAImageFormat& format,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
@@ -64,8 +67,14 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 	LUNAColorType GetColorType() const;
+
+	// Load image from file
 	bool Load(const std::string& filename, const LUNAImageFormat& format,
 		LUNAFileLocation location = LUNAFileLocation::ASSETS);
+
+	// Save image to file
+	bool Save(const std::string& filename, const LUNAImageFormat& format,
+		LUNAFileLocation location = LUNAFileLocation::APP_FOLDER);
 
 	// Set pixmap size without stretching image
 	void SetSize(int width, int height);
@@ -93,6 +102,12 @@ public:
 
 	// Fill rectangle on image with given color
 	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color);
+
+	// Flip image vertically
+	void FlipVertically();
+
+	// Flip image horizontally
+	void FlipHorizontally();
 };
 
 }

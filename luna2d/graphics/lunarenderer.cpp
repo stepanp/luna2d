@@ -26,6 +26,7 @@
 #include "lunasizes.h"
 #include "lunalog.h"
 #include "lunaassets.h"
+#include "lunaimage.h"
 
 using namespace luna2d;
 
@@ -123,6 +124,20 @@ void LUNARenderer::DisableScissor()
 	Render();
 
 	glDisable(GL_SCISSOR_TEST);
+}
+
+// Read screen pixels into instance of "LUNAImage"
+std::shared_ptr<LUNAImage> LUNARenderer::ReadPixels()
+{
+	int width = LUNAEngine::SharedSizes()->GetPhysicalScreenWidth();
+	int height = LUNAEngine::SharedSizes()->GetPhysicalScreenHeight();
+
+	std::vector<unsigned char> data(width * height * GetBytesPerPixel(LUNAColorType::RGB));
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, &data[0]);
+
+	auto image = std::make_shared<LUNAImage>(width, height, LUNAColorType::RGB, data);
+	image->FlipVertically();
+	return image;
 }
 
 bool LUNARenderer::IsEnabledDebugRender()

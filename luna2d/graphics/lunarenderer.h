@@ -41,6 +41,8 @@ const int RENDER_ELEMENT_PER_VERTEX = 8; // Count of array elements for each ver
 
 namespace luna2d{
 
+class LUNAImage;
+
 class LUNARenderer
 {
 public:
@@ -89,6 +91,9 @@ public:
 
 	void EnableScissor(float x, float y, float width, float height);
 	void DisableScissor();
+
+	// Read screen pixels into instance of "LUNAImage"
+	std::shared_ptr<LUNAImage> ReadPixels();
 
 	bool IsEnabledDebugRender();
 	void EnableDebugRender(bool enable);

@@ -29,19 +29,6 @@
 
 using namespace luna2d;
 
-int BytesPerPixel(LUNAColorType colorType)
-{
-	switch(colorType)
-	{
-	case LUNAColorType::RGBA:
-		return 4;
-	case LUNAColorType::RGB:
-		return 4;
-	case LUNAColorType::ALPHA:
-		return 1;
-	}
-}
-
 // Construct empty image
 LUNAImage::LUNAImage() : LUNAImage(0, 0, LUNAColorType::RGBA)
 {
@@ -49,7 +36,7 @@ LUNAImage::LUNAImage() : LUNAImage(0, 0, LUNAColorType::RGBA)
 
 // Constuct empty image with given sizes and color type
 LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType) :
-	data(width * height * BytesPerPixel(colorType)),
+	data(width * height * GetBytesPerPixel(colorType)),
 	width(width),
 	height(height),
 	colorType(colorType)
@@ -65,6 +52,16 @@ LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType, const std::
 {
 }
 
+// Constuct image from given data without copy
+LUNAImage::LUNAImage(int width, int height, LUNAColorType colorType, std::vector<unsigned char>&& data) :
+	data(std::move(data)),
+	width(width),
+	height(height),
+	colorType(colorType)
+{
+
+}
+
 // Constructor with loading
 LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format, LUNAFileLocation location) : LUNAImage()
 {
@@ -74,7 +71,7 @@ LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format,
 // Convert given coordinates to position in data buffer
 int LUNAImage::CoordsToPos(int x, int y) const
 {
-	return (x + y * width) * BytesPerPixel(colorType);
+	return (x + y * width) * GetBytesPerPixel(colorType);
 }
 
 bool LUNAImage::IsEmpty() const
@@ -102,6 +99,7 @@ LUNAColorType LUNAImage::GetColorType() const
 	return colorType;
 }
 
+// Load image from file
 bool LUNAImage::Load(const std::string& filename, const LUNAImageFormat& format, LUNAFileLocation location)
 {
 	// Read data form file
@@ -111,6 +109,15 @@ bool LUNAImage::Load(const std::string& filename, const LUNAImageFormat& format,
 	return format.Decode(fileData, data, width, height, colorType);
 }
 
+// Save image to file
+bool LUNAImage::Save(const std::string& filename, const LUNAImageFormat& format, LUNAFileLocation location)
+{
+	std::vector<unsigned char> fileData;
+	if(!format.Encode(data, fileData, width, height, colorType)) return false;
+
+	return LUNAEngine::SharedFiles()->WriteFile(filename, fileData, location);
+}
+
 // Set pixmap size without stretching image
 void LUNAImage::SetSize(int width, int height)
 {
@@ -118,11 +125,11 @@ void LUNAImage::SetSize(int width, int height)
 
 	if(this->width == width)
 	{
-		data.resize(width * height * BytesPerPixel(colorType));
+		data.resize(width * height * GetBytesPerPixel(colorType));
 	}
 	else
 	{
-		std::vector<unsigned char> newData(width * height * BytesPerPixel(colorType));
+		std::vector<unsigned char> newData(width * height * GetBytesPerPixel(colorType));
 		data.swap(newData);
 
 		DrawBuffer(0, 0, newData, this->width, this->height, colorType);
@@ -230,9 +237,9 @@ void LUNAImage::DrawRawBuffer(int x, int y,
 
 	if(sourceWidth <= 0 || sourceHeight <= 0) return;
 
-	int rowX = sourceX * BytesPerPixel(bufferColorType);
-	int rowLen = sourceWidth * BytesPerPixel(bufferColorType);
-	int rowFullLen = bufferWidth * BytesPerPixel(bufferColorType);
+	int rowX = sourceX * GetBytesPerPixel(bufferColorType);
+	int rowLen = sourceWidth * GetBytesPerPixel(bufferColorType);
+	int rowFullLen = bufferWidth * GetBytesPerPixel(bufferColorType);
 
 	for(int row = 0; row < sourceHeight; row++)
 	{
@@ -251,6 +258,43 @@ void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNACol
 		for(int i = 0; i < width; i++)
 		{
 			SetPixel(x + i, y + j, color);
+		}
+	}
+}
+
+// Flip image vertically
+void LUNAImage::FlipVertically()
+{
+	int rowLen = width * GetBytesPerPixel(colorType);
+	std::vector<unsigned char> tempRow(rowLen);
+
+	for(int row = 0; row < height / 2; row++)
+	{
+		int pos = CoordsToPos(0, row);
+		int endPos = CoordsToPos(0, height - row - 1);
+
+		memcpy(&tempRow[0], &data[pos], rowLen);
+		memcpy(&data[pos], &data[endPos], rowLen);
+		memcpy(&data[endPos], &tempRow[0], rowLen);
+	}
+}
+
+// Flip image horizontally
+void LUNAImage::FlipHorizontally()
+{
+	std::array<unsigned char, 4/* Max bytes per pixel */> tempPixel;
+	int pixelLen = GetBytesPerPixel(colorType);
+
+	for(int x = 0; x < width / 2; x++)
+	{
+		for(int row = 0; row < height; row++)
+		{
+			int pos = CoordsToPos(x, row);
+			int endPos = CoordsToPos(width - x - 1, row);
+
+			memcpy(&tempPixel[0], &data[pos], pixelLen);
+			memcpy(&data[pos], &data[endPos], pixelLen);
+			memcpy(&data[endPos], &tempPixel[0], pixelLen);
 		}
 	}
 }
