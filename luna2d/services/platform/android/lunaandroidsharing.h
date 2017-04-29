@@ -36,10 +36,15 @@ public:
 private:
 	jclass javaSharing;
 	jmethodID javaText;
+	jmethodID javaImage;
 
 public:
 	// Share given text using system sharing dialog
 	virtual void Text(const std::string& text);
+
+	// Share given image witg given text using system sharing dialog
+	// Image should be located in "LUNAFileLocation::APP_FOLDER"
+	virtual void Image(const std::string& filename, const std::string& text);
 };
 
 }

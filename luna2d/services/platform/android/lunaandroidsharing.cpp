@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidsharing.h"
+#include "lunafiles.h"
 
 using namespace luna2d;
 
@@ -36,10 +37,19 @@ LUNAAndroidSharing::LUNAAndroidSharing()
 
 	// Get java wrapper method ids
 	javaText = env->GetStaticMethodID(javaSharing, "text", "(Ljava/lang/String;)V");
+	javaImage = env->GetStaticMethodID(javaSharing, "image", "(Ljava/lang/String;Ljava/lang/String;)V");
 }
 
 // Share given text using system sharing dialog
 void LUNAAndroidSharing::Text(const std::string& text)
 {
 	jni::Env()->CallStaticVoidMethod(javaSharing, javaText, jni::ToJString(text).j_str());
+}
+
+// Share given image witg given text using system sharing dialog
+// Image should be located in "LUNAFileLocation::APP_FOLDER"
+void LUNAAndroidSharing::Image(const std::string& filename, const std::string& text)
+{
+	std::string path = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
+	jni::Env()->CallStaticVoidMethod(javaSharing, javaImage, jni::ToJString(path).j_str(), jni::ToJString(text).j_str());
 }
