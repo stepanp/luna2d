@@ -31,6 +31,9 @@ public:
 	virtual ~LUNASharingService() {}
 
 public:
+	// Get name of sharing service. Should be in lower case
+	virtual std::string GetName() = 0;
+
 	// Share given text
 	virtual void Text(const std::string& text) = 0;
 

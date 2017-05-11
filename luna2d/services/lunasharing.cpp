@@ -48,9 +48,8 @@ void LUNASharing::LoadServices()
 
 	for(const auto& jsonName : jsonServices)
 	{
-		std::string serviceName = jsonName.string_value();
-		auto service = LoadService(serviceName);
-		if(service) services[serviceName] = service;
+		auto service = LoadService(jsonName.string_value());
+		if(service) services[service->GetName()] = service;
 	}
 }
 

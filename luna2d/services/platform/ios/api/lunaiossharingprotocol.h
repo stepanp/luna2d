@@ -23,6 +23,8 @@
 
 @protocol LUNAIosSharingProtocol
 
+-(NSString*) getName;
+
 // Share given text
 -(void) text: (NSString*)text;
 

@@ -37,6 +37,9 @@ private:
 	id service;
 	
 public:
+	// Get name of sharing service. Should be in lower case
+	virtual std::string GetName();
+	
 	// Share given text
 	virtual void Text(const std::string& text);
 	
@@ -55,6 +58,9 @@ private:
 	void DoShare(NSArray* dataToShare);
 	
 public:
+	// Get name of sharing service. Should be in lower case
+	virtual std::string GetName();
+	
 	// Share given text
 	virtual void Text(const std::string& text);
 	

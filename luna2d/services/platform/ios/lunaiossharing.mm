@@ -33,6 +33,12 @@ LUNAIosSharingService::LUNAIosSharingService(id service) :
 {
 }
 
+// Get name of sharing service. Should be in lower case
+std::string LUNAIosSharingService::GetName()
+{
+	return FromNsString([service getName]);
+}
+
 // Share given text
 void LUNAIosSharingService::Text(const std::string& text)
 {
@@ -62,6 +68,12 @@ void LUNAIosDefaultSharing::DoShare(NSArray* dataToShare)
 	[rootViewController presentViewController:shareController animated:YES completion:nil];
 }
 
+// Get name of sharing service. Should be in lower case
+std::string LUNAIosDefaultSharing::GetName()
+{
+	return "";
+}
+
 // Share given text using
 void LUNAIosDefaultSharing::Text(const std::string& text)
 {
@@ -81,7 +93,7 @@ void LUNAIosDefaultSharing::Image(const std::string& filename, const std::string
 // Load service instance by name
 std::shared_ptr<LUNASharingService> LUNAIosSharing::LoadService(const std::string& name)
 {
-	if(name == "") return (std::make_shared<LUNAIosDefaultSharing>();
+	if(name == "") return std::make_shared<LUNAIosDefaultSharing>();
 	
 	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosSharingProtocol));
 	
