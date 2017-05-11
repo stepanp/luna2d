@@ -21,57 +21,13 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+@protocol LUNAIosSharingProtocol
 
-#include "lunasharing.h"
-#import <UIKit/UIKit.h>
+// Share given text
+-(void) text: (NSString*)text;
 
-namespace luna2d{
+// Share given image with given text
+// Image should be located in "LUNAFileLocation::APP_FOLDER"
+-(void) image: (NSString*)filename text: (NSString*)text;
 	
-class LUNAIosSharingService : public LUNASharingService
-{
-public:
-	LUNAIosSharingService(id service);
-	
-private:
-	id service;
-	
-public:
-	// Share given text
-	virtual void Text(const std::string& text);
-	
-	// Share given image with given text
-	// Image should be located in "LUNAFileLocation::APP_FOLDER"
-	virtual void Image(const std::string& filename, const std::string& text);
-};
-	
-
-//------------------------------------
-// Sharing via platform sharing dialog
-//------------------------------------
-class LUNAIosDefaultSharing : public LUNASharingService
-{
-private:
-	void DoShare(NSArray* dataToShare);
-	
-public:
-	// Share given text
-	virtual void Text(const std::string& text);
-	
-	// Share given image with given text
-	// Image should be located in "LUNAFileLocation::APP_FOLDER"
-	virtual void Image(const std::string& filename, const std::string& text);
-};
-	
-
-class LUNAIosSharing : public LUNASharing
-{
-public:
-	LUNAIosSharing();
-	
-public:	
-	// Load service instance by name
-	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name);
-};
-
-}
+@end

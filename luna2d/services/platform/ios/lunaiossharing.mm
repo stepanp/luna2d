@@ -23,10 +23,31 @@
 
 #include "lunaiossharing.h"
 #include "lunansstring.h"
+#include "lunaiosservices.h"
+#import "lunaiossharingprotocol.h"
 
 using namespace luna2d;
 
-void LUNAIosSharing::DoShare(NSArray* dataToShare)
+LUNAIosSharingService::LUNAIosSharingService(id service) :
+	service(service)
+{
+}
+
+// Share given text
+void LUNAIosSharingService::Text(const std::string& text)
+{
+	[service text: ToNsString(text)];
+}
+
+// Share given image with given text
+// Image should be located in "LUNAFileLocation::APP_FOLDER"
+void LUNAIosSharingService::Image(const std::string& filename, const std::string& text)
+{
+	[service image: ToNsString(filename) text: ToNsString(text)];
+}
+
+
+void LUNAIosDefaultSharing::DoShare(NSArray* dataToShare)
 {
 	UIViewController* rootViewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
 	
@@ -41,17 +62,32 @@ void LUNAIosSharing::DoShare(NSArray* dataToShare)
 	[rootViewController presentViewController:shareController animated:YES completion:nil];
 }
 
-// Share given text using system sharing dialog
-void LUNAIosSharing::Text(const std::string& text)
+// Share given text using
+void LUNAIosDefaultSharing::Text(const std::string& text)
 {
 	NSArray* dataToShare = @[ToNsString(text)];
 	DoShare(dataToShare);
 }
 
-// Share given image witg given text using system sharing dialog
+// Share given image witg given text
 // Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAIosSharing::Image(const std::string& filename, const std::string& text)
+void LUNAIosDefaultSharing::Image(const std::string& filename, const std::string& text)
 {
 	NSArray* dataToShare = @[ToNsString(text)];
 	DoShare(dataToShare);
 }
+
+
+LUNAIosSharing::LUNAIosSharing()
+{
+	SetDefaultService(std::make_shared<LUNAIosDefaultSharing>());
+}
+
+// Load service instance by name
+std::shared_ptr<LUNASharingService> LUNAIosSharing::LoadService(const std::string& name)
+{
+	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosSharingProtocol));
+	
+	if(!service) return nullptr;
+	
+	return std::make_shared<LUNAIosSharingService>(service);}

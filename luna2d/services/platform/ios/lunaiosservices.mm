@@ -42,6 +42,7 @@ void LUNAIosServices::LoadServices()
 	leaderboards = std::make_shared<LUNAIosLeaderboards>();
 	
 	ads->LoadServices();
+	sharing->LoadServices()
 }
 
 // Dynamically create instance of serivice by given class name
