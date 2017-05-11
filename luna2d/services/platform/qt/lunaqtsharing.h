@@ -30,12 +30,14 @@ namespace luna2d{
 class LUNAQtSharing : public LUNASharing
 {
 public:
-	// Share given text using system sharing dialog
-	virtual void Text(const std::string& text);
+	// Load service instance by name
+	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name);
 
-	// Share given image witg given text using system sharing dialog
-	// Image should be located in "LUNAFileLocation::APP_FOLDER"
-	virtual void Image(const std::string& filename, const std::string& text);
+	// Share given text using specified service. If service is not specifed system sharing dialog will be used
+	virtual void Text(const std::string& text, const std::string& serviceName = "");
+
+	// Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+	virtual void Image(const std::string& filename, const std::string& text, const std::string& serviceName = "");
 };
 
 }

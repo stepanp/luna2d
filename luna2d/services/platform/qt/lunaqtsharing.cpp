@@ -25,15 +25,20 @@
 
 using namespace luna2d;
 
-// Share given text using system sharing dialog
-void LUNAQtSharing::Text(const std::string& text)
+// Load service instance by name
+std::shared_ptr<LUNASharingService> LUNAQtSharing::LoadService(const std::string& name)
+{
+	return nullptr;
+}
+
+// Share given text using specified service. If service is not specifed system sharing dialog will be used
+void LUNAQtSharing::Text(const std::string& text, const std::string& serviceName)
 {
 
 }
 
-// Share given image witg given text using system sharing dialog
-// Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAQtSharing::Image(const std::string& filename, const std::string& text)
+// Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+void LUNAQtSharing::Image(const std::string& filename, const std::string& text, const std::string& serviceName)
 {
 
 }

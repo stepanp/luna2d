@@ -25,18 +25,46 @@
 
 namespace luna2d{
 
+class LUNASharingService
+{
+public:
+	virtual ~LUNASharingService() {}
+
+public:
+	// Share given text
+	virtual void Text(const std::string& text) = 0;
+
+	// Share given image with given text
+	// Image should be located in "LUNAFileLocation::APP_FOLDER"
+	virtual void Image(const std::string& filename, const std::string& text) = 0;
+};
+
+
 class LUNASharing
 {
 public:
 	virtual ~LUNASharing() {}
 
-public:
-	// Share given text using system sharing dialog
-	virtual void Text(const std::string& text) = 0;
+protected:
+	std::unordered_map<std::string,std::shared_ptr<LUNASharingService>> services;
 
-	// Share given image witg given text using system sharing dialog
-	// Image should be located in "LUNAFileLocation::APP_FOLDER"
-	virtual void Image(const std::string& filename, const std::string& text) = 0;
+protected:
+	std::shared_ptr<LUNASharingService> GetService(const std::string& serviceName);
+
+	void SetDefaultService(const std::shared_ptr<LUNASharingService>& service);
+
+public:
+	// Load service instance by name
+	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name) = 0;
+
+	// Load services from config
+	void LoadServices();
+
+	// Share given text using specified service. If service is not specifed system sharing dialog will be used
+	virtual void Text(const std::string& text, const std::string& serviceName = "");
+
+	// Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+	virtual void Image(const std::string& filename, const std::string& text, const std::string& serviceName = "");
 };
 
 }

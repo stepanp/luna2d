@@ -22,5 +22,51 @@
 //-----------------------------------------------------------------------------
 
 #include "lunasharing.h"
+#include "lunalog.h"
+#include "lunaconfig.h"
 
 using namespace luna2d;
+
+std::shared_ptr<LUNASharingService> LUNASharing::GetService(const std::string& serviceName)
+{
+	auto it = services.find(serviceName);
+	if(it == services.end())
+	{
+		LUNA_LOGE("Sharing service with name \"%s\" not found", serviceName.c_str());
+		return nullptr;
+	}
+	return it->second;
+}
+
+void LUNASharing::SetDefaultService(const std::shared_ptr<LUNASharingService>& service)
+{
+	services[""] = service;
+}
+
+// Load services from config
+void LUNASharing::LoadServices()
+{
+	auto config = LUNAEngine::Shared()->GetConfig();
+	auto jsonServices = config->GetCustomValues()["sharingServices"].array_items();
+
+	for(const auto& jsonName : jsonServices)
+	{
+		std::string serviceName = jsonName.string_value();
+		auto service = LoadService(serviceName);
+		if(service) services[serviceName] = service;
+	}
+}
+
+// Share given text using specified service. If service is not specifed system sharing dialog will be used
+void LUNASharing::Text(const std::string& text, const std::string& serviceName)
+{
+	auto service = GetService(serviceName);
+	if(service) service->Text(text);
+}
+
+// Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+void LUNASharing::Image(const std::string& filename, const std::string& text, const std::string& serviceName)
+{
+	auto service = GetService(serviceName);
+	if(service) service->Image(filename, text);
+}
