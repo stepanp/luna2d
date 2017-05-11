@@ -51,8 +51,6 @@ protected:
 protected:
 	std::shared_ptr<LUNASharingService> GetService(const std::string& serviceName);
 
-	void SetDefaultService(const std::shared_ptr<LUNASharingService>& service);
-
 public:
 	// Load service instance by name
 	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name) = 0;

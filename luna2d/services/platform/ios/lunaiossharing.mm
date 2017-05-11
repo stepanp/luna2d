@@ -78,14 +78,11 @@ void LUNAIosDefaultSharing::Image(const std::string& filename, const std::string
 }
 
 
-LUNAIosSharing::LUNAIosSharing()
-{
-	SetDefaultService(std::make_shared<LUNAIosDefaultSharing>());
-}
-
 // Load service instance by name
 std::shared_ptr<LUNASharingService> LUNAIosSharing::LoadService(const std::string& name)
 {
+	if(name == "") return (std::make_shared<LUNAIosDefaultSharing>();
+	
 	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosSharingProtocol));
 	
 	if(!service) return nullptr;

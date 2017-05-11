@@ -65,10 +65,7 @@ public:
 	
 
 class LUNAIosSharing : public LUNASharing
-{
-public:
-	LUNAIosSharing();
-	
+{	
 public:	
 	// Load service instance by name
 	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name);

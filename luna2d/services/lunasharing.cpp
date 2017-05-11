@@ -38,14 +38,11 @@ std::shared_ptr<LUNASharingService> LUNASharing::GetService(const std::string& s
 	return it->second;
 }
 
-void LUNASharing::SetDefaultService(const std::shared_ptr<LUNASharingService>& service)
-{
-	services[""] = service;
-}
-
 // Load services from config
 void LUNASharing::LoadServices()
 {
+	services[""] = LoadService(""); // Load default service
+
 	auto config = LUNAEngine::Shared()->GetConfig();
 	auto jsonServices = config->GetCustomValues()["sharingServices"].array_items();
 
