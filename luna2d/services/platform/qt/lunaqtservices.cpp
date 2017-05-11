@@ -23,6 +23,7 @@
 
 #include "lunaqtservices.h"
 #include "lunaqtads.h"
+#include "lunaqtpurchases.h"
 #include "lunaqtsharing.h"
 #include "lunaqtstore.h"
 #include "lunaqtleaderboards.h"
@@ -32,6 +33,7 @@ using namespace luna2d;
 void LUNAQtServices::LoadServices()
 {
 	ads = std::make_shared<LUNAQtAds>();
+	purchases = std::make_shared<LUNAQtPurchases>();
 	sharing = std::make_shared<LUNAQtSharing>();
 	store = std::make_shared<LUNAQtStore>();
 	leaderboards = std::make_shared<LUNAQtLeaderboards>();
