@@ -21,37 +21,43 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
-
 #include "lunaengine.h"
 
 namespace luna2d{
 
-class LUNAAds;
-class LUNAPurchases;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-
-class LUNAServices
+class LUNAPurchases
 {
 public:
-	virtual ~LUNAServices() {}
+	virtual ~LUNAPurchases() {}
 
 protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNAPurchases> purchases;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
+	std::unordered_map<std::string, std::string> productAliases;
+
+protected:
+	// Read list of aliases for product ids from config
+	void ReadProductsFromConfig();
+
+	// Get product id by alias
+	std::string GetProductIdForAlias(const std::string& alias);
+
+	// Get all aliases for given product id
+	std::vector<std::string> GetAliasesForProductId(const std::string& productId);
 
 public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNAPurchases> GetPurchases();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	virtual void LoadServices() = 0;
+	// Fetch products info from server
+	virtual void FetchProducts() = 0;
+
+	// Purchase product with given id
+	virtual void PurchaseProduct(const std::string& productId) = 0;
+
+	// Restore purchased products
+	virtual void RestoreProducts() = 0;
+
+	// Calls when products info successfully fetched
+	void OnProductsFetched(const std::vector<std::string>& availableProducts);
+
+	// Calls when product with given product id has been purchased
+	void OnProductPurchased(const std::string& productId);
 };
 
 }

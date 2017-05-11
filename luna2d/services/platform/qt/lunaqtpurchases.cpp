@@ -21,37 +21,25 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunaqtpurchases.h"
+#include "lunalog.h"
 
-#include "lunaengine.h"
+using namespace luna2d;
 
-namespace luna2d{
-
-class LUNAAds;
-class LUNAPurchases;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-
-class LUNAServices
+// Fetch products info from server
+void LUNAQtPurchases::FetchProducts()
 {
-public:
-	virtual ~LUNAServices() {}
 
-protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNAPurchases> purchases;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
+}
 
-public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNAPurchases> GetPurchases();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	virtual void LoadServices() = 0;
-};
+// Purchase product with given id
+void LUNAQtPurchases::PurchaseProduct(const std::string& productId)
+{
+
+}
+
+// Restore purchased products
+void LUNAQtPurchases::RestoreProducts()
+{
 
 }

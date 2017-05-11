@@ -24,6 +24,7 @@
 #include "lunabindservices.h"
 #include "lunaservices.h"
 #include "lunaads.h"
+#include "lunapurchases.h"
 #include "lunasharing.h"
 #include "lunastore.h"
 #include "lunaleaderboards.h"
@@ -41,6 +42,17 @@ static void BindAds(const std::shared_ptr<LUNAAds>& ads, LuaScript* lua, LuaTabl
 	tblAds.SetField("isRewardedVideoReady", LuaFunction(lua, ads.get(), &LUNAAds::IsRewardedVideoReady));
 	tblAds.SetField("showInterstitial", LuaFunction(lua, ads.get(), &LUNAAds::ShowInterstital));
 	tblAds.SetField("showRewardedVideo", LuaFunction(lua, ads.get(), &LUNAAds::ShowRewardedVideo));
+}
+
+// Bind "luna.purchases" module
+static void BindPurchases(const std::shared_ptr<LUNAPurchases>& purchases, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblPurchases(lua);
+	tblLuna.SetField("purchases", tblPurchases);
+
+	tblPurchases.SetField("fetchProducts", LuaFunction(lua, purchases.get(), &LUNAPurchases::FetchProducts));
+	tblPurchases.SetField("purchaseProduct", LuaFunction(lua, purchases.get(), &LUNAPurchases::PurchaseProduct));
+	tblPurchases.SetField("restoreProducts", LuaFunction(lua, purchases.get(), &LUNAPurchases::RestoreProducts));
 }
 
 // Bind "luna.sharing" module
@@ -80,6 +92,7 @@ void luna2d::BindServices()
 	auto services = LUNAEngine::SharedServices();
 
 	BindAds(services->GetAds(), lua, tblLuna);
+	BindPurchases(services->GetPurchases(), lua, tblLuna);
 	BindSharing(services->GetSharing(), lua, tblLuna);
 	BindStore(services->GetStore(), lua, tblLuna);
 	BindLeaderboards(services->GetLeaderboards(), lua, tblLuna);

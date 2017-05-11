@@ -23,35 +23,21 @@
 
 #pragma once
 
-#include "lunaengine.h"
+#include "lunapurchases.h"
 
 namespace luna2d{
 
-class LUNAAds;
-class LUNAPurchases;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-
-class LUNAServices
+class LUNAQtPurchases : public LUNAPurchases
 {
 public:
-	virtual ~LUNAServices() {}
+	// Fetch products info from server
+	virtual void FetchProducts();
 
-protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNAPurchases> purchases;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
+	// Purchase product with given id
+	virtual void PurchaseProduct(const std::string& productId);
 
-public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNAPurchases> GetPurchases();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	virtual void LoadServices() = 0;
+	// Restore purchased products
+	virtual void RestoreProducts();
 };
 
 }
