@@ -21,12 +21,12 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaimageformat.h"
+#include "lunacolortype.h"
 
 using namespace luna2d;
 
 // Get number of bytes per pixel for given color type
-int luna2d::GetBytesPerPixel(LUNAColorType colorType)
+size_t luna2d::GetBytesPerPixel(LUNAColorType colorType)
 {
 	switch(colorType)
 	{

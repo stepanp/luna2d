@@ -23,38 +23,47 @@
 
 #pragma once
 
-#include "lunacolortype.h"
+#include "lunaengine.h"
+#include "lunastringenum.h"
+#include "lunalua.h"
 
 namespace luna2d{
 
 //---------------------------
-// Interface for image format
+// Color type of image format
 //---------------------------
-class LUNAImageFormat
+enum class LUNAColorType
 {
-public:
-	virtual ~LUNAImageFormat() {}
-
-public:
-	// Decode compressed image data to raw bitmap data
-	// Params:
-	// "inData" - Input buffer with decoded image data
-	// "outData" - Output buffer for raw bitmap data
-	// "outWidth" - Output width of image
-	// "outHeight" - Output height of image
-	// "outColorType" - Output color type of image
-	virtual bool Decode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int& outWidth, int& outHeight, LUNAColorType& outColorType) const = 0;
-
-	// Encode raw bitmap data to compressed image data
-	// Params:
-	// "inData" - Input buffer with raw bitmap data
-	// "outData" - Output buffer for decoded data
-	// "width" - Width of input image
-	// "height" - Height of input image
-	// "colorType" - Color type of input image
-	virtual bool Encode(const std::vector<unsigned char>& inData, std::vector<unsigned char>& outData,
-		int width, int height, LUNAColorType colorType) const = 0;
+	RGB = 1,
+	RGBA = 2,
+	ALPHA = 3,
 };
+
+const LUNAStringEnum<LUNAColorType> COLOR_TYPE =
+{
+	"rgb",
+	"rgba",
+	"alpha",
+};
+
+
+template<>
+struct LuaStack<LUNAColorType>
+{
+	static void Push(lua_State* luaVm, const LUNAColorType& type)
+	{
+		LuaStack<std::string>::Push(luaVm, COLOR_TYPE.FromEnum(type));
+	}
+
+	static LUNAColorType Pop(lua_State* luaVm, int index = -1)
+	{
+		auto strType = LuaStack<std::string>::Pop(luaVm, index);
+		return COLOR_TYPE.FromString(strType, LUNAColorType::RGBA);
+	}
+};
+
+
+// Get number of bytes per pixel for given color type
+size_t GetBytesPerPixel(LUNAColorType colorType);
 
 }
