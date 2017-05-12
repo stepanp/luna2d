@@ -98,6 +98,7 @@ MainWindow::MainWindow(const QString& projectPath) :
 	connect(ui->comboFormat, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTabsCnangedFormat(int)));
 	connect(ui->checkResize, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedResize);
 	connect(ui->checkAtlas, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedAtlas);
+	connect(ui->checkPixmap, &QCheckBox::toggled, this, &MainWindow::OnTabsChangedPixmap);
 
 	// "Resize settings" tab signals
 	connect(ui->comboSrcResolution, &QComboBox::currentTextChanged, this, &MainWindow::OnTabsChangedSourceResolution);
@@ -162,6 +163,9 @@ void MainWindow::UpdateTaskTabs()
 	ui->comboFormat->setCurrentIndex(static_cast<int>(task->outputFormat));
 	ui->checkResize->setChecked(task->resize);
 	ui->checkAtlas->setChecked(task->atlas);
+	ui->checkAtlas->setEnabled(!task->markAsPixmap);
+	ui->checkPixmap->setChecked(task->markAsPixmap);
+	ui->checkPixmap->setEnabled(!task->atlas);
 	ui->tabsSettings->setTabEnabled(TAB_RESIZE, task->resize);
 	ui->tabsSettings->setTabEnabled(TAB_ATLAS, task->atlas);
 
@@ -694,6 +698,29 @@ void MainWindow::OnTabsChangedAtlas(bool value)
 
 	GetSelectedTask()->atlas = value;
 	ui->tabsSettings->setTabEnabled(TAB_ATLAS, value);
+
+	// Disable "Mark as pixmap" checkbox
+	if(value)
+	{
+		OnTabsChangedPixmap(false);
+		ui->checkPixmap->setEnabled(false);
+	}
+	else ui->checkPixmap->setEnabled(true);
+}
+
+void MainWindow::OnTabsChangedPixmap(bool value)
+{
+	if(!GetSelectedTask()) return;
+
+	GetSelectedTask()->markAsPixmap = value;
+
+	// Disable "Atlas" checkbox
+	if(value)
+	{
+		OnTabsChangedAtlas(false);
+		ui->checkAtlas->setEnabled(false);
+	}
+	else ui->checkAtlas->setEnabled(true);
 }
 
 

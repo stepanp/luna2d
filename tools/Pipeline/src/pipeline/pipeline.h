@@ -56,6 +56,7 @@ private:
 	void RunTask(Task* task);
 	void ResizeStage(ImageList images, Task* task);
 	void BuildAtlasStage(QHash<QString,ImageList> images, Task* task);
+	void MakePixmapDescription(const QString& filename, Task* task);
 	void UpdateProgress();
 
 signals:

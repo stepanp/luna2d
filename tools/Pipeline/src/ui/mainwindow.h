@@ -113,6 +113,7 @@ public slots:
 	void OnTabsCnangedFormat(int index);
 	void OnTabsChangedResize(bool value);
 	void OnTabsChangedAtlas(bool value);
+	void OnTabsChangedPixmap(bool value);
 
 	// "Resize settings" tab slots
 	void OnTabsChangedSourceResolution(const QString& value);

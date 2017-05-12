@@ -52,6 +52,7 @@ public:
 	QString name;
 	QString outputDir;
 	bool resize, atlas; // Pipeline stages
+	bool markAsPixmap;
 	QList<TaskNode*> nodes;
 	OutputFormat outputFormat;
 

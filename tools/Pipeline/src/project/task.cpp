@@ -34,6 +34,7 @@ Task::Task(Project* project) :
 	outputDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)),
 	resize(true),
 	atlas(true),
+	markAsPixmap(false),
 	outputFormat(OutputFormat::PNG_32),
 	sourceRes(QString::fromStdString(luna2d::DEFAULT_RESOLUTION)),
 	potSize(false)
@@ -46,6 +47,7 @@ Task::Task(Project* project, const QJsonObject& jsonTask) :
 	outputDir(AbsolutePath(jsonTask["outputDir"].toString())),
 	resize(jsonTask["resize"].toBool()),
 	atlas(jsonTask["atlas"].toBool()),
+	markAsPixmap(jsonTask["markAsPixmap"].toBool()),
 	outputFormat(OutputFormat::PNG_32),
 	sourceRes(jsonTask["sourceRes"].toString()),
 	potSize(jsonTask["potSize"].toBool())
@@ -143,6 +145,7 @@ QJsonObject Task::ToJson()
 	jsonTask["outputDir"] = RelativePath(outputDir);
 	jsonTask["resize"] = resize;
 	jsonTask["atlas"] = atlas;
+	jsonTask["markAsPixmap"] = markAsPixmap;
 	jsonTask["sourceRes"] = sourceRes;
 	jsonTask["potSize"] = potSize;
 

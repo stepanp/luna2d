@@ -155,7 +155,10 @@ void Pipeline::ResizeStage(ImageList images, Task* task)
 				if(!SaveImage(entry.second, task->outputDir, filename, task->outputFormat))
 				{
 					errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(filename)));
+					continue;
 				}
+
+				if(task->markAsPixmap) MakePixmapDescription(MakeFilename(entry.first, resolution, "pixmap"), task);
 			}
 		}
 	}
@@ -210,6 +213,17 @@ void Pipeline::BuildAtlasStage(QHash<QString,ImageList> images, Task* task)
 		}
 
 		UpdateProgress();
+	}
+}
+
+void Pipeline::MakePixmapDescription(const QString& filename, Task* task)
+{
+	QDir outputDir(task->outputDir);
+	QFile file(outputDir.absoluteFilePath(filename));
+	if(!file.open(QIODevice::WriteOnly))
+	{
+		errors.push_back(ERROR_MASK.arg(task->name).arg(ERROR_SAVE_MASK.arg(filename)));
+		return;
 	}
 }
 
