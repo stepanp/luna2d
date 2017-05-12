@@ -23,9 +23,11 @@
 
 #pragma once
 
-#include "platform/lunafiles.h"
+#include "lunafiles.h"
 #include "lunapngformat.h"
 #include "lunacolor.h"
+#include "lunablendingmode.h"
+#include "lunaassets.h"
 
 namespace luna2d{
 
@@ -34,8 +36,10 @@ class LUNATexture;
 //------------------------------
 // Class for working with images
 //------------------------------
-class LUNAImage
+class LUNAImage : public LUNAAsset
 {
+	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAImage)
+
 public:
 	// Construct empty image
 	LUNAImage();
@@ -59,7 +63,18 @@ private:
 	LUNAColorType colorType;
 
 private:
-	int CoordsToPos(int x, int y) const; // Convert given coordinates to position in data buffer
+	// Convert given coordinates to position in data buffer
+	int CoordsToPos(int x, int y) const;
+
+	// Draw another image to this image without blending
+	void BlendNone(int x, int y, const LUNAImage& image);
+
+	// Draw another image to this image with alpha blending
+	void BlendAlpha(int x, int y, const LUNAImage& image);
+
+	uint32_t GetBytePixel(size_t pos);
+
+	void SetBytePixel(size_t pos, uint32_t color);
 
 public:
 	bool IsEmpty() const;
@@ -85,8 +100,11 @@ public:
 	// Fill image with given color
 	void Fill(const LUNAColor& color);
 
-	 // Draw another image to this image
-	void DrawImage(int x, int y, const LUNAImage& image);
+	// Fill rectangle on image with given color
+	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color);
+
+	// Draw another image to this image
+	void DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode blendingMode);
 
 	// Draw image from given buffer to this image
 	// Width and height of buffer in pixels
@@ -99,9 +117,6 @@ public:
 	// Color type of given buffer should be same as image color type
 	void DrawRawBuffer(int x, int y,
 		const unsigned char* buffer, int bufferWidth, int bufferHeight, LUNAColorType bufferColorType);
-
-	// Fill rectangle on image with given color
-	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color);
 
 	// Flip image vertically
 	void FlipVertically();

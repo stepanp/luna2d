@@ -31,6 +31,7 @@
 #include "lunatext.h"
 #include "lunaparticlesystem.h"
 #include "lunacurverenderer.h"
+#include "lunapngformat.h"
 
 using namespace luna2d;
 
@@ -226,6 +227,45 @@ LUNAGraphics::LUNAGraphics() :
 	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
 	clsFont.SetMethod("getStringWidth", &LUNAFont::GetStringWidth);
 	clsFont.SetMethod("getStringHeight", &LUNAFont::GetStringHeight);
+
+	LuaClass<LUNAImage> clsImage(lua);
+	clsImage.SetMethod("getWidth", &LUNAImage::GetWidth);
+	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
+	clsImage.SetMethod("getColorType", &LUNAImage::GetColorType);
+	clsImage.SetMethod("setSize", &LUNAImage::SetSize);
+	clsImage.SetMethod("getPixel", &LUNAImage::GetPixel);
+	clsImage.SetMethod("setPixel", &LUNAImage::SetPixel);
+	clsImage.SetMethod("fill", &LUNAImage::Fill);
+	clsImage.SetMethod("fillRectangle", &LUNAImage::FillRectangle);
+	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
+	clsImage.SetMethod("flipVertically", &LUNAImage::FlipVertically);
+	clsImage.SetMethod("flipHorizontally", &LUNAImage::FlipHorizontally);
+	tblGraphics.SetField("Pixmap", clsImage);
+
+	std::function<void(const std::shared_ptr<LUNAImage>&,int,int,const std::shared_ptr<LUNAImage>&, LUNABlendingMode)> fnDrawPixmap =
+		[](const std::shared_ptr<LUNAImage>& thisPixmap, int x, int y, const std::shared_ptr<LUNAImage>& pixmap, LUNABlendingMode mode)
+	{
+		if(!pixmap) LUNA_RETURN_ERR("Attempt to draw invalid pixmap");
+
+		thisPixmap->DrawImage(x, y, *(pixmap.get()), mode);
+	};
+	clsImage.SetExtensionMethod("drawPixmap", fnDrawPixmap);
+
+	std::function<void(const std::shared_ptr<LUNAImage>&,const std::string&)> fnSave =
+		[](const std::shared_ptr<LUNAImage>& thisPixmap, const std::string& filename)
+	{
+		thisPixmap->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+	};
+	clsImage.SetExtensionMethod("save", fnSave);
+
+	std::function<std::shared_ptr<LUNAImage>(LuaNil, const std::string&)> fnImageConstruct =
+		[](LuaNil, const std::string& filename) -> std::shared_ptr<LUNAImage>
+	{
+		auto image = std::make_shared<LUNAImage>(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+		if(image->IsEmpty()) return nullptr;
+		return image;
+	};
+	clsImage.SetExtensionConstructor(fnImageConstruct);
 }
 
 double LUNAGraphics::SmoothDeltaTime(double deltaTime)

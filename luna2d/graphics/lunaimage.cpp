@@ -74,6 +74,61 @@ int LUNAImage::CoordsToPos(int x, int y) const
 	return (x + y * width) * GetBytesPerPixel(colorType);
 }
 
+// Draw another image to this image without blending
+void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
+{
+	// Line-by-line copying buffer is faster than SetPixel
+	// Use it when possible
+	if(image.GetColorType() == colorType)
+	{
+		DrawBuffer(x, y, image.GetData(), image.GetWidth(), image.GetHeight(), image.GetColorType());
+		return;
+	}
+
+	for(int j = 0; j < image.GetHeight(); j++)
+	{
+		for(int i = 0; i < image.GetWidth(); i++)
+		{
+			SetPixel(x + i, y + j, image.GetPixel(i, j));
+		}
+	}
+}
+
+// Draw another image to this image with alpha blending
+void LUNAImage::BlendAlpha(int x, int y, const LUNAImage& image)
+{
+	for(int j = 0; j < image.GetHeight(); j++)
+	{
+		for(int i = 0; i < image.GetWidth(); i++)
+		{
+			const LUNAColor& dest = GetPixel(x + i, y + j);
+			const LUNAColor& source = image.GetPixel(i, j);
+			LUNAColor result;
+
+			result.r = std::min(dest.r + source.a * (source.r - dest.r), 1.0f);
+			result.g = std::min(dest.g + source.a * (source.g - dest.g), 1.0f);
+			result.b = std::min(dest.b + source.a * (source.b - dest.b), 1.0f);
+			result.a = std::min(dest.a + source.a, 1.0f);
+
+			SetPixel(x + i, y + j, result);
+		}
+	}
+}
+
+uint32_t LUNAImage::GetBytePixel(size_t pos)
+{
+	if(colorType == LUNAColorType::ALPHA) return data[pos] | data[pos] | data[pos] | data[pos];
+
+	uint32_t ret = 0x000000FF;
+	memcpy(&ret, &data[pos], GetBytesPerPixel(colorType));
+	return ret;
+}
+
+void LUNAImage::SetBytePixel(size_t pos, uint32_t color)
+{
+	memcpy(&data[pos], &color, GetBytesPerPixel(colorType));
+}
+
 bool LUNAImage::IsEmpty() const
 {
 	return data.empty();
@@ -143,42 +198,14 @@ void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
 
-	int pos = CoordsToPos(x, y);
-
-	switch(colorType)
-	{
-	case LUNAColorType::RGBA:
-		data[pos] = color.GetR();
-		data[pos + 1] = color.GetG();
-		data[pos + 2] = color.GetB();
-		data[pos + 3] = color.GetA();
-		break;
-	case LUNAColorType::RGB:
-		data[pos] = color.GetR();
-		data[pos + 1] = color.GetG();
-		data[pos + 2] = color.GetB();
-		break;
-	case LUNAColorType::ALPHA:
-		data[pos] = color.GetA();
-		break;
-	}
+	SetBytePixel(CoordsToPos(x, y), color.GetUint32());
 }
 
 LUNAColor LUNAImage::GetPixel(int x, int y) const
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return LUNAColor();
 
-	int pos = CoordsToPos(x, y);
-
-	switch(colorType)
-	{
-	case LUNAColorType::RGBA:
-		return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2], data[pos + 3]);
-	case LUNAColorType::RGB:
-		return LUNAColor::Rgb(data[pos], data[pos + 1], data[pos + 2]);
-	case LUNAColorType::ALPHA:
-		return LUNAColor::Rgb(255, 255, 255, data[pos]);
-	}
+	return LUNAColor::Uint32(GetBytePixel(CoordsToPos(x, y)));
 }
 
 // Fill image with given color
@@ -187,26 +214,32 @@ void LUNAImage::Fill(const LUNAColor& color)
 	FillRectangle(0, 0, width, height, color);
 }
 
+// Fill rectangle on image with given color
+void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
+{
+	for(int j = 0; j < height; j++)
+	{
+		for(int i = 0; i < width; i++)
+		{
+			SetPixel(x + i, y + j, color);
+		}
+	}
+}
+
 // Draw another image to this image
-void LUNAImage::DrawImage(int x, int y, const LUNAImage& image)
+void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode blendingMode)
 {
 	if(IsEmpty() || image.IsEmpty()) return;
 	if(x < 0 || y < 0 || x + image.GetWidth() > width || y + image.GetHeight() > height) return;
 
-	// Line-by-line copying buffer is faster than SetPixel
-	// Use it when possible
-	if(image.GetColorType() == colorType)
+	switch(blendingMode)
 	{
-		DrawBuffer(x, y, image.GetData(), image.GetWidth(), image.GetHeight(), image.GetColorType());
-		return;
-	}
-
-	for(int j = 0; j < image.GetHeight(); j++)
-	{
-		for(int i = 0; i < image.GetWidth(); i++)
-		{
-			SetPixel(x + i, y + j, image.GetPixel(i, j));
-		}
+	case LUNABlendingMode::NONE:
+		BlendNone(x, y, image);
+		break;
+	case LUNABlendingMode::ALPHA:
+		BlendAlpha(x, y, image);
+		break;
 	}
 }
 
@@ -247,18 +280,6 @@ void LUNAImage::DrawRawBuffer(int x, int y,
 		int pos = CoordsToPos(x + sourceX, y + sourceY + row);
 
 		memcpy(&data[pos], &buffer[bufferPos], rowLen);
-	}
-}
-
-// Fill rectangle on image with given color
-void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
-{
-	for(int j = 0; j < height; j++)
-	{
-		for(int i = 0; i < width; i++)
-		{
-			SetPixel(x + i, y + j, color);
-		}
 	}
 }
 

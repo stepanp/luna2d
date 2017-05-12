@@ -61,6 +61,19 @@ unsigned char LUNAColor::GetA() const
 	return a * 255;
 }
 
+// Get color as uint32_t
+uint32_t LUNAColor::GetUint32() const
+{
+	uint32_t color = 0;
+
+	color |= GetR() << 24;
+	color |= GetG() << 16;
+	color |= GetB() << 8;
+	color |= GetA();
+
+	return color;
+}
+
 // Convert value from byte format(0-255) to float format(0.0f-1.0f)
 float LUNAColor::ByteToFloat(unsigned char value)
 {
@@ -87,6 +100,17 @@ LUNAColor LUNAColor::Hex(int hex, float a)
 	unsigned char byteC = hex & 0xFF;
 
 	return LUNAColor(ByteToFloat(byteA), ByteToFloat(byteB), ByteToFloat(byteC), a);
+}
+
+// From uint32_t
+static LUNAColor LUNAColor::Uint32(uint32_t color)
+{
+	uint8_t r = (color >> 24) & 0xFF;
+	uint8_t g = (color >> 16) & 0xFF;
+	uint8_t b = (color >> 8) & 0xFF;
+	uint8_t a = color & 0xFF;
+
+	return LUNAColor(ByteToFloat(r), ByteToFloat(g), ByteToFloat(b), ByteToFloat(a));
 }
 
 // Initialize requently used colors

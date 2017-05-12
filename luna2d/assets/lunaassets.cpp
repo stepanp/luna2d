@@ -25,6 +25,7 @@
 #include "lunagraphics.h"
 #include "lunasizes.h"
 #include "lunatextureatlasloader.h"
+#include "lunapixmaploader.h"
 #include "lunashaderloader.h"
 #include "lunafontloader.h"
 #include "lunajsonloader.h"
@@ -113,7 +114,7 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 
 	// Ignore description files
 	std::string ext = files->GetExtension(path);
-	if(ext == "atlas" || ext == "font") return true;
+	if(ext == "atlas" || ext == "font" || ext == "pixmap") return true;
 
 	// Shader loading starts from vertex shader file
 	if(ext == "frag") return true;
@@ -128,15 +129,18 @@ bool LUNAAssets::IsIgnored(const std::string& path)
 // Get loader for given file
 std::shared_ptr<LUNAAssetLoader> LUNAAssets::GetLoader(const std::string& path)
 {
-	std::string ext = LUNAEngine::SharedFiles()->GetExtension(path);
+	auto files = LUNAEngine::SharedFiles();
+	std::string ext = files->GetExtension(path);
 
 	if(ext == "png")
 	{
-		// Load texture atlas if atlas desctiption file is exists
-		std::string atlasPath = path.substr(0, path.rfind(".") + 1) + "atlas";
-		if(LUNAEngine::SharedFiles()->IsFile(atlasPath)) return std::make_shared<LUNATextureAtlasLoader>();
+		// Load image as texture atlas if atlas desctiption file is exists
+		if(files->IsFile(files->ReplaceExtension(path, "atlas"))) return std::make_shared<LUNATextureAtlasLoader>();
 
-		// Load just texture
+		// Load image as pixmap if pixmap desctiption file is exists
+		if(files->IsFile(files->ReplaceExtension(path, "pixmap"))) return std::make_shared<LUNAPixmapLoader>();
+
+		// Load image as just texture
 		else return std::make_shared<LUNATextureLoader>();
 	}
 	else if(ext == "ttf") return std::make_shared<LUNAFontLoader>();
