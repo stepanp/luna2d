@@ -174,6 +174,26 @@ public:
 		SetMetatable(meta);
 	}
 
+	template<typename ... Args>
+	void SetExtensionConstructor(const std::function<std::shared_ptr<Class>(Args...)>& construct)
+	{
+		// Wrap given constructor method to skip first "LuaNil" argument of function
+		std::function<std::shared_ptr<Class>(LuaNil,Args...)> wrapConstruct =
+			[construct](LuaNil, const Args& ... args) -> std::shared_ptr<Class>
+			{
+				return construct(args...);
+			};
+
+		lua_State *luaVm = ref->GetLuaVm();
+
+		LuaFunction fnConstruct(luaVm);
+		fnConstruct.Bind(wrapConstruct);
+
+		LuaTable meta(luaVm);
+		meta.SetField("__call", fnConstruct);
+		SetMetatable(meta);
+	}
+
 	template<typename Ret, typename ... Args>
 	void SetMethod(const std::string& name, Ret (Class::*method)(Args ...))
 	{
@@ -187,6 +207,24 @@ public:
 	{
 		LuaFunction fn(ref->GetLuaVm());
 		fn.Bind<Ret, Class, Args...>(method);
+		SetField(name, fn, true);
+	}
+
+	template<typename Ret, typename ... Args>
+	void SetExtensionMethod(const std::string& name, const std::function<Ret(const std::shared_ptr<Class>&,Args...)>& method)
+	{
+		// Wrap given method to validate first argument of function
+		std::function<Ret(const std::shared_ptr<Class>&,Args...)> wrapMethod =
+			[method](const std::shared_ptr<Class>& obj, const Args& ... args)
+			{
+				if(!obj) LUNA_RETURN_ERR("First argument is not valid userdata."
+					"Possibly method called through \".\" instead of \":\" operator?");
+
+				method(obj, args...);
+			};
+
+		LuaFunction fn(ref->GetLuaVm());
+		fn.Bind(wrapMethod);
 		SetField(name, fn, true);
 	}
 };
