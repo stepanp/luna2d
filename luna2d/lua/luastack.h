@@ -245,7 +245,7 @@ struct LuaStack<QVariant>
 		case QMetaType::Int:
 			LuaStack<int>::Push(luaVm, arg.toInt());
 			break;
-		case QMetaType::Float:
+		case QMetaType::Double:
 			LuaStack<float>::Push(luaVm, arg.toFloat());
 			break;
 		case QMetaType::QString:
