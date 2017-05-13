@@ -29,6 +29,71 @@
 
 using namespace luna2d;
 
+typedef uint32_t (*ReadPixelFunc)(const std::vector<unsigned char>&, size_t);
+typedef void (*WritePixelFunc)(std::vector<unsigned char>&, size_t, uint32_t);
+
+static uint32_t ReadPixelRGBA(const std::vector<unsigned char>& data, size_t pos)
+{
+	return (data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | data[pos + 3];
+}
+
+static uint32_t ReadPixelRGB(const std::vector<unsigned char>& data, size_t pos)
+{
+	return (data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | 255;
+}
+
+static uint32_t ReadPixelAlpha(const std::vector<unsigned char>& data, size_t pos)
+{
+	return 255 | 255 | 255 | data[pos];
+}
+
+static void WritePixelRGBA(std::vector<unsigned char>& data, size_t pos, uint32_t color)
+{
+	data[pos] = (color >> 24) & 0xFF;
+	data[pos + 1] = (color >> 16) & 0xFF;
+	data[pos + 2] = (color >> 8) & 0xFF;
+	data[pos + 3] = color & 0xFF;
+}
+
+static void WritePixelRGB(std::vector<unsigned char>& data, size_t pos, uint32_t color)
+{
+	data[pos] = (color >> 24) & 0xFF;
+	data[pos + 1] = (color >> 16) & 0xFF;
+	data[pos + 2] = (color >> 8) & 0xFF;
+}
+
+static void WritePixelAlpha(std::vector<unsigned char>& data, size_t pos, uint32_t color)
+{
+	data[pos] = color & 0xFF;
+}
+
+static ReadPixelFunc GetReadPixelFunc(LUNAColorType colorType)
+{
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return &ReadPixelRGBA;
+	case LUNAColorType::RGB:
+		return &ReadPixelRGB;
+	case LUNAColorType::ALPHA:
+		return &ReadPixelAlpha;
+	}
+}
+
+static WritePixelFunc GetWritePixelFunc(LUNAColorType colorType)
+{
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return &WritePixelRGBA;
+	case LUNAColorType::RGB:
+		return &WritePixelRGB;
+	case LUNAColorType::ALPHA:
+		return &WritePixelAlpha;
+	}
+}
+
+
 // Construct empty image
 LUNAImage::LUNAImage() : LUNAImage(0, 0, LUNAColorType::RGBA)
 {
@@ -69,7 +134,7 @@ LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format,
 }
 
 // Convert given coordinates to position in data buffer
-int LUNAImage::CoordsToPos(int x, int y) const
+size_t LUNAImage::CoordsToPos(int x, int y) const
 {
 	return (x + y * width) * GetBytesPerPixel(colorType);
 }
@@ -77,7 +142,7 @@ int LUNAImage::CoordsToPos(int x, int y) const
 // Draw another image to this image without blending
 void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
 {
-	// Line-by-line copying buffer is faster than SetPixel
+	// Line-by-line copying buffer is faster than "writePixel"/"readPixel"
 	// Use it when possible
 	if(image.GetColorType() == colorType)
 	{
@@ -85,11 +150,14 @@ void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
 		return;
 	}
 
+	auto readPixel = GetReadPixelFunc(image.GetColorType());
+	auto writePixel = GetWritePixelFunc(colorType);
+
 	for(int j = 0; j < image.GetHeight(); j++)
 	{
 		for(int i = 0; i < image.GetWidth(); i++)
 		{
-			SetPixel(x + i, y + j, image.GetPixel(i, j));
+			writePixel(data, CoordsToPos(x + i, y + j), readPixel(image.GetData(), image.CoordsToPos(i, j)));
 		}
 	}
 }
@@ -97,36 +165,32 @@ void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
 // Draw another image to this image with alpha blending
 void LUNAImage::BlendAlpha(int x, int y, const LUNAImage& image)
 {
+	auto destReadPixel = GetReadPixelFunc(colorType);
+	auto sourceReadPixel = GetReadPixelFunc(image.GetColorType());
+	auto writePixel = GetWritePixelFunc(colorType);
+
 	for(int j = 0; j < image.GetHeight(); j++)
 	{
 		for(int i = 0; i < image.GetWidth(); i++)
 		{
-			const LUNAColor& dest = GetPixel(x + i, y + j);
-			const LUNAColor& source = image.GetPixel(i, j);
-			LUNAColor result;
+			size_t destPos = CoordsToPos(x + i, y + j);
 
-			result.r = std::min(dest.r + source.a * (source.r - dest.r), 1.0f);
-			result.g = std::min(dest.g + source.a * (source.g - dest.g), 1.0f);
-			result.b = std::min(dest.b + source.a * (source.b - dest.b), 1.0f);
-			result.a = std::min(dest.a + source.a, 1.0f);
+			uint32_t dest = destReadPixel(data, destPos);
+			uint32_t source = sourceReadPixel(image.GetData(), image.CoordsToPos(i, j));
 
-			SetPixel(x + i, y + j, result);
+			uint32_t alpha = (source & 0xFF);
+			uint32_t invAlpha = 255 - alpha;
+
+			uint32_t resultR = (((((dest >> 0) & 0xFF) * invAlpha + ((source >> 0) & 0xFF) * alpha) >> 8));
+			uint32_t resultG = (((((dest >> 8) & 0xFF) * invAlpha + ((source >> 8) & 0xFF) * alpha)) & ~0xFF);
+			uint32_t resultB = (((((dest >> 16) & 0xFF) * invAlpha + ((source >> 16) & 0xFF) * alpha) << 8) & ~0xFFFF);
+			uint32_t resultA = (((((dest >> 24) & 0xFF) * invAlpha + ((source >> 24) & 0xFF) * alpha) << 16) & ~0xFFFFFF);
+
+			uint32_t result = resultR | resultG | resultB | resultA;
+
+			writePixel(data, destPos, result);
 		}
 	}
-}
-
-uint32_t LUNAImage::GetBytePixel(size_t pos)
-{
-	if(colorType == LUNAColorType::ALPHA) return data[pos] | data[pos] | data[pos] | data[pos];
-
-	uint32_t ret = 0x000000FF;
-	memcpy(&ret, &data[pos], GetBytesPerPixel(colorType));
-	return ret;
-}
-
-void LUNAImage::SetBytePixel(size_t pos, uint32_t color)
-{
-	memcpy(&data[pos], &color, GetBytesPerPixel(colorType));
 }
 
 bool LUNAImage::IsEmpty() const
@@ -198,14 +262,16 @@ void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
 
-	SetBytePixel(CoordsToPos(x, y), color.GetUint32());
+	auto writePixel = GetWritePixelFunc(colorType);
+	writePixel(data, CoordsToPos(x, y), color.GetUint32());
 }
 
 LUNAColor LUNAImage::GetPixel(int x, int y) const
 {
 	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return LUNAColor();
 
-	return LUNAColor::Uint32(GetBytePixel(CoordsToPos(x, y)));
+	auto readPixel = GetReadPixelFunc(colorType);
+	return LUNAColor::Uint32(readPixel(data, CoordsToPos(x, y)));
 }
 
 // Fill image with given color
@@ -217,11 +283,16 @@ void LUNAImage::Fill(const LUNAColor& color)
 // Fill rectangle on image with given color
 void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
 {
+	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
+
+	uint32_t uintColor = color.GetUint32();
+	auto writePixel = GetWritePixelFunc(colorType);
+
 	for(int j = 0; j < height; j++)
 	{
 		for(int i = 0; i < width; i++)
 		{
-			SetPixel(x + i, y + j, color);
+			writePixel(data, CoordsToPos(x + i, y + j), uintColor);
 		}
 	}
 }
@@ -239,6 +310,8 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode
 		break;
 	case LUNABlendingMode::ALPHA:
 		BlendAlpha(x, y, image);
+		break;
+	default:
 		break;
 	}
 }
@@ -270,9 +343,10 @@ void LUNAImage::DrawRawBuffer(int x, int y,
 
 	if(sourceWidth <= 0 || sourceHeight <= 0) return;
 
-	int rowX = sourceX * GetBytesPerPixel(bufferColorType);
-	int rowLen = sourceWidth * GetBytesPerPixel(bufferColorType);
-	int rowFullLen = bufferWidth * GetBytesPerPixel(bufferColorType);
+	int bytesPerPixel = GetBytesPerPixel(bufferColorType);
+	int rowX = sourceX * bytesPerPixel;
+	int rowLen = sourceWidth * bytesPerPixel;
+	int rowFullLen = bufferWidth * bytesPerPixel;
 
 	for(int row = 0; row < sourceHeight; row++)
 	{
@@ -303,7 +377,7 @@ void LUNAImage::FlipVertically()
 // Flip image horizontally
 void LUNAImage::FlipHorizontally()
 {
-	std::array<unsigned char, 4/* Max bytes per pixel */> tempPixel;
+	uint32_t tempPixel;
 	int pixelLen = GetBytesPerPixel(colorType);
 
 	for(int x = 0; x < width / 2; x++)
@@ -313,9 +387,9 @@ void LUNAImage::FlipHorizontally()
 			int pos = CoordsToPos(x, row);
 			int endPos = CoordsToPos(width - x - 1, row);
 
-			memcpy(&tempPixel[0], &data[pos], pixelLen);
+			memcpy(&tempPixel, &data[pos], pixelLen);
 			memcpy(&data[pos], &data[endPos], pixelLen);
-			memcpy(&data[endPos], &tempPixel[0], pixelLen);
+			memcpy(&data[endPos], &tempPixel, pixelLen);
 		}
 	}
 }

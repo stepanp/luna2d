@@ -64,17 +64,13 @@ private:
 
 private:
 	// Convert given coordinates to position in data buffer
-	int CoordsToPos(int x, int y) const;
+	size_t CoordsToPos(int x, int y) const;
 
 	// Draw another image to this image without blending
 	void BlendNone(int x, int y, const LUNAImage& image);
 
 	// Draw another image to this image with alpha blending
 	void BlendAlpha(int x, int y, const LUNAImage& image);
-
-	uint32_t GetBytePixel(size_t pos);
-
-	void SetBytePixel(size_t pos, uint32_t color);
 
 public:
 	bool IsEmpty() const;

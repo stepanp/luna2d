@@ -103,12 +103,12 @@ LUNAColor LUNAColor::Hex(int hex, float a)
 }
 
 // From uint32_t
-static LUNAColor LUNAColor::Uint32(uint32_t color)
+LUNAColor LUNAColor::Uint32(uint32_t color)
 {
-	uint8_t r = (color >> 24) & 0xFF;
-	uint8_t g = (color >> 16) & 0xFF;
-	uint8_t b = (color >> 8) & 0xFF;
-	uint8_t a = color & 0xFF;
+	unsigned char r = (color >> 24) & 0xFF;
+	unsigned char g = (color >> 16) & 0xFF;
+	unsigned char b = (color >> 8) & 0xFF;
+	unsigned char a = color & 0xFF;
 
 	return LUNAColor(ByteToFloat(r), ByteToFloat(g), ByteToFloat(b), ByteToFloat(a));
 }
