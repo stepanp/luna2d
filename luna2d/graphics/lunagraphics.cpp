@@ -200,9 +200,6 @@ LUNAGraphics::LUNAGraphics() :
 	clsCurveRenderer.SetMethod("render", &LUNACurveRenderer::Render);
 	tblGraphics.SetField("CurveRenderer", clsCurveRenderer);
 
-	tblGraphics.MakeReadOnly();
-	tblLuna.SetField("graphics", tblGraphics);
-
 	// Bind graphics asset types
 	LuaClass<LUNATexture> clsTexture(lua);
 	clsTexture.SetMethod("getWidth", &LUNATexture::GetWidth);
@@ -258,14 +255,17 @@ LUNAGraphics::LUNAGraphics() :
 	};
 	clsImage.SetExtensionMethod("save", fnSave);
 
-	std::function<std::shared_ptr<LUNAImage>(LuaNil, const std::string&)> fnImageConstruct =
-		[](LuaNil, const std::string& filename) -> std::shared_ptr<LUNAImage>
+	std::function<std::shared_ptr<LUNAImage>(const std::string&)> fnImageConstruct =
+		[](const std::string& filename) -> std::shared_ptr<LUNAImage>
 	{
 		auto image = std::make_shared<LUNAImage>(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
 		if(image->IsEmpty()) return nullptr;
 		return image;
 	};
 	clsImage.SetExtensionConstructor(fnImageConstruct);
+
+	tblGraphics.MakeReadOnly();
+	tblLuna.SetField("graphics", tblGraphics);
 }
 
 double LUNAGraphics::SmoothDeltaTime(double deltaTime)

@@ -312,6 +312,7 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode
 		BlendAlpha(x, y, image);
 		break;
 	default:
+		LUNA_LOGE("LUNAImage is not support blending mode \"%s\"", BLENDING_MODE.FromEnum(blendingMode).c_str());
 		break;
 	}
 }
