@@ -152,10 +152,11 @@ void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
 
 	auto readPixel = GetReadPixelFunc(image.GetColorType());
 	auto writePixel = GetWritePixelFunc(colorType);
+	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
 
-	for(int j = 0; j < image.GetHeight(); j++)
+	for(int j = sourceRect.x; j < sourceRect.height; j++)
 	{
-		for(int i = 0; i < image.GetWidth(); i++)
+		for(int i = sourceRect.y; i < sourceRect.width; i++)
 		{
 			writePixel(data, CoordsToPos(x + i, y + j), readPixel(image.GetData(), image.CoordsToPos(i, j)));
 		}
@@ -168,10 +169,11 @@ void LUNAImage::BlendAlpha(int x, int y, const LUNAImage& image)
 	auto destReadPixel = GetReadPixelFunc(colorType);
 	auto sourceReadPixel = GetReadPixelFunc(image.GetColorType());
 	auto writePixel = GetWritePixelFunc(colorType);
+	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
 
-	for(int j = 0; j < image.GetHeight(); j++)
+	for(int j = sourceRect.x; j < sourceRect.height; j++)
 	{
-		for(int i = 0; i < image.GetWidth(); i++)
+		for(int i = sourceRect.y; i < sourceRect.width; i++)
 		{
 			size_t destPos = CoordsToPos(x + i, y + j);
 
@@ -191,6 +193,24 @@ void LUNAImage::BlendAlpha(int x, int y, const LUNAImage& image)
 			writePixel(data, destPos, result);
 		}
 	}
+}
+
+LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height)
+{
+	int sourceX = x < 0 ? -x : 0;
+	int sourceY = y < 0 ? -y : 0;
+	int sourceWidth = width - sourceX;
+	int sourceHeight = height - sourceY;
+
+	if(this->width - x < sourceWidth) sourceWidth = this->width - x;
+	if(this->height - y < sourceHeight) sourceHeight = this->height - y;
+
+	return LUNARectInt(sourceX, sourceY, sourceWidth, sourceHeight);
+}
+
+bool LUNAImage::CheckSourceRect(int x, int y, int width, int height)
+{
+	return x + width > 0 && y + height > 0 && x < this->width && y < this->height;
 }
 
 bool LUNAImage::IsEmpty() const
@@ -283,14 +303,15 @@ void LUNAImage::Fill(const LUNAColor& color)
 // Fill rectangle on image with given color
 void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
 {
-	if(IsEmpty() || x < 0 || y < 0 || x > width || y > height) return;
+	if(IsEmpty() || !CheckSourceRect(x, y, width, height)) return;
 
 	uint32_t uintColor = color.GetUint32();
 	auto writePixel = GetWritePixelFunc(colorType);
+	auto sourceRect = GetSourceRect(x, y, width, height);
 
-	for(int j = 0; j < height; j++)
+	for(int j = sourceRect.x; j < sourceRect.height; j++)
 	{
-		for(int i = 0; i < width; i++)
+		for(int i = sourceRect.y; i < sourceRect.width; i++)
 		{
 			writePixel(data, CoordsToPos(x + i, y + j), uintColor);
 		}
@@ -300,8 +321,7 @@ void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNACol
 // Draw another image to this image
 void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode blendingMode)
 {
-	if(IsEmpty() || image.IsEmpty()) return;
-	if(x < 0 || y < 0 || x + image.GetWidth() > width || y + image.GetHeight() > height) return;
+	if(IsEmpty() || image.IsEmpty() || !CheckSourceRect(x, y, image.GetWidth(), image.GetHeight())) return;
 
 	switch(blendingMode)
 	{

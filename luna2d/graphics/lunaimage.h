@@ -28,6 +28,7 @@
 #include "lunacolor.h"
 #include "lunablendingmode.h"
 #include "lunaassets.h"
+#include "lunarect.h"
 
 namespace luna2d{
 
@@ -71,6 +72,10 @@ private:
 
 	// Draw another image to this image with alpha blending
 	void BlendAlpha(int x, int y, const LUNAImage& image);
+
+	LUNARectInt GetSourceRect(int x, int y, int width, int height);
+
+	bool CheckSourceRect(int x, int y, int width, int height);
 
 public:
 	bool IsEmpty() const;
