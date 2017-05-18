@@ -38,6 +38,18 @@ public:
 	float x, y, width, height;
 };
 
+
+class LUNARectInt
+{
+public:
+	LUNARectInt();
+	LUNARectInt(int x, int y, int width, int height);
+
+public:
+	int x, y, width, height;
+};
+
+
 template<>
 struct LuaStack<LUNARect>
 {

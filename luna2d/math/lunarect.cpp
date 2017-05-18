@@ -34,6 +34,19 @@ LUNARect::LUNARect(float x, float y, float width, float height) :
 {
 }
 
+
+LUNARectInt::LUNARectInt() : LUNARectInt(0, 0, 0, 0)
+{
+
+}
+
+LUNARectInt::LUNARectInt(int x, int y, int width, int height) :
+	x(x), y(y), width(width), height(height)
+{
+}
+
+
+
 // Conctuctor for creating instance in lua
 int LUNARect::LuaConstruct(lua_State* luaVm)
 {
