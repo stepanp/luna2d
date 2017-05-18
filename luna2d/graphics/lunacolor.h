@@ -70,6 +70,7 @@ struct LuaStack<LUNAColor>
 		tblColor.SetArrayField<int>(1, color.GetR());
 		tblColor.SetArrayField<int>(2, color.GetG());
 		tblColor.SetArrayField<int>(3, color.GetB());
+		tblColor.SetArrayField<int>(4, color.GetA());
 		LuaStack<LuaTable>::Push(luaVm, tblColor);
 	}
 
@@ -81,7 +82,9 @@ struct LuaStack<LUNAColor>
 		unsigned char r = (unsigned char)tblColor.GetArrayField<int>(1);
 		unsigned char g = (unsigned char)tblColor.GetArrayField<int>(2);
 		unsigned char b = (unsigned char)tblColor.GetArrayField<int>(3);
-		return LUNAColor::Rgb(r, g, b);
+		unsigned char a = tblColor.GetArrayCount() > 3 ? (unsigned char)tblColor.GetArrayField<int>(4) : 255;
+
+		return LUNAColor::Rgb(r, g, b, a);
 	}
 };
 
