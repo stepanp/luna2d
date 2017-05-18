@@ -232,12 +232,26 @@ LUNAGraphics::LUNAGraphics() :
 	clsImage.SetMethod("setSize", &LUNAImage::SetSize);
 	clsImage.SetMethod("getPixel", &LUNAImage::GetPixel);
 	clsImage.SetMethod("setPixel", &LUNAImage::SetPixel);
-	clsImage.SetMethod("fill", &LUNAImage::Fill);
-	clsImage.SetMethod("fillRectangle", &LUNAImage::FillRectangle);
 	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
 	clsImage.SetMethod("flipVertically", &LUNAImage::FlipVertically);
 	clsImage.SetMethod("flipHorizontally", &LUNAImage::FlipHorizontally);
 	tblGraphics.SetField("Pixmap", clsImage);
+
+	std::function<void(const std::shared_ptr<LUNAImage>&, const LUNAColor&, LuaAny)> fnFill =
+		[](const std::shared_ptr<LUNAImage>& thisPixmap, const LUNAColor& color, LuaAny blendingMode)
+	{
+		LUNABlendingMode mode = blendingMode.GetType() != LUA_TSTRING ? LUNABlendingMode::NONE : blendingMode.To<LUNABlendingMode>();
+		thisPixmap->Fill(color, mode);
+	};
+	clsImage.SetExtensionMethod("fill", fnFill);
+
+	std::function<void(const std::shared_ptr<LUNAImage>&,int,int,int,int,const LUNAColor&, LuaAny)> fnFillRectangle =
+		[](const std::shared_ptr<LUNAImage>& thisPixmap, int x, int y, int width, int height, const LUNAColor& color, LuaAny blendingMode)
+	{
+		LUNABlendingMode mode = blendingMode.GetType() != LUA_TSTRING ? LUNABlendingMode::NONE : blendingMode.To<LUNABlendingMode>();
+		thisPixmap->FillRectangle(x, y, width, height, color, mode);
+	};
+	clsImage.SetExtensionMethod("fillRectangle", fnFillRectangle);
 
 	std::function<void(const std::shared_ptr<LUNAImage>&,int,int,const std::shared_ptr<LUNAImage>&, LUNABlendingMode)> fnDrawPixmap =
 		[](const std::shared_ptr<LUNAImage>& thisPixmap, int x, int y, const std::shared_ptr<LUNAImage>& pixmap, LUNABlendingMode mode)

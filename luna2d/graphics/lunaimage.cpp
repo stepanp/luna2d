@@ -31,6 +31,7 @@ using namespace luna2d;
 
 typedef uint32_t (*ReadPixelFunc)(const std::vector<unsigned char>&, size_t);
 typedef void (*WritePixelFunc)(std::vector<unsigned char>&, size_t, uint32_t);
+typedef uint32_t (*BlendingFunc)(uint32_t dest, uint32_t source);
 
 static uint32_t ReadPixelRGBA(const std::vector<unsigned char>& data, size_t pos)
 {
@@ -67,6 +68,24 @@ static void WritePixelAlpha(std::vector<unsigned char>& data, size_t pos, uint32
 	data[pos] = color & 0xFF;
 }
 
+uint32_t BlendingNone(uint32_t dest, uint32_t source)
+{
+	return source;
+}
+
+uint32_t BlendingAlpha(uint32_t dest, uint32_t source)
+{
+	uint32_t alpha = (source & 0xFF);
+	uint32_t invAlpha = 255 - alpha;
+
+	uint32_t resultR = (((((dest >> 0) & 0xFF) * invAlpha + ((source >> 0) & 0xFF) * alpha) >> 8));
+	uint32_t resultG = (((((dest >> 8) & 0xFF) * invAlpha + ((source >> 8) & 0xFF) * alpha)) & ~0xFF);
+	uint32_t resultB = (((((dest >> 16) & 0xFF) * invAlpha + ((source >> 16) & 0xFF) * alpha) << 8) & ~0xFFFF);
+	uint32_t resultA = (((((dest >> 24) & 0xFF) * invAlpha + ((source >> 24) & 0xFF) * alpha) << 16) & ~0xFFFFFF);
+
+	return resultR | resultG | resultB | resultA;
+}
+
 static ReadPixelFunc GetReadPixelFunc(LUNAColorType colorType)
 {
 	switch(colorType)
@@ -90,6 +109,20 @@ static WritePixelFunc GetWritePixelFunc(LUNAColorType colorType)
 		return &WritePixelRGB;
 	case LUNAColorType::ALPHA:
 		return &WritePixelAlpha;
+	}
+}
+
+static BlendingFunc GetBlendingFunc(LUNABlendingMode blendingMode)
+{
+	switch(blendingMode)
+	{
+	case LUNABlendingMode::NONE:
+		return &BlendingNone;
+	case LUNABlendingMode::ALPHA:
+		return &BlendingAlpha;
+	default:
+		LUNA_LOGE("LUNAImage is not support blending mode \"%s\"", BLENDING_MODE.FromEnum(blendingMode).c_str());
+		return &BlendingNone;
 	}
 }
 
@@ -137,62 +170,6 @@ LUNAImage::LUNAImage(const std::string& filename, const LUNAImageFormat& format,
 size_t LUNAImage::CoordsToPos(int x, int y) const
 {
 	return (x + y * width) * GetBytesPerPixel(colorType);
-}
-
-// Draw another image to this image without blending
-void LUNAImage::BlendNone(int x, int y, const LUNAImage& image)
-{
-	// Line-by-line copying buffer is faster than "writePixel"/"readPixel"
-	// Use it when possible
-	if(image.GetColorType() == colorType)
-	{
-		DrawBuffer(x, y, image.GetData(), image.GetWidth(), image.GetHeight(), image.GetColorType());
-		return;
-	}
-
-	auto readPixel = GetReadPixelFunc(image.GetColorType());
-	auto writePixel = GetWritePixelFunc(colorType);
-	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
-
-	for(int j = sourceRect.x; j < sourceRect.height; j++)
-	{
-		for(int i = sourceRect.y; i < sourceRect.width; i++)
-		{
-			writePixel(data, CoordsToPos(x + i, y + j), readPixel(image.GetData(), image.CoordsToPos(i, j)));
-		}
-	}
-}
-
-// Draw another image to this image with alpha blending
-void LUNAImage::BlendAlpha(int x, int y, const LUNAImage& image)
-{
-	auto destReadPixel = GetReadPixelFunc(colorType);
-	auto sourceReadPixel = GetReadPixelFunc(image.GetColorType());
-	auto writePixel = GetWritePixelFunc(colorType);
-	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
-
-	for(int j = sourceRect.x; j < sourceRect.height; j++)
-	{
-		for(int i = sourceRect.y; i < sourceRect.width; i++)
-		{
-			size_t destPos = CoordsToPos(x + i, y + j);
-
-			uint32_t dest = destReadPixel(data, destPos);
-			uint32_t source = sourceReadPixel(image.GetData(), image.CoordsToPos(i, j));
-
-			uint32_t alpha = (source & 0xFF);
-			uint32_t invAlpha = 255 - alpha;
-
-			uint32_t resultR = (((((dest >> 0) & 0xFF) * invAlpha + ((source >> 0) & 0xFF) * alpha) >> 8));
-			uint32_t resultG = (((((dest >> 8) & 0xFF) * invAlpha + ((source >> 8) & 0xFF) * alpha)) & ~0xFF);
-			uint32_t resultB = (((((dest >> 16) & 0xFF) * invAlpha + ((source >> 16) & 0xFF) * alpha) << 8) & ~0xFFFF);
-			uint32_t resultA = (((((dest >> 24) & 0xFF) * invAlpha + ((source >> 24) & 0xFF) * alpha) << 16) & ~0xFFFFFF);
-
-			uint32_t result = resultR | resultG | resultB | resultA;
-
-			writePixel(data, destPos, result);
-		}
-	}
 }
 
 LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height)
@@ -295,13 +272,13 @@ LUNAColor LUNAImage::GetPixel(int x, int y) const
 }
 
 // Fill image with given color
-void LUNAImage::Fill(const LUNAColor& color)
+void LUNAImage::Fill(const LUNAColor& color, LUNABlendingMode blendingMode)
 {
-	FillRectangle(0, 0, width, height, color);
+	FillRectangle(0, 0, width, height, color, blendingMode);
 }
 
 // Fill rectangle on image with given color
-void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color)
+void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNAColor& color, LUNABlendingMode blendingMode)
 {
 	if(IsEmpty() || !CheckSourceRect(x, y, width, height)) return;
 
@@ -309,12 +286,37 @@ void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNACol
 	auto writePixel = GetWritePixelFunc(colorType);
 	auto sourceRect = GetSourceRect(x, y, width, height);
 
-	for(int j = sourceRect.x; j < sourceRect.height; j++)
+	if(blendingMode == LUNABlendingMode::NONE)
 	{
-		for(int i = sourceRect.y; i < sourceRect.width; i++)
+		for(int j = sourceRect.x; j < sourceRect.height; j++)
 		{
-			writePixel(data, CoordsToPos(x + i, y + j), uintColor);
+			for(int i = sourceRect.y; i < sourceRect.width; i++)
+			{
+				writePixel(data, CoordsToPos(x + i, y + j), uintColor);
+			}
 		}
+	}
+
+	else if(blendingMode == LUNABlendingMode::ALPHA)
+	{
+		auto readPixel = GetReadPixelFunc(colorType);
+		auto blend = GetBlendingFunc(blendingMode);
+
+		for(int j = sourceRect.x; j < sourceRect.height; j++)
+		{
+			for(int i = sourceRect.y; i < sourceRect.width; i++)
+			{
+				size_t pos = CoordsToPos(x + i, y + j);
+				uint32_t dest = readPixel(data, pos);
+
+				writePixel(data, pos, blend(dest, uintColor));
+			}
+		}
+	}
+
+	else
+	{
+		LUNA_LOGE("LUNAImage is not support blending mode \"%s\"", BLENDING_MODE.FromEnum(blendingMode).c_str());
 	}
 }
 
@@ -323,17 +325,31 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode
 {
 	if(IsEmpty() || image.IsEmpty() || !CheckSourceRect(x, y, image.GetWidth(), image.GetHeight())) return;
 
-	switch(blendingMode)
+	// Line-by-line copying buffer is faster than per pixel drawing
+	// Use it when possible
+	if(image.GetColorType() == colorType && blendingMode == LUNABlendingMode::NONE)
 	{
-	case LUNABlendingMode::NONE:
-		BlendNone(x, y, image);
-		break;
-	case LUNABlendingMode::ALPHA:
-		BlendAlpha(x, y, image);
-		break;
-	default:
-		LUNA_LOGE("LUNAImage is not support blending mode \"%s\"", BLENDING_MODE.FromEnum(blendingMode).c_str());
-		break;
+		DrawBuffer(x, y, image.GetData(), image.GetWidth(), image.GetHeight(), image.GetColorType());
+		return;
+	}
+
+	auto destReadPixel = GetReadPixelFunc(colorType);
+	auto sourceReadPixel = GetReadPixelFunc(image.GetColorType());
+	auto writePixel = GetWritePixelFunc(colorType);
+	auto blend = GetBlendingFunc(blendingMode);
+	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
+
+	for(int j = sourceRect.x; j < sourceRect.height; j++)
+	{
+		for(int i = sourceRect.y; i < sourceRect.width; i++)
+		{
+			size_t destPos = CoordsToPos(x + i, y + j);
+
+			uint32_t dest = destReadPixel(data, destPos);
+			uint32_t source = sourceReadPixel(image.GetData(), image.CoordsToPos(i, j));
+
+			writePixel(data, destPos, blend(dest, source));
+		}
 	}
 }
 

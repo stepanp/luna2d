@@ -67,12 +67,6 @@ private:
 	// Convert given coordinates to position in data buffer
 	size_t CoordsToPos(int x, int y) const;
 
-	// Draw another image to this image without blending
-	void BlendNone(int x, int y, const LUNAImage& image);
-
-	// Draw another image to this image with alpha blending
-	void BlendAlpha(int x, int y, const LUNAImage& image);
-
 	LUNARectInt GetSourceRect(int x, int y, int width, int height);
 
 	bool CheckSourceRect(int x, int y, int width, int height);
@@ -99,13 +93,13 @@ public:
 	LUNAColor GetPixel(int x, int y) const;
 
 	// Fill image with given color
-	void Fill(const LUNAColor& color);
+	void Fill(const LUNAColor& color, LUNABlendingMode blendingMode = LUNABlendingMode::NONE);
 
 	// Fill rectangle on image with given color
-	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color);
+	void FillRectangle(int x, int y, int width, int height, const LUNAColor& color, LUNABlendingMode blendingMode = LUNABlendingMode::NONE);
 
 	// Draw another image to this image
-	void DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode blendingMode);
+	void DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode blendingMode = LUNABlendingMode::ALPHA);
 
 	// Draw image from given buffer to this image
 	// Width and height of buffer in pixels
