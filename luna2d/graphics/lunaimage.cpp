@@ -172,7 +172,7 @@ size_t LUNAImage::CoordsToPos(int x, int y) const
 	return (x + y * width) * GetBytesPerPixel(colorType);
 }
 
-LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height)
+LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height) const
 {
 	int sourceX = x < 0 ? -x : 0;
 	int sourceY = y < 0 ? -y : 0;
@@ -185,7 +185,7 @@ LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height)
 	return LUNARectInt(sourceX, sourceY, sourceWidth, sourceHeight);
 }
 
-bool LUNAImage::CheckSourceRect(int x, int y, int width, int height)
+bool LUNAImage::CheckSourceRect(int x, int y, int width, int height) const
 {
 	return x + width > 0 && y + height > 0 && x < this->width && y < this->height;
 }
@@ -246,13 +246,16 @@ void LUNAImage::SetSize(int width, int height)
 	else
 	{
 		std::vector<unsigned char> newData(width * height * GetBytesPerPixel(colorType));
-		data.swap(newData);
+		newData.swap(data);
 
-		DrawBuffer(0, 0, newData, this->width, this->height, colorType);
+		int oldWidth = this->width;
+		int oldHeight = this->height;
+
+		this->width = width;
+		this->height = height;
+
+		DrawBuffer(0, 0, newData, oldWidth, oldHeight, colorType);
 	}
-
-	this->width = width;
-	this->height = height;
 }
 
 void LUNAImage::SetPixel(int x, int y, const LUNAColor& color)

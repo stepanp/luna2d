@@ -67,9 +67,9 @@ private:
 	// Convert given coordinates to position in data buffer
 	size_t CoordsToPos(int x, int y) const;
 
-	LUNARectInt GetSourceRect(int x, int y, int width, int height);
+	LUNARectInt GetSourceRect(int x, int y, int width, int height) const;
 
-	bool CheckSourceRect(int x, int y, int width, int height);
+	bool CheckSourceRect(int x, int y, int width, int height) const;
 
 public:
 	bool IsEmpty() const;
