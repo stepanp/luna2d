@@ -35,16 +35,21 @@ class LUNATexture : public LUNAAsset
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNATexture)
 
 public:
+	// Construct texture from image data
 	LUNATexture(const LUNAImage& image);
+
+	// Construct empty texture
+	LUNATexture(int width, int height, LUNAColorType colorType);
+
 	virtual ~LUNATexture();
 
 private:
 	int width, height;
 	LUNAColorType colorType;
-	GLuint id;
+	GLuint id = 0;
 
 private:
-	void CreateGlTexture(const std::vector<unsigned char>& data);
+	void InitFromImageData(const std::vector<unsigned char>& data);
 
 public:
 	// Get sizes in pixels
@@ -55,8 +60,12 @@ public:
 	float GetWidthPoints() const;
 	float GetHeightPoints() const;
 
+	// Get texture pixels as pixmap
+	std::shared_ptr<LUNAImage> GetPixels();
+
 	GLuint GetId() const;
 	bool IsValid() const; // Check for texture is valid. Can be invalid after loss GL context
+
 	void Bind() const;
 	void Unbind() const;
 
@@ -109,7 +118,7 @@ public:
 				LUNAImage image(reloadPath, *format, LUNAFileLocation::ASSETS);
 				if(!image.IsEmpty())
 				{
-					CreateGlTexture(image.GetData());
+					InitFromImageData(image.GetData());
 					return;
 				}
 			}

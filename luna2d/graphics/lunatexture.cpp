@@ -27,50 +27,56 @@
 
 using namespace luna2d;
 
+// Construct texture from image data
 LUNATexture::LUNATexture(const LUNAImage& image) :
 	width(image.GetWidth()),
 	height(image.GetHeight()),
 	colorType(image.GetColorType())
 {
-	CreateGlTexture(image.GetData());
+	InitFromImageData(image.GetData());
+}
+
+// Construct empty texture
+LUNATexture::LUNATexture(int width, int height, LUNAColorType colorType) :
+	width(width),
+	height(height),
+	colorType(colorType)
+{
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	GLint glColorType = ToGlColorType(colorType);
+	glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0, glColorType, GL_UNSIGNED_BYTE, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 LUNATexture::~LUNATexture()
 {
-	glDeleteTextures(1, &id);
-
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 	// Remove texture from reloadable assets list
 	if(!reloadPath.empty()) LUNAEngine::SharedAssets()->SetAssetReloadable(this, false);
 #endif
+
+	if(!id) return;
+
+	Unbind();
+	glDeleteTextures(1, &id);
 }
 
-void LUNATexture::CreateGlTexture(const std::vector<unsigned char>& data)
+void LUNATexture::InitFromImageData(const std::vector<unsigned char>& data)
 {
-	GLuint textureId;
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	GLint glColorType = GL_RGB;
-	switch(colorType)
-	{
-	case LUNAColorType::RGBA:
-		glColorType = GL_RGBA;
-		break;
-	case LUNAColorType::RGB:
-		glColorType = GL_RGB;
-		break;
-	case LUNAColorType::ALPHA:
-		glColorType = GL_ALPHA;
-		break;
-	}
-
+	GLint glColorType = ToGlColorType(colorType);
 	glTexImage2D(GL_TEXTURE_2D, 0, glColorType, width, height, 0, glColorType, GL_UNSIGNED_BYTE, &data[0]);
-
-	id = textureId;
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -95,6 +101,18 @@ float LUNATexture::GetWidthPoints() const
 float LUNATexture::GetHeightPoints() const
 {
 	return std::floor(height * LUNAEngine::SharedSizes()->GetTextureScale());
+}
+
+// Get texture pixels as pixmap
+std::shared_ptr<LUNAImage> LUNATexture::GetPixels()
+{
+	std::vector<unsigned char> data(width * height * GetBytesPerPixel(colorType));
+
+	Bind();
+	glGetTexImage(GL_TEXTURE_2D, 0, ToGlColorType(colorType), GL_UNSIGNED_BYTE, &data[0]);
+	Unbind();
+
+	return std::make_shared<LUNAImage>(width, height, colorType, data);
 }
 
 GLuint LUNATexture::GetId() const
