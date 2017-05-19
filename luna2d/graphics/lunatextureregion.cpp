@@ -75,13 +75,13 @@ float LUNATextureRegion::GetV2()
 float LUNATextureRegion::GetWidth()
 {
 	if(texture.expired()) return 0;
-	return (u2 - u1) * texture.lock()->GetWidth();
+	return std::abs(u2 - u1) * texture.lock()->GetWidth();
 }
 
 float LUNATextureRegion::GetHeight()
 {
 	if(texture.expired()) return 0;
-	return (v2 - v1) * texture.lock()->GetHeight();
+	return std::abs(v2 - v1) * texture.lock()->GetHeight();
 }
 
 // Get sizes in game points (scaled to virtual resoultion)
