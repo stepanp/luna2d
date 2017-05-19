@@ -27,6 +27,7 @@
 #include "lunashader.h"
 #include "lunacamera.h"
 #include "lunamaterial.h"
+#include "lunaframebuffer.h"
 
 // Default shaders
 #include "shaders/default.vert.h"
@@ -64,6 +65,9 @@ private:
 	// Material for current render call
 	const LUNAMaterial* curMaterial = nullptr;
 
+	// Framebuffer
+	std::shared_ptr<LUNAFrameBuffer> frameBuffer;
+
 	// Info for stats
 	int renderCalls = 0; // Count of render calls on current frame
 	int renderedVertexes = 0; // Count of rendered vertexes on current frame
@@ -91,6 +95,10 @@ public:
 
 	void EnableScissor(float x, float y, float width, float height);
 	void DisableScissor();
+
+	void SetFrameBuffer(const std::shared_ptr<LUNAFrameBuffer>& frameBuffer);
+
+	void SetDefaultViewport();
 
 	// Read screen pixels into instance of "LUNAImage"
 	std::shared_ptr<LUNAImage> ReadPixels();

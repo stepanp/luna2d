@@ -31,6 +31,7 @@
 #include "lunatext.h"
 #include "lunaparticlesystem.h"
 #include "lunacurverenderer.h"
+#include "lunaframebuffer.h"
 #include "lunapngformat.h"
 
 using namespace luna2d;
@@ -61,6 +62,7 @@ LUNAGraphics::LUNAGraphics() :
 	tblGraphics.SetField("getDefaultShader", LuaFunction(lua, &renderer, &LUNARenderer::GetDefaultShader));
 	tblGraphics.SetField("enableScissor", LuaFunction(lua, &renderer, &LUNARenderer::EnableScissor));
 	tblGraphics.SetField("disableScissor", LuaFunction(lua, &renderer, &LUNARenderer::DisableScissor));
+	tblGraphics.SetField("setFrameBuffer", LuaFunction(lua, &renderer, &LUNARenderer::SetFrameBuffer));
 	tblGraphics.SetField("enableDebugRender", LuaFunction(lua, &renderer, &LUNARenderer::EnableDebugRender));
 	tblGraphics.SetField("renderLine", LuaFunction(lua, &renderer, &LUNARenderer::RenderLine));
 
@@ -140,7 +142,7 @@ LUNAGraphics::LUNAGraphics() :
 	clsMesh.SetMethod("render", &LUNAMesh::Render);
 	tblGraphics.SetField("Mesh", clsMesh);
 
-	// Bind text renderer
+	// Bind text
 	LuaClass<LUNAText> clsText(lua);
 	clsText.SetConstructor<const std::weak_ptr<LUNAFont>&>();
 	clsText.SetMethod("getX", &LUNAText::GetX);
@@ -200,16 +202,16 @@ LUNAGraphics::LUNAGraphics() :
 	clsCurveRenderer.SetMethod("render", &LUNACurveRenderer::Render);
 	tblGraphics.SetField("CurveRenderer", clsCurveRenderer);
 
-	// Bind graphics asset types
+	// Bind texture
 	LuaClass<LUNATexture> clsTexture(lua);
 	clsTexture.SetMethod("getWidth", &LUNATexture::GetWidth);
 	clsTexture.SetMethod("getHeight", &LUNATexture::GetHeight);
 	clsTexture.SetMethod("getWidthPoints", &LUNATexture::GetWidthPoints);
 	clsTexture.SetMethod("getHeightPoints", &LUNATexture::GetHeightPoints);
 
-	LuaClass<LUNAShader> clsShader(lua);
-
+	// Bind texture region
 	LuaClass<LUNATextureRegion> clsTextureRegion(lua);
+	clsTextureRegion.SetConstructor<const std::weak_ptr<LUNATexture>&,int,int,int,int>();
 	clsTextureRegion.SetMethod("getTexture", &LUNATextureRegion::GetTexture);
 	clsTextureRegion.SetMethod("getWidth", &LUNATextureRegion::GetWidth);
 	clsTextureRegion.SetMethod("getHeight", &LUNATextureRegion::GetHeight);
@@ -219,12 +221,18 @@ LUNAGraphics::LUNAGraphics() :
 	clsTextureRegion.SetMethod("getV1", &LUNATextureRegion::GetV1);
 	clsTextureRegion.SetMethod("getU2", &LUNATextureRegion::GetU2);
 	clsTextureRegion.SetMethod("getV2", &LUNATextureRegion::GetV2);
+	tblGraphics.SetField("TextureRegion", clsTextureRegion);
 
+	// Bind shader
+	LuaClass<LUNAShader> clsShader(lua);
+
+	// Bind font
 	LuaClass<LUNAFont> clsFont(lua);
 	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
 	clsFont.SetMethod("getStringWidth", &LUNAFont::GetStringWidth);
 	clsFont.SetMethod("getStringHeight", &LUNAFont::GetStringHeight);
 
+	// Bind pixmap
 	LuaClass<LUNAImage> clsImage(lua);
 	clsImage.SetMethod("getWidth", &LUNAImage::GetWidth);
 	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
@@ -235,7 +243,6 @@ LUNAGraphics::LUNAGraphics() :
 	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
 	clsImage.SetMethod("flipVertically", &LUNAImage::FlipVertically);
 	clsImage.SetMethod("flipHorizontally", &LUNAImage::FlipHorizontally);
-	tblGraphics.SetField("Pixmap", clsImage);
 
 	std::function<void(const std::shared_ptr<LUNAImage>&, const LUNAColor&, LuaAny)> fnFill =
 		[](const std::shared_ptr<LUNAImage>& thisPixmap, const LUNAColor& color, LuaAny blendingMode)
@@ -277,6 +284,31 @@ LUNAGraphics::LUNAGraphics() :
 		return image;
 	};
 	clsImage.SetExtensionConstructor(fnImageConstruct);
+	tblGraphics.SetField("Pixmap", clsImage);
+
+	// Bind framebuffer
+	LuaClass<LUNAFrameBuffer> clsFrameBuffer(lua);
+	clsFrameBuffer.SetConstructor<int,int>();
+	clsFrameBuffer.SetMethod("getViewportWidth", &LUNAFrameBuffer::GetViewportWidth);
+	clsFrameBuffer.SetMethod("getViewportHeight", &LUNAFrameBuffer::GetViewportHeight);
+	clsFrameBuffer.SetMethod("getTexture", &LUNAFrameBuffer::GetTexture);
+	clsFrameBuffer.SetMethod("getTextureRegion", &LUNAFrameBuffer::GetTextureRegion);
+
+	std::function<std::shared_ptr<LUNAFrameBuffer>()> fnFrameBufferConstruct = []() -> std::shared_ptr<LUNAFrameBuffer>
+	{
+		auto sizes = LUNAEngine::SharedSizes();
+		return std::make_shared<LUNAFrameBuffer>(sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight());
+	};
+	clsFrameBuffer.SetField("fullscreen", LuaFunction(lua, fnFrameBufferConstruct));
+
+	std::function<void(const std::shared_ptr<LUNAFrameBuffer>&,const std::string&)> fnFrameBufferSave =
+		[](const std::shared_ptr<LUNAFrameBuffer>& thisFramebuffer, const std::string& filename)
+	{
+		auto pixmap = thisFramebuffer->GetPixels();
+		pixmap->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+	};
+	clsFrameBuffer.SetExtensionMethod("save", fnFrameBufferSave);
+	tblGraphics.SetField("FrameBuffer", clsFrameBuffer);
 
 	tblGraphics.MakeReadOnly();
 	tblLuna.SetField("graphics", tblGraphics);

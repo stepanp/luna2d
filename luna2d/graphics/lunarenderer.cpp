@@ -40,7 +40,7 @@ LUNARenderer::LUNARenderer()
 	primitivesShader = std::make_shared<LUNAShader>(PRIMITIVES_VERT_SHADER, PRIMITIVES_FRAG_SHADER);
 	fontShader = std::make_shared<LUNAShader>(FONT_VERT_SHADER, FONT_FRAG_SHADER);
 
-	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
+	SetDefaultViewport();
 }
 
 void LUNARenderer::SetVertex(float u, float v, float x, float y, const LUNAColor& color)
@@ -124,6 +124,21 @@ void LUNARenderer::DisableScissor()
 	Render();
 
 	glDisable(GL_SCISSOR_TEST);
+}
+
+void LUNARenderer::SetFrameBuffer(const std::shared_ptr<LUNAFrameBuffer>& frameBuffer)
+{
+	if(inProgress) Render();
+
+	if(this->frameBuffer) this->frameBuffer->Unbind();
+	if(frameBuffer) frameBuffer->Bind();
+
+	this->frameBuffer = frameBuffer;
+}
+
+void LUNARenderer::SetDefaultViewport()
+{
+	glViewport(0, 0, LUNAEngine::SharedSizes()->GetPhysicalScreenWidth(), LUNAEngine::SharedSizes()->GetPhysicalScreenHeight());
 }
 
 // Read screen pixels into instance of "LUNAImage"
