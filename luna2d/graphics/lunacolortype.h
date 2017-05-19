@@ -26,6 +26,7 @@
 #include "lunaengine.h"
 #include "lunastringenum.h"
 #include "lunalua.h"
+#include "lunagl.h"
 
 namespace luna2d{
 
@@ -65,5 +66,8 @@ struct LuaStack<LUNAColorType>
 
 // Get number of bytes per pixel for given color type
 size_t GetBytesPerPixel(LUNAColorType colorType);
+
+// Convert to GL color type
+GLint ToGlColorType(LUNAColorType colorType);
 
 }

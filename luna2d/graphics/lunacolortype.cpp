@@ -37,5 +37,23 @@ size_t luna2d::GetBytesPerPixel(LUNAColorType colorType)
 	case LUNAColorType::ALPHA:
 		return 1;
 	}
+
+}
+
+// Convert to GL color type
+GLint luna2d::ToGlColorType(LUNAColorType colorType)
+{
+	switch(colorType)
+	{
+	case LUNAColorType::RGBA:
+		return GL_RGBA;
+		break;
+	case LUNAColorType::RGB:
+		return GL_RGB;
+		break;
+	case LUNAColorType::ALPHA:
+		return GL_ALPHA;
+		break;
+	}
 }
 
