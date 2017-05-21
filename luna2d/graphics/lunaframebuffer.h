@@ -39,15 +39,17 @@ public:
 
 private:
 	GLuint id = 0;
+	GLint prevId = 0;
 	int viewportWidth, viewportHeight;
 	std::shared_ptr<LUNATexture> texture;
 
 public:
+	GLuint GetId();
 	int GetViewportWidth();
 	int GetViewportHeight();
 	std::shared_ptr<LUNATexture> GetTexture();
 	std::shared_ptr<LUNATextureRegion> GetTextureRegion();
-	std::shared_ptr<LUNAImage> GetPixels();
+	std::shared_ptr<LUNAImage> ReadPixels();
 	void Bind();
 	void Unbind();
 

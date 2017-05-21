@@ -33,13 +33,16 @@ LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight) :
 	texture(std::make_shared<LUNATexture>(math::NearestPowerOfTwo(viewportWidth), math::NearestPowerOfTwo(viewportHeight),
 		LUNAColorType::RGB))
 {
+	GLint prevId = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
+
 	glGenFramebuffers(1, &id);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->GetId(), 0);
 
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) LUNA_LOGE("Failed to create GL framebuffer");
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
 }
 
 LUNAFrameBuffer::~LUNAFrameBuffer()
@@ -48,6 +51,11 @@ LUNAFrameBuffer::~LUNAFrameBuffer()
 
 	Unbind();
 	glDeleteFramebuffers(1, &id);
+}
+
+GLuint LUNAFrameBuffer::GetId()
+{
+	return id;
 }
 
 int LUNAFrameBuffer::GetViewportWidth()
@@ -76,24 +84,34 @@ std::shared_ptr<LUNATextureRegion> LUNAFrameBuffer::GetTextureRegion()
 	return std::make_shared<LUNATextureRegion>(texture, u1, v1, u2, v2);
 }
 
-std::shared_ptr<LUNAImage> LUNAFrameBuffer::GetPixels()
+std::shared_ptr<LUNAImage> LUNAFrameBuffer::ReadPixels()
 {
-	auto pixmap = texture->GetPixels();
+	std::vector<unsigned char> data(viewportWidth * viewportHeight * GetBytesPerPixel(LUNAColorType::RGBA));
 
-	pixmap->SetSize(viewportWidth, viewportHeight);
+	GLint prevId = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, id);
+	glViewport(0, 0, viewportWidth, viewportHeight);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, viewportWidth, viewportHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
+	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();
+
+	auto pixmap = std::make_shared<LUNAImage>(viewportWidth, viewportHeight, LUNAColorType::RGBA, data);
 	pixmap->FlipVertically();
-
 	return pixmap;
 }
 
 void LUNAFrameBuffer::Bind()
 {
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &this->prevId);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 	glViewport(0, 0, viewportWidth, viewportHeight);
 }
 
 void LUNAFrameBuffer::Unbind()
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, this->prevId);
 	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();
 }

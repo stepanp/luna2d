@@ -65,7 +65,7 @@ private:
 	// Material for current render call
 	const LUNAMaterial* curMaterial = nullptr;
 
-	// Framebuffer
+	// Frame buffer
 	std::shared_ptr<LUNAFrameBuffer> frameBuffer;
 
 	// Info for stats

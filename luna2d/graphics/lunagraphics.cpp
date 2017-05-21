@@ -304,7 +304,7 @@ LUNAGraphics::LUNAGraphics() :
 	std::function<void(const std::shared_ptr<LUNAFrameBuffer>&,const std::string&)> fnFrameBufferSave =
 		[](const std::shared_ptr<LUNAFrameBuffer>& thisFramebuffer, const std::string& filename)
 	{
-		auto pixmap = thisFramebuffer->GetPixels();
+		auto pixmap = thisFramebuffer->ReadPixels();
 		pixmap->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
 	};
 	clsFrameBuffer.SetExtensionMethod("save", fnFrameBufferSave);
