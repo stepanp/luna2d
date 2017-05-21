@@ -49,7 +49,6 @@ LUNAFrameBuffer::~LUNAFrameBuffer()
 {
 	if(!id) return;
 
-	Unbind();
 	glDeleteFramebuffers(1, &id);
 }
 

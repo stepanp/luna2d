@@ -56,15 +56,12 @@ LUNATexture::LUNATexture(int width, int height, LUNAColorType colorType) :
 
 LUNATexture::~LUNATexture()
 {
+	glDeleteTextures(1, &id);
+
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 	// Remove texture from reloadable assets list
 	if(!reloadPath.empty()) LUNAEngine::SharedAssets()->SetAssetReloadable(this, false);
 #endif
-
-	if(!id) return;
-
-	Unbind();
-	glDeleteTextures(1, &id);
 }
 
 void LUNATexture::InitFromImageData(const std::vector<unsigned char>& data)
