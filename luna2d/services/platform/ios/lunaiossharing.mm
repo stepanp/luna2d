@@ -23,6 +23,7 @@
 
 #include "lunaiossharing.h"
 #include "lunansstring.h"
+#include "lunaiosfiles.h"
 #include "lunaiosservices.h"
 #import "lunaiossharingprotocol.h"
 
@@ -85,7 +86,9 @@ void LUNAIosDefaultSharing::Text(const std::string& text)
 // Image should be located in "LUNAFileLocation::APP_FOLDER"
 void LUNAIosDefaultSharing::Image(const std::string& filename, const std::string& text)
 {
-	NSArray* dataToShare = @[ToNsString(text)];
+	std::string imagePath = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
+	
+	NSArray* dataToShare = @[ToNsString(text), [UIImage imageNamed:ToNsString(imagePath)]];
 	DoShare(dataToShare);
 }
 
