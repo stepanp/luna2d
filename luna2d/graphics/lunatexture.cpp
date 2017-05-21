@@ -103,18 +103,6 @@ float LUNATexture::GetHeightPoints() const
 	return std::floor(height * LUNAEngine::SharedSizes()->GetTextureScale());
 }
 
-// Get texture pixels as pixmap
-std::shared_ptr<LUNAImage> LUNATexture::GetPixels()
-{
-	std::vector<unsigned char> data(width * height * GetBytesPerPixel(colorType));
-
-	Bind();
-	glGetTexImage(GL_TEXTURE_2D, 0, ToGlColorType(colorType), GL_UNSIGNED_BYTE, &data[0]);
-	Unbind();
-
-	return std::make_shared<LUNAImage>(width, height, colorType, data);
-}
-
 GLuint LUNATexture::GetId() const
 {
 	return id;

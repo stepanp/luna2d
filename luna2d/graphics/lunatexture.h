@@ -60,9 +60,6 @@ public:
 	float GetWidthPoints() const;
 	float GetHeightPoints() const;
 
-	// Get texture pixels as pixmap
-	std::shared_ptr<LUNAImage> GetPixels();
-
 	GLuint GetId() const;
 	bool IsValid() const; // Check for texture is valid. Can be invalid after loss GL context
 
