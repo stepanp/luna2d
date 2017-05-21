@@ -34,15 +34,9 @@ LUNAIosFiles::LUNAIosFiles()
 }
 
 // Convert given path in a path relative to root directory of given location
-NSString* LUNAIosFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
+std::string LUNAIosFiles::GetPathInLocation(const std::string& path, LUNAFileLocation location)
 {
-	std::string ret = GetRootFolder(location);
-	
-	// Remove slashes at end of path, because NSBundle pathForResource cannot find path with slash at end
-	if(path != "/") ret = ret + path;
-	if(ret[ret.length() - 1] == '/') ret = ret.substr(0, ret.length() - 1);
-	
-	return ToNsString(ret);
+	return GetRootFolder(location) + path;
 }
 
 // Get root folder for file location
@@ -51,112 +45,85 @@ std::string LUNAIosFiles::GetRootFolder(LUNAFileLocation location)
 	switch(location)
 	{
 	case LUNAFileLocation::ASSETS:
-		return "game/";
+		return FromNsString([[NSBundle mainBundle] pathForResource:@"game" ofType:nil]) + "/";
+	case LUNAFileLocation::APP_FOLDER:
+	{
+		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+		return FromNsString([paths objectAtIndex:0]) + "/";
 	}
-	
-	return "";
+	default:
+		return "";
+	}
 }
 
 // Check for given path is file
 bool LUNAIosFiles::IsFile(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
-	{
-		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-		BOOL isDir = false;
-		
-		return [fileManager fileExistsAtPath:fullPath isDirectory:&isDir] && !isDir;
-	}
+	NSString* fullPath = ToNsString(GetPathInLocation(path, location));
+	BOOL isDir = false;
 	
-	return false;
+	return [fileManager fileExistsAtPath:fullPath isDirectory:&isDir] && !isDir;
 }
 
 // Check for given path is directory
 bool LUNAIosFiles::IsDirectory(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
-	{
-		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-		BOOL isDir = false;
-		
-		return [fileManager fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
-	}
+	NSString* fullPath = ToNsString(GetPathInLocation(path, location));
+	BOOL isDir = false;
 	
-	return false;
+	return [fileManager fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
 }
 
 // Check for path is exists
 bool LUNAIosFiles::IsExists(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
-	{
-		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-		return [fileManager fileExistsAtPath:fullPath];
-	}
-	
-	return false;
+	return [fileManager fileExistsAtPath:ToNsString(GetPathInLocation(path, location))];
 }
 
 // Get list of files and subdirectories in given directory
 std::vector<std::string> LUNAIosFiles::GetFileList(const std::string& path, LUNAFileLocation location)
 {
+	if(!IsDirectory(path, location)) return {}; // Return empty file list
+	
 	std::vector<std::string> ret;
 	
-	if(!IsDirectory(path, location)) return std::move(ret); // Return empty file list
+	NSString* fullPath = ToNsString(GetPathInLocation(path, location));
+	NSArray* fileUrls = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:fullPath]
+		includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
+		options:NSDirectoryEnumerationSkipsHiddenFiles
+		error:nil];
 	
-	if(location == LUNAFileLocation::ASSETS)
+	for(NSURL* url in fileUrls)
 	{
-		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-		NSArray* fileUrls = [fileManager contentsOfDirectoryAtURL:[NSURL fileURLWithPath:fullPath]
-			includingPropertiesForKeys:[NSArray arrayWithObject:NSURLNameKey]
-			options:NSDirectoryEnumerationSkipsHiddenFiles
-			error:nil];
+		NSNumber* isDir;
+		BOOL result = [url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:nil];
+		std::string name = [[url lastPathComponent] UTF8String];
 		
-		for(NSURL* url in fileUrls)
-		{
-			NSNumber* isDir;
-			BOOL result = [url getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:nil];
-			std::string name = [[url lastPathComponent] UTF8String];
-			
-			if(result && [isDir boolValue]) ret.push_back(name + "/");
-			else ret.push_back(name);
-		}
-		
-		return std::move(ret);
+		if(result && [isDir boolValue]) ret.push_back(name + "/");
+		else ret.push_back(name);
 	}
-
-	return std::move(ret);
+	
+	return ret;
 }
 
 // Get size of file
 ssize_t LUNAIosFiles::GetFileSize(const std::string& path, LUNAFileLocation location)
 {
-	if(location == LUNAFileLocation::ASSETS)
-	{
-		NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-		FILE* file = fopen([fullPath UTF8String], "r");
-		if(!file) return -1;
-		
-		fseek(file, 0, SEEK_END);
-		ssize_t size = ftell(file);
-		fclose(file);
-		
-		return size;
-	}
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(!file) return -1;
 	
-	return -1;
+	fseek(file, 0, SEEK_END);
+	ssize_t size = ftell(file);
+	fclose(file);
+	
+	return size;
 }
 
 // Read all file data
 std::vector<unsigned char> LUNAIosFiles::ReadFile(const std::string &path, LUNAFileLocation location)
 {
-	std::vector<unsigned char> ret;
-	
-	if(!IsFile(path, location)) return std::move(ret);
-	
-	NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-	FILE* file = fopen([fullPath UTF8String], "r");
-	if(!file) return std::move(ret);
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
+	if(!file) return {};
 	
 	// Get file size
 	fseek(file, 0, SEEK_END);
@@ -164,20 +131,18 @@ std::vector<unsigned char> LUNAIosFiles::ReadFile(const std::string &path, LUNAF
 	fseek(file, 0, SEEK_SET);
 	
 	// Read file
+	std::vector<unsigned char> ret;
 	ret.resize(size);
 	fread(&ret[0], sizeof(unsigned char), size, file);
 	fclose(file);
 	
-	return std::move(ret);
+	return ret;
 }
 
 // Read all file data as string
 std::string LUNAIosFiles::ReadFileToString(const std::string &path, LUNAFileLocation location)
 {
-	if(!IsFile(path, location)) return "";
-	
-	NSString* fullPath = [[NSBundle mainBundle] pathForResource:GetPathInLocation(path, location) ofType:nil];
-	FILE* file = fopen([fullPath UTF8String], "r");
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "r");
 	if(!file) return "";
 	
 	// Get file size
@@ -191,21 +156,37 @@ std::string LUNAIosFiles::ReadFileToString(const std::string &path, LUNAFileLoca
 	fread(&ret[0], sizeof(char), size, file);
 	fclose(file);
 	
-	return std::move(ret);
+	return ret;
 }
 
 // Write given byte buffer to file
 bool LUNAIosFiles::WriteFile(const std::string &path, const std::vector<unsigned char> &data, LUNAFileLocation location)
 {
-	LUNA_LOGE("Method LUNAIosFiles::WriteFile is not implemented");
-	return false;
+	// Assets folder is readonly
+	if(location == LUNAFileLocation::ASSETS) return false;
+	
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "wb");
+	if(!file) return false;
+	
+	fwrite(data.data(), sizeof(unsigned char), data.size(), file);
+	fclose(file);
+	
+	return true;
 }
 
 // Write given text data to file
 bool LUNAIosFiles::WriteFileFromString(const std::string& path, const std::string& data, LUNAFileLocation location)
 {
-	LUNA_LOGE("Method LUNAIosFiles::WriteFileFromString is not implemented");
-	return false;
+	// Assets folder is readonly
+	if(location == LUNAFileLocation::ASSETS) return false;
+	
+	FILE* file = fopen(GetPathInLocation(path, location).c_str(), "w");
+	if(!file) return false;
+	
+	fwrite(data.data(), sizeof(char), data.size(), file);
+	fclose(file);
+	
+	return true;
 }
 
 // Read all data from file compressed using "Deflate" algorithm

@@ -41,7 +41,7 @@ private:
 	
 private:
 	// Convert given path in a path relative to root directory of given location
-	NSString* GetPathInLocation(const std::string& path, LUNAFileLocation location);
+	std::string GetPathInLocation(const std::string& path, LUNAFileLocation location);
 	
 public:
 	// Get root folder for file location
