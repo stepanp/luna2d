@@ -242,6 +242,9 @@ void LUNAImage::SetSize(int width, int height)
 	if(this->width == width)
 	{
 		data.resize(width * height * GetBytesPerPixel(colorType));
+
+		this->width = width;
+		this->height = height;
 	}
 	else
 	{
