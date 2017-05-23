@@ -234,6 +234,7 @@ LUNAGraphics::LUNAGraphics() :
 
 	// Bind pixmap
 	LuaClass<LUNAImage> clsImage(lua);
+	clsImage.SetConstructor<int,int,LUNAColorType>();
 	clsImage.SetMethod("getWidth", &LUNAImage::GetWidth);
 	clsImage.SetMethod("getHeight", &LUNAImage::GetHeight);
 	clsImage.SetMethod("getColorType", &LUNAImage::GetColorType);
@@ -276,14 +277,14 @@ LUNAGraphics::LUNAGraphics() :
 	};
 	clsImage.SetExtensionMethod("save", fnSave);
 
-	std::function<std::shared_ptr<LUNAImage>(const std::string&)> fnImageConstruct =
+	std::function<std::shared_ptr<LUNAImage>(const std::string&)> fnImageFromFile =
 		[](const std::string& filename) -> std::shared_ptr<LUNAImage>
 	{
 		auto image = std::make_shared<LUNAImage>(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
 		if(image->IsEmpty()) return nullptr;
 		return image;
 	};
-	clsImage.SetExtensionConstructor(fnImageConstruct);
+	clsImage.SetField("fromFile", LuaFunction(lua, fnImageFromFile));
 	tblGraphics.SetField("Pixmap", clsImage);
 
 	// Bind framebuffer
