@@ -50,7 +50,8 @@ void LUNAIosSharingService::Text(const std::string& text)
 // Image should be located in "LUNAFileLocation::APP_FOLDER"
 void LUNAIosSharingService::Image(const std::string& filename, const std::string& text)
 {
-	[service image: ToNsString(filename) text: ToNsString(text)];
+	std::string imagePath = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
+	[service image: ToNsString(imagePath) text: ToNsString(text)];
 }
 
 
