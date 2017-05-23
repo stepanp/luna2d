@@ -293,6 +293,7 @@ LUNAGraphics::LUNAGraphics() :
 	clsFrameBuffer.SetMethod("getViewportHeight", &LUNAFrameBuffer::GetViewportHeight);
 	clsFrameBuffer.SetMethod("getTexture", &LUNAFrameBuffer::GetTexture);
 	clsFrameBuffer.SetMethod("getTextureRegion", &LUNAFrameBuffer::GetTextureRegion);
+	clsFrameBuffer.SetMethod("readPixels", &LUNAFrameBuffer::ReadPixels);
 
 	std::function<std::shared_ptr<LUNAFrameBuffer>()> fnFrameBufferConstruct = []() -> std::shared_ptr<LUNAFrameBuffer>
 	{
@@ -300,14 +301,6 @@ LUNAGraphics::LUNAGraphics() :
 		return std::make_shared<LUNAFrameBuffer>(sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight());
 	};
 	clsFrameBuffer.SetField("fullscreen", LuaFunction(lua, fnFrameBufferConstruct));
-
-	std::function<void(const std::shared_ptr<LUNAFrameBuffer>&,const std::string&)> fnFrameBufferSave =
-		[](const std::shared_ptr<LUNAFrameBuffer>& thisFramebuffer, const std::string& filename)
-	{
-		auto pixmap = thisFramebuffer->ReadPixels();
-		pixmap->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
-	};
-	clsFrameBuffer.SetExtensionMethod("save", fnFrameBufferSave);
 	tblGraphics.SetField("FrameBuffer", clsFrameBuffer);
 
 	tblGraphics.MakeReadOnly();
