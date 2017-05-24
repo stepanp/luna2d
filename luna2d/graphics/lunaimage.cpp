@@ -381,8 +381,11 @@ void LUNAImage::DrawRawBuffer(int x, int y,
 	int sourceWidth = bufferWidth - sourceX;
 	int sourceHeight = bufferHeight - sourceY;
 
-	if(width - x < sourceWidth) sourceWidth = width - x;
-	if(height - y < sourceHeight) sourceHeight = height - y;
+	int destX = x < 0 ? 0 : x;
+	int destY = y < 0 ? 0 : y;
+
+	if(width - destX < sourceWidth) sourceWidth = width - destX;
+	if(height - destY < sourceHeight) sourceHeight = height - destY;
 
 	if(sourceWidth <= 0 || sourceHeight <= 0) return;
 
