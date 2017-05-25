@@ -35,9 +35,9 @@ namespace luna2d{
 //---------------------------
 enum class LUNAColorType
 {
-	RGB = 1,
-	RGBA = 2,
-	ALPHA = 3,
+	RGB,
+	RGBA,
+	ALPHA,
 };
 
 const LUNAStringEnum<LUNAColorType> COLOR_TYPE =

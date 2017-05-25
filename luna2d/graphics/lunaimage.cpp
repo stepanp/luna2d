@@ -179,8 +179,11 @@ LUNARectInt LUNAImage::GetSourceRect(int x, int y, int width, int height) const
 	int sourceWidth = width - sourceX;
 	int sourceHeight = height - sourceY;
 
-	if(this->width - x < sourceWidth) sourceWidth = this->width - x;
-	if(this->height - y < sourceHeight) sourceHeight = this->height - y;
+	int destX = x < 0 ? 0 : x;
+	int destY = y < 0 ? 0 : y;
+
+	if(this->width - destX < sourceWidth) sourceWidth = this->width - destX;
+	if(this->height - destY < sourceHeight) sourceHeight = this->height - destY;
 
 	return LUNARectInt(sourceX, sourceY, sourceWidth, sourceHeight);
 }
@@ -294,9 +297,9 @@ void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNACol
 
 	if(blendingMode == LUNABlendingMode::NONE)
 	{
-		for(int j = sourceRect.x; j < sourceRect.height; j++)
+		for(int j = sourceRect.y; j < sourceRect.y + sourceRect.height; j++)
 		{
-			for(int i = sourceRect.y; i < sourceRect.width; i++)
+			for(int i = sourceRect.x; i < sourceRect.x + sourceRect.width; i++)
 			{
 				writePixel(data, CoordsToPos(x + i, y + j), uintColor);
 			}
@@ -308,9 +311,9 @@ void LUNAImage::FillRectangle(int x, int y, int width, int height, const LUNACol
 		auto readPixel = GetReadPixelFunc(colorType);
 		auto blend = GetBlendingFunc(blendingMode);
 
-		for(int j = sourceRect.x; j < sourceRect.height; j++)
+		for(int j = sourceRect.y; j < sourceRect.y + sourceRect.height; j++)
 		{
-			for(int i = sourceRect.y; i < sourceRect.width; i++)
+			for(int i = sourceRect.x; i < sourceRect.x + sourceRect.width; i++)
 			{
 				size_t pos = CoordsToPos(x + i, y + j);
 				uint32_t dest = readPixel(data, pos);
@@ -345,9 +348,9 @@ void LUNAImage::DrawImage(int x, int y, const LUNAImage& image, LUNABlendingMode
 	auto blend = GetBlendingFunc(blendingMode);
 	auto sourceRect = GetSourceRect(x, y, image.GetWidth(), image.GetHeight());
 
-	for(int j = sourceRect.x; j < sourceRect.height; j++)
+	for(int j = sourceRect.y; j < sourceRect.y + sourceRect.height; j++)
 	{
-		for(int i = sourceRect.y; i < sourceRect.width; i++)
+		for(int i = sourceRect.x; i < sourceRect.x + sourceRect.width; i++)
 		{
 			size_t destPos = CoordsToPos(x + i, y + j);
 
