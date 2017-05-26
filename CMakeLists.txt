@@ -112,6 +112,11 @@ list(REMOVE_ITEM THIRDPARTY_SOURCES ${THIRDPARTY_DIR}/lua/luac.c)
 aux_source_directory(${THIRDPARTY_DIR}/libpng/arm THIRDPARTY_SOURCES)
 aux_source_directory(${THIRDPARTY_DIR}/libpng THIRDPARTY_SOURCES)
 
+# libjpeg
+set(LIBJPEG_PATH ${THIRDPARTY_DIR}/libjpeg)
+include(${LIBJPEG_PATH}/libjpeg.cmake)
+list(APPEND THIRDPARTY_SOURCES ${LIBJPEG_SOURCES})
+
 # Box2D
 aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision THIRDPARTY_SOURCES)
 aux_source_directory(${THIRDPARTY_DIR}/Box2D/Collision/Shapes THIRDPARTY_SOURCES)
