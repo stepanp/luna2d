@@ -23,6 +23,7 @@
 
 #include "lunapngformat.h"
 #include "lunalog.h"
+#include <png.h>
 
 using namespace luna2d;
 

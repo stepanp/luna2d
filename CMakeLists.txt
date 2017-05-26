@@ -49,6 +49,7 @@ set(LUNA2D_DIRS
 	${LUNA2D_DIR}/graphics
 	${LUNA2D_DIR}/graphics/shaders
 	${LUNA2D_DIR}/graphics/particles
+	${LUNA2D_DIR}/graphics/imageformats
 	${LUNA2D_DIR}/lua
 	${LUNA2D_DIR}/lua/scripts
 	${LUNA2D_DIR}/math

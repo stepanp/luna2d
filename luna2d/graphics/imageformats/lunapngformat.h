@@ -24,7 +24,6 @@
 #pragma once
 
 #include "lunaimageformat.h"
-#include <png.h>
 
 namespace luna2d{
 
