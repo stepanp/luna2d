@@ -104,7 +104,7 @@ bool LUNAJpegFormat::Encode(const std::vector<unsigned char>& inData, std::vecto
 		info->dest->next_output_byte = dest->data->data() + oldSize;
 		info->dest->free_in_buffer = JPEG_OUTPUT_BUFFER_SIZE;
 
-		return true;
+		return TRUE;
 	};
 
 	info.image_width = width;
@@ -128,8 +128,8 @@ bool LUNAJpegFormat::Encode(const std::vector<unsigned char>& inData, std::vecto
 	}
 
 	jpeg_set_defaults(&info);
-	jpeg_set_quality(&info, DEFAULT_JPEG_QUALITY, true);
-	jpeg_start_compress(&info, true);
+	jpeg_set_quality(&info, DEFAULT_JPEG_QUALITY, TRUE);
+	jpeg_start_compress(&info, TRUE);
 
 	if(colorType == LUNAColorType::RGBA)
 	{
