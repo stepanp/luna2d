@@ -33,6 +33,7 @@
 #include "lunacurverenderer.h"
 #include "lunaframebuffer.h"
 #include "lunapngformat.h"
+#include "lunajpegformat.h"
 
 using namespace luna2d;
 
@@ -273,7 +274,14 @@ LUNAGraphics::LUNAGraphics() :
 	std::function<void(const std::shared_ptr<LUNAImage>&,const std::string&)> fnSave =
 		[](const std::shared_ptr<LUNAImage>& thisPixmap, const std::string& filename)
 	{
-		thisPixmap->Save(filename, LUNAPngFormat(), LUNAFileLocation::APP_FOLDER);
+		std::string ext = LUNAEngine::SharedFiles()->GetExtension(filename);
+		std::unique_ptr<LUNAImageFormat> format;
+
+		if(ext == "png") format = std::unique_ptr<LUNAPngFormat>(new LUNAPngFormat());
+		else if(ext == "jpg" || ext == "jpeg") format = std::unique_ptr<LUNAJpegFormat>(new LUNAJpegFormat());
+		else LUNA_LOG("Cannot save pixmap. Image format \"%s\" is unsupoorted");
+
+		thisPixmap->Save(filename, *format, LUNAFileLocation::APP_FOLDER);
 	};
 	clsImage.SetExtensionMethod("save", fnSave);
 
