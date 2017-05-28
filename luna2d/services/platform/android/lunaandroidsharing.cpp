@@ -23,33 +23,79 @@
 
 #include "lunaandroidsharing.h"
 #include "lunafiles.h"
+#include "lunalog.h"
 
 using namespace luna2d;
 
-LUNAAndroidSharing::LUNAAndroidSharing()
+LUNAAndroidSharingService::LUNAAndroidSharingService(const std::string& javaClasspath)
 {
+	// Convert classpath like "com.package.Class" 
+	// to internal JNI format like "com/package/Class"
+	auto jniClasspath = javaClasspath;
+	std::replace(jniClasspath.begin(), jniClasspath.end(), '.', '/');
+
 	jni::Env env;
 
 	// Get ref to java wrapper class
-	jclass localRef = env->FindClass("com/stepanp/luna2d/services/LunaSharing");
-	javaSharing = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
-	env->DeleteLocalRef(localRef);
+	jclass localClassRef = env->FindClass(jniClasspath.c_str());
+	if(env->ExceptionCheck()) 
+	{
+		env->ExceptionClear();
+		LUNA_LOGE("Cannot load sharing serivce. Java class \"%s\" not found", javaClasspath.c_str());
+		return;
+	}
+
+	javaClass = reinterpret_cast<jclass>(env->NewGlobalRef(localClassRef));
+	env->DeleteLocalRef(localClassRef);
+
+	// Make new object of java wrapper class
+	jmethodID constructor = env->GetMethodID(javaClass, "<init>", "()V");
+	jobject localObjRef = env->NewObject(javaClass, constructor);
+	javaObject = reinterpret_cast<jobject>(env->NewGlobalRef(localObjRef));
+	env->DeleteLocalRef(localObjRef);
 
 	// Get java wrapper method ids
-	javaText = env->GetStaticMethodID(javaSharing, "text", "(Ljava/lang/String;)V");
-	javaImage = env->GetStaticMethodID(javaSharing, "image", "(Ljava/lang/String;Ljava/lang/String;)V");
+	javaGetName = env->GetMethodID(javaClass, "getName", "()Ljava/lang/String;");
+	javaText = env->GetMethodID(javaClass, "text", "(Ljava/lang/String;)V");
+	javaImage = env->GetMethodID(javaClass, "image", "(Ljava/lang/String;Ljava/lang/String;)V");
+
+	isLoaded = true;
 }
 
-// Share given text using system sharing dialog
-void LUNAAndroidSharing::Text(const std::string& text)
+// Check for java part of sharing service was loaded successufully
+bool LUNAAndroidSharingService::IsLoaded()
 {
-	jni::Env()->CallStaticVoidMethod(javaSharing, javaText, jni::ToJString(text).j_str());
+	return isLoaded;
 }
 
-// Share given image witg given text using system sharing dialog
+// Get name of sharing service. Should be in lower case
+std::string LUNAAndroidSharingService::GetName()
+{
+	return jni::FromJString(jni::Env()->CallObjectMethod(javaObject, javaGetName));
+}
+
+// Share given text
+void LUNAAndroidSharingService::Text(const std::string& text)
+{
+	jni::Env()->CallVoidMethod(javaObject, javaText, jni::ToJString(text).j_str());
+}
+
+// Share given image with given text
 // Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAAndroidSharing::Image(const std::string& filename, const std::string& text)
+void LUNAAndroidSharingService::Image(const std::string& filename, const std::string& text)
 {
 	std::string path = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
-	jni::Env()->CallStaticVoidMethod(javaSharing, javaImage, jni::ToJString(path).j_str(), jni::ToJString(text).j_str());
+	jni::Env()->CallVoidMethod(javaObject, javaImage, jni::ToJString(path).j_str(), jni::ToJString(text).j_str());
+}
+
+
+// Load service instance by name
+std::shared_ptr<LUNASharingService> LUNAAndroidSharing::LoadService(const std::string& name)
+{
+	std::string classpath = name == "" ? "com.stepanp.luna2d.services.LunaDefaultSharing" : name;
+	auto service = std::make_shared<LUNAAndroidSharingService>(classpath);
+
+	if(!service) return nullptr;
+
+	return service;
 }

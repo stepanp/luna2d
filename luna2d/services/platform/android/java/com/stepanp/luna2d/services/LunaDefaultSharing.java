@@ -26,14 +26,19 @@ package com.stepanp.luna2d.services;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import java.io.File;
 import com.stepanp.luna2d.LunaActivity;
+import com.stepanp.luna2d.services.api.LunaSharingService;
 
-public class LunaSharing
+public class LunaDefaultSharing extends LunaSharingService
 {
+	public String getName()
+	{
+		return "";
+	}
+
 	// Share given text using system sharing dialog
-	public static void text(String text)
+	public void text(String text)
 	{
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_SEND);
@@ -44,12 +49,12 @@ public class LunaSharing
 		activity.startActivity(Intent.createChooser(intent, null));
 	}
 
-	// Share given image witg given text using system sharing dialog
-	public static void image(String filename, String text)
+	// Share given image with given text using system sharing dialog
+	public void image(String filename, String text)
 	{
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_SEND);
-		//intent.putExtra(Intent.EXTRA_TEXT, text);
+		intent.putExtra(Intent.EXTRA_TEXT, text);
 		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filename)));
 		intent.setType("image/png");
 

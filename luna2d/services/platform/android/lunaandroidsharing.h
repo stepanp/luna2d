@@ -28,23 +28,40 @@
 
 namespace luna2d{
 
-class LUNAAndroidSharing : public LUNASharing
+class LUNAAndroidSharingService : public LUNASharingService
 {
 public:
-	LUNAAndroidSharing();
-
+	LUNAAndroidSharingService(const std::string& javaClasspath);
+	
 private:
-	jclass javaSharing;
+	jclass javaClass;
+	jobject javaObject = nullptr;
+	jmethodID javaGetName;
 	jmethodID javaText;
 	jmethodID javaImage;
-
+	bool isLoaded = false;
+	
 public:
-	// Share given text using system sharing dialog
-	virtual void Text(const std::string& text);
+	// Check for java part of sharing service was loaded successufully
+	bool IsLoaded();
 
-	// Share given image witg given text using system sharing dialog
+	// Get name of sharing service. Should be in lower case
+	virtual std::string GetName();
+	
+	// Share given text
+	virtual void Text(const std::string& text);
+	
+	// Share given image with given text
 	// Image should be located in "LUNAFileLocation::APP_FOLDER"
 	virtual void Image(const std::string& filename, const std::string& text);
+};
+
+
+class LUNAAndroidSharing : public LUNASharing
+{
+public:	
+	// Load service instance by name
+	virtual std::shared_ptr<LUNASharingService> LoadService(const std::string& name);
 };
 
 }

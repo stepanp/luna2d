@@ -38,6 +38,7 @@ void LUNAAndroidServices::LoadServices()
 	leaderboards = std::make_shared<LUNAAndroidLeaderboards>();
 
 	ads->LoadServices();
+	sharing->LoadServices();
 }
 
 

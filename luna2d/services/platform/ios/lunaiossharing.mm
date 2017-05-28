@@ -103,4 +103,5 @@ std::shared_ptr<LUNASharingService> LUNAIosSharing::LoadService(const std::strin
 	
 	if(!service) return nullptr;
 	
-	return std::make_shared<LUNAIosSharingService>(service);}
+	return std::make_shared<LUNAIosSharingService>(service);
+}
