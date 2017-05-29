@@ -74,10 +74,15 @@ private:
 	bool cached = false; // Check if texture is generated and was cached to APP_FOLDER
 
 public:
-	inline void SetReloadPath(const std::string& path)
+	const std::string& GetReloadPath()
+	{
+		return reloadPath;
+	}
+
+	inline void SetReloadPath(const std::string& path, bool makeReloadable = true)
 	{
 		reloadPath = path;
-		LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
+		if(makeReloadable) LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
 	}
 
 	inline void SetCached(bool cached)
@@ -95,7 +100,7 @@ public:
 			auto data = LUNAEngine::SharedFiles()->ReadCompressedFile(reloadPath, LUNAFileLocation::APP_FOLDER);
 			if(!data.empty())
 			{
-				CreateGlTexture(data);
+				InitFromImageData(data);
 				return;
 			}
 		}

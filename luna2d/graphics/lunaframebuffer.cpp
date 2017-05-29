@@ -43,13 +43,21 @@ LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight) :
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) LUNA_LOGE("Failed to create GL framebuffer");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Add framebuffer from reloadable assets list
+	LUNAEngine::SharedAssets()->SetAssetReloadable(this, true);
+#endif
 }
 
 LUNAFrameBuffer::~LUNAFrameBuffer()
 {
-	if(!id) return;
-
 	glDeleteFramebuffers(1, &id);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	// Remove framebuffer from reloadable assets list
+	LUNAEngine::SharedAssets()->SetAssetReloadable(this, false);
+#endif
 }
 
 GLuint LUNAFrameBuffer::GetId()
@@ -107,6 +115,10 @@ void LUNAFrameBuffer::Bind()
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &this->prevId);
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 	glViewport(0, 0, viewportWidth, viewportHeight);
+
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+	needCache = true;
+#endif
 }
 
 void LUNAFrameBuffer::Unbind()
@@ -114,3 +126,58 @@ void LUNAFrameBuffer::Unbind()
 	glBindFramebuffer(GL_FRAMEBUFFER, this->prevId);
 	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();
 }
+
+
+// Recreate framebuffer and reload attached texture when application lost OpenGL context
+// SEE: "lunaassets.h"
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+void LUNAFrameBuffer::Reload()
+{
+	// Reload texture
+	texture->Reload();
+
+	// Recreate framebuffer
+	GLint prevId = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
+
+	glGenFramebuffers(1, &id);
+	glBindFramebuffer(GL_FRAMEBUFFER, id);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->GetId(), 0);
+
+	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) LUNA_LOGE("Failed to create GL framebuffer");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
+}
+
+void LUNAFrameBuffer::Cache()
+{
+	if(!needCache) return;
+
+	std::vector<unsigned char> data(viewportWidth * viewportHeight * GetBytesPerPixel(LUNAColorType::RGBA));
+
+	GLint prevId = 0;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, id);
+	glViewport(0, 0, viewportWidth, viewportHeight);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, viewportWidth, viewportHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
+	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();
+
+	std::string reloadPath = texture->GetReloadPath();
+
+	if(reloadPath.empty())
+	{
+		std::string reloadPath = LUNAEngine::SharedAssets()->CacheTexture(data);
+		texture->SetReloadPath(reloadPath, false);
+		texture->SetCached(true);
+	}
+	else
+	{
+		LUNAEngine::SharedAssets()->CacheTexture(data, reloadPath);
+	}
+
+	needCache = false;
+}
+#endif

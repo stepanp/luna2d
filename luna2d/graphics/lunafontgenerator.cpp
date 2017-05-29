@@ -170,7 +170,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 	// Cache generated texture to APP_DATA folder for reloading when lossing GL context
-	std::string reloadPath = LUNAEngine::SharedAssets()->CacheTexture(image);
+	std::string reloadPath = LUNAEngine::SharedAssets()->CacheTexture(image.GetData());
 	texture->SetReloadPath(reloadPath);
 	texture->SetCached(true);
 #endif

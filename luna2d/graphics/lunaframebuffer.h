@@ -24,14 +24,13 @@
 #pragma once
 
 #include "lunaengine.h"
-#include "lunaimage.h"
 #include "lunatextureregion.h"
 
 namespace luna2d{
 
-class LUNAFrameBuffer
+class LUNAFrameBuffer : public LUNAAsset
 {
-	LUNA_USERDATA(LUNAFrameBuffer)
+	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFrameBuffer)
 
 public:
 	LUNAFrameBuffer(int viewPortWidth, int viewPortHeight);
@@ -53,6 +52,16 @@ public:
 	void Bind();
 	void Unbind();
 
+// Recreate framebuffer and reload attached texture when application lost OpenGL context
+// SEE: "lunaassets.h"
+#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
+private:
+	bool needCache = false;
+
+public:
+	virtual void Reload();
+	virtual void Cache();
+#endif
 };
 
 }

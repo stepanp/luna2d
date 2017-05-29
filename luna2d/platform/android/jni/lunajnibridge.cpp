@@ -92,6 +92,7 @@ LUNA_JNI_FUNC(void, LunaNative, onTouchUp)(JNIEnv* env, jclass cls, jfloat x, jf
 
 LUNA_JNI_FUNC(void, LunaNative, onPause)(JNIEnv* env, jclass cls)
 {
+	LUNAEngine::SharedAssets()->CacheAssets();
 	if(LUNAEngine::Shared()->IsInitialized()) LUNAEngine::Shared()->OnPause();
 }
 

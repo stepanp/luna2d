@@ -27,10 +27,6 @@
 #include "lunalua.h"
 #include "lunafiles.h"
 
-#if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
-#include "lunaimage.h"
-#endif
-
 namespace luna2d{
 
 const std::string ASSET_CUSTOM_DATA_NAME = "_customData"; // Name of field in asset table with custom data
@@ -48,6 +44,7 @@ public:
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 public:
 	virtual void Reload() {} // Reload asset data
+	virtual void Cache() {} // Cache asset data
 #endif
 };
 
@@ -127,11 +124,17 @@ private:
 public:
 	// Cache generated texture to APP_DATA folder
 	// Return path to resulting file
-	inline std::string CacheTexture(const LUNAImage& image)
+	inline std::string CacheTexture(const std::vector<unsigned char>& textureData, const std::string& reloadPath = "")
 	{
-		std::string path = ".luna2d_gentexture_" + std::to_string(lastCachedId);
-		if(!LUNAEngine::SharedFiles()->WriteCompressedFile(path, image.GetData(), LUNAFileLocation::APP_FOLDER)) return "";
-		lastCachedId++;
+		std::string path = reloadPath;
+
+		if(reloadPath.empty())
+		{
+			path = ".luna2d_gentexture_" + std::to_string(lastCachedId);
+			lastCachedId++;
+		}
+
+		if(!LUNAEngine::SharedFiles()->WriteCompressedFile(path, textureData, LUNAFileLocation::APP_FOLDER)) return "";
 		return path;
 	}
 
@@ -145,6 +148,11 @@ public:
 	inline void ReloadAssets()
 	{
 		for(LUNAAsset* asset : reloadableAssets) asset->Reload();
+	}
+
+	inline void CacheAssets()
+	{
+		for(LUNAAsset* asset : reloadableAssets) asset->Cache();
 	}
 #endif
 };
