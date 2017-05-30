@@ -120,22 +120,37 @@ public:
 private:
 	std::unordered_set<LUNAAsset*> reloadableAssets; // List of all assets needing reload
 	int lastCachedId = 0; // Counter for generate unique cached texture names
+	std::stack<int> freeCacheIds;
 
 public:
-	// Cache generated texture to APP_DATA folder
-	// Return path to resulting file
-	inline std::string CacheTexture(const std::vector<unsigned char>& textureData, const std::string& reloadPath = "")
+	inline int NewCacheId()
 	{
-		std::string path = reloadPath;
-
-		if(reloadPath.empty())
+		if(freeCacheIds.empty())
 		{
-			path = ".luna2d_gentexture_" + std::to_string(lastCachedId);
 			lastCachedId++;
+			return lastCachedId;
 		}
 
-		if(!LUNAEngine::SharedFiles()->WriteCompressedFile(path, textureData, LUNAFileLocation::APP_FOLDER)) return "";
-		return path;
+		int cacheId = freeCacheIds.top();
+		freeCacheIds.pop();
+		return cacheId;
+	}
+
+	inline void ReleaseCacheId(int cacheId)
+	{
+		freeCacheIds.push(cacheId);
+	}
+
+	// Cache generated texture to APP_DATA folder
+	// Return path to resulting file
+	inline int CacheTexture(const std::vector<unsigned char>& textureData, int cacheId = 0)
+	{
+		cacheId = cacheId != 0 ? cacheId : NewCacheId();
+		std::string path = ".luna2d_gentexture_" + std::to_string(cacheId);
+
+		if(!LUNAEngine::SharedFiles()->WriteCompressedFile(path, textureData, LUNAFileLocation::APP_FOLDER)) return 0;
+
+		return cacheId;
 	}
 
 	// Add/remove asset to list of reloadable asets

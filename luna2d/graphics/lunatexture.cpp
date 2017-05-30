@@ -61,6 +61,7 @@ LUNATexture::~LUNATexture()
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 	// Remove texture from reloadable assets list
 	if(!reloadPath.empty()) LUNAEngine::SharedAssets()->SetAssetReloadable(this, false);
+	if(cacheId != 0) LUNAEngine::SharedAssets()->ReleaseCacheId(cacheId);
 #endif
 }
 

@@ -24,6 +24,7 @@
 #include "lunaframebuffer.h"
 #include "lunagraphics.h"
 #include "lunamath.h"
+#include "lunapngformat.h"
 
 using namespace luna2d;
 
@@ -31,7 +32,7 @@ LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight) :
 	viewportWidth(viewportWidth),
 	viewportHeight(viewportHeight),
 	texture(std::make_shared<LUNATexture>(math::NearestPowerOfTwo(viewportWidth), math::NearestPowerOfTwo(viewportHeight),
-		LUNAColorType::RGB))
+		LUNAColorType::RGBA))
 {
 	GLint prevId = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
@@ -45,7 +46,7 @@ LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight) :
 	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
 
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
-	// Add framebuffer from reloadable assets list
+	// Add framebuffer to reloadable assets list
 	LUNAEngine::SharedAssets()->SetAssetReloadable(this, true);
 #endif
 }
@@ -153,7 +154,7 @@ void LUNAFrameBuffer::Cache()
 {
 	if(!needCache) return;
 
-	std::vector<unsigned char> data(viewportWidth * viewportHeight * GetBytesPerPixel(LUNAColorType::RGBA));
+	std::vector<unsigned char> data(texture->GetWidth() * texture->GetHeight() * GetBytesPerPixel(LUNAColorType::RGBA));
 
 	GLint prevId = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);
@@ -161,22 +162,11 @@ void LUNAFrameBuffer::Cache()
 	glBindFramebuffer(GL_FRAMEBUFFER, id);
 	glViewport(0, 0, viewportWidth, viewportHeight);
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, viewportWidth, viewportHeight, GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+	glReadPixels(0, 0, texture->GetWidth(), texture->GetHeight(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
 	glBindFramebuffer(GL_FRAMEBUFFER, prevId);
 	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();
 
-	std::string reloadPath = texture->GetReloadPath();
-
-	if(reloadPath.empty())
-	{
-		std::string reloadPath = LUNAEngine::SharedAssets()->CacheTexture(data);
-		texture->SetReloadPath(reloadPath, false);
-		texture->SetCached(true);
-	}
-	else
-	{
-		LUNAEngine::SharedAssets()->CacheTexture(data, reloadPath);
-	}
+	texture->Cache(data, false);
 
 	needCache = false;
 }

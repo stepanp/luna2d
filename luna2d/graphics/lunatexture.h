@@ -71,7 +71,7 @@ public:
 #if LUNA_PLATFORM == LUNA_PLATFORM_ANDROID
 private:
 	std::string reloadPath; // Path to reload texture data
-	bool cached = false; // Check if texture is generated and was cached to APP_FOLDER
+	int cacheId = 0;
 
 public:
 	const std::string& GetReloadPath()
@@ -79,15 +79,10 @@ public:
 		return reloadPath;
 	}
 
-	inline void SetReloadPath(const std::string& path, bool makeReloadable = true)
+	inline void SetReloadPath(const std::string& path)
 	{
 		reloadPath = path;
-		if(makeReloadable) LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
-	}
-
-	inline void SetCached(bool cached)
-	{
-		this->cached = cached;
+		LUNAEngine::SharedAssets()->SetAssetReloadable(this, true); // Add this texture to reloadable assets
 	}
 
 	inline virtual void Reload()
@@ -95,7 +90,7 @@ public:
 		if(reloadPath.empty()) return;
 
 		// Generated textures reloads direcly from cached data
-		if(cached)
+		if(cacheId != 0)
 		{
 			auto data = LUNAEngine::SharedFiles()->ReadCompressedFile(reloadPath, LUNAFileLocation::APP_FOLDER);
 			if(!data.empty())
@@ -127,6 +122,13 @@ public:
 		}
 
 		LUNA_LOGE("Cannot reload texture from path \"%s\"", reloadPath.c_str());
+	}
+
+	inline void Cache(const std::vector<unsigned char>& data, bool makeReloadable = true)
+	{
+		cacheId = LUNAEngine::SharedAssets()->CacheTexture(data, cacheId);
+		reloadPath = ".luna2d_gentexture_" + std::to_string(cacheId);
+		if(makeReloadable) LUNAEngine::SharedAssets()->SetAssetReloadable(this, true);
 	}
 #endif
 
