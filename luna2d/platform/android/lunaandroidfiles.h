@@ -40,11 +40,12 @@ namespace luna2d{
 class LUNAAndroidFiles : public LUNAFiles
 {
 public:
-	LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath);
+	LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath, const std::string& cachePath);
 
 private:
 	std::string apkPath; // Saved path to this .apk file
-	std::string appFolderPath; // Path to application folder in /data/data/
+	std::string appFolderPath; // Path to application folder in /data/data/<package_name>/files/
+	std::string cachePath; // Path to cache on external storage in /Android/data/<package_name>/cache/
 	std::unordered_map<std::string, std::pair<int, int>> directoryCache;
 	std::unordered_map<std::string, int> filesCache;
 

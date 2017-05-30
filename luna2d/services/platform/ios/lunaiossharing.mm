@@ -47,10 +47,9 @@ void LUNAIosSharingService::Text(const std::string& text)
 }
 
 // Share given image with given text
-// Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAIosSharingService::Image(const std::string& filename, const std::string& text)
+// Image should be located in "LUNAFileLocation::CACHE"
+void LUNAIosSharingService::Image(const std::string& imagePath, const std::string& text)
 {
-	std::string imagePath = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
 	[service image: ToNsString(imagePath) text: ToNsString(text)];
 }
 
@@ -84,11 +83,9 @@ void LUNAIosDefaultSharing::Text(const std::string& text)
 }
 
 // Share given image witg given text
-// Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAIosDefaultSharing::Image(const std::string& filename, const std::string& text)
+// Image should be located in "LUNAFileLocation::CACHE"
+void LUNAIosDefaultSharing::Image(const std::string& imagePath, const std::string& text)
 {
-	std::string imagePath = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
-	
 	NSArray* dataToShare = @[ToNsString(text), [UIImage imageNamed:ToNsString(imagePath)]];
 	DoShare(dataToShare);
 }

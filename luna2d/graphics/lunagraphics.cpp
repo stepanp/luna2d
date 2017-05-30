@@ -281,7 +281,7 @@ LUNAGraphics::LUNAGraphics() :
 		else if(ext == "jpg" || ext == "jpeg") format = std::unique_ptr<LUNAJpegFormat>(new LUNAJpegFormat());
 		else LUNA_LOG("Cannot save pixmap. Image format \"%s\" is unsupoorted");
 
-		thisPixmap->Save(filename, *format, LUNAFileLocation::APP_FOLDER);
+		thisPixmap->Save(filename, *format, LUNAFileLocation::CACHE);
 	};
 	clsImage.SetExtensionMethod("save", fnSave);
 

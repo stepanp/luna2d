@@ -37,6 +37,7 @@ public:
 	virtual void Text(const std::string& text, const std::string& serviceName = "");
 
 	// Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+	// Image should be located in "LUNAFileLocation::CACHE"
 	virtual void Image(const std::string& filename, const std::string& text, const std::string& serviceName = "");
 };
 

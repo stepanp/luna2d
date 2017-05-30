@@ -9,5 +9,5 @@ public abstract class LunaSharingService
 	public abstract void text(String text);
 
 	// Share given image with given text
-	public abstract void image(String filename, String text);
+	public abstract void image(String imagePath, String text);
 }

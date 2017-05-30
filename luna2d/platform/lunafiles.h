@@ -32,6 +32,7 @@ enum class LUNAFileLocation
 {
 	ASSETS, // Files in main game folder (e.g. on Android "game" folder located in "assets" folder in .apk)
 	APP_FOLDER, // Files in application data folder (e.g. on Android is /data/data/%app_name")
+	CACHE,
 };
 
 //---------------------

@@ -28,9 +28,10 @@
 
 using namespace luna2d;
 
-LUNAAndroidFiles::LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath) :
+LUNAAndroidFiles::LUNAAndroidFiles(const std::string& apkPath, const std::string& appFolderPath, const std::string& cachePath) :
 	apkPath(apkPath),
-	appFolderPath(appFolderPath + "/")
+	appFolderPath(appFolderPath + "/"),
+	cachePath(cachePath + "/")
 {
 	CacheZipNames();
 }
@@ -123,6 +124,8 @@ std::string LUNAAndroidFiles::GetRootFolder(LUNAFileLocation location)
 		return "assets/game/";
 	case LUNAFileLocation::APP_FOLDER:
 		return appFolderPath;
+	case LUNAFileLocation::CACHE:
+		return cachePath;
 	}
 }
 

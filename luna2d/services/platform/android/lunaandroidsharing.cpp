@@ -81,11 +81,10 @@ void LUNAAndroidSharingService::Text(const std::string& text)
 }
 
 // Share given image with given text
-// Image should be located in "LUNAFileLocation::APP_FOLDER"
-void LUNAAndroidSharingService::Image(const std::string& filename, const std::string& text)
+// Image should be located in "LUNAFileLocation::CACHE"
+void LUNAAndroidSharingService::Image(const std::string& imagePath, const std::string& text)
 {
-	std::string path = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::APP_FOLDER) + filename;
-	jni::Env()->CallVoidMethod(javaObject, javaImage, jni::ToJString(path).j_str(), jni::ToJString(text).j_str());
+	jni::Env()->CallVoidMethod(javaObject, javaImage, jni::ToJString(imagePath).j_str(), jni::ToJString(text).j_str());
 }
 
 

@@ -46,7 +46,9 @@ std::string LUNAIosFiles::GetRootFolder(LUNAFileLocation location)
 	{
 	case LUNAFileLocation::ASSETS:
 		return FromNsString([[NSBundle mainBundle] pathForResource:@"game" ofType:nil]) + "/";
+
 	case LUNAFileLocation::APP_FOLDER:
+	case LUNAFileLocation::CACHE:
 	{
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		return FromNsString([paths objectAtIndex:0]) + "/";

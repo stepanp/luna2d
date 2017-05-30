@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------
 
 #include "lunasharing.h"
+#include "lunafiles.h"
 #include "lunalog.h"
 #include "lunaconfig.h"
 
@@ -57,12 +58,18 @@ void LUNASharing::LoadServices()
 void LUNASharing::Text(const std::string& text, const std::string& serviceName)
 {
 	auto service = GetService(serviceName);
-	if(service) service->Text(text);
+	if(!service) return;
+
+	service->Text(text);
 }
 
 // Share given image witg given text using specified service. If service is not specifed system sharing dialog will be used
+// Image should be located in "LUNAFileLocation::CACHE"
 void LUNASharing::Image(const std::string& filename, const std::string& text, const std::string& serviceName)
 {
 	auto service = GetService(serviceName);
-	if(service) service->Image(filename, text);
+	if(!service) return;
+
+	std::string imagePath = LUNAEngine::SharedFiles()->GetRootFolder(LUNAFileLocation::CACHE) + filename;
+	service->Image(imagePath, text);
 }

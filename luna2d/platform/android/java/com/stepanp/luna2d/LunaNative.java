@@ -33,7 +33,7 @@ public class LunaNative
 	
 	public static native boolean isInitialized();
 	public static native void initialize(int screenWidth, int screenHeight, 
-			String appName, String apkPath, String appFolderPath);
+			String appName, String apkPath, String appFolderPath, String cachePath);
 	public static native void reloadAssets();
 	public static native void mainLoop();
 	

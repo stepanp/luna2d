@@ -50,13 +50,13 @@ public class LunaDefaultSharing extends LunaSharingService
 	}
 
 	// Share given image with given text using system sharing dialog
-	public void image(String filename, String text)
+	public void image(String imagePath, String text)
 	{
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_SEND);
 		intent.putExtra(Intent.EXTRA_TEXT, text);
-		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filename)));
-		intent.setType("image/png");
+		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(imagePath)));
+		intent.setType("image/*");
 
 		Activity activity = LunaActivity.getSharedActivity();
 		activity.startActivity(Intent.createChooser(intent, null));

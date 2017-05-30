@@ -35,10 +35,11 @@
 using namespace luna2d;
 
 LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screenWidth, jint screenHeight,
-		jstring appName, jstring apkPath, jstring appFolderPath)
+		jstring appName, jstring apkPath, jstring appFolderPath, jstring cachePath)
 {
 	// Initialize file utils
-	LUNAFiles* files = new LUNAAndroidFiles(jni::FromJString(apkPath), jni::FromJString(appFolderPath));
+	LUNAFiles* files = new LUNAAndroidFiles(jni::FromJString(apkPath), jni::FromJString(appFolderPath),
+		jni::FromJString(cachePath));
 
 	// Initialize log
 	LUNALog* log = new LUNAAndroidLog(jni::FromJString(appName));

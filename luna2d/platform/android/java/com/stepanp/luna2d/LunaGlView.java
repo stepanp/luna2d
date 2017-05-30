@@ -215,8 +215,11 @@ public class LunaGlView extends GLSurfaceView
 				
 				// Get path to application folder in "data/data/"
 				String appFolderPath = activity.getFilesDir().getAbsolutePath();
+
+				// Get path to cache on external storage
+				String cachePath = activity.getExternalCacheDir().getAbsolutePath();
 				
-				LunaNative.initialize(screenWidth, screenHeight, appName, apkPath, appFolderPath);
+				LunaNative.initialize(screenWidth, screenHeight, appName, apkPath, appFolderPath, cachePath);
 			}
 			
 			// When surface was recreated, we need reload some assets: textures, shaders, etc.
