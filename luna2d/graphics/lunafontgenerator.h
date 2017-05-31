@@ -37,10 +37,6 @@
 
 namespace luna2d{
 
-const std::u32string LATIN_CHARS = LUNA_UTF32("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM");
-const std::u32string CYRILLIC_CHARS = LUNA_UTF32("йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ");
-const std::u32string COMMON_CHARS = LUNA_UTF32(" !@#$%^&*()-+=!№?<>[]{}:;,.\\/|`~'\"_©");
-const std::u32string NUMBER_CHARS = LUNA_UTF32("1234567890");
 const int CHAR_PADDING = 3; // Size of padding between chars(in pixels)
 
 //----------------------------------------------
@@ -58,9 +54,11 @@ private:
 
 public:
 	bool enableLatin = true;
+	bool enableDiactritic = true;
 	bool enableCyrillic = true;
 	bool enableCommon = true;
 	bool enableNumbers = true;
+	std::u32string customSymbols;
 
 private:
 	// Conversions between pixels and internal FreeType units

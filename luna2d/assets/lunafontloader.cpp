@@ -70,9 +70,11 @@ bool LUNAFontLoader::Load(const std::string& filename)
 			if(jsonChars.is_object())
 			{
 				generator.enableLatin = jsonChars["latin"].bool_value() == true;
+				generator.enableDiactritic = jsonChars["diactritic"].bool_value() == true;
 				generator.enableCyrillic = jsonChars["cyrillic"].bool_value() == true;
 				generator.enableCommon = jsonChars["common"].bool_value() == true;
 				generator.enableNumbers = jsonChars["numbers"].bool_value() == true;
+				generator.customSymbols = utf::ToUtf32(jsonChars["custom"].string_value());
 			}
 
 			fonts[entry.first] = generator.GenerateFont(sizeParams["size"].int_value());

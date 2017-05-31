@@ -27,6 +27,12 @@
 
 using namespace luna2d;
 
+const std::u32string LATIN_CHARS = LUNA_UTF32("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM");
+const std::u32string DIACTRITIC_CHARS = LUNA_UTF32("áàâäåãéèêîíìôöóòûùüœæøßçñÁÀÂÄÅÃÉÈÊÎÍÌÔÖÓÒÛÙÜŒÆØÇÑ");
+const std::u32string CYRILLIC_CHARS = LUNA_UTF32("йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ");
+const std::u32string COMMON_CHARS = LUNA_UTF32(" !@#$%^&*()-+=!№?<>[]{}:;,.\\/|`~'\"_©");
+const std::u32string NUMBER_CHARS = LUNA_UTF32("1234567890");
+
 struct CharRegion
 {
 	CharRegion(char32_t c, int x, int y, int width, int height) : c(c), x(x), y(y), width(width), height(height) {}
@@ -58,9 +64,11 @@ int LUNAFontGenerator::PixelsToUnits(int pixels)
 void LUNAFontGenerator::ResetCharSets()
 {
 	enableLatin = true;
+	enableDiactritic = true;
 	enableCyrillic = true;
 	enableCommon = true;
 	enableNumbers = true;
+	customSymbols.clear();
 }
 
 bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation location)
@@ -93,9 +101,11 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	std::u32string chars;
 
 	if(enableLatin) chars += LATIN_CHARS;
+	if(enableDiactritic) chars += DIACTRITIC_CHARS;
 	if(enableCyrillic) chars += CYRILLIC_CHARS;
 	if(enableCommon) chars += COMMON_CHARS;
 	if(enableNumbers) chars += NUMBER_CHARS;
+	if(!customSymbols.empty()) chars += customSymbols;
 
 	// Get global char metrics
 	int maxW = UnitsToPixels(face->size->metrics.max_advance); // Max char width
