@@ -31,17 +31,26 @@ public:
 	virtual ~LUNAAdsService() {}
 
 public:
+	// Get default banner height (in pixels)
+	virtual int GetBannerHeight() = 0;
+
+	// Check for banner is downloaded ready to showing
+	virtual bool IsBannerReady() = 0;
+
 	// Check for interstitial is downloaded ready to showing
 	virtual bool IsInterstitalReady() = 0;
 
 	// Check for video is downloaded ready to showing
 	virtual bool IsRewardedVideoReady() = 0;
 
+	// Show banner
+	virtual void ShowBanner(const std::string& location) = 0;
+
 	// Show interstitial
-	virtual void ShowInterstital() = 0;
+	virtual void ShowInterstital(const std::string& location) = 0;
 
 	// Show rewarded video
-	virtual void ShowRewardedVideo() = 0;
+	virtual void ShowRewardedVideo(const std::string& location) = 0;
 };
 
 
@@ -49,7 +58,7 @@ class LUNAAds
 {
 public:
 	virtual ~LUNAAds() {}
-	
+
 private:
 	std::shared_ptr<LUNAAdsService> service;
 
@@ -60,21 +69,33 @@ public:
 	// Load services from config
 	void LoadServices();
 
+	// Get default banner height (in pixels)
+	int GetPhysicalBannerHeight();
+
+	// Get default banner height (in points)
+	float GetBannerHeight();
+
+	// Check for banner is downloaded ready to showing
+	bool IsBannerReady();
+
 	// Check for interstitial is downloaded ready to showing
 	bool IsInterstitalReady();
 
 	// Check for rewarded video is downloaded ready to showing
 	bool IsRewardedVideoReady();
 
+	// Show banner
+	void ShowBanner(const std::string& location);
+
 	// Show interstitial
-	void ShowInterstital();
-	
+	void ShowInterstital(const std::string& location);
+
 	// Show rewarded video
-	void ShowRewardedVideo();
-	
+	void ShowRewardedVideo(const std::string& location);
+
 	// Called when video has been succesfully viewed
 	void OnRewardedVideoSuccess();
-	
+
 	// Called when video has been dismissed or in case of error
 	void OnRewardedVideoFail();
 };

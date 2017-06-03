@@ -25,6 +25,7 @@
 #include "lunaiosservices.h"
 #include "lunaplatformutils.h"
 #include "lunalog.h"
+#import "lunansstring.h"
 #import "lunaiosadsprotocol.h"
 
 using namespace luna2d;
@@ -61,6 +62,18 @@ LUNAIosAdsService::LUNAIosAdsService(id service) :
 	}];
 }
 
+// Get default banner height (in pixels)
+int LUNAIosAdsService::GetBannerHeight()
+{
+	return [service getBannerHeight];
+}
+
+// Check for banner is downloaded ready to showing
+bool LUNAIosAdsService::IsBannerReady()
+{
+	return [service isBannerReady];
+}
+
 // Check for interstitial is downloaded ready to showing
 bool LUNAIosAdsService::IsInterstitalReady()
 {
@@ -73,16 +86,22 @@ bool LUNAIosAdsService::IsRewardedVideoReady()
 	return [service isRewardedVideoReady];
 }
 
-// Show interstitial
-void LUNAIosAdsService::ShowInterstital()
+// Show banner
+void LUNAIosAdsService::ShowBanner(const std::string& location)
 {
-	[service showInterstitial];
+	[service showBanner: ToNsString(location)];
+}
+
+// Show interstitial
+void LUNAIosAdsService::ShowInterstital(const std::string& location)
+{
+	[service showInterstitial: ToNsString(location)];
 }
 
 // Show rewarded video
-void LUNAIosAdsService::ShowRewardedVideo()
+void LUNAIosAdsService::ShowRewardedVideo(const std::string& location)
 {
-	[service showRewardedVideo];
+	[service showRewardedVideo: ToNsString(location)];
 	LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(true);
 	LUNAEngine::Shared()->OnPause();
 	

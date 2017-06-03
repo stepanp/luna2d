@@ -36,17 +36,26 @@ private:
 	id service;
 	
 public:
+	// Get default banner height (in pixels)
+	virtual int GetBannerHeight();
+	
+	// Check for banner is downloaded ready to showing
+	virtual bool IsBannerReady();
+	
 	// Check for interstitial is downloaded ready to showing
 	virtual bool IsInterstitalReady();
 	
 	// Check for video is downloaded ready to showing
 	virtual bool IsRewardedVideoReady();
 	
+	// Show banner
+	virtual void ShowBanner(const std::string& location);
+	
 	// Show interstitial
-	virtual void ShowInterstital();
+	virtual void ShowInterstital(const std::string& location);
 		
 	// Show rewarded video
-	virtual void ShowRewardedVideo();
+	virtual void ShowRewardedVideo(const std::string& location);
 };
 
 	

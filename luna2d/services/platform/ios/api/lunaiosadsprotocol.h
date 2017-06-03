@@ -32,16 +32,25 @@
 // Set callback calling when video cause error
 -(void) setOnRewardedVideoError: (void (^)()) callback;
 
-// Should display interstitial
+// Get default banner height (in pixels)
+-(int) getBannerHeight;
+
+// Check for banner is downloaded ready to showing
+-(BOOL) isBannerReady;
+
+// Check for interstitial is downloaded ready to showing
 -(BOOL) isInterstitialReady;
 
-// Should display rewarded video
+// Check for rewarded video is downloaded ready to showing
 -(BOOL) isRewardedVideoReady;
 
-// Should display interstitial
--(void) showInterstitial;
+// Show banner
+-(void) showBanner : (NSString*) location;
 
-// Should display rewarded video
--(void) showRewardedVideo;
+// Show interstitial
+-(void) showInterstitial : (NSString*) location;
+
+// Show rewarded video
+-(void) showRewardedVideo: (NSString*) location;
 	
 @end

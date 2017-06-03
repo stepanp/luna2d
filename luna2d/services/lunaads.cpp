@@ -22,8 +22,9 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaads.h"
-#include "lunalua.h"
 #include "lunaconfig.h"
+#include "lunalua.h"
+#include "lunagraphics.h"
 
 using namespace luna2d;
 
@@ -43,6 +44,29 @@ void LUNAAds::LoadServices()
 	service = LoadService(serviceName);
 }
 
+// Get default banner height (in pixels)
+int LUNAAds::GetPhysicalBannerHeight()
+{
+	if(!service) return 0;
+
+	return service->GetBannerHeight();
+}
+
+// Get default banner height (in points)
+float LUNAAds::GetBannerHeight()
+{
+	int physicalHeight = GetPhysicalBannerHeight();
+	return LUNAEngine::SharedGraphics()->GetCamera()->Unproject(glm::vec2(physicalHeight, 0)).x;
+}
+
+// Check for banner is downloaded ready to showing
+bool LUNAAds::IsBannerReady()
+{
+	if(!service) return false;
+
+	return service->IsBannerReady();
+}
+
 // Check for interstitial is downloaded ready to showing
 bool LUNAAds::IsInterstitalReady()
 {
@@ -59,20 +83,28 @@ bool LUNAAds::IsRewardedVideoReady()
 	return service->IsRewardedVideoReady();
 }
 
-// Show interstitial
-void LUNAAds::ShowInterstital()
+// Show banner
+void LUNAAds::ShowBanner(const std::string& location)
 {
 	if(!service) return;
 
-	service->ShowInterstital();
+	service->ShowBanner(location);
+}
+
+// Show interstitial
+void LUNAAds::ShowInterstital(const std::string& location)
+{
+	if(!service) return;
+
+	service->ShowInterstital(location);
 }
 
 // Show rewarded video
-void LUNAAds::ShowRewardedVideo()
+void LUNAAds::ShowRewardedVideo(const std::string& location)
 {
 	if(!service) return;
 
-	service->ShowRewardedVideo();
+	service->ShowRewardedVideo(location);
 }
 
 // Called when video has been succesfully viewed
