@@ -83,6 +83,7 @@ public:
 	bool IsEnabled();
 
 	// Enable/disable ads
+	// When ads is disabled all caching and showing requests will be ignored
 	void SetEnabled(bool enabled);
 
 	// Get default banner height (in pixels)

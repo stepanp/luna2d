@@ -51,6 +51,7 @@ bool LUNAAds::IsEnabled()
 }
 
 // Enable/disable ads
+// When ads is disabled all caching and showing requests will be ignored
 void LUNAAds::SetEnabled(bool enabled)
 {
 	this->enabled = enabled;
