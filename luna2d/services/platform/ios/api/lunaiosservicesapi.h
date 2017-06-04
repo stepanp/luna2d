@@ -40,4 +40,7 @@
 // Get bool value from config
 +(BOOL) getConfigBool: (NSString*) name;
 
+// Get array value from config
++(NSArray*) getConfigArray: (NSString*) name;
+
 @end

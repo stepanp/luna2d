@@ -207,18 +207,24 @@ void LUNAEngine::OnResume()
 
 void LUNAEngine::OnTouchDown(float x, float y, int touchIndex)
 {
+	if(graphics->IsPaused()) return;
+
 	glm::vec2 pos = graphics->GetCamera()->Unproject(glm::vec2(x, y));
 	scenes->OnTouchDown(pos.x, pos.y, touchIndex);
 }
 
 void LUNAEngine::OnTouchMoved(float x, float y, int touchIndex)
 {
+	if(graphics->IsPaused()) return;
+
 	glm::vec2 pos = graphics->GetCamera()->Unproject(glm::vec2(x, y));
 	scenes->OnTouchMoved(pos.x, pos.y, touchIndex);
 }
 
 void LUNAEngine::OnTouchUp(float x, float y, int touchIndex)
 {
+	if(graphics->IsPaused()) return;
+
 	glm::vec2 pos = graphics->GetCamera()->Unproject(glm::vec2(x, y));
 	scenes->OnTouchUp(pos.x, pos.y, touchIndex);
 }

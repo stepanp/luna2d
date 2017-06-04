@@ -64,4 +64,21 @@ using namespace luna2d;
 	return config->GetCustomValues()[FromNsString(name)].bool_value();
 }
 
+// Get array value from config
++(NSArray*) getConfigArray: (NSString*) name;
+{
+	auto config = LUNAEngine::Shared()->GetConfig();
+	auto jsonArray = config->GetCustomValues()[FromNsString(name)].array_items();
+	NSMutableArray* mutableArray = [NSMutableArray arrayWithCapacity: jsonArray.size()];
+	
+	for(const auto& jsonItem : jsonArray)
+	{
+		if(jsonItem.is_bool()) [mutableArray addObject: jsonItem.bool_value() ? @YES : @NO];
+		else if(jsonItem.is_number()) [mutableArray addObject: [NSNumber numberWithDouble: jsonItem.number_value()]];
+		else if(jsonItem.is_string()) [mutableArray addObject: ToNsString(jsonItem.string_value())];
+	}
+	
+	return [mutableArray copy];
+}
+
 @end

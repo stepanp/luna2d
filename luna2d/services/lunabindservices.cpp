@@ -40,11 +40,13 @@ static void BindAds(const std::shared_ptr<LUNAAds>& ads, LuaScript* lua, LuaTabl
 	
 	tblAds.SetField("getPhysicalBannerHeight", LuaFunction(lua, ads.get(), &LUNAAds::GetPhysicalBannerHeight));
 	tblAds.SetField("getBannerHeight", LuaFunction(lua, ads.get(), &LUNAAds::GetBannerHeight));
-	tblAds.SetField("isBannerReady", LuaFunction(lua, ads.get(), &LUNAAds::IsBannerReady));
-	tblAds.SetField("isInterstitialReady", LuaFunction(lua, ads.get(), &LUNAAds::IsInterstitalReady));
-	tblAds.SetField("isRewardedVideoReady", LuaFunction(lua, ads.get(), &LUNAAds::IsRewardedVideoReady));
 	tblAds.SetField("showBanner", LuaFunction(lua, ads.get(), &LUNAAds::ShowBanner));
-	tblAds.SetField("showInterstitial", LuaFunction(lua, ads.get(), &LUNAAds::ShowInterstital));
+	tblAds.SetField("hideBanner", LuaFunction(lua, ads.get(), &LUNAAds::HideBanner));
+	tblAds.SetField("isInterstitialReady", LuaFunction(lua, ads.get(), &LUNAAds::IsInterstitialReady));
+	tblAds.SetField("cacheInterstitial", LuaFunction(lua, ads.get(), &LUNAAds::CacheInterstitial));
+	tblAds.SetField("showInterstitial", LuaFunction(lua, ads.get(), &LUNAAds::ShowInterstitial));
+	tblAds.SetField("isRewardedVideoReady", LuaFunction(lua, ads.get(), &LUNAAds::IsRewardedVideoReady));
+	tblAds.SetField("cacheRewardedVideo", LuaFunction(lua, ads.get(), &LUNAAds::CacheRewardedVideo));
 	tblAds.SetField("showRewardedVideo", LuaFunction(lua, ads.get(), &LUNAAds::ShowRewardedVideo));
 }
 

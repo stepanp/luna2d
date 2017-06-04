@@ -23,6 +23,9 @@
 
 @protocol LUNAIosAdsProtocol
 
+// Set callback calling when interstitial has been closed
+-(void) setOnInterstitialClosed: (void (^)()) callback;
+
 // Set callback calling when video has been succesfully viewed
 -(void) setOnRewardedVideoSuccess: (void (^)()) callback;
 
@@ -35,20 +38,29 @@
 // Get default banner height (in pixels)
 -(int) getBannerHeight;
 
-// Check for banner is downloaded ready to showing
--(BOOL) isBannerReady;
+// Check for banner is shown
+-(BOOL) isBannerShown;
+
+// Show banner
+-(void) showBanner: (NSString*) location;
+
+// Hide banner
+-(void) hideBanner;
+
+// Show interstitial
+-(void) showInterstitial: (NSString*) location;
 
 // Check for interstitial is downloaded ready to showing
 -(BOOL) isInterstitialReady;
 
+// Cache interstitial
+-(void) cacheInterstitial: (NSString*) location;
+
 // Check for rewarded video is downloaded ready to showing
 -(BOOL) isRewardedVideoReady;
 
-// Show banner
--(void) showBanner : (NSString*) location;
-
-// Show interstitial
--(void) showInterstitial : (NSString*) location;
+// Cache rewarded video
+-(void) cacheRewardedVideo: (NSString*) location;
 
 // Show rewarded video
 -(void) showRewardedVideo: (NSString*) location;

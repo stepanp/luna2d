@@ -24,7 +24,7 @@
 #include "lunaads.h"
 #include "lunaconfig.h"
 #include "lunalua.h"
-#include "lunagraphics.h"
+#include "lunasizes.h"
 
 using namespace luna2d;
 
@@ -55,32 +55,18 @@ int LUNAAds::GetPhysicalBannerHeight()
 // Get default banner height (in points)
 float LUNAAds::GetBannerHeight()
 {
-	int physicalHeight = GetPhysicalBannerHeight();
-	return LUNAEngine::SharedGraphics()->GetCamera()->Unproject(glm::vec2(physicalHeight, 0)).x;
+	auto sizes = LUNAEngine::SharedSizes();
+	float ratio = sizes->GetScreenHeight() / (float)sizes->GetPhysicalScreenHeight();
+
+	return GetPhysicalBannerHeight() * ratio;
 }
 
-// Check for banner is downloaded ready to showing
-bool LUNAAds::IsBannerReady()
+// Check for banner is shown
+bool LUNAAds::IsBannerShown()
 {
 	if(!service) return false;
 
-	return service->IsBannerReady();
-}
-
-// Check for interstitial is downloaded ready to showing
-bool LUNAAds::IsInterstitalReady()
-{
-	if(!service) return false;
-
-	return service->IsInterstitalReady();
-}
-
-// Check for rewarded video is downloaded ready to showing
-bool LUNAAds::IsRewardedVideoReady()
-{
-	if(!service) return false;
-
-	return service->IsRewardedVideoReady();
+	service->IsBannerShown();
 }
 
 // Show banner
@@ -91,18 +77,66 @@ void LUNAAds::ShowBanner(const std::string& location)
 	service->ShowBanner(location);
 }
 
-// Show interstitial
-void LUNAAds::ShowInterstital(const std::string& location)
+void LUNAAds::HideBanner()
 {
 	if(!service) return;
 
-	service->ShowInterstital(location);
+	service->HideBanner();
+}
+
+// Check for interstitial is downloaded ready to showing
+bool LUNAAds::IsInterstitialReady()
+{
+	if(!service) return false;
+
+	return service->IsInterstitialReady();
+}
+
+// Cache interstitial
+void LUNAAds::CacheInterstitial(const std::string& location)
+{
+	if(!service) return;
+
+	return service->CacheInterstitial(location);
+}
+
+// Show interstitial
+void LUNAAds::ShowInterstitial(const std::string& location)
+{
+	if(!service) return;
+
+	service->ShowInterstitial(location);
+}
+
+// Called when interstitial has been closed
+void LUNAAds::OnInterstitialClosed()
+{
+	auto tblAds = GetAdsTable();
+	auto fnClosed = tblAds.GetFunction("onInterstitialClosed");
+
+	if(fnClosed) fnClosed.CallVoid();
+}
+
+// Check for rewarded video is downloaded ready to showing
+bool LUNAAds::IsRewardedVideoReady()
+{
+	if(!service) return false;
+
+	return service->IsRewardedVideoReady();
+}
+
+// Cache rewarded video
+void LUNAAds::CacheRewardedVideo(const std::string& location)
+{
+	if(!service) return;
+
+	return service->CacheRewardedVideo(location);
 }
 
 // Show rewarded video
 void LUNAAds::ShowRewardedVideo(const std::string& location)
 {
-	if(!service) return;
+	if(!service || !service->IsRewardedVideoReady()) return;
 
 	service->ShowRewardedVideo(location);
 }

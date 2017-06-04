@@ -34,20 +34,29 @@ public:
 	// Get default banner height (in pixels)
 	virtual int GetBannerHeight() = 0;
 
-	// Check for banner is downloaded ready to showing
-	virtual bool IsBannerReady() = 0;
-
-	// Check for interstitial is downloaded ready to showing
-	virtual bool IsInterstitalReady() = 0;
-
-	// Check for video is downloaded ready to showing
-	virtual bool IsRewardedVideoReady() = 0;
+	// Check for banner is shown
+	virtual bool IsBannerShown() = 0;
 
 	// Show banner
 	virtual void ShowBanner(const std::string& location) = 0;
 
+	// Hide banner
+	virtual void HideBanner() = 0;
+
+	// Check for interstitial is downloaded ready to showing
+	virtual bool IsInterstitialReady() = 0;
+
+	// Cache interstitial
+	virtual void CacheInterstitial(const std::string& location) = 0;
+
 	// Show interstitial
-	virtual void ShowInterstital(const std::string& location) = 0;
+	virtual void ShowInterstitial(const std::string& location) = 0;
+
+	// Check for video is downloaded ready to showing
+	virtual bool IsRewardedVideoReady() = 0;
+
+	// Cache rewarded video
+	virtual void CacheRewardedVideo(const std::string& location) = 0;
 
 	// Show rewarded video
 	virtual void ShowRewardedVideo(const std::string& location) = 0;
@@ -75,20 +84,32 @@ public:
 	// Get default banner height (in points)
 	float GetBannerHeight();
 
-	// Check for banner is downloaded ready to showing
-	bool IsBannerReady();
-
-	// Check for interstitial is downloaded ready to showing
-	bool IsInterstitalReady();
-
-	// Check for rewarded video is downloaded ready to showing
-	bool IsRewardedVideoReady();
+	// Check for banner is shown
+	bool IsBannerShown();
 
 	// Show banner
 	void ShowBanner(const std::string& location);
 
+	// Hide banner
+	void HideBanner();
+
+	// Check for interstitial is downloaded ready to showing
+	bool IsInterstitialReady();
+
+	// Cache interstitial
+	void CacheInterstitial(const std::string& location);
+
 	// Show interstitial
-	void ShowInterstital(const std::string& location);
+	void ShowInterstitial(const std::string& location);
+
+	// Called when interstitial has been closed
+	void OnInterstitialClosed();
+
+	// Check for rewarded video is downloaded ready to showing
+	bool IsRewardedVideoReady();
+
+	// Cache rewarded video
+	void CacheRewardedVideo(const std::string& location);
 
 	// Show rewarded video
 	void ShowRewardedVideo(const std::string& location);

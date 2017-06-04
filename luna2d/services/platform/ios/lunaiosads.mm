@@ -33,6 +33,11 @@ using namespace luna2d;
 LUNAIosAdsService::LUNAIosAdsService(id service) :
 	service(service)
 {
+	[service setOnInterstitialClosed: ^(void)
+	{
+		LUNAEngine::SharedServices()->GetAds()->OnInterstitialClosed();
+	}];
+	
 	[service setOnRewardedVideoSuccess: ^(void)
 	{
 		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
@@ -68,22 +73,10 @@ int LUNAIosAdsService::GetBannerHeight()
 	return [service getBannerHeight];
 }
 
-// Check for banner is downloaded ready to showing
-bool LUNAIosAdsService::IsBannerReady()
+// Check for banner is shown
+bool LUNAIosAdsService::IsBannerShown()
 {
-	return [service isBannerReady];
-}
-
-// Check for interstitial is downloaded ready to showing
-bool LUNAIosAdsService::IsInterstitalReady()
-{
-	return [service isInterstitialReady];
-}
-
-// Check for video is downloaded ready to showing
-bool LUNAIosAdsService::IsRewardedVideoReady()
-{
-	return [service isRewardedVideoReady];
+	return [service isBannerShown];
 }
 
 // Show banner
@@ -92,10 +85,40 @@ void LUNAIosAdsService::ShowBanner(const std::string& location)
 	[service showBanner: ToNsString(location)];
 }
 
+// Hide banner
+void LUNAIosAdsService::HideBanner()
+{
+	[service hideBanner];
+}
+
+// Check for interstitial is downloaded ready to showing
+bool LUNAIosAdsService::IsInterstitialReady()
+{
+	return [service isInterstitialReady];
+}
+
+// Cache interstitial
+void LUNAIosAdsService::CacheInterstitial(const std::string& location)
+{
+	[service cacheInterstitial: ToNsString(location)];
+}
+
 // Show interstitial
-void LUNAIosAdsService::ShowInterstital(const std::string& location)
+void LUNAIosAdsService::ShowInterstitial(const std::string& location)
 {
 	[service showInterstitial: ToNsString(location)];
+}
+
+// Check for video is downloaded ready to showing
+bool LUNAIosAdsService::IsRewardedVideoReady()
+{
+	return [service isRewardedVideoReady];
+}
+
+// Cache rewarded video
+void LUNAIosAdsService::CacheRewardedVideo(const std::string& location)
+{
+	[service cacheRewardedVideo: ToNsString(location)];
 }
 
 // Show rewarded video

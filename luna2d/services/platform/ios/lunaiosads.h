@@ -39,21 +39,30 @@ public:
 	// Get default banner height (in pixels)
 	virtual int GetBannerHeight();
 	
-	// Check for banner is downloaded ready to showing
-	virtual bool IsBannerReady();
-	
-	// Check for interstitial is downloaded ready to showing
-	virtual bool IsInterstitalReady();
-	
-	// Check for video is downloaded ready to showing
-	virtual bool IsRewardedVideoReady();
+	// Check for banner is shown
+	virtual bool IsBannerShown();
 	
 	// Show banner
 	virtual void ShowBanner(const std::string& location);
 	
+	// Hide banner
+	virtual void HideBanner();
+	
+	// Check for interstitial is downloaded ready to showing
+	virtual bool IsInterstitialReady();
+	
+	// Cache interstitial
+	virtual void CacheInterstitial(const std::string& location);
+	
 	// Show interstitial
-	virtual void ShowInterstital(const std::string& location);
-		
+	virtual void ShowInterstitial(const std::string& location);
+	
+	// Check for video is downloaded ready to showing
+	virtual bool IsRewardedVideoReady();
+	
+	// Cache rewarded video
+	virtual void CacheRewardedVideo(const std::string& location);
+	
 	// Show rewarded video
 	virtual void ShowRewardedVideo(const std::string& location);
 };
