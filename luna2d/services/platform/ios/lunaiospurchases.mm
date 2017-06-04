@@ -45,7 +45,7 @@ using namespace luna2d;
 
 -(void) request:(SKRequest*) request didFailWithError:(NSError*) error
 {
-	LUNA_LOGE("Failed to retrieve in-app purchases product list: %s", [error.localizedDescription UTF8String]);
+	NSLog(@"Failed to retrieve in-app purchases product list: %@", error.localizedDescription);
 }
 
 @end
@@ -58,7 +58,7 @@ using namespace luna2d;
 
 @implementation PurchasesDelegate
 
-- (void) paymentQueue:(SKPaymentQueue*) queue updatedTransactions:(NSArray<SKPaymentTransaction*>*) transactions
+-(void) paymentQueue:(SKPaymentQueue*) queue updatedTransactions:(NSArray<SKPaymentTransaction*>*) transactions
 {
 	for(SKPaymentTransaction *transaction in transactions)
 	{
@@ -76,7 +76,7 @@ using namespace luna2d;
 			case SKPaymentTransactionStateFailed:
 			{
 				NSString* error = [transaction.error localizedDescription];
-				if(error) LUNA_LOGE("In-app purchase failed: %s", [error UTF8String]);
+				if(error) NSLog(@"In-app purchase failed: %@", error);
 				
 				[[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 				break;
@@ -89,9 +89,9 @@ using namespace luna2d;
 	}
 }
 
-- (void) request:(SKRequest*)request didFailWithError:(NSError*) error
+-(void) request:(SKRequest*)request didFailWithError:(NSError*) error
 {
-	LUNA_LOGE("Failed to perform in-app purchase %s", [error.localizedDescription UTF8String]);
+	NSLog(@"Failed to perform in-app purchase %s", error.localizedDescription);
 	
 	auto purchases = std::static_pointer_cast<LUNAIosPurchases>(LUNAEngine::SharedServices()->GetPurchases());
 	purchases->OnProductPurchased("", false);
