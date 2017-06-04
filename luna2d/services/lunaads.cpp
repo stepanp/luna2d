@@ -44,6 +44,18 @@ void LUNAAds::LoadServices()
 	service = LoadService(serviceName);
 }
 
+// Check for ads is enabled
+bool LUNAAds::IsEnabled()
+{
+	return enabled;
+}
+
+// Enable/disable ads
+void LUNAAds::SetEnabled(bool enabled)
+{
+	this->enabled = enabled;
+}
+
 // Get default banner height (in pixels)
 int LUNAAds::GetPhysicalBannerHeight()
 {
@@ -66,13 +78,13 @@ bool LUNAAds::IsBannerShown()
 {
 	if(!service) return false;
 
-	service->IsBannerShown();
+	return service->IsBannerShown();
 }
 
 // Show banner
 void LUNAAds::ShowBanner(const std::string& location)
 {
-	if(!service) return;
+	if(!service || !enabled) return;
 
 	service->ShowBanner(location);
 }
@@ -87,7 +99,7 @@ void LUNAAds::HideBanner()
 // Check for interstitial is downloaded ready to showing
 bool LUNAAds::IsInterstitialReady()
 {
-	if(!service) return false;
+	if(!service || !enabled) return false;
 
 	return service->IsInterstitialReady();
 }
@@ -95,7 +107,7 @@ bool LUNAAds::IsInterstitialReady()
 // Cache interstitial
 void LUNAAds::CacheInterstitial(const std::string& location)
 {
-	if(!service) return;
+	if(!service || !enabled) return;
 
 	return service->CacheInterstitial(location);
 }
@@ -103,7 +115,7 @@ void LUNAAds::CacheInterstitial(const std::string& location)
 // Show interstitial
 void LUNAAds::ShowInterstitial(const std::string& location)
 {
-	if(!service) return;
+	if(!service || !enabled) return;
 
 	service->ShowInterstitial(location);
 }
@@ -120,7 +132,7 @@ void LUNAAds::OnInterstitialClosed()
 // Check for rewarded video is downloaded ready to showing
 bool LUNAAds::IsRewardedVideoReady()
 {
-	if(!service) return false;
+	if(!service || !enabled) return false;
 
 	return service->IsRewardedVideoReady();
 }
@@ -128,7 +140,7 @@ bool LUNAAds::IsRewardedVideoReady()
 // Cache rewarded video
 void LUNAAds::CacheRewardedVideo(const std::string& location)
 {
-	if(!service) return;
+	if(!service || !enabled) return;
 
 	return service->CacheRewardedVideo(location);
 }
@@ -136,7 +148,7 @@ void LUNAAds::CacheRewardedVideo(const std::string& location)
 // Show rewarded video
 void LUNAAds::ShowRewardedVideo(const std::string& location)
 {
-	if(!service || !service->IsRewardedVideoReady()) return;
+	if(!service || !enabled || !service->IsRewardedVideoReady()) return;
 
 	service->ShowRewardedVideo(location);
 }

@@ -70,6 +70,7 @@ public:
 
 private:
 	std::shared_ptr<LUNAAdsService> service;
+	bool enabled = true;
 
 public:
 	// Load service instance by name
@@ -77,6 +78,12 @@ public:
 
 	// Load services from config
 	void LoadServices();
+
+	// Check for ads is enabled
+	bool IsEnabled();
+
+	// Enable/disable ads
+	void SetEnabled(bool enabled);
 
 	// Get default banner height (in pixels)
 	int GetPhysicalBannerHeight();

@@ -26,6 +26,11 @@
 using namespace luna2d;
 
 // Load service instance by name
+LUNAQtAds::LUNAQtAds()
+{
+	SetEnabled(false);
+}
+
 std::shared_ptr<LUNAAdsService> LUNAQtAds::LoadService(const std::string& name)
 {
 	return nullptr;
