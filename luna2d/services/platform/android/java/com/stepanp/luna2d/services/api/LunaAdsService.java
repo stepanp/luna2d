@@ -44,7 +44,7 @@ public abstract class LunaAdsService
 	public abstract void cacheInterstitial(String location);
 
 	// Show interstitial
-	public abstract void showInterstitialAsync(String location);
+	public abstract void showInterstitial(String location);
 
 	// Check for rewarded video is downloaded ready to showing
 	public abstract boolean isRewardedVideoReady();

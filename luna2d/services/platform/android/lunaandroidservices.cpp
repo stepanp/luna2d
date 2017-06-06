@@ -23,6 +23,7 @@
 
 #include "lunaandroidservices.h"
 #include "lunaandroidads.h"
+#include "lunaandroidpurchases.h"
 #include "lunaandroidsharing.h"
 #include "lunaandroidstore.h"
 #include "lunaandroidleaderboards.h"
@@ -33,6 +34,7 @@ using namespace luna2d;
 void LUNAAndroidServices::LoadServices()
 {
 	ads = std::make_shared<LUNAAndroidAds>();
+	purchases = std::make_shared<LUNAAndroidPurchases>();
 	sharing = std::make_shared<LUNAAndroidSharing>();
 	store = std::make_shared<LUNAAndroidStore>();
 	leaderboards = std::make_shared<LUNAAndroidLeaderboards>();

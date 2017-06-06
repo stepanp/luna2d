@@ -38,9 +38,11 @@ LUNAAndroidPurchases::LUNAAndroidPurchases()
 	env->DeleteLocalRef(localRef);
 
 	// Get java wrapper method ids
-	javaFetchProducts = env->GetStaticMethodID(javaPurchases, "fetchProducts", "(Ljava/lang/Array;)V");
+	javaFetchProducts = env->GetStaticMethodID(javaPurchases, "fetchProducts", "([Ljava/lang/String;)V");
 	javaPurchaseProduct = env->GetStaticMethodID(javaPurchases, "purchaseProduct", "(Ljava/lang/String;)V");
 	javaRestoreProducts = env->GetStaticMethodID(javaPurchases, "restoreProducts", "()V");
+
+	ReadProductsFromConfig();
 }
 
 // Fetch products info from server

@@ -23,7 +23,9 @@
 
 package com.stepanp.luna2d.services;
 
-public class LunaAndroidPurchases
+import com.stepanp.luna2d.services.api.LunaServicesApi;
+
+public class LunaPurchases
 {
     // Fetch products info from server
     public static void fetchProducts(String[] productIds)
