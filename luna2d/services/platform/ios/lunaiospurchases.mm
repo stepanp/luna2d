@@ -118,7 +118,8 @@ SKProduct* LUNAIosPurchases::GetProduct(const std::string& productId)
 // Fetch products info from server
 void LUNAIosPurchases::FetchProducts()
 {
-	if(productAliases.empty()) LUNA_RETURN_ERR("NO ALIASES");
+	if(productAliases.empty()) LUNA_RETURN_ERR("Cannot fetch products."
+		"Any product id not found in \"inAppPurchasesProducts\" value in config");
 	if([products count] > 0) return;
 	
 	NSMutableSet* productSet = [NSMutableSet set];

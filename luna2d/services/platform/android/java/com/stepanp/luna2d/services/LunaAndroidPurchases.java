@@ -21,36 +21,25 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+package com.stepanp.luna2d.services;
 
-#include "lunapurchases.h"
-#import <StoreKit/StoreKit.h>
-
-namespace luna2d{
-
-class LUNAIosPurchases : public LUNAPurchases
+public class LunaAndroidPurchases
 {
-public:
-	LUNAIosPurchases();
-	
-private:
-	NSMutableDictionary* products = [[NSMutableDictionary alloc] init];
-	id purchasesDelegate;
-	
-	SKProduct* GetProduct(const std::string& productId);
-	
-public:
-	// Fetch products info from server
-	virtual void FetchProducts();
-	
-	// Purchase product with given id
-	virtual void PurchaseProduct(const std::string& productId);
-	
-	// Restore purchased products
-	virtual void RestoreProducts();
-	
-	void OnFetchProducts(SKProductsResponse* response);
-	void OnProductPurchased(const std::string& productId, bool isSuccess);
-};
+    // Fetch products info from server
+    public static void fetchProducts(String[] productIds)
+    {
 
+    }
+
+    // Purchase product with given id
+    public static void purchaseProduct(String productId)
+    {
+
+    }
+
+    // Restore purchased products
+    public static void restoreProducts()
+    {
+
+    }
 }

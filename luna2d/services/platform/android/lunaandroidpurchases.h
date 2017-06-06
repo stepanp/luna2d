@@ -24,22 +24,22 @@
 #pragma once
 
 #include "lunapurchases.h"
-#import <StoreKit/StoreKit.h>
+#include "lunaandroidjni.h"
 
 namespace luna2d{
 
-class LUNAIosPurchases : public LUNAPurchases
+class LUNAAndroidPurchases : public LUNAPurchases
 {
 public:
-	LUNAIosPurchases();
-	
+	LUNAAndroidPurchases();
+
 private:
-	NSMutableDictionary* products = [[NSMutableDictionary alloc] init];
-	id purchasesDelegate;
-	
-	SKProduct* GetProduct(const std::string& productId);
-	
-public:
+	jclass javaPurchases;
+	jmethodID javaFetchProducts;
+	jmethodID javaPurchaseProduct;
+	jmethodID javaRestoreProducts;
+
+public:	
 	// Fetch products info from server
 	virtual void FetchProducts();
 	
@@ -48,9 +48,6 @@ public:
 	
 	// Restore purchased products
 	virtual void RestoreProducts();
-	
-	void OnFetchProducts(SKProductsResponse* response);
-	void OnProductPurchased(const std::string& productId, bool isSuccess);
 };
 
 }
