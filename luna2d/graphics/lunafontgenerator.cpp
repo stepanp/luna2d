@@ -28,9 +28,9 @@
 using namespace luna2d;
 
 const std::u32string LATIN_CHARS = LUNA_UTF32("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM");
-const std::u32string DIACTRITIC_CHARS = LUNA_UTF32("áàâäåãéèêîíìôöóòûùüœæøßçñÁÀÂÄÅÃÉÈÊÎÍÌÔÖÓÒÛÙÜŒÆØÇÑ");
+const std::u32string DIACTRITIC_CHARS = LUNA_UTF32("áàâäåãéèêîíìôöóòûùúüœæøßçñÁÀÂÄÅÃÃÉÈÊÎÍÌÔÖÓÒÛÙÚÜŒÆØÇÑ");
 const std::u32string CYRILLIC_CHARS = LUNA_UTF32("йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ");
-const std::u32string COMMON_CHARS = LUNA_UTF32(" !@#$%^&*()-+=!№?<>[]{}:;,.\\/|`~'\"_©");
+const std::u32string COMMON_CHARS = LUNA_UTF32(" !@#$%^&*()-+=!№?¿<>[]{}:;,.\\/|`~'\"_©");
 const std::u32string NUMBER_CHARS = LUNA_UTF32("1234567890");
 
 struct CharRegion
