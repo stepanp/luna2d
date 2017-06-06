@@ -23,19 +23,47 @@
 
 package com.stepanp.luna2d.services.api;
 
-public abstract class LunaAdsSerivce
+public abstract class LunaAdsService
 {
+	// Get default banner height (in pixels)
+	public abstract int getBannerHeight();
+
+	// Check for banner is shown
+	public abstract boolean isBannerShown();
+
+	// Show banner
+	public abstract void showBanner(String location);
+
+	// Hide banner
+	public abstract void hideBanner();	
+
+	// Check for interstitial is downloaded ready to showing
 	public abstract boolean isInterstitalReady();
 
+	// Cache interstitial
+	public abstract void cacheInterstitial(String location);
+
+	// Show interstitial
+	public abstract void showInterstitialAsync(String location);
+
+	// Check for rewarded video is downloaded ready to showing
 	public abstract boolean isRewardedVideoReady();
 
-	public abstract void showInterstitial();
+	// Cache rewarded video
+	public abstract void cacheRewardedVideo(String location);
 
-	public abstract void showRewardedVideo();
+	// Show rewarded video
+	public abstract void showRewardedVideo(String location);
 
+	// Callback for interstitial has been closed
+	protected native void onInterstitialClosed();
+
+	// Callback for video has been succesfully viewed
 	protected native void onRewardedVideoSuccess();
 
+	// Callback for video has been dismissed
 	protected native void onRewardedVideoFail();
 
+	// Callback for video cause error
 	protected native void onRewardedVideoError();
 }

@@ -36,9 +36,15 @@ public:
 private:
 	jclass javaClass = nullptr;
 	jobject javaObject = nullptr;
+	jmethodID javaGetBannerHeight = nullptr;
+	jmethodID javaIsBannerShown = nullptr;
+	jmethodID javaShowBanner = nullptr;
+	jmethodID javaHideBanner = nullptr;
 	jmethodID javaIsInterstitalReady = nullptr;
-	jmethodID javaIsRewardedVideoReady = nullptr;
+	jmethodID javaCacheInterstital = nullptr;
 	jmethodID javaShowInterstital = nullptr;
+	jmethodID javaIsRewardedVideoReady = nullptr;
+	jmethodID javaCacheRewardedVideo = nullptr;
 	jmethodID javaShowRewardedVideo = nullptr;
 	bool isLoaded = false;
 
@@ -46,17 +52,35 @@ public:
 	// Check for java part of ads service was loaded successufully
 	bool IsLoaded();
 
+	// Get default banner height (in pixels)
+	virtual int GetBannerHeight();
+	
+	// Check for banner is shown
+	virtual bool IsBannerShown();
+	
+	// Show banner
+	virtual void ShowBanner(const std::string& location);
+	
+	// Hide banner
+	virtual void HideBanner();
+	
 	// Check for interstitial is downloaded ready to showing
-	virtual bool IsInterstitalReady();
+	virtual bool IsInterstitialReady();
+	
+	// Cache interstitial
+	virtual void CacheInterstitial(const std::string& location);
+	
+	// Show interstitial
+	virtual void ShowInterstitial(const std::string& location);
 	
 	// Check for video is downloaded ready to showing
 	virtual bool IsRewardedVideoReady();
 	
-	// Show interstitial
-	virtual void ShowInterstital();
-		
+	// Cache rewarded video
+	virtual void CacheRewardedVideo(const std::string& location);
+	
 	// Show rewarded video
-	virtual void ShowRewardedVideo();
+	virtual void ShowRewardedVideo(const std::string& location);
 };
 
 

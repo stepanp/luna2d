@@ -77,3 +77,19 @@ LUNA_JNI_FUNC_PACKAGE(bool, services_api, LunaServicesApi, getConfigBool)(JNIEnv
 	auto name = jni::FromJString(jName);
 	return LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].bool_value();
 }
+
+LUNA_JNI_FUNC_PACKAGE(jobjectArray, services_api, LunaServicesApi, getConfigStringArray)(JNIEnv* env, jclass cls, jstring jName)
+{
+	auto name = jni::FromJString(jName);
+	auto items = LUNAEngine::Shared()->GetConfig()->GetCustomValues()[name].array_items();
+
+	jobjectArray ret = jni::Env()->NewObjectArray(items.size(), 
+		jni::Env()->FindClass("java/lang/String"), jni::Env()->NewStringUTF(""));
+
+    for(int i = 0; i < items.size(); i++) 
+    {  
+        jni::Env()->SetObjectArrayElement(ret, i, jni::Env()->NewStringUTF(items[i].string_value().c_str()));  
+    }  
+
+    return ret;
+}

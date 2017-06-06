@@ -47,6 +47,9 @@ public class LunaServicesApi
 	// Get bool value from config by name
 	public static native boolean getConfigBool(String name);
 
+	// Get array of strings from config by name
+	public static native String[] getConfigStringArray(String name);
+
 	// Get main game activity
 	// Some android APIs requests Context or Activity for work.
 	// So, use Activity returning this method

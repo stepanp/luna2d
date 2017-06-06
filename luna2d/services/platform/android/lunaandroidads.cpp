@@ -56,10 +56,16 @@ LUNAAndroidAdsService::LUNAAndroidAdsService(const std::string& javaClassPath)
 	env->DeleteLocalRef(localObjRef);
 
 	// Get java wrapper method ids
-	javaIsInterstitalReady = env->GetMethodID(javaClass, "isInterstitalReady", "()Z");
+	javaGetBannerHeight = env->GetMethodID(javaClass, "getBannerHeight", "()I");
+	javaIsBannerShown = env->GetMethodID(javaClass, "isBannerShown", "()Z");
+	javaShowBanner = env->GetMethodID(javaClass, "showBanner", "(Ljava/lang/String;)V");
+	javaHideBanner = env->GetMethodID(javaClass, "hideBanner", "()V");
+	javaIsInterstitalReady = env->GetMethodID(javaClass, "interstitalReady", "()Z");
+	javaCacheInterstital = env->GetMethodID(javaClass, "cacheInterstital", "(Ljava/lang/String;)V");
+	javaShowInterstital = env->GetMethodID(javaClass, "showInterstital", "(Ljava/lang/String;)V");
 	javaIsRewardedVideoReady = env->GetMethodID(javaClass, "isRewardedVideoReady", "()Z");
-	javaShowInterstital = env->GetMethodID(javaClass, "showInterstitial", "()V");
-	javaShowRewardedVideo = env->GetMethodID(javaClass, "showRewardedVideo", "()V");
+	javaCacheRewardedVideo = env->GetMethodID(javaClass, "cacheRewardedVideo", "(Ljava/lang/String;)V");
+	javaShowRewardedVideo = env->GetMethodID(javaClass, "showRewardedVideo", "(Ljava/lang/String;)V");
 
 	isLoaded = true;
 }
@@ -70,10 +76,46 @@ bool LUNAAndroidAdsService::IsLoaded()
 	return isLoaded;
 }
 
+// Get default banner height (in pixels)
+int LUNAAndroidAdsService::GetBannerHeight()
+{
+	return jni::Env()->CallIntMethod(javaObject, javaGetBannerHeight);
+}
+
+// Check for banner is shown
+bool LUNAAndroidAdsService::IsBannerShown()
+{
+	return jni::Env()->CallBooleanMethod(javaObject, javaIsBannerShown);
+}
+
+// Show banner
+void LUNAAndroidAdsService::ShowBanner(const std::string& location)
+{
+	jni::Env()->CallVoidMethod(javaObject, javaShowBanner, jni::ToJString(location).j_str());
+}
+
+// Hide banner
+void LUNAAndroidAdsService::HideBanner()
+{
+	jni::Env()->CallVoidMethod(javaObject, javaHideBanner);
+}
+
 // Check for interstitial is downloaded ready to showing
-bool LUNAAndroidAdsService::IsInterstitalReady()
+bool LUNAAndroidAdsService::IsInterstitialReady()
 {
 	return jni::Env()->CallBooleanMethod(javaObject, javaIsInterstitalReady);
+}
+
+// Cache interstitial
+void LUNAAndroidAdsService::CacheInterstitial(const std::string& location)
+{
+	jni::Env()->CallVoidMethod(javaObject, javaCacheInterstital, jni::ToJString(location).j_str());
+}
+
+// Show interstitial
+void LUNAAndroidAdsService::ShowInterstitial(const std::string& location)
+{
+	jni::Env()->CallVoidMethod(javaObject, javaShowInterstital, jni::ToJString(location).j_str());
 }
 
 // Check for video is downloaded ready to showing
@@ -82,19 +124,19 @@ bool LUNAAndroidAdsService::IsRewardedVideoReady()
 	return jni::Env()->CallBooleanMethod(javaObject, javaIsRewardedVideoReady);
 }
 
-// Show interstitial
-void LUNAAndroidAdsService::ShowInterstital()
+// Cache rewarded video
+void LUNAAndroidAdsService::CacheRewardedVideo(const std::string& location)
 {
-	jni::Env()->CallVoidMethod(javaObject, javaShowInterstital);
+	jni::Env()->CallVoidMethod(javaObject, javaCacheRewardedVideo, jni::ToJString(location).j_str());
 }
 
 // Show rewarded video
-void LUNAAndroidAdsService::ShowRewardedVideo()
+void LUNAAndroidAdsService::ShowRewardedVideo(const std::string& location)
 {
 	LUNAEngine::Shared()->OnPause();
 	LUNAEngine::Shared()->EnablePauseHandling(false); // Protect game from resuming by operating system
 
-	jni::Env()->CallVoidMethod(javaObject, javaShowRewardedVideo);
+	jni::Env()->CallVoidMethod(javaObject, javaShowRewardedVideo, jni::ToJString(location).j_str());
 }
 
 
@@ -112,6 +154,11 @@ std::shared_ptr<LUNAAdsService> LUNAAndroidAds::LoadService(const std::string& n
 //--------------------
 // Callbacks from Java
 //-------------------- 
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onInterstitialClosed)(JNIEnv* env, jmethodID method)
+{
+	LUNAEngine::SharedServices()->GetAds()->OnInterstitialClosed();
+}
+
 LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onRewardedVideoSuccess)(JNIEnv* env, jmethodID method)
 {
 	LUNAEngine::Shared()->EnablePauseHandling(true);
