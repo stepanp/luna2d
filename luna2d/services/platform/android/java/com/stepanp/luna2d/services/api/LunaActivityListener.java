@@ -42,5 +42,5 @@ public interface LunaActivityListener
 
 	public void onNetworkStateChanged(Activity acitivity, boolean connected);
 
-	public void onActivityResult(int requestCode, int resultCode, Intent intent);
+	public boolean onActivityResult(int requestCode, int resultCode, Intent intent);
 }

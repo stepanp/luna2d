@@ -174,7 +174,6 @@ void LUNAIosPurchases::OnFetchProducts(SKProductsResponse* response)
 
 void LUNAIosPurchases::OnProductPurchased(const std::string& productId, bool isSuccess)
 {
-	LUNA_LOG("OnProductPurchased %s %s", productId.c_str(), isSuccess ? "true" : "false");
 	if(isSuccess) LUNAPurchases::OnProductPurchased(productId);
 }
 

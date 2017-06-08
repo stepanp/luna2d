@@ -25,6 +25,7 @@
 #include "lunafiles.h"
 #include "lunalog.h"
 #include "lunamacro.h"
+#include "lunaservices.h"
 
 using namespace luna2d;
 
@@ -58,7 +59,6 @@ void LUNAAndroidPurchases::FetchProducts()
 	for(const auto& entry : productAliases)
 	{
 		jni::Env()->SetObjectArrayElement(javaProductIds, i, jni::Env()->NewStringUTF(entry.second.c_str())); 
-
 		i++;
 	}
 
@@ -76,4 +76,22 @@ void LUNAAndroidPurchases::PurchaseProduct(const std::string& productId)
 void LUNAAndroidPurchases::RestoreProducts()
 {
 	jni::Env()->CallStaticVoidMethod(javaPurchases, javaRestoreProducts);
+}
+
+
+LUNA_JNI_FUNC_PACKAGE(void, services, LunaPurchases, onFetchProducts)(JNIEnv* env, jclass cls, jobjectArray productIds)
+{
+	std::vector<std::string> availableProducts;
+
+	for(int i = 0; i < jni::Env()->GetArrayLength(productIds); i++)
+	{
+		availableProducts.push_back(jni::FromJString(jni::Env()->GetObjectArrayElement(productIds, i)));
+	}
+	
+	LUNAEngine::SharedServices()->GetPurchases()->OnProductsFetched(availableProducts);
+}
+
+LUNA_JNI_FUNC_PACKAGE(void, services, LunaPurchases, onProductPurchased)(JNIEnv* env, jclass cls, jstring productId)
+{
+	LUNAEngine::SharedServices()->GetPurchases()->OnProductPurchased(jni::FromJString(productId));
 }

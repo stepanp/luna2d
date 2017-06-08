@@ -23,25 +23,192 @@
 
 package com.stepanp.luna2d.services;
 
+import java.util.Arrays;
+import java.util.List;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+import com.android.billing.util.IabHelper;
+import com.android.billing.util.IabResult;
+import com.android.billing.util.Inventory;
+import com.android.billing.util.Purchase;
+import com.stepanp.luna2d.services.api.LunaActivityListener;
 import com.stepanp.luna2d.services.api.LunaServicesApi;
+
 
 public class LunaPurchases
 {
-    // Fetch products info from server
-    public static void fetchProducts(String[] productIds)
-    {
+    private static final int RC_REQUEST = 10001;
 
+    private static IabHelper helper;
+    private static Inventory inventory;
+    
+    // Fetch products info from server
+    public static void fetchProducts(final String[] productIds)
+    {
+        if(inventory != null) return;
+
+        if(!LunaServicesApi.hasConfigValue("googlePlayPublicKey"))
+        {
+            Log.e(LunaServicesApi.getLogTag(), "Application's public key \"googlePlayPublicKey\" should be set in config");
+            return;
+        }
+
+        if(helper == null)
+        {
+            Activity activity = LunaServicesApi.getSharedActivity();
+            String rsaKey = LunaServicesApi.getConfigString("googlePlayPublicKey");
+
+            helper = new IabHelper(activity, rsaKey);
+        }
+
+        helper.startSetup(new IabHelper.OnIabSetupFinishedListener()
+        {
+            @Override
+            public void onIabSetupFinished(IabResult result)
+            {
+                if(result.isFailure())
+                {
+                    Log.e(LunaServicesApi.getLogTag(), "Problem setting up in-app billing: " + result);
+                    return;
+                }
+
+                try
+                {
+                    helper.queryInventoryAsync(true, Arrays.asList(productIds), null, queryInventoryListener);
+                }
+                catch(IabHelper.IabAsyncInProgressException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     // Purchase product with given id
     public static void purchaseProduct(String productId)
     {
+        if(inventory == null)
+        {
+            Log.e(LunaServicesApi.getLogTag(), "Products info not fetched from server");
+            return;
+        }
 
+        if(!inventory.hasDetails(productId))
+        {
+            Log.e(LunaServicesApi.getLogTag(), "Product \"" + productId + "\" not found");
+            return;
+        }
+
+        try
+        {
+            Activity activity = LunaServicesApi.getSharedActivity();
+            helper.launchPurchaseFlow(activity, productId, RC_REQUEST, purchaseListener);
+        }
+        catch(IabHelper.IabAsyncInProgressException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     // Restore purchased products
     public static void restoreProducts()
     {
+        if(inventory == null)
+        {
+            Log.e(LunaServicesApi.getLogTag(), "Products info not fetched from server");
+            return;
+        }
 
+        for(String productId : inventory.getAllSkus())
+        {
+            if(inventory.hasPurchase(productId)) onProductPurchased(productId);
+        }
     }
+
+    private static native void onFetchProducts(String[] productIds);
+
+    private static native void onProductPurchased(String productId);
+
+    private static IabHelper.QueryInventoryFinishedListener queryInventoryListener = new IabHelper.QueryInventoryFinishedListener()
+    {
+        @Override
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+        {
+            if(helper == null) return;
+
+            if(result.isFailure())
+            {
+                Log.e(LunaServicesApi.getLogTag(), "Failed to query inventory: " + result);
+                return;
+            }
+
+            LunaPurchases.inventory = inventory;
+
+            List<String> productIds = inventory.getAllSkus();
+            onFetchProducts(productIds.toArray(new String[productIds.size()]));
+        }
+    };
+
+    private static  IabHelper.OnIabPurchaseFinishedListener purchaseListener = new IabHelper.OnIabPurchaseFinishedListener()
+    {
+        @Override
+        public void onIabPurchaseFinished(IabResult result, Purchase info)
+        {
+            if(helper == null) return;
+
+            if(result.isFailure())
+            {
+                Log.e(LunaServicesApi.getLogTag(), "Error purchasing: " + result);
+                return;
+            }
+
+            onProductPurchased(info.getSku());
+        }
+    };
+
+    private static LunaActivityListener activityListener = new LunaActivityListener()
+    {
+        @Override
+        public void onStart(Activity activity) {}
+
+        @Override
+        public void onResume(Activity activity) {}
+
+        @Override
+        public void onPause(Activity activity) {}
+
+        @Override
+        public void onStop(Activity activity) {}
+
+        @Override
+        public void onDestroy(Activity activity)
+        {
+            if(helper == null) return;
+
+            try
+            {
+                helper.dispose();
+            }
+            catch(IabHelper.IabAsyncInProgressException e)
+            {
+                e.printStackTrace();
+            }
+
+            helper = null;
+            inventory = null;
+        }
+
+        @Override
+        public boolean onBackPressed(Activity acitivity) { return false; }
+
+        @Override
+        public void onNetworkStateChanged(Activity acitivity, boolean connected) {}
+
+        @Override
+        public boolean onActivityResult(int requestCode, int resultCode, Intent intent)
+        {
+            return helper.handleActivityResult(requestCode, resultCode, intent);
+        }
+    };
 }

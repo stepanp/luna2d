@@ -135,9 +135,14 @@ public class LunaActivity extends Activity
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
-		super.onActivityResult(requestCode, resultCode, intent);
+		boolean processEvent = true;
 
-		for(LunaActivityListener listener : listeners) listener.onActivityResult(requestCode, resultCode, intent);
+		for(LunaActivityListener listener : listeners)
+		{
+			if(listener.onActivityResult(requestCode, resultCode, intent)) processEvent = false;
+		}
+
+		if(processEvent) super.onActivityResult(requestCode, resultCode, intent);
 	}
 
 	@Override

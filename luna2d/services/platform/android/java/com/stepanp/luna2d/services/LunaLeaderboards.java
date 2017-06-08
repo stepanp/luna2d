@@ -181,7 +181,7 @@ public class LunaLeaderboards
 		}
 
 		@Override
-		public void onActivityResult(int requestCode, int resultCode, Intent intent)
+		public boolean onActivityResult(int requestCode, int resultCode, Intent intent)
 		{
 			if (requestCode == RC_SIGN_IN)
 			{
@@ -189,6 +189,8 @@ public class LunaLeaderboards
 				if(resultCode == Activity.RESULT_OK) apiClient.connect();
 				else notConnected = true;
 			}
+
+			return false;
 		}
 	};
 }
