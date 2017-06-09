@@ -60,9 +60,9 @@ LUNAAndroidAdsService::LUNAAndroidAdsService(const std::string& javaClassPath)
 	javaIsBannerShown = env->GetMethodID(javaClass, "isBannerShown", "()Z");
 	javaShowBanner = env->GetMethodID(javaClass, "showBanner", "(Ljava/lang/String;)V");
 	javaHideBanner = env->GetMethodID(javaClass, "hideBanner", "()V");
-	javaIsInterstitalReady = env->GetMethodID(javaClass, "interstitalReady", "()Z");
-	javaCacheInterstital = env->GetMethodID(javaClass, "cacheInterstital", "(Ljava/lang/String;)V");
-	javaShowInterstital = env->GetMethodID(javaClass, "showInterstital", "(Ljava/lang/String;)V");
+	javaIsInterstitialReady = env->GetMethodID(javaClass, "isInterstitialReady", "()Z");
+	javaCacheInterstitial = env->GetMethodID(javaClass, "cacheInterstitial", "(Ljava/lang/String;)V");
+	javaShowInterstitial = env->GetMethodID(javaClass, "showInterstitial", "(Ljava/lang/String;)V");
 	javaIsRewardedVideoReady = env->GetMethodID(javaClass, "isRewardedVideoReady", "()Z");
 	javaCacheRewardedVideo = env->GetMethodID(javaClass, "cacheRewardedVideo", "(Ljava/lang/String;)V");
 	javaShowRewardedVideo = env->GetMethodID(javaClass, "showRewardedVideo", "(Ljava/lang/String;)V");
@@ -103,19 +103,19 @@ void LUNAAndroidAdsService::HideBanner()
 // Check for interstitial is downloaded ready to showing
 bool LUNAAndroidAdsService::IsInterstitialReady()
 {
-	return jni::Env()->CallBooleanMethod(javaObject, javaIsInterstitalReady);
+	return jni::Env()->CallBooleanMethod(javaObject, javaIsInterstitialReady);
 }
 
 // Cache interstitial
 void LUNAAndroidAdsService::CacheInterstitial(const std::string& location)
 {
-	jni::Env()->CallVoidMethod(javaObject, javaCacheInterstital, jni::ToJString(location).j_str());
+	jni::Env()->CallVoidMethod(javaObject, javaCacheInterstitial, jni::ToJString(location).j_str());
 }
 
 // Show interstitial
 void LUNAAndroidAdsService::ShowInterstitial(const std::string& location)
 {
-	jni::Env()->CallVoidMethod(javaObject, javaShowInterstital, jni::ToJString(location).j_str());
+	jni::Env()->CallVoidMethod(javaObject, javaShowInterstitial, jni::ToJString(location).j_str());
 }
 
 // Check for video is downloaded ready to showing

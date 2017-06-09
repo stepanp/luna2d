@@ -38,7 +38,7 @@ public abstract class LunaAdsService
 	public abstract void hideBanner();	
 
 	// Check for interstitial is downloaded ready to showing
-	public abstract boolean isInterstitalReady();
+	public abstract boolean isInterstitialReady();
 
 	// Cache interstitial
 	public abstract void cacheInterstitial(String location);

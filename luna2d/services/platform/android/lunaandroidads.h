@@ -40,9 +40,9 @@ private:
 	jmethodID javaIsBannerShown = nullptr;
 	jmethodID javaShowBanner = nullptr;
 	jmethodID javaHideBanner = nullptr;
-	jmethodID javaIsInterstitalReady = nullptr;
-	jmethodID javaCacheInterstital = nullptr;
-	jmethodID javaShowInterstital = nullptr;
+	jmethodID javaIsInterstitialReady = nullptr;
+	jmethodID javaCacheInterstitial = nullptr;
+	jmethodID javaShowInterstitial = nullptr;
 	jmethodID javaIsRewardedVideoReady = nullptr;
 	jmethodID javaCacheRewardedVideo = nullptr;
 	jmethodID javaShowRewardedVideo = nullptr;
