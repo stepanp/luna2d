@@ -154,7 +154,7 @@ public class LunaPurchases
     private static IabHelper.QueryInventoryFinishedListener queryInventoryListener = new IabHelper.QueryInventoryFinishedListener()
     {
         @Override
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+        public void onQueryInventoryFinished(IabResult result, final Inventory inventory)
         {
             if(helper == null) return;
 
@@ -166,15 +166,22 @@ public class LunaPurchases
 
             LunaPurchases.inventory = inventory;
 
-            List<String> productIds = inventory.getAllSkus();
-            onFetchProducts(productIds.toArray(new String[productIds.size()]));
+			LunaServicesApi.runInRenderThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					List<String> productIds = inventory.getAllSkus();
+					onFetchProducts(productIds.toArray(new String[productIds.size()]));
+				}
+			});
         }
     };
 
     private static IabHelper.OnIabPurchaseFinishedListener purchaseListener = new IabHelper.OnIabPurchaseFinishedListener()
     {
         @Override
-        public void onIabPurchaseFinished(IabResult result, Purchase info)
+        public void onIabPurchaseFinished(IabResult result, final Purchase info)
         {
             if(helper == null) return;
 
@@ -184,7 +191,14 @@ public class LunaPurchases
                 return;
             }
 
-            onProductPurchased(info.getSku());
+			LunaServicesApi.runInRenderThread(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					onProductPurchased(info.getSku());
+				}
+			});
         }
     };
 
