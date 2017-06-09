@@ -35,54 +35,75 @@ import com.android.billing.util.Purchase;
 import com.stepanp.luna2d.services.api.LunaActivityListener;
 import com.stepanp.luna2d.services.api.LunaServicesApi;
 
-
 public class LunaPurchases
 {
     private static final int RC_REQUEST = 10001;
 
     private static IabHelper helper;
     private static Inventory inventory;
+
+	public static void init()
+	{
+		if(!LunaServicesApi.hasConfigValue("googlePlayPublicKey"))
+		{
+			Log.e(LunaServicesApi.getLogTag(), "Application's public key \"googlePlayPublicKey\" should be set in config");
+			return;
+		}
+
+		Activity activity = LunaServicesApi.getSharedActivity();
+		String rsaKey = LunaServicesApi.getConfigString("googlePlayPublicKey");
+
+		helper = new IabHelper(activity, rsaKey);
+		helper.enableDebugLogging(true);
+
+		LunaServicesApi.addActivityListener(activityListener);
+	}
+
+	private static void queryInventory(final String[] productIds)
+	{
+		try
+		{
+			helper.queryInventoryAsync(true, Arrays.asList(productIds), null, queryInventoryListener);
+		}
+		catch(IabHelper.IabAsyncInProgressException e)
+		{
+			e.printStackTrace();
+		}
+	}
     
     // Fetch products info from server
     public static void fetchProducts(final String[] productIds)
     {
-        if(inventory != null) return;
+        if(helper == null || inventory != null) return;
 
-        if(!LunaServicesApi.hasConfigValue("googlePlayPublicKey"))
-        {
-            Log.e(LunaServicesApi.getLogTag(), "Application's public key \"googlePlayPublicKey\" should be set in config");
-            return;
-        }
+		if(!helper.isSetupDone())
+		{
+			helper.startSetup(new IabHelper.OnIabSetupFinishedListener()
+			{
+				@Override
+				public void onIabSetupFinished(IabResult result)
+				{
+					if (result.isFailure())
+					{
+						Log.e(LunaServicesApi.getLogTag(), "Problem setting up in-app billing: " + result);
+						return;
+					}
 
-        if(helper == null)
-        {
-            Activity activity = LunaServicesApi.getSharedActivity();
-            String rsaKey = LunaServicesApi.getConfigString("googlePlayPublicKey");
+					queryInventory(productIds);
+				}
+			});
 
-            helper = new IabHelper(activity, rsaKey);
-        }
+			return;
+		}
 
-        helper.startSetup(new IabHelper.OnIabSetupFinishedListener()
-        {
-            @Override
-            public void onIabSetupFinished(IabResult result)
-            {
-                if(result.isFailure())
-                {
-                    Log.e(LunaServicesApi.getLogTag(), "Problem setting up in-app billing: " + result);
-                    return;
-                }
-
-                try
-                {
-                    helper.queryInventoryAsync(true, Arrays.asList(productIds), null, queryInventoryListener);
-                }
-                catch(IabHelper.IabAsyncInProgressException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        });
+		LunaServicesApi.runInUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				queryInventory(productIds);
+			}
+		});
     }
 
     // Purchase product with given id
@@ -150,7 +171,7 @@ public class LunaPurchases
         }
     };
 
-    private static  IabHelper.OnIabPurchaseFinishedListener purchaseListener = new IabHelper.OnIabPurchaseFinishedListener()
+    private static IabHelper.OnIabPurchaseFinishedListener purchaseListener = new IabHelper.OnIabPurchaseFinishedListener()
     {
         @Override
         public void onIabPurchaseFinished(IabResult result, Purchase info)

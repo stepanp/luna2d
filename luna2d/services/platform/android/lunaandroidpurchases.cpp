@@ -43,6 +43,9 @@ LUNAAndroidPurchases::LUNAAndroidPurchases()
 	javaPurchaseProduct = env->GetStaticMethodID(javaPurchases, "purchaseProduct", "(Ljava/lang/String;)V");
 	javaRestoreProducts = env->GetStaticMethodID(javaPurchases, "restoreProducts", "()V");
 
+	jmethodID javaInit = env->GetStaticMethodID(javaPurchases, "init", "()V");
+	env->CallStaticVoidMethod(javaPurchases, javaInit);
+
 	ReadProductsFromConfig();
 }
 
