@@ -54,7 +54,6 @@ public class LunaPurchases
 		String rsaKey = LunaServicesApi.getConfigString("googlePlayPublicKey");
 
 		helper = new IabHelper(activity, rsaKey);
-		helper.enableDebugLogging(true);
 
 		LunaServicesApi.addActivityListener(activityListener);
 	}
