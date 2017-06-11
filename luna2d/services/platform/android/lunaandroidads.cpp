@@ -154,26 +154,26 @@ std::shared_ptr<LUNAAdsService> LUNAAndroidAds::LoadService(const std::string& n
 //--------------------
 // Callbacks from Java
 //-------------------- 
-LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onInterstitialClosed)(JNIEnv* env, jmethodID method)
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsService, onInterstitialClosed)(JNIEnv* env, jmethodID method)
 {
 	LUNAEngine::SharedServices()->GetAds()->OnInterstitialClosed();
 }
 
-LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onRewardedVideoSuccess)(JNIEnv* env, jmethodID method)
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsService, onRewardedVideoSuccess)(JNIEnv* env, jmethodID method)
 {
 	LUNAEngine::Shared()->EnablePauseHandling(true);
 	LUNAEngine::Shared()->OnResume();
 	LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoSuccess();
 }
 
-LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onRewardedVideoFail)(JNIEnv* env, jmethodID method)
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsService, onRewardedVideoFail)(JNIEnv* env, jmethodID method)
 {
 	LUNAEngine::Shared()->EnablePauseHandling(true);
 	LUNAEngine::Shared()->OnResume();
 	LUNAEngine::SharedServices()->GetAds()->OnRewardedVideoFail();
 }
 
-LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsSerivce, onRewardedVideoError)(JNIEnv* env, jmethodID method)
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaAdsService, onRewardedVideoError)(JNIEnv* env, jmethodID method)
 {
 	LUNAEngine::SharedPlatformUtils()->MessageDialog("Error", "Cannot load rewarded video",
 		[]()
