@@ -42,6 +42,7 @@ static void BindAds(const std::shared_ptr<LUNAAds>& ads, LuaScript* lua, LuaTabl
 	tblAds.SetField("setEnabled", LuaFunction(lua, ads.get(), &LUNAAds::SetEnabled));
 	tblAds.SetField("getPhysicalBannerHeight", LuaFunction(lua, ads.get(), &LUNAAds::GetPhysicalBannerHeight));
 	tblAds.SetField("getBannerHeight", LuaFunction(lua, ads.get(), &LUNAAds::GetBannerHeight));
+	tblAds.SetField("isBannerShown", LuaFunction(lua, ads.get(), &LUNAAds::IsBannerShown));
 	tblAds.SetField("showBanner", LuaFunction(lua, ads.get(), &LUNAAds::ShowBanner));
 	tblAds.SetField("hideBanner", LuaFunction(lua, ads.get(), &LUNAAds::HideBanner));
 	tblAds.SetField("isInterstitialReady", LuaFunction(lua, ads.get(), &LUNAAds::IsInterstitialReady));
