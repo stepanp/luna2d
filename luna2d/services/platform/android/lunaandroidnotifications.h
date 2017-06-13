@@ -21,16 +21,29 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-package com.stepanp.luna2d.services.api;
+#pragma once
 
-public abstract class LunaSharingService
+#include "lunanotifications.h"
+#include "lunaandroidjni.h"
+
+namespace luna2d{
+
+class LUNAAndroidNotifications : public LUNANotifications
 {
-	// Get name of sharing service. Should be in lower case
-	public abstract String getName();
+public:
+	LUNAAndroidNotifications();
 
-	// Share given text
-	public abstract void text(String text);
+private:
+	jclass javaNotifications;
+	jmethodID javaSchedule;
+	jmethodID javaCancel;
 
-	// Share given image with given text
-	public abstract void image(String imagePath, String text);
+public:
+	// Schedule local push notification
+	virtual void Schedule(const std::string& message, int secondsFromNow);
+
+	// Cancel scheduled notifications
+	virtual void Cancel();
+};
+
 }

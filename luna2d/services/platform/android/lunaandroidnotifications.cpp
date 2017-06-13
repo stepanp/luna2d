@@ -21,16 +21,34 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-package com.stepanp.luna2d.services.api;
+#include "lunaandroidnotifications.h"
 
-public abstract class LunaSharingService
+using namespace luna2d;
+
+LUNAAndroidNotifications::LUNAAndroidNotifications()
 {
-	// Get name of sharing service. Should be in lower case
-	public abstract String getName();
+	jni::Env env;
 
-	// Share given text
-	public abstract void text(String text);
+	// Get ref to java wrapper class
+	jclass localRef = env->FindClass("com/stepanp/luna2d/services/LunaNotifications");
+	javaNotifications = reinterpret_cast<jclass>(env->NewGlobalRef(localRef));
+	env->DeleteLocalRef(localRef);
 
-	// Share given image with given text
-	public abstract void image(String imagePath, String text);
+	// Get java wrapper method ids
+	javaSchedule = env->GetStaticMethodID(javaNotifications, "schedule", "(Ljava/lang/String;I)V");
+	javaCancel = env->GetStaticMethodID(javaNotifications, "cancel", "()V");
+}
+
+// Schedule local push notification
+void LUNAAndroidNotifications::Schedule(const std::string& message, int secondsFromNow)
+{
+	if(secondsFromNow <= 0) return;
+
+	jni::Env()->CallStaticVoidMethod(javaNotifications, javaSchedule, jni::ToJString(message).j_str(), secondsFromNow);
+}
+
+// Cancel scheduled notifications
+void LUNAAndroidNotifications::Cancel()
+{
+	jni::Env()->CallStaticVoidMethod(javaNotifications, javaCancel);
 }
