@@ -21,24 +21,21 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaqtservices.h"
-#include "lunaqtads.h"
-#include "lunaqtpurchases.h"
-#include "lunaqtsharing.h"
-#include "lunaqtstore.h"
-#include "lunaqtleaderboards.h"
-#include "lunaqtnotifications.h"
+#include "lunaengine.h"
 
-using namespace luna2d;
+namespace luna2d{
 
-void LUNAQtServices::LoadServices()
+class LUNANotifications
 {
-	ads = std::make_shared<LUNAQtAds>();
-	purchases = std::make_shared<LUNAQtPurchases>();
-	sharing = std::make_shared<LUNAQtSharing>();
-	store = std::make_shared<LUNAQtStore>();
-	leaderboards = std::make_shared<LUNAQtLeaderboards>();
-	notifications = std::make_shared<LUNAQtNotifications>();
+public:
+	virtual ~LUNANotifications() {}
 
-	ads->LoadServices();
+public:
+	// Schedule local push notification
+	virtual void Schedule(const std::string& message, int secondsFromNow) = 0;
+
+	// Cancel scheduled notifications
+	virtual void Cancel() = 0;
+};
+
 }

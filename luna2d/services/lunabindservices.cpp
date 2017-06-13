@@ -28,6 +28,7 @@
 #include "lunasharing.h"
 #include "lunastore.h"
 #include "lunaleaderboards.h"
+#include "lunanotifications.h"
 #include "lunalua.h"
 
 using namespace luna2d;
@@ -94,6 +95,16 @@ static void BindLeaderboards(const std::shared_ptr<LUNALeaderboards>& leaderboar
 	tblLeaderboards.SetField("open", LuaFunction(lua, leaderboards.get(), &LUNALeaderboards::Open));
 }
 
+// Bind "luna.notifications" module
+static void BindNotifications(const std::shared_ptr<LUNANotifications>& notifications, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblNotifications(lua);
+	tblLuna.SetField("notifications", tblNotifications);
+
+	tblNotifications.SetField("schedule", LuaFunction(lua, notifications.get(), &LUNANotifications::Schedule));
+	tblNotifications.SetField("cancel", LuaFunction(lua, notifications.get(), &LUNANotifications::Cancel));
+}
+
 void luna2d::BindServices()
 {
 	auto lua = LUNAEngine::SharedLua();
@@ -105,4 +116,5 @@ void luna2d::BindServices()
 	BindSharing(services->GetSharing(), lua, tblLuna);
 	BindStore(services->GetStore(), lua, tblLuna);
 	BindLeaderboards(services->GetLeaderboards(), lua, tblLuna);
+	BindNotifications(services->GetNotifications(), lua, tblLuna);
 }

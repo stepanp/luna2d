@@ -32,6 +32,7 @@ class LUNAPurchases;
 class LUNASharing;
 class LUNAStore;
 class LUNALeaderboards;
+class LUNANotifications;
 
 class LUNAServices
 {
@@ -44,6 +45,7 @@ protected:
 	std::shared_ptr<LUNASharing> sharing;
 	std::shared_ptr<LUNAStore> store;
 	std::shared_ptr<LUNALeaderboards> leaderboards;
+	std::shared_ptr<LUNANotifications> notifications;
 
 public:
 	std::shared_ptr<LUNAAds> GetAds();
@@ -51,6 +53,8 @@ public:
 	std::shared_ptr<LUNASharing> GetSharing();
 	std::shared_ptr<LUNAStore> GetStore();
 	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
+	std::shared_ptr<LUNANotifications> GetNotifications();
+
 	virtual void LoadServices() = 0;
 };
 
