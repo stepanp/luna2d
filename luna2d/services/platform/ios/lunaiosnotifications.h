@@ -21,48 +21,25 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "lunaiosservices.h"
-#include "lunaiosads.h"
-#include "lunaiospurchases.h"
-#include "lunaiossharing.h"
-#include "lunaiosstore.h"
-#include "lunaiosleaderboards.h"
-#include "lunaiosnotifications.h"
-#include "lunansstring.h"
-#include "lunalog.h"
-#import <objc/runtime.h>
+#include "lunanotifications.h"
+#import <UIKit/UIKit.h>
 
-using namespace luna2d;
+namespace luna2d{
 
-void LUNAIosServices::LoadServices()
+class LUNAIosNotifications : public LUNANotifications
 {
-	ads = std::make_shared<LUNAIosAds>();
-	purchases = std::make_shared<LUNAIosPurchases>();
-	sharing = std::make_shared<LUNAIosSharing>();
-	store = std::make_shared<LUNAIosStore>();
-	leaderboards = std::make_shared<LUNAIosLeaderboards>();
-	notifications = std::make_shared<LUNAIosNotifications>();
-	
-	ads->LoadServices();
-	sharing->LoadServices();
-}
+public:
+	LUNAIosNotifications();
 
-// Dynamically create instance of serivice by given class name
-id LUNAIosServices::LoadService(const std::string& name, Protocol* proto)
-{
-	id obj = [[NSClassFromString(ToNsString(name)) alloc] init];
-	
-	if(!obj)
-	{
-		LUNA_LOGE("Error with loading service. Class with name \"%s\" not found", name.c_str());
-		return nil;
-	}
-	
-	if(![obj conformsToProtocol:proto])
-	{
-		LUNA_LOGE("Error with loading service. Class with name \"%s\" isn't conform for protocol \"%s\"", name.c_str(), protocol_getName(proto));
-		return nil;
-	}
-	
-	return obj;
+private:
+	id impl;
+
+public:
+	// Schedule local push notification
+	virtual void Schedule(const std::string& message, int secondsFromNow);
+
+	// Cancel scheduled notifications
+	virtual void Cancel();
+};
+
 }
