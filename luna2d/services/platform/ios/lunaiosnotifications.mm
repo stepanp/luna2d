@@ -134,3 +134,10 @@ void LUNAIosNotifications::Cancel()
 
 	[impl cancel];
 }
+
+// Suppress notification if it caused while application in foreground
+void LUNAIosNotifications::SuppressWhileForeground()
+{
+	Cancel();
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}

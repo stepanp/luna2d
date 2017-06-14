@@ -40,6 +40,9 @@ public:
 
 	// Cancel scheduled notifications
 	virtual void Cancel();
+	
+	// Suppress notification if it caused while application in foreground
+	void SuppressWhileForeground();
 };
 
 }

@@ -23,6 +23,8 @@
 
 #import "lunaappdelegare.h"
 #import "lunaviewcontroller.h"
+#import "lunaservices.h"
+#import "lunaiosnotifications.h"
 #include "lunaengine.h"
 
 using namespace luna2d;
@@ -40,6 +42,12 @@ using namespace luna2d;
 	[self.window makeKeyAndVisible];
 	
 	return YES;
+}
+
+- (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification
+{
+	auto notifications = std::static_pointer_cast<LUNAIosNotifications>(LUNAEngine::SharedServices()->GetNotifications());
+	notifications->SuppressWhileForeground();
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
