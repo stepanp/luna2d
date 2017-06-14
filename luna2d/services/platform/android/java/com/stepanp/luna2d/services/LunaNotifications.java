@@ -39,8 +39,6 @@ import com.stepanp.luna2d.LunaActivity;
 
 public class LunaNotifications
 {
-	private final static int NOTIFICATION_ID = 1;
-
 	private static Notification makeNotification(Context context, String message)
 	{
 		ApplicationInfo appInfo = context.getApplicationInfo();
@@ -71,22 +69,22 @@ public class LunaNotifications
 		return builder.build();
 	}
 
-	private static PendingIntent makePendingIntent(String message)
+	private static PendingIntent makePendingIntent(String message, int id)
 	{
 		Activity activity = LunaActivity.getSharedActivity();
 
 		Intent intent = new Intent(activity.getApplicationContext(), LunaNotifications.Receiver.class);
-		intent.putExtra("id", NOTIFICATION_ID);
+		intent.putExtra("id", id);
 		intent.putExtra("message", message);
 
-		return PendingIntent.getBroadcast(activity, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		return PendingIntent.getBroadcast(activity, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
-	// Schedule local push notification
-	public static void schedule(String message, int secondsFromNow)
+	// Schedule local notification
+	public static void schedule(String message, int secondsFromNow, int id)
 	{
 		Activity activity = LunaActivity.getSharedActivity();
-		PendingIntent pendingIntent = makePendingIntent(message);
+		PendingIntent pendingIntent = makePendingIntent(message, id);
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
@@ -96,14 +94,17 @@ public class LunaNotifications
 		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 	}
 
-	// Cancel scheduled notifications
-	public static void cancel()
+	// Cancel scheduled notification with specified id
+	public static void cancel(int id)
 	{
 		Activity activity = LunaActivity.getSharedActivity();
-		PendingIntent pendingIntent = makePendingIntent(null);
+		PendingIntent pendingIntent = makePendingIntent(null, id);
 
 		AlarmManager alarmManager = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(pendingIntent);
+
+		NotificationManager manager = (NotificationManager)activity.getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.cancel(id);
 	}
 
 	public static class Receiver extends BroadcastReceiver

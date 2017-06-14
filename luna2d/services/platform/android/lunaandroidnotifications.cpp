@@ -39,23 +39,23 @@ LUNAAndroidNotifications::LUNAAndroidNotifications() : LUNANotifications()
 	env->DeleteLocalRef(localRef);
 
 	// Get java wrapper method ids
-	javaSchedule = env->GetStaticMethodID(javaNotifications, "schedule", "(Ljava/lang/String;I)V");
-	javaCancel = env->GetStaticMethodID(javaNotifications, "cancel", "()V");
+	javaSchedule = env->GetStaticMethodID(javaNotifications, "schedule", "(Ljava/lang/String;II)V");
+	javaCancel = env->GetStaticMethodID(javaNotifications, "cancel", "(I)V");
 }
 
-// Schedule local push notification
-void LUNAAndroidNotifications::Schedule(const std::string& message, int secondsFromNow)
+// Schedule local notification
+void LUNAAndroidNotifications::Schedule(const std::string& message, int secondsFromNow, int id)
 {
 	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
 	if(secondsFromNow <= 0) LUNA_RETURN_ERR(NOTIFICATIONS_SECONDS_ERR.c_str());
 
-	jni::Env()->CallStaticVoidMethod(javaNotifications, javaSchedule, jni::ToJString(message).j_str(), secondsFromNow);
+	jni::Env()->CallStaticVoidMethod(javaNotifications, javaSchedule, jni::ToJString(message).j_str(), secondsFromNow, id);
 }
 
-// Cancel scheduled notifications
-void LUNAAndroidNotifications::Cancel()
+// Cancel scheduled notification with specified id
+void LUNAAndroidNotifications::Cancel(int id)
 {
 	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
 
-	jni::Env()->CallStaticVoidMethod(javaNotifications, javaCancel);
+	jni::Env()->CallStaticVoidMethod(javaNotifications, javaCancel, id);
 }
