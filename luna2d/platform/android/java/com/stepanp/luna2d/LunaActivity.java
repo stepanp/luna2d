@@ -35,6 +35,7 @@ public class LunaActivity extends Activity
 {
 	private LunaGlView glView;
 	private List<LunaActivityListener> listeners = new ArrayList<LunaActivityListener>();
+	private boolean inForeground = false;
 
 	private static Activity sharedActivity = null;
 
@@ -51,6 +52,11 @@ public class LunaActivity extends Activity
 	public void removeListener(LunaActivityListener listener)
 	{
 		listeners.remove(listener);
+	}
+
+	public boolean isInForeground()
+	{
+		return inForeground;
 	}
 	
 	@Override
@@ -73,6 +79,8 @@ public class LunaActivity extends Activity
 		super.onPause();
 		glView.onPause();
 
+		inForeground = false;
+
 		for(LunaActivityListener listener : listeners) listener.onPause(this);
 	}
 
@@ -81,6 +89,8 @@ public class LunaActivity extends Activity
 	{
 		super.onResume();
 		glView.onResume();
+
+		inForeground = true;
 
 		for(LunaActivityListener listener : listeners) listener.onResume(this);
 

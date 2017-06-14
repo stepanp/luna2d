@@ -23,15 +23,108 @@
 
 package com.stepanp.luna2d.services;
 
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import java.util.Calendar;
+import com.stepanp.luna2d.LunaActivity;
+
 public class LunaNotifications
 {
-	public static void schedule(String message, int secondsFromNow)
-	{
+	private final static int NOTIFICATION_ID = 1;
 
+	private static Notification makeNotification(Context context, String message)
+	{
+		ApplicationInfo appInfo = context.getApplicationInfo();
+		String appName = (String)context.getPackageManager().getApplicationLabel(appInfo);
+
+		Intent intent = new Intent(context, LunaActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		int appIconId = appInfo.icon;
+		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), appIconId);
+
+		int notificationIcon = context.getResources().getIdentifier("ic_notification", "mipmap", context.getPackageName());
+		if(notificationIcon == 0) notificationIcon = appIconId;
+
+		Notification.Builder builder = new Notification.Builder(context);
+
+		builder.setContentTitle(appName);
+		builder.setContentText(message);
+		builder.setTicker(message);
+		builder.setSmallIcon(notificationIcon);
+		builder.setLargeIcon(largeIcon);
+		builder.setAutoCancel(true);
+		builder.setDefaults(Notification.DEFAULT_ALL);
+		builder.setContentIntent(pendingIntent);
+
+		return builder.build();
 	}
 
+	private static PendingIntent makePendingIntent(String message)
+	{
+		Activity activity = LunaActivity.getSharedActivity();
+
+		Intent intent = new Intent(activity.getApplicationContext(), LunaNotifications.Receiver.class);
+		intent.putExtra("id", NOTIFICATION_ID);
+		intent.putExtra("message", message);
+
+		return PendingIntent.getBroadcast(activity, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	}
+
+	// Schedule local push notification
+	public static void schedule(String message, int secondsFromNow)
+	{
+		Activity activity = LunaActivity.getSharedActivity();
+		PendingIntent pendingIntent = makePendingIntent(message);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(System.currentTimeMillis());
+		calendar.add(Calendar.SECOND, secondsFromNow);
+
+		AlarmManager alarmManager = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+	}
+
+	// Cancel scheduled notifications
 	public static void cancel()
 	{
+		Activity activity = LunaActivity.getSharedActivity();
+		PendingIntent pendingIntent = makePendingIntent(null);
 
+		AlarmManager alarmManager = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(pendingIntent);
+	}
+
+	public static class Receiver extends BroadcastReceiver
+	{
+		private boolean isActivityInForeground()
+		{
+			LunaActivity activity = (LunaActivity)LunaActivity.getSharedActivity();
+			return activity != null && activity.isInForeground();
+		}
+
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			if(isActivityInForeground()) return; // Suppress notifications when activity in foreground
+
+			int id = intent.getIntExtra("id", 0);
+			String message = intent.getStringExtra("message");
+
+			Notification notification = makeNotification(context, message);
+			NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+			manager.notify(id, notification);
+		}
 	}
 }
