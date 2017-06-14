@@ -25,12 +25,23 @@
 
 namespace luna2d{
 
+const std::string NOTIFICATIONS_DISABLED_ERR = "Notifications disabled. To enable notifications set \"enableNotifications\" in config to \"true\"";
+const std::string NOTIFICATIONS_SECONDS_ERR = "Cannot schedule notification. Count of seconds must be positive";
+
+
 class LUNANotifications
 {
 public:
+    LUNANotifications();
 	virtual ~LUNANotifications() {}
 
+private:
+    bool enabled = false;
+
 public:
+    // Check for notifications is enabled in config
+    bool IsEnabled();
+
 	// Schedule local push notification
 	virtual void Schedule(const std::string& message, int secondsFromNow) = 0;
 

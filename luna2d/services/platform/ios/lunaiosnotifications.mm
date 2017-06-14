@@ -23,6 +23,8 @@
 
 #include "lunaiosnotifications.h"
 #include "lunansstring.h"
+#include "lunalog.h"
+#include "lunamacro.h"
 
 using namespace luna2d;
 
@@ -105,18 +107,22 @@ using namespace luna2d;
 @end
 
 
-LUNAIosNotifications::LUNAIosNotifications()
+LUNAIosNotifications::LUNAIosNotifications() : LUNANotifications()
 {
+	if(!IsEnabled()) return;
+
 	if([[[UIDevice currentDevice] systemVersion] floatValue] < 10.0) impl = [[Notifications89 alloc] init];
 	else impl = [[Notifications10 alloc] init];
 
 	[impl register];
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 // Schedule local push notification
 void LUNAIosNotifications::Schedule(const std::string& message, int secondsFromNow)
 {
-	if(secondsFromNow <= 0) return;
+	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
+	if(secondsFromNow <= 0) LUNA_RETURN_ERR(NOTIFICATIONS_SECONDS_ERR.c_str());
 
 	[impl schedule:ToNsString(message) secondsFromNow:secondsFromNow];
 }
@@ -124,5 +130,7 @@ void LUNAIosNotifications::Schedule(const std::string& message, int secondsFromN
 // Cancel scheduled notifications
 void LUNAIosNotifications::Cancel()
 {
+	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
+
 	[impl cancel];
 }

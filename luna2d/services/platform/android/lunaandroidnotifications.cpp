@@ -22,11 +22,15 @@
 //-----------------------------------------------------------------------------
 
 #include "lunaandroidnotifications.h"
+#include "lunalog.h"
+#include "lunamacro.h"
 
 using namespace luna2d;
 
-LUNAAndroidNotifications::LUNAAndroidNotifications()
+LUNAAndroidNotifications::LUNAAndroidNotifications() : LUNANotifications()
 {
+	if(!IsEnabled()) return;
+
 	jni::Env env;
 
 	// Get ref to java wrapper class
@@ -42,7 +46,8 @@ LUNAAndroidNotifications::LUNAAndroidNotifications()
 // Schedule local push notification
 void LUNAAndroidNotifications::Schedule(const std::string& message, int secondsFromNow)
 {
-	if(secondsFromNow <= 0) return;
+	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
+	if(secondsFromNow <= 0) LUNA_RETURN_ERR(NOTIFICATIONS_SECONDS_ERR.c_str());
 
 	jni::Env()->CallStaticVoidMethod(javaNotifications, javaSchedule, jni::ToJString(message).j_str(), secondsFromNow);
 }
@@ -50,5 +55,7 @@ void LUNAAndroidNotifications::Schedule(const std::string& message, int secondsF
 // Cancel scheduled notifications
 void LUNAAndroidNotifications::Cancel()
 {
+	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
+
 	jni::Env()->CallStaticVoidMethod(javaNotifications, javaCancel);
 }

@@ -22,5 +22,16 @@
 //-----------------------------------------------------------------------------
 
 #include "lunanotifications.h"
+#include "lunaconfig.h"
 
 using namespace luna2d;
+
+LUNANotifications::LUNANotifications() :
+    enabled(LUNAEngine::Shared()->GetConfig()->GetCustomValues()["enableNotifications"].bool_value())
+{
+}
+
+bool LUNANotifications::IsEnabled()
+{
+    return enabled;
+}
