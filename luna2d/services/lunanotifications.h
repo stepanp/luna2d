@@ -42,11 +42,11 @@ public:
     // Check for notifications is enabled in config
     bool IsEnabled();
 
-	// Schedule local push notification
-	virtual void Schedule(const std::string& message, int secondsFromNow) = 0;
+	// Schedule local notification
+	virtual void Schedule(const std::string& message, int secondsFromNow, int id) = 0;
 
-	// Cancel scheduled notifications
-	virtual void Cancel() = 0;
+	// Cancel scheduled notification with specified id
+	virtual void Cancel(int id) = 0;
 };
 
 }

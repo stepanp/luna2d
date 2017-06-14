@@ -25,14 +25,14 @@
 
 using namespace luna2d;
 
-// Schedule local push notification
-void LUNAQtNotifications::Schedule(const std::string& message, int secondsFromNow)
+// Schedule local notification
+void LUNAQtNotifications::Schedule(const std::string& message, int secondsFromNow, int id)
 {
 
 }
 
-// Cancel scheduled notifications
-void LUNAQtNotifications::Cancel()
+// Cancel scheduled notification with specified id
+void LUNAQtNotifications::Cancel(int id)
 {
 
 }

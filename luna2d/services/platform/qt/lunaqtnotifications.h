@@ -28,11 +28,11 @@ namespace luna2d{
 class LUNAQtNotifications : public LUNANotifications
 {
 public:
-	// Schedule local push notification
-	virtual void Schedule(const std::string& message, int secondsFromNow);
+	// Schedule local notification
+	virtual void Schedule(const std::string& message, int secondsFromNow, int id);
 
-	// Cancel scheduled notifications
-	virtual void Cancel();
+	// Cancel scheduled notification with specified id
+	virtual void Cancel(int id);
 };
 
 }
