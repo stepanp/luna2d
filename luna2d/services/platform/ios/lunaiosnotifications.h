@@ -42,7 +42,7 @@ public:
 	virtual void Cancel(int id);
 	
 	// Suppress notification if it caused while application in foreground
-	void SuppressWhileForeground();
+	void SuppressWhileForeground(UILocalNotification* notification);
 };
 
 }

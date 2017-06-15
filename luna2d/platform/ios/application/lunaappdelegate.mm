@@ -49,7 +49,7 @@ using namespace luna2d;
 - (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification
 {
 	auto notifications = std::static_pointer_cast<LUNAIosNotifications>(LUNAEngine::SharedServices()->GetNotifications());
-	notifications->SuppressWhileForeground();
+	notifications->SuppressWhileForeground(notification);
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

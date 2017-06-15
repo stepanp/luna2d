@@ -159,7 +159,9 @@ void LUNAIosNotifications::Cancel(int id)
 }
 
 // Suppress notification if it caused while application in foreground
-void LUNAIosNotifications::SuppressWhileForeground()
+void LUNAIosNotifications::SuppressWhileForeground(UILocalNotification* notification)
 {
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 1; // It's not misprint, didn't work without it
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+	[[UIApplication sharedApplication] cancelLocalNotification:notification];
 }
