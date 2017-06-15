@@ -41,6 +41,8 @@ using namespace luna2d;
 	self.window.rootViewController = [[LUNAViewController alloc] initWithNibName:nil bundle:nil];
 	[self.window makeKeyAndVisible];
 	
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+	
 	return YES;
 }
 
@@ -58,6 +60,8 @@ using namespace luna2d;
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
 	LUNAEngine::Shared()->OnResume();
+	
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }
 
 @end

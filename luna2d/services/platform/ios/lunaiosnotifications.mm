@@ -34,11 +34,13 @@ using namespace luna2d;
 //---------------------------------------------------
 @interface Notifications10 : NSObject
 
+//@property (nonatomic, strong) isAccessStateUnknown;
+
 -(void) requestAccess;
 
--(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow;
+-(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow id: (int)id;
 
--(void) cancel;
+-(void) cancel: (int)id;
 
 @end
 
@@ -47,10 +49,11 @@ using namespace luna2d;
 -(void) requestAccess
 {
 	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-	[center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert) completionHandler:nil];
+	[center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert)
+						  completionHandler:^(BOOL, NSError* error) {}];
 }
 
--(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow
+-(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow id: (int)id
 {
 	UNMutableNotificationContent* notification = [[UNMutableNotificationContent alloc] init];
     notification.body = message;
@@ -58,16 +61,18 @@ using namespace luna2d;
     notification.badge = [NSNumber numberWithInt:1];
 
     UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:secondsFromNow repeats:NO];
-    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"0" content:notification trigger:trigger];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[@(id) stringValue] content:notification trigger:trigger];
     
     UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
     [center addNotificationRequest:request withCompletionHandler:nil];
 }
 
--(void) cancel
+-(void) cancel: (int)id
 {
+	NSArray* ids = [NSArray arrayWithObject:[@(id) stringValue]];
+	
 	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
-	[center removeAllPendingNotificationRequests];
+	[center removePendingNotificationRequestsWithIdentifiers:ids];
 }
 	
 @end
@@ -80,9 +85,9 @@ using namespace luna2d;
 
 -(void) requestAccess;
 
--(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow;
+-(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow id: (int)id;
 
--(void) cancel;
+-(void) cancel: (int)id;
 	
 @end
 
@@ -94,25 +99,32 @@ using namespace luna2d;
 	[[UIApplication sharedApplication] registerUserNotificationSettings:settings];
 }
 
--(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow
+-(void) schedule: (NSString*)message secondsFromNow: (int)secondsFromNow id: (int)id
 {
+	// Cancel previous notification with same id
+	[self cancel:id];
+	
 	UILocalNotification* notification = [[UILocalNotification alloc] init];
 
 	notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:secondsFromNow];
 	notification.timeZone = [NSTimeZone defaultTimeZone];
 	notification.alertBody = message;
-	notification.alertAction = @"";
+	notification.alertAction = nil;
 	notification.applicationIconBadgeNumber = 1;
 	notification.soundName = UILocalNotificationDefaultSoundName;
+	notification.userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:id] forKey:@"id"];
 	
 	[[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
 
--(void) cancel
+-(void) cancel: (int)id
 {
 	for(UILocalNotification* notification : [[UIApplication sharedApplication] scheduledLocalNotifications])
 	{
-		 [[UIApplication sharedApplication] cancelLocalNotification:notification];
+		if([[notification.userInfo objectForKey:@"id"] isEqualToNumber:[NSNumber numberWithInt:id]])
+		{
+			[[UIApplication sharedApplication] cancelLocalNotification:notification];
+		}
 	}
 }
 	
@@ -126,30 +138,28 @@ LUNAIosNotifications::LUNAIosNotifications() : LUNANotifications()
 	if([[[UIDevice currentDevice] systemVersion] floatValue] < 10.0) impl = [[Notifications89 alloc] init];
 	else impl = [[Notifications10 alloc] init];
 
-	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 	[impl requestAccess];
 }
 
-// Schedule local push notification
-void LUNAIosNotifications::Schedule(const std::string& message, int secondsFromNow)
+// Schedule local notification
+void LUNAIosNotifications::Schedule(const std::string& message, int secondsFromNow, int id)
 {
 	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
 	if(secondsFromNow <= 0) LUNA_RETURN_ERR(NOTIFICATIONS_SECONDS_ERR.c_str());
-
-	[impl schedule:ToNsString(message) secondsFromNow:secondsFromNow];
+	
+	[impl schedule:ToNsString(message) secondsFromNow:secondsFromNow id:id];
 }
 
-// Cancel scheduled notifications
-void LUNAIosNotifications::Cancel()
+// Cancel scheduled notification with specified id
+void LUNAIosNotifications::Cancel(int id)
 {
 	if(!IsEnabled()) LUNA_RETURN_ERR(NOTIFICATIONS_DISABLED_ERR.c_str());
 
-	[impl cancel];
+	[impl cancel:id];
 }
 
 // Suppress notification if it caused while application in foreground
 void LUNAIosNotifications::SuppressWhileForeground()
 {
-	Cancel();
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 }

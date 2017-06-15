@@ -35,11 +35,11 @@ private:
 	id impl;
 
 public:
-	// Schedule local push notification
-	virtual void Schedule(const std::string& message, int secondsFromNow);
-
-	// Cancel scheduled notifications
-	virtual void Cancel();
+	// Schedule local notification
+	virtual void Schedule(const std::string& message, int secondsFromNow, int id);
+	
+	// Cancel scheduled notification with specified id
+	virtual void Cancel(int id);
 	
 	// Suppress notification if it caused while application in foreground
 	void SuppressWhileForeground();
