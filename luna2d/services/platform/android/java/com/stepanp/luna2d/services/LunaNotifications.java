@@ -24,6 +24,7 @@
 package com.stepanp.luna2d.services;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -35,6 +36,7 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import java.util.Calendar;
+import java.util.List;
 import com.stepanp.luna2d.LunaActivity;
 
 public class LunaNotifications
@@ -109,16 +111,27 @@ public class LunaNotifications
 
 	public static class Receiver extends BroadcastReceiver
 	{
-		private boolean isActivityInForeground()
+		private boolean isActivityInForeground(Context context)
 		{
-			LunaActivity activity = (LunaActivity)LunaActivity.getSharedActivity();
-			return activity != null && activity.isInForeground();
+			ActivityManager activityManager = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+			List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+
+			if(processes == null) return false;
+
+			String packageName = context.getPackageName();
+			for (ActivityManager.RunningAppProcessInfo process : processes)
+			{
+				if (process.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+					process.processName.equals(packageName)) return true;
+			}
+
+			return false;
 		}
 
 		@Override
 		public void onReceive(Context context, Intent intent)
 		{
-			if(isActivityInForeground()) return; // Suppress notifications when activity in foreground
+			if(isActivityInForeground(context)) return; // Suppress notifications when activity in foreground
 
 			int id = intent.getIntExtra("id", 0);
 			String message = intent.getStringExtra("message");
