@@ -31,6 +31,7 @@ namespace luna2d{
 enum class LUNABoundsType
 {
 	AABB,
+	CIRCLE,
 	POLYGON
 };
 
@@ -99,6 +100,28 @@ public:
 	void SetWidth(float width);
 	void SetHeight(float height);
 	void SetSize(float width, float height);
+
+	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+};
+
+
+class LUNACircleBounds : public LUNABounds
+{
+	LUNA_USERDATA_DERIVED(LUNABounds, LUNACircleBounds)
+
+public:
+	LUNACircleBounds(float radius);
+
+private:
+	float radius;
+
+private:
+	virtual void UpdateBoudingBox();
+
+public:
+	glm::vec2 GetCenter();
+	float GetRadius();
+	void SetRadius(float radius);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
 };

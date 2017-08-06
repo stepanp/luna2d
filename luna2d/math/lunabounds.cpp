@@ -210,12 +210,82 @@ bool LUNAAABBBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	{
 		case LUNABoundsType::AABB:
 			return bboxIntersects;
+		case LUNABoundsType::CIRCLE:
+		{
+			auto circleBounds = std::static_pointer_cast<LUNACircleBounds>(bounds);
+			return intersect::CircleRect(circleBounds->GetCenter(), circleBounds->GetRadius(), GetBoundingBox());
+		}
 		case LUNABoundsType::POLYGON:
+		{
 			auto polygonBounds = std::static_pointer_cast<LUNAPolygonBounds>(bounds);
 			return intersect::RectPolygion(GetBoundingBox(), polygonBounds->GetVertexes());
+		}
 	}
 
 	return false;
+}
+
+
+LUNACircleBounds::LUNACircleBounds(float radius) :
+	LUNABounds(LUNABoundsType::CIRCLE),
+	radius(radius)
+{
+	SetOriginToCenter();
+}
+
+void LUNACircleBounds::UpdateBoudingBox()
+{
+	cachedBBox.width = radius * std::abs(scale.x);
+	cachedBBox.height = radius * std::abs(scale.y);
+	cachedBBox.x = pos.x + origin.x * scale.x;
+	cachedBBox.y = pos.y + origin.y * scale.y;
+
+	if(scale.x < 0) cachedBBox.x -= cachedBBox.width;
+	if(scale.y < 0) cachedBBox.y -= cachedBBox.height;
+}
+
+glm::vec2 LUNACircleBounds::GetCenter()
+{
+	const auto& bBox = GetBoundingBox();
+	return glm::vec2(bBox.x + radius, bBox.y + radius);
+}
+
+float LUNACircleBounds::GetRadius()
+{
+	return radius;
+}
+
+void LUNACircleBounds::SetRadius(float radius)
+{
+	this->radius = radius;
+}
+
+bool LUNACircleBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
+{
+	if(!bounds)
+	{
+		LUNA_LOGE("Attemt check intersection with invalid bounds");
+		return false;
+	}
+
+	bool bboxIntersects = intersect::Rectangles(GetBoundingBox(), bounds->GetBoundingBox());
+	if(!bboxIntersects) return false;
+
+	switch(bounds->GetType())
+	{
+		case LUNABoundsType::AABB:
+			return intersect::CircleRect(GetCenter(), GetRadius(), bounds->GetBoundingBox());
+		case LUNABoundsType::CIRCLE:
+		{
+			auto circleBounds = std::static_pointer_cast<LUNACircleBounds>(bounds);
+			return intersect::Circles(GetCenter(), GetRadius(), circleBounds->GetCenter(), circleBounds->GetRadius());
+		}
+		case LUNABoundsType::POLYGON:
+		{
+			auto polygonBounds = std::static_pointer_cast<LUNAPolygonBounds>(bounds);
+			return intersect::CirclePolygon(GetCenter(), GetRadius(), polygonBounds->GetVertexes());
+		}
+	}
 }
 
 
@@ -296,8 +366,15 @@ bool LUNAPolygonBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	{
 		case LUNABoundsType::AABB:
 			return intersect::RectPolygion(bounds->GetBoundingBox(), GetVertexes());
+		case LUNABoundsType::CIRCLE:
+		{
+			auto circleBounds = std::static_pointer_cast<LUNACircleBounds>(bounds);
+			return intersect::CirclePolygon(circleBounds->GetCenter(), circleBounds->GetRadius(), GetVertexes());
+		}
 		case LUNABoundsType::POLYGON:
+		{
 			auto polygonBounds = std::static_pointer_cast<LUNAPolygonBounds>(bounds);
 			return intersect::Polygions(GetVertexes(), polygonBounds->GetVertexes());
+		}
 	}
 }

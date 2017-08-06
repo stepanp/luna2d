@@ -206,6 +206,14 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	tblMath.SetField("AABBBounds", clsAABBBounds);
 	tblMath.SetField("RectBounds", clsAABBBounds); // RectBounds is alias for AABBBounds
 
+	// Bind circle bounds
+	LuaClass<LUNACircleBounds> clsCircleBounds(lua);
+	clsCircleBounds.SetConstructor<float>();
+	clsCircleBounds.SetMethod("getCenter", &LUNACircleBounds::GetCenter);
+	clsCircleBounds.SetMethod("getRadius", &LUNACircleBounds::GetRadius);
+	clsCircleBounds.SetMethod("setRadius", &LUNACircleBounds::SetRadius);
+	tblMath.SetField("CircleBounds", clsCircleBounds);
+
 	// Bind polygon bounds
 	LuaClass<LUNAPolygonBounds> clsPolygonBounds(lua);
 	clsPolygonBounds.SetConstructor<const std::vector<glm::vec2>&>();
@@ -225,13 +233,24 @@ static void BindIntersect(LuaScript* lua, LuaTable& tblLuna)
 	LuaTable tblIntersect(lua);
 	tblLuna.SetField("intersect", tblIntersect);
 
+	std::function<LuaAny(const glm::vec2&, const glm::vec2&, const glm::vec2&, const glm::vec2&)> fnPointBetweenLines =
+	[lua](const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p3, const glm::vec2& p4) -> LuaAny
+	{
+		glm::vec2 ret = intersect::PointBetweenLines(p1, p2, p3, p4);
+		if(std::isnan(ret.x) || std::isnan(ret.y)) return LuaAny(lua, nil);
+		return LuaAny(lua, ret);
+	};
+
 	tblIntersect.SetField("pointInRectangle", LuaFunction(lua, &intersect::PointInRectangle));
 	tblIntersect.SetField("pointInCircle", LuaFunction(lua, &intersect::PointInCircle));
 	tblIntersect.SetField("pointInPolygon", LuaFunction(lua, &intersect::PointInPolygon));
 	tblIntersect.SetField("rectangles", LuaFunction(lua, &intersect::Rectangles));
 	tblIntersect.SetField("lines", LuaFunction(lua, &intersect::Lines));
 	tblIntersect.SetField("lineCircle", LuaFunction(lua, &intersect::LineCircle));
-	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, &intersect::PointBetweenLines));
+	tblIntersect.SetField("pointBetweenLines", LuaFunction(lua, fnPointBetweenLines));
+	tblIntersect.SetField("circles", LuaFunction(lua, &intersect::Circles));
+	tblIntersect.SetField("circlePolygon", LuaFunction(lua, &intersect::CirclePolygon));
+	tblIntersect.SetField("circleRect", LuaFunction(lua, &intersect::CircleRect));
 }
 
 // Bind "luna.splines" module

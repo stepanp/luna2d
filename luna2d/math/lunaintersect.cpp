@@ -25,6 +25,8 @@
 using namespace luna2d;
 using namespace luna2d::intersect;
 
+static const glm::vec2 NAN_VEC2 = glm::vec2(std::nanf(""), std::nanf(""));
+
 // Check for point insinde in rectangle
 bool luna2d::intersect::PointInRectangle(const glm::vec2& point, const LUNARect& rect)
 {
@@ -35,7 +37,7 @@ bool luna2d::intersect::PointInRectangle(const glm::vec2& point, const LUNARect&
 // Check for point insinde in cirle
 bool luna2d::intersect::PointInCircle(const glm::vec2& point, const glm::vec2& circleCenter, float r)
 {
-	return glm::distance(point, circleCenter) <= r;
+	return glm::distance2(point, circleCenter) <= r * r;
 }
 
 // Check for point inside polygon
@@ -47,8 +49,7 @@ bool luna2d::intersect::PointInPolygon(const glm::vec2& point, const std::vector
 	{
 		if((polygon[i].y >= point.y) != (polygon[j].y >= point.y) &&
 			(point.x <= (polygon[j].x - polygon[i].x) * (point.y - polygon[i].y) /
-			(polygon[j].y - polygon[i].y) + polygon[i].x))
-		ret = !ret;
+			(polygon[j].y - polygon[i].y) + polygon[i].x)) ret = !ret;
 	}
 
 	return ret;
@@ -62,17 +63,18 @@ bool luna2d::intersect::Rectangles(const LUNARect& rect1, const LUNARect& rect2)
 }
 
 // Check intersection between two lines
-bool luna2d::intersect::Lines(const LuaTable& line1, const LuaTable& line2)
+bool luna2d::intersect::Lines(const glm::vec2& lineBegin1, const glm::vec2& lineEnd1,
+	const glm::vec2& lineBegin2, const glm::vec2& lineEnd2)
 {
-	float x1 = line1.GetFloat("x1");
-	float y1 = line1.GetFloat("y1");
-	float x2 = line1.GetFloat("x2");
-	float y2 = line1.GetFloat("y2");
+	float x1 = lineBegin1.x;
+	float y1 = lineBegin1.y;
+	float x2 = lineEnd1.x;
+	float y2 = lineEnd1.y;
 
-	float x3 = line2.GetFloat("x1");
-	float y3 = line2.GetFloat("y1");
-	float x4 = line2.GetFloat("x2");
-	float y4 = line2.GetFloat("y2");
+	float x3 = lineBegin2.x;
+	float y3 = lineBegin2.y;
+	float x4 = lineEnd2.x;
+	float y4 = lineEnd2.y;
 
 	float d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 	if(d == 0) return false;
@@ -89,14 +91,15 @@ bool luna2d::intersect::Lines(const LuaTable& line1, const LuaTable& line2)
 }
 
 // Check intersection between line and circle
-bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point, float r)
+bool luna2d::intersect::LineCircle(const glm::vec2& lineBegin, const glm::vec2& lineEnd,
+	const glm::vec2& circleCenter, float circleRadius)
 {
-	float x1 = line.GetFloat("x1");
-	float y1 = line.GetFloat("y1");
-	float x2 = line.GetFloat("x2");
-	float y2 = line.GetFloat("y2");
-	float cx = point.x;
-	float cy = point.y;
+	float x1 = lineBegin.x;
+	float y1 = lineBegin.y;
+	float x2 = lineEnd.x;
+	float y2 = lineEnd.y;
+	float cx = circleCenter.x;
+	float cy = circleCenter.y;
 
 	x1 -= cx;
 	y1 -= cy;
@@ -108,7 +111,7 @@ bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point,
 
 	float a = dx * dx + dy * dy;
 	float b = 2 * (x1 * dx + y1 * dy);
-	float c = x1 * x1 + y1 * y1 - r * r;
+	float c = x1 * x1 + y1 * y1 - circleRadius * circleRadius;
 
 	if(-b < 0) return c < 0;
 	else if(-b < 2 * a) return (4 * a * c - b * b) < 0;
@@ -117,36 +120,34 @@ bool luna2d::intersect::LineCircle(const LuaTable& line, const glm::vec2& point,
 }
 
 // Get intersection point between two lines
-LuaTable luna2d::intersect::PointBetweenLines(const LuaTable& line1, const LuaTable& line2)
+glm::vec2 luna2d::intersect::PointBetweenLines(const glm::vec2& lineBegin1, const glm::vec2& lineEnd1,
+	const glm::vec2& lineBegin2, const glm::vec2& lineEnd2)
 {
-	float x1 = line1.GetFloat("x1");
-	float y1 = line1.GetFloat("y1");
-	float x2 = line1.GetFloat("x2");
-	float y2 = line1.GetFloat("y2");
+	float x1 = lineBegin1.x;
+	float y1 = lineBegin1.y;
+	float x2 = lineEnd1.x;
+	float y2 = lineEnd1.y;
 
-	float x3 = line2.GetFloat("x1");
-	float y3 = line2.GetFloat("y1");
-	float x4 = line2.GetFloat("x2");
-	float y4 = line2.GetFloat("y2");
+	float x3 = lineBegin2.x;
+	float y3 = lineBegin2.y;
+	float x4 = lineEnd2.x;
+	float y4 = lineEnd2.y;
 
 	float d = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
-	if(d == 0) return nil;
+	if(d == 0) return NAN_VEC2;
 
 	float yd = y1 - y3;
 	float xd = x1 - x3;
 	float ua = ((x4 - x3) * yd  - (y4 - y3) * xd) / d;
-	if(ua < 0 || ua > 1) return nil;
+	if(ua < 0 || ua > 1) return NAN_VEC2;
 
 	float ub = ((x2 - x1) * yd  - (y2 - y1) * xd) / d;
-	if(ub < 0 || ub > 1) return nil;
+	if(ub < 0 || ub > 1) return NAN_VEC2;
 
 	float x = x1 + ua * (x2 - x1);
 	float y = y1 + ua * (y2 - y1);
 
-	LuaTable tblRet(LUNAEngine::SharedLua());
-	tblRet.SetField("x", x);
-	tblRet.SetField("y", y);
-	return std::move(tblRet);
+	return glm::vec2(x, y);
 }
 
 static std::vector<glm::vec2> rectPolygonCache =
@@ -181,4 +182,32 @@ bool luna2d::intersect::Polygions(const std::vector<glm::vec2>& polygon1, const 
 	for(const auto& vec : polygon2) if(PointInPolygon(vec, polygon1)) return true;
 
 	return false;
+}
+
+// Check intersection between two circles
+bool luna2d::intersect::Circles(const glm::vec2& center1, float radius1, const glm::vec2& center2, float radius2)
+{
+	return glm::distance2(center1, center2) <= std::powf(radius1 + radius2, 2);
+}
+
+// Check intersection between circle and polygon
+bool luna2d::intersect::CirclePolygon(const glm::vec2& center, float radius, const std::vector<glm::vec2>& polygon)
+{
+	LUNA_LOGE("Function luna2d::intersect::CirclePolygon is not implemented");
+	return false;
+}
+
+// Check intersection between circle and rectangle
+bool luna2d::intersect::CircleRect(const glm::vec2& center, float radius, const LUNARect& rect)
+{
+	glm::vec2 rectCenter(rect.x + rect.width / 2.0f, rect.y + rect.height / 2.0f);
+	glm::vec2 rectHalfSizes(rect.width / 2.0f, rect.height / 2.0f);
+
+	glm::vec2 difference = center - rectCenter;
+	glm::vec2 clamped = glm::clamp(difference, -rectHalfSizes, rectHalfSizes);
+
+	glm::vec2 closest = rectCenter + clamped;
+	difference = closest - center;
+
+	return glm::length2(difference) < radius * radius;
 }
