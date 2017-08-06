@@ -44,6 +44,8 @@ public class LunaPurchases
 
 	public static void init()
 	{
+		if(!LunaServicesApi.hasConfigValue("inAppPurchasesProducts")) return;
+
 		if(!LunaServicesApi.hasConfigValue("googlePlayPublicKey"))
 		{
 			Log.e(LunaServicesApi.getLogTag(), "Application's public key \"googlePlayPublicKey\" should be set in config");
