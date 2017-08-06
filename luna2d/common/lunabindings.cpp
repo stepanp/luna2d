@@ -181,6 +181,7 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	clsBounds.SetMethod("getPos", &LUNABounds::GetPos);
 	clsBounds.SetMethod("setPos", &LUNABounds::SetPos);
 	clsBounds.SetMethod("getBoundingBox", &LUNABounds::GetBoundingBox);
+	clsBounds.SetMethod("getCenter", &LUNABounds::GetCenter);
 	clsBounds.SetMethod("isIntersect", &LUNABounds::IsIntersect);
 	clsBounds.SetMethod("getOriginX", &LUNABounds::GetOriginX);
 	clsBounds.SetMethod("getOriginY", &LUNABounds::GetOriginY);
@@ -209,7 +210,6 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	// Bind circle bounds
 	LuaClass<LUNACircleBounds> clsCircleBounds(lua);
 	clsCircleBounds.SetConstructor<float>();
-	clsCircleBounds.SetMethod("getCenter", &LUNACircleBounds::GetCenter);
 	clsCircleBounds.SetMethod("getRadius", &LUNACircleBounds::GetRadius);
 	clsCircleBounds.SetMethod("setRadius", &LUNACircleBounds::SetRadius);
 	tblMath.SetField("CircleBounds", clsCircleBounds);
@@ -222,6 +222,11 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	clsPolygonBounds.SetMethod("getAngle", &LUNAPolygonBounds::GetAngle);
 	clsPolygonBounds.SetMethod("setAngle", &LUNAPolygonBounds::SetAngle);
 	tblMath.SetField("PolygonBounds", clsPolygonBounds);
+
+	// Bind OBB bounds
+	LuaClass<LUNAOBBBounds> clsOBBBounds(lua);
+	clsOBBBounds.SetConstructor<float, float>();
+	tblMath.SetField("OBBBounds", clsOBBBounds);
 
 	// Set "luna.math" as alias for standard "math" module
 	tblLuna.SetField("math", tblMath);

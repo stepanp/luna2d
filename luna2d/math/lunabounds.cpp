@@ -47,6 +47,12 @@ const LUNARect& LUNABounds::GetBoundingBox()
 	return cachedBBox;
 }
 
+glm::vec2 LUNABounds::GetCenter()
+{
+	const auto& bBox = GetBoundingBox();
+	return glm::vec2(bBox.x + bBox.width, bBox.y + bBox.height);
+}
+
 float LUNABounds::GetX()
 {
 	return pos.x;
@@ -244,12 +250,6 @@ void LUNACircleBounds::UpdateBoudingBox()
 	if(scale.y < 0) cachedBBox.y -= cachedBBox.height;
 }
 
-glm::vec2 LUNACircleBounds::GetCenter()
-{
-	const auto& bBox = GetBoundingBox();
-	return glm::vec2(bBox.x + radius, bBox.y + radius);
-}
-
 float LUNACircleBounds::GetRadius()
 {
 	return radius;
@@ -377,4 +377,16 @@ bool LUNAPolygonBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 			return intersect::Polygions(GetVertexes(), polygonBounds->GetVertexes());
 		}
 	}
+}
+
+
+LUNAOBBBounds::LUNAOBBBounds(float width, float height) :
+	LUNAPolygonBounds
+	({
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(width, 0.0f),
+		glm::vec2(width, height),
+		glm::vec2(0.0f, height)
+	})
+{
 }

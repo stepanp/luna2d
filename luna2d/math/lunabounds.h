@@ -57,6 +57,7 @@ protected:
 public:
 	LUNABoundsType GetType();
 	const LUNARect& GetBoundingBox();
+	glm::vec2 GetCenter();
 	float GetX();
 	float GetY();
 	void SetX(float x);
@@ -119,7 +120,6 @@ private:
 	virtual void UpdateBoudingBox();
 
 public:
-	glm::vec2 GetCenter();
 	float GetRadius();
 	void SetRadius(float radius);
 
@@ -149,6 +149,15 @@ public:
 	void SetAngle(float angle);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+};
+
+
+class LUNAOBBBounds : public LUNAPolygonBounds
+{
+	LUNA_USERDATA_DERIVED(LUNABounds, LUNAOBBBounds)
+
+public:
+	LUNAOBBBounds(float width, float height);
 };
 
 }
