@@ -231,6 +231,11 @@ bool LUNAAABBBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	return false;
 }
 
+bool LUNAAABBBounds::IsPointIn(const glm::vec2& point)
+{
+	return intersect::PointInRectangle(point, GetBoundingBox());
+}
+
 
 LUNACircleBounds::LUNACircleBounds(float radius) :
 	LUNABounds(LUNABoundsType::CIRCLE),
@@ -288,6 +293,11 @@ bool LUNACircleBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 	}
 }
 
+bool LUNACircleBounds::IsPointIn(const glm::vec2& point)
+{
+	return intersect::PointInCircle(point, GetCenter(), GetRadius());
+}
+
 
 LUNAPolygonBounds::LUNAPolygonBounds(const std::vector<glm::vec2>& vertexes) :
 	LUNABounds(LUNABoundsType::POLYGON)
@@ -325,7 +335,7 @@ void LUNAPolygonBounds::UpdateBoudingBox()
 	cachedBBox.height = top - bottom;
 }
 
-const std::vector<glm::vec2>&LUNAPolygonBounds::GetVertexes()
+const std::vector<glm::vec2>& LUNAPolygonBounds::GetVertexes()
 {
 	UpdateVertexes();
 	return transformedVertexes;
@@ -377,6 +387,11 @@ bool LUNAPolygonBounds::IsIntersect(const std::shared_ptr<LUNABounds>& bounds)
 			return intersect::Polygions(GetVertexes(), polygonBounds->GetVertexes());
 		}
 	}
+}
+
+bool LUNAPolygonBounds::IsPointIn(const glm::vec2& point)
+{
+	return intersect::PointInPolygon(point, GetVertexes());
 }
 
 

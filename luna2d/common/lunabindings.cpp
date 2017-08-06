@@ -183,6 +183,7 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	clsBounds.SetMethod("getBoundingBox", &LUNABounds::GetBoundingBox);
 	clsBounds.SetMethod("getCenter", &LUNABounds::GetCenter);
 	clsBounds.SetMethod("isIntersect", &LUNABounds::IsIntersect);
+	clsBounds.SetMethod("isPointIn", &LUNABounds::IsPointIn);
 	clsBounds.SetMethod("getOriginX", &LUNABounds::GetOriginX);
 	clsBounds.SetMethod("getOriginY", &LUNABounds::GetOriginY);
 	clsBounds.SetMethod("setOriginX", &LUNABounds::SetOriginX);

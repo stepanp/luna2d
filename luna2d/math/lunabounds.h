@@ -78,6 +78,7 @@ public:
 	void SetScale(float scale);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds) = 0;
+	virtual bool IsPointIn(const glm::vec2& point) = 0;
 };
 
 
@@ -103,6 +104,7 @@ public:
 	void SetSize(float width, float height);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+	virtual bool IsPointIn(const glm::vec2& point);
 };
 
 
@@ -124,6 +126,7 @@ public:
 	void SetRadius(float radius);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+	virtual bool IsPointIn(const glm::vec2& point);
 };
 
 
@@ -149,6 +152,7 @@ public:
 	void SetAngle(float angle);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);
+	virtual bool IsPointIn(const glm::vec2& point);
 };
 
 
