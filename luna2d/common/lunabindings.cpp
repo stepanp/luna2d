@@ -213,6 +213,7 @@ static void BindMath(LuaScript* lua, LuaTable& tblLuna)
 	clsCircleBounds.SetConstructor<float>();
 	clsCircleBounds.SetMethod("getRadius", &LUNACircleBounds::GetRadius);
 	clsCircleBounds.SetMethod("setRadius", &LUNACircleBounds::SetRadius);
+	clsCircleBounds.SetMethod("getDiameter", &LUNACircleBounds::GetDiameter);
 	tblMath.SetField("CircleBounds", clsCircleBounds);
 
 	// Bind polygon bounds

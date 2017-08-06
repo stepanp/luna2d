@@ -123,6 +123,7 @@ private:
 
 public:
 	float GetRadius();
+	float GetDiameter();
 	void SetRadius(float radius);
 
 	virtual bool IsIntersect(const std::shared_ptr<LUNABounds>& bounds);

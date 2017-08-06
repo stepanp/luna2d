@@ -50,7 +50,7 @@ const LUNARect& LUNABounds::GetBoundingBox()
 glm::vec2 LUNABounds::GetCenter()
 {
 	const auto& bBox = GetBoundingBox();
-	return glm::vec2(bBox.x + bBox.width, bBox.y + bBox.height);
+	return glm::vec2(bBox.x + bBox.width / 2.0f, bBox.y + bBox.height / 2.0f);
 }
 
 float LUNABounds::GetX()
@@ -246,8 +246,8 @@ LUNACircleBounds::LUNACircleBounds(float radius) :
 
 void LUNACircleBounds::UpdateBoudingBox()
 {
-	cachedBBox.width = radius * std::abs(scale.x);
-	cachedBBox.height = radius * std::abs(scale.y);
+	cachedBBox.width = GetDiameter() * std::abs(scale.x);
+	cachedBBox.height = GetDiameter() * std::abs(scale.y);
 	cachedBBox.x = pos.x + origin.x * scale.x;
 	cachedBBox.y = pos.y + origin.y * scale.y;
 
@@ -258,6 +258,11 @@ void LUNACircleBounds::UpdateBoudingBox()
 float LUNACircleBounds::GetRadius()
 {
 	return radius;
+}
+
+float LUNACircleBounds::GetDiameter()
+{
+	return GetRadius() * 2.0f;
 }
 
 void LUNACircleBounds::SetRadius(float radius)
