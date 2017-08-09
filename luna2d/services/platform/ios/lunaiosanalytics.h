@@ -23,42 +23,29 @@
 
 #pragma once
 
-#include "lunaengine.h"
+#include "lunaanalytics.h"
 
 namespace luna2d{
-
-class LUNAAds;
-class LUNAPurchases;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-class LUNANotifications;
-class LUNAAnalytics;
-
-class LUNAServices
+	
+class LUNAIosAnalyticsService : public LUNAAnalyticsService
 {
 public:
-	virtual ~LUNAServices() {}
-
-protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNAPurchases> purchases;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
-	std::shared_ptr<LUNANotifications> notifications;
-	std::shared_ptr<LUNAAnalytics> analytics;
-
+	LUNAIosAnalyticsService(id service);
+	
+private:
+	id service;
+	
 public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNAPurchases> GetPurchases();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	std::shared_ptr<LUNANotifications> GetNotifications();
-	std::shared_ptr<LUNAAnalytics> GetAnalytics();
+	// Send data to analytics
+	virtual void Send(const std::string& data);
+};
 
-	virtual void LoadServices() = 0;
+	
+class LUNAIosAnalytics : public LUNAAnalytics
+{
+public:
+	// Load service instance by name
+	virtual std::shared_ptr<LUNAAnalyticsService> LoadService(const std::string& name);
 };
 
 }

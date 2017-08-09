@@ -28,6 +28,7 @@
 #include "lunaandroidstore.h"
 #include "lunaandroidleaderboards.h"
 #include "lunaandroidnotifications.h"
+#include "lunaandroidanalytics.h"
 #include "lunaconfig.h"
 
 using namespace luna2d;
@@ -40,9 +41,11 @@ void LUNAAndroidServices::LoadServices()
 	store = std::make_shared<LUNAAndroidStore>();
 	leaderboards = std::make_shared<LUNAAndroidLeaderboards>();
 	notifications = std::make_shared<LUNAAndroidNotifications>();
+	analytics = std::make_shared<LUNAAndroidAnalytics>();
 
 	ads->LoadServices();
 	sharing->LoadServices();
+	analytics->LoadServices();
 }
 
 

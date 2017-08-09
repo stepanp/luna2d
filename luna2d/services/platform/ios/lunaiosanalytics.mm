@@ -21,44 +21,30 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#pragma once
+#include "lunaiosanalytics.h"
+#include "lunaiosservices.h"
+#import "lunansstring.h"
+#import "lunaiosanalyticsprotocol.h"
 
-#include "lunaengine.h"
+using namespace luna2d;
 
-namespace luna2d{
-
-class LUNAAds;
-class LUNAPurchases;
-class LUNASharing;
-class LUNAStore;
-class LUNALeaderboards;
-class LUNANotifications;
-class LUNAAnalytics;
-
-class LUNAServices
+LUNAIosAnalyticsService::LUNAIosAnalyticsService(id service) :
+	service(service)
 {
-public:
-	virtual ~LUNAServices() {}
+}
 
-protected:
-	std::shared_ptr<LUNAAds> ads;
-	std::shared_ptr<LUNAPurchases> purchases;
-	std::shared_ptr<LUNASharing> sharing;
-	std::shared_ptr<LUNAStore> store;
-	std::shared_ptr<LUNALeaderboards> leaderboards;
-	std::shared_ptr<LUNANotifications> notifications;
-	std::shared_ptr<LUNAAnalytics> analytics;
+// Send data to analytics
+void LUNAIosAnalyticsService::Send(const std::string& data)
+{
+	[service send:ToNsString(data)];
+}
 
-public:
-	std::shared_ptr<LUNAAds> GetAds();
-	std::shared_ptr<LUNAPurchases> GetPurchases();
-	std::shared_ptr<LUNASharing> GetSharing();
-	std::shared_ptr<LUNAStore> GetStore();
-	std::shared_ptr<LUNALeaderboards> GetLeaderboards();
-	std::shared_ptr<LUNANotifications> GetNotifications();
-	std::shared_ptr<LUNAAnalytics> GetAnalytics();
-
-	virtual void LoadServices() = 0;
-};
-
+// Load service instance by name
+std::shared_ptr<LUNAAnalyticsService> LUNAIosAnalytics::LoadService(const std::string& name)
+{
+	id service = LUNAIosServices::LoadService(name, @protocol(LUNAIosAnalyticsProtocol));
+	
+	if(!service) return nullptr;
+	
+	return std::make_shared<LUNAIosAnalyticsService>(service);
 }

@@ -28,6 +28,7 @@
 #include "lunastore.h"
 #include "lunaleaderboards.h"
 #include "lunanotifications.h"
+#include "lunaanalytics.h"
 
 using namespace luna2d;
 
@@ -59,5 +60,10 @@ std::shared_ptr<LUNALeaderboards> LUNAServices::GetLeaderboards()
 std::shared_ptr<LUNANotifications> LUNAServices::GetNotifications()
 {
 	return notifications;
+}
+
+std::shared_ptr<LUNAAnalytics> LUNAServices::GetAnalytics()
+{
+	return analytics;
 }
 

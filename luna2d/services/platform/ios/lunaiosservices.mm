@@ -28,6 +28,7 @@
 #include "lunaiosstore.h"
 #include "lunaiosleaderboards.h"
 #include "lunaiosnotifications.h"
+#include "lunaiosanalytics.h"
 #include "lunansstring.h"
 #include "lunalog.h"
 #import <objc/runtime.h>
@@ -42,9 +43,11 @@ void LUNAIosServices::LoadServices()
 	store = std::make_shared<LUNAIosStore>();
 	leaderboards = std::make_shared<LUNAIosLeaderboards>();
 	notifications = std::make_shared<LUNAIosNotifications>();
+	analytics = std::make_shared<LUNAIosAnalytics>();
 	
 	ads->LoadServices();
 	sharing->LoadServices();
+	analytics->LoadServices();
 }
 
 // Dynamically create instance of serivice by given class name

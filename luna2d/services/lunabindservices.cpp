@@ -29,6 +29,7 @@
 #include "lunastore.h"
 #include "lunaleaderboards.h"
 #include "lunanotifications.h"
+#include "lunaanalytics.h"
 #include "lunalua.h"
 
 using namespace luna2d;
@@ -105,6 +106,15 @@ static void BindNotifications(const std::shared_ptr<LUNANotifications>& notifica
 	tblNotifications.SetField("cancel", LuaFunction(lua, notifications.get(), &LUNANotifications::Cancel));
 }
 
+// Bind "luna.analytics" module
+static void BindAnalytics(const std::shared_ptr<LUNAAnalytics>& analytics, LuaScript* lua, LuaTable& tblLuna)
+{
+	LuaTable tblAnalytics(lua);
+	tblLuna.SetField("analytics", tblAnalytics);
+
+	tblAnalytics.SetField("send", LuaFunction(lua, analytics.get(), &LUNAAnalytics::Send));
+}
+
 void luna2d::BindServices()
 {
 	auto lua = LUNAEngine::SharedLua();
@@ -117,4 +127,5 @@ void luna2d::BindServices()
 	BindStore(services->GetStore(), lua, tblLuna);
 	BindLeaderboards(services->GetLeaderboards(), lua, tblLuna);
 	BindNotifications(services->GetNotifications(), lua, tblLuna);
+	BindAnalytics(services->GetAnalytics(), lua, tblLuna);
 }

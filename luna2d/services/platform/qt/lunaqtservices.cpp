@@ -28,6 +28,7 @@
 #include "lunaqtstore.h"
 #include "lunaqtleaderboards.h"
 #include "lunaqtnotifications.h"
+#include "lunaqtanalytics.h"
 
 using namespace luna2d;
 
@@ -39,6 +40,5 @@ void LUNAQtServices::LoadServices()
 	store = std::make_shared<LUNAQtStore>();
 	leaderboards = std::make_shared<LUNAQtLeaderboards>();
 	notifications = std::make_shared<LUNAQtNotifications>();
-
-	ads->LoadServices();
+	analytics = std::make_shared<LUNAQtAnalytics>();
 }
