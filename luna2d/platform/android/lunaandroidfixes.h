@@ -30,7 +30,7 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
-#include <math.h>
+#include <cmath>
 
 // Fix "%function% is not member of ::std"
 namespace std
@@ -56,5 +56,10 @@ namespace std
 	inline float roundf(float f)
 	{
 		return ::roundf(f);
+	}
+
+	inline float nanf(const char* arg)
+	{
+		return NAN;
 	}
 }

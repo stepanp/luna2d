@@ -187,7 +187,7 @@ bool luna2d::intersect::Polygions(const std::vector<glm::vec2>& polygon1, const 
 // Check intersection between two circles
 bool luna2d::intersect::Circles(const glm::vec2& center1, float radius1, const glm::vec2& center2, float radius2)
 {
-	return glm::distance2(center1, center2) <= std::powf(radius1 + radius2, 2);
+	return glm::distance2(center1, center2) <= std::pow(radius1 + radius2, 2.0f);
 }
 
 // Check intersection between circle and polygon
