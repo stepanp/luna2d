@@ -21,7 +21,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#import "lunaappdelegare.h"
+#import "lunaappdelegate.h"
 #import "lunaviewcontroller.h"
 #import "lunaservices.h"
 #import "lunaiosnotifications.h"
