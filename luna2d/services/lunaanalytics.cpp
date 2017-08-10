@@ -30,7 +30,7 @@ using namespace luna2d;
 void LUNAAnalytics::LoadServices()
 {
 	auto config = LUNAEngine::Shared()->GetConfig();
-	std::string serviceName = config->GetCustomValues()["analytics"].string_value();
+	std::string serviceName = config->GetCustomValues()["analyticsService"].string_value();
 
 	if(serviceName.empty()) return;
 
