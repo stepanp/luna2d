@@ -21,30 +21,20 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#import <Foundation/Foundation.h>
-#import "lunaioscustomappdelegate.h"
+#import <UIKit/UIKit.h>
 
-@interface LUNAIosServicesApi : NSObject
+@protocol LUNAIosCustomAppDelegate
 
-// Check for config has value with given name
-+(BOOL) hasConfigValue: (NSString*) name;
+-(void) applicationDidEnterBackground:(UIApplication*)application;
 
-// Get string value from config
-+(NSString*) getConfigString: (NSString*) name;
+-(void) applicationWillEnterForeground:(UIApplication*)application;
 
-// Get int value from config
-+(int) getConfigInt: (NSString*) name;
+-(void) applicationDidBecomeActive:(UIApplication*)application;
 
-// Get float value from config
-+(float) getConfigFloat: (NSString*) name;
+-(BOOL) application:(UIApplication*)application continueUserActivity:(NSUserActivity*)userActivity restorationHandler:(void (^)(NSArray*))restorationHandler;
 
-// Get bool value from config
-+(BOOL) getConfigBool: (NSString*) name;
+-(BOOL) application:(UIApplication*)application openURL:(NSURL*)url options:(NSDictionary<NSString*,id>*)options;
 
-// Get array value from config
-+(NSArray*) getConfigArray: (NSString*) name;
-
-// Add delegate to handle events from UIApplication
-+(void) addCustomAppDelegate: (id<LUNAIosCustomAppDelegate>) delegate;
+-(BOOL) application:(UIApplication*)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation;
 
 @end

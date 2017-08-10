@@ -35,8 +35,9 @@ using namespace luna2d;
 
 @implementation LUNAAppDelegate
 
-- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
+-(BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
+	self.customDelegates = [[NSMutableArray alloc] init];
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.rootViewController = [[LUNAViewController alloc] initWithNibName:nil bundle:nil];
 	[self.window makeKeyAndVisible];
@@ -46,22 +47,70 @@ using namespace luna2d;
 	return YES;
 }
 
-- (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification
+-(void) application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification
 {
 	auto notifications = std::static_pointer_cast<LUNAIosNotifications>(LUNAEngine::SharedServices()->GetNotifications());
 	notifications->SuppressWhileForeground(notification);
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
+-(void) applicationDidEnterBackground:(UIApplication*)application
 {
 	LUNAEngine::Shared()->OnPause();
+	
+	for(id delegate in self.customDelegates)
+	{
+		[delegate applicationDidEnterBackground:application];
+	}
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application
+-(void) applicationWillEnterForeground:(UIApplication*)application
 {
 	LUNAEngine::Shared()->OnResume();
 	
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+	
+	for(id delegate in self.customDelegates)
+	{
+		[delegate applicationWillEnterForeground:application];
+	}
+}
+
+-(void) applicationDidBecomeActive:(UIApplication*)application
+{
+	for(id delegate in self.customDelegates)
+	{
+		[delegate applicationDidBecomeActive:application];
+	}
+}
+
+-(BOOL) application:(UIApplication*)application continueUserActivity:(NSUserActivity*)userActivity restorationHandler:(void (^)(NSArray*))restorationHandler
+{
+	for(id delegate in self.customDelegates)
+	{
+		if(![delegate application:application continueUserActivity:userActivity restorationHandler:restorationHandler]) return NO;
+	}
+	
+	return YES;
+}
+
+-(BOOL) application:(UIApplication*)application openURL:(NSURL*)url options:(NSDictionary<NSString*,id>*)options
+{
+	for(id delegate in self.customDelegates)
+	{
+		if(![delegate application:application openURL:url options:options]) return NO;
+	}
+
+	return YES;
+}
+
+-(BOOL) application:(UIApplication*)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation
+{
+	for(id delegate in self.customDelegates)
+	{
+		if(![delegate application:application openURL:url sourceApplication:sourceApplication annotation:annotation]) return NO;
+	}
+	
+	return YES;
 }
 
 @end

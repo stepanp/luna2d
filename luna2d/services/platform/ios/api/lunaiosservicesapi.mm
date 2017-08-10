@@ -24,6 +24,7 @@
 #import "lunaiosservicesapi.h"
 #include "lunaconfig.h"
 #include "lunansstring.h"
+#import "lunaappdelegate.h"
 
 using namespace luna2d;
 
@@ -79,6 +80,13 @@ using namespace luna2d;
 	}
 	
 	return [mutableArray copy];
+}
+
+// Add delegate to handle events from UIApplication
++(void) addCustomAppDelegate: (id<LUNAIosCustomAppDelegate>) delegate
+{
+	LUNAAppDelegate* appDelegate = (LUNAAppDelegate*)[[UIApplication sharedApplication] delegate];
+	[appDelegate.customDelegates addObject:delegate];
 }
 
 @end
