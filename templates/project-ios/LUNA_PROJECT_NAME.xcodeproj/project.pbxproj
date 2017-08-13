@@ -16,6 +16,8 @@
 		FD4707AE1EF1C90D005D31C3 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD4707AD1EF1C90D005D31C3 /* UserNotifications.framework */; };
 		FD6DB46A1D68CDDB00048ED6 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6DB4691D68CDDB00048ED6 /* GameKit.framework */; };
 		FD7015841F40CEC50016864C /* AppiraterLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FD7015621F40CEC50016864C /* AppiraterLocalizable.strings */; };
+		FD7015881F40CF970016864C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7015871F40CF970016864C /* StoreKit.framework */; };
+		FD70158A1F40CFC00016864C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD7015891F40CFC00016864C /* SystemConfiguration.framework */; };
 		FD90884A1D36F09B00B892A9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD9088491D36F09B00B892A9 /* Images.xcassets */; };
 		FD9D5B131D4CDBCA00AE62A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */; };
 		FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FDD1EAF31D3B01EE00F58C6C /* libluna2d.a */; };
@@ -65,6 +67,8 @@
 		FD7015811F40CEC50016864C /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
 		FD7015821F40CEC50016864C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
 		FD7015831F40CEC50016864C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/AppiraterLocalizable.strings"; sourceTree = "<group>"; };
+		FD7015871F40CF970016864C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		FD7015891F40CFC00016864C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FD9088491D36F09B00B892A9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = LUNA_PROJECT_NAME/Images.xcassets; sourceTree = "<group>"; };
 		FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		FDD1EAEB1D3AFEF700F58C6C /* LUNA_PROJECT_NAME.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LUNA_PROJECT_NAME.xcodeproj; sourceTree = "<group>"; };
@@ -78,6 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD70158A1F40CFC00016864C /* SystemConfiguration.framework in Frameworks */,
+				FD7015881F40CF970016864C /* StoreKit.framework in Frameworks */,
 				FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */,
 				FD424BD71D34544F00D04922 /* OpenGLES.framework in Frameworks */,
 				FD424BD51D34544900D04922 /* OpenAL.framework in Frameworks */,
@@ -111,6 +117,8 @@
 				FD6DB4691D68CDDB00048ED6 /* GameKit.framework */,
 				FD9D5B121D4CDBCA00AE62A8 /* CoreGraphics.framework */,
 				FD424BB01D3450FB00D04922 /* luna2d.mm */,
+				FD7015891F40CFC00016864C /* SystemConfiguration.framework */,
+				FD7015871F40CF970016864C /* StoreKit.framework */,
 				FD424B901D344FF400D04922 /* Products */,
 			);
 			sourceTree = "<group>";
