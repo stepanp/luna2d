@@ -354,25 +354,16 @@ static BOOL _alwaysUseMainBundle = NO;
 	NSDate *dateOfFirstLaunch = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAppiraterFirstUseDate]];
 	NSTimeInterval timeSinceFirstLaunch = [[NSDate date] timeIntervalSinceDate:dateOfFirstLaunch];
 	NSTimeInterval timeUntilRate = 60 * 60 * 24 * _daysUntilPrompt;
-	
-	NSLog(@"Time %f %f", timeSinceFirstLaunch, timeUntilRate);
-	
 	if (timeSinceFirstLaunch < timeUntilRate)
 		return NO;
 	
 	// check if the app has been used enough
 	NSInteger useCount = [userDefaults integerForKey:kAppiraterUseCount];
-	
-	NSLog(@"Use cound %d %d", useCount, _usesUntilPrompt);
-	
 	if (useCount < _usesUntilPrompt)
 		return NO;
 	
 	// check if the user has done enough significant events
 	NSInteger sigEventCount = [userDefaults integerForKey:kAppiraterSignificantEventCount];
-	
-	NSLog(@"Significant events %d %d", sigEventCount, _significantEventsUntilPrompt);
-	
 	if (sigEventCount < _significantEventsUntilPrompt)
 		return NO;
 	
@@ -380,9 +371,6 @@ static BOOL _alwaysUseMainBundle = NO;
 	NSDate *reminderRequestDate = [NSDate dateWithTimeIntervalSince1970:[userDefaults doubleForKey:kAppiraterReminderRequestDate]];
 	NSTimeInterval timeSinceReminderRequest = [[NSDate date] timeIntervalSinceDate:reminderRequestDate];
 	NSTimeInterval timeUntilReminder = 60 * 60 * 24 * _timeBeforeReminding;
-	
-	NSLog(@"Reminder time %f %f", timeSinceReminderRequest, timeUntilReminder);
-	
 	if (timeSinceReminderRequest < timeUntilReminder)
 		return NO;
 	
