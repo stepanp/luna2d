@@ -16,10 +16,11 @@ android {
 			java.srcDirs = [
 					"src/main/../../../../../../luna2d/platform/android/java",
 					"src/main/../../../../../../luna2d/services/platform/android/java",
-					"src/main/../../../../../../thirdparty/androidbilling/java"
+					"src/main/../../../../../../thirdparty/androidbilling/java",
+					"src/main/../../../../../../thirdparty/appirater/android/java"
 			]
 			aidl.srcDirs =[ "src/main/../../../../../../thirdparty/androidbilling/aidl" ]
-			resources.srcDirs  = ["src/main/res"]
+			resources.srcDirs = ["src/main/res"]
 			manifest.srcFile 'src/main/AndroidManifest.xml'
 		}
 	}
