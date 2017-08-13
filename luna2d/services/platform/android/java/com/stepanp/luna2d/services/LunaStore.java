@@ -23,16 +23,19 @@
 
 package com.stepanp.luna2d.services;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.net.Uri;
-import com.stepanp.luna2d.LunaActivity;
+import com.stepanp.luna2d.services.api.LunaServicesApi;
+import com.sbstrm.appirater.Appirater;
 
 public class LunaStore
 {
 	// Get url to page of game in store
 	public static String getUrl()
 	{
-		String appPackage = LunaActivity.getSharedActivity().getPackageName();
+		String appPackage = LunaServicesApi.getSharedActivity().getPackageName();
 		String url = "https://play.google.com/store/apps/details?id=" + appPackage;
 
 		return url;
@@ -42,6 +45,36 @@ public class LunaStore
 	public static void openPage()
 	{
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getUrl()));
-		LunaActivity.getSharedActivity().startActivity(intent);
+		LunaServicesApi.getSharedActivity().startActivity(intent);
+	}
+
+	// Request rate app dialog
+	public static void requestRateApp()
+	{
+		final Activity activity = LunaServicesApi.getSharedActivity();
+		int daysUntilPromt = 0;
+		int launchesUntilPromt = 2;
+		int daysBeforeReminding = 2;
+
+		if(LunaServicesApi.hasConfigValue("rateAppDays")) daysUntilPromt = LunaServicesApi.getConfigInt("rateAppDays");
+		if(LunaServicesApi.hasConfigValue("rateAppLaunches")) launchesUntilPromt = LunaServicesApi.getConfigInt("rateAppLaunches");
+		if(LunaServicesApi.hasConfigValue("rateAppRemindingTime")) daysBeforeReminding = LunaServicesApi.getConfigInt("rateAppRemindingTime");
+
+		ApplicationInfo appInfo = activity.getApplicationInfo();
+		String appName = (String)activity.getPackageManager().getApplicationLabel(appInfo);
+
+		Appirater.appTitle = appName;
+		Appirater.daysUntilPrompt = daysUntilPromt;
+		Appirater.launchesUntilPrompt = launchesUntilPromt;
+		Appirater.daysBeforeReminding = daysBeforeReminding;
+
+		LunaServicesApi.runInUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Appirater.appLaunched(activity);
+			}
+		});
 	}
 }

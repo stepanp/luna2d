@@ -37,6 +37,7 @@ private:
 	jclass javaStore;
 	jmethodID javaGetUrl;
 	jmethodID javaOpenPage;
+	jmethodID javaRequestRateApp;
 
 public:
 	// Get url to page of game in store
@@ -44,6 +45,9 @@ public:
 
 	// Open page of game in store
 	virtual void OpenPage();
+
+	// Request rate app dialog
+	virtual void RequestRateApp();
 };
 
 }

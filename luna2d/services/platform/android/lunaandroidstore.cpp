@@ -37,6 +37,7 @@ LUNAAndroidStore::LUNAAndroidStore()
 	// Get java wrapper method ids
 	javaGetUrl = env->GetStaticMethodID(javaStore, "getUrl", "()Ljava/lang/String;");
 	javaOpenPage = env->GetStaticMethodID(javaStore, "openPage", "()V");
+	javaRequestRateApp = env->GetStaticMethodID(javaStore, "requestRateApp", "()V");
 }
 
 // Get url to page of game in store
@@ -49,4 +50,10 @@ std::string LUNAAndroidStore::GetUrl()
 void LUNAAndroidStore::OpenPage()
 {
 	jni::Env()->CallStaticVoidMethod(javaStore, javaOpenPage);
+}
+
+// Request rate app dialog
+void LUNAAndroidStore::RequestRateApp()
+{
+	jni::Env()->CallStaticVoidMethod(javaStore, javaRequestRateApp);
 }
