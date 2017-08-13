@@ -36,3 +36,9 @@ void LUNAQtStore::OpenPage()
 {
 
 }
+
+// Request rate app dialog
+void LUNAQtStore::RequestRateApp()
+{
+
+}

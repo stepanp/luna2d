@@ -36,6 +36,9 @@ public:
 	
 	// Open page of game in store
 	virtual void OpenPage();
+	
+	// Request rate app dialog
+	virtual void RequestRateApp();
 };
 
 }

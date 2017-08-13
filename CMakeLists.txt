@@ -93,6 +93,7 @@ set(THIRDPARTY_DIRS
 	${THIRDPARTY_DIR}/json11
 	${THIRDPARTY_DIR}/libpng/arm
 	${THIRDPARTY_DIR}/libpng
+	${THIRDPARTY_DIR}/libjpeg
 	${THIRDPARTY_DIR}/utf8cpp
 	${THIRDPARTY_DIR}/libzip
 	${THIRDPARTY_DIR}/zlib
@@ -147,6 +148,15 @@ aux_source_directory(${THIRDPARTY_DIR}/ogg THIRDPARTY_SOURCES)
 
 # libvorbis
 aux_source_directory(${THIRDPARTY_DIR}/vorbis THIRDPARTY_SOURCES)
+
+# appirater
+if(${PLATFROM_NAME} STREQUAL "ios")
+	aux_source_directory(${THIRDPARTY_DIR}/appirater/ios APPIRATER_SOURCES)
+	list(APPEND THIRDPARTY_SOURCES ${APPIRATER_SOURCES})
+	list(APPEND THIRDPARTY_DIRS ${THIRDPARTY_DIR}/appirater/ios)
+	set_source_files_properties(${APPIRATER_SOURCES} STRING PROPERTIES COMPILE_FLAGS "-fobjc-arc")
+	include_directories(${THIRDPARTY_DIR}/appirater/ios)
+endif()
 
 
 # Build Qt static library

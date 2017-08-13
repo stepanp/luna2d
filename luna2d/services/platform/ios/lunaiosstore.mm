@@ -24,6 +24,8 @@
 #include "lunaiosstore.h"
 #include "lunansstring.h"
 #include "lunalog.h"
+#import "lunaiosservicesapi.h"
+#import <Appirater.h>
 
 using namespace luna2d;
 
@@ -44,6 +46,27 @@ void LUNAIosStore::OpenPage()
 	NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.com/app/%@",
 		[appName stringByReplacingOccurrencesOfString:@" " withString:@""]]];
 	[[UIApplication sharedApplication] openURL:url];
+}
+
+// Request rate app dialog
+void LUNAIosStore::RequestRateApp()
+{
+	NSString* appId = @"";
+	int days = 0;
+	int launches = 2;
+	int remindingTime = 2;
+	
+	if([LUNAIosServicesApi hasConfigValue:@"rateAppId"]) appId = [LUNAIosServicesApi getConfigString:@"rateAppId"];
+	if([LUNAIosServicesApi hasConfigValue:@"rateAppDays"]) days = [LUNAIosServicesApi getConfigInt:@"rateAppDays"];
+	if([LUNAIosServicesApi hasConfigValue:@"rateAppLaunches"]) launches = [LUNAIosServicesApi getConfigInt:@"rateAppLaunches"];
+	if([LUNAIosServicesApi hasConfigValue:@"rateAppRemindingTime"]) remindingTime = [LUNAIosServicesApi getConfigInt:@"rateAppRemindingTime"];
+	
+	[Appirater setAppId:appId];
+	[Appirater setDaysUntilPrompt:days];
+	[Appirater setUsesUntilPrompt:launches];
+	[Appirater setSignificantEventsUntilPrompt:-1];
+	[Appirater setTimeBeforeReminding:remindingTime];
+	[Appirater appLaunched:YES];
 }
 
 
