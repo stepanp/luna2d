@@ -28,15 +28,16 @@ using namespace luna2d;
 
 LUNACamera::LUNACamera(float width, int height) :
 	width(width),
-	height(height)
+	height(height),
+	zoom(1.0f)
 {
 	UpdateMatrix();
 }
 
 void LUNACamera::UpdateMatrix()
 {
-	float halfWidth = width / 2.0f;
-	float halfHeight = height / 2.0f;
+	float halfWidth = (width * zoom) / 2.0f;
+	float halfHeight = (height * zoom) / 2.0f;
 
 	matrix = glm::ortho(pos.x - halfWidth, pos.x + halfWidth, pos.y - halfHeight, pos.y + halfHeight);
 }
@@ -75,6 +76,17 @@ void LUNACamera::SetPos(float x, float y)
 	pos.x = x;
 	pos.y = y;
 
+	UpdateMatrix();
+}
+
+float LUNACamera::GetZoom()
+{
+	return zoom;
+}
+
+void LUNACamera::SetZoom(float zoom)
+{
+	this->zoom = 1.0f / zoom;
 	UpdateMatrix();
 }
 

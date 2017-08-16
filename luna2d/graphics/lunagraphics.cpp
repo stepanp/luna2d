@@ -75,6 +75,8 @@ LUNAGraphics::LUNAGraphics() :
 	clsCamera.SetMethod("setY", &LUNACamera::SetY);
 	clsCamera.SetMethod("getPos", &LUNACamera::GetPos);
 	clsCamera.SetMethod("setPos", &LUNACamera::SetPos);
+	clsCamera.SetMethod("getZoom", &LUNACamera::GetZoom);
+	clsCamera.SetMethod("setZoom", &LUNACamera::SetZoom);
 
 	// Bind sprite
 	LuaClass<LUNASprite> clsSprite(lua);

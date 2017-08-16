@@ -40,6 +40,7 @@ public:
 
 private:
 	float width, height;
+	float zoom;
 	glm::vec2 pos;
 	glm::mat4 matrix;
 
@@ -53,6 +54,8 @@ public:
 	void SetY(float y);
 	const glm::vec2& GetPos();
 	void SetPos(float x, float y);
+	float GetZoom();
+	void SetZoom(float zoom);
 	const glm::mat4& GetMatrix();
 
 	// Convert coordinates from camera to physical screen
