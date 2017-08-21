@@ -94,16 +94,6 @@ void LUNAQtWidget::paintGL()
 	if(LUNAEngine::Shared()->IsInitialized())
 	{
 		emit gameLoopIteration();
-
-		// On Android "OnTouchMoved" event calls every time when finger is being pressed,
-		// even if finger isn't moved
-		// Emulate same behavior
-		if(mouseDown)
-		{
-			QPoint mousePos = mapFromGlobal(QCursor::pos());
-			LUNAEngine::Shared()->OnTouchMoved(TranslateMouseX(mousePos.x()), TranslateMouseY(mousePos.y()), 0);
-		}
-
 		LUNAEngine::Shared()->MainLoop();
 	}
 
@@ -137,6 +127,16 @@ void LUNAQtWidget::mousePressEvent(QMouseEvent *event)
 	{
 		mouseDown = true;
 		LUNAEngine::Shared()->OnTouchDown(TranslateMouseX(event->x()), TranslateMouseY(event->y()), 0);
+	}
+}
+
+void LUNAQtWidget::mouseMoveEvent(QMouseEvent *event)
+{
+	if(!LUNAEngine::Shared()->IsInitialized() || !mouseDown) return;
+
+	if(QApplication::mouseButtons() == Qt::LeftButton)
+	{
+		LUNAEngine::Shared()->OnTouchMoved(TranslateMouseX(event->x()), TranslateMouseY(event->y()), 0);
 	}
 }
 

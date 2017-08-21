@@ -55,6 +55,7 @@ protected:
 	virtual void initializeGL();
 	virtual void paintGL();
 	virtual void mousePressEvent(QMouseEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
 	virtual void mouseReleaseEvent(QMouseEvent* event);
 	virtual bool eventFilter(QObject* target, QEvent* event);
 
