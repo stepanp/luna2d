@@ -263,7 +263,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "python ${SRCROOT}/.luna2d/update.py";
+			shellScript = "python \"${SRCROOT}/.luna2d/update.py\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
