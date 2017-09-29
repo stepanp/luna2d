@@ -50,6 +50,9 @@ public class LunaServicesApi
 	// Get array of strings from config by name
 	public static native String[] getConfigStringArray(String name);
 
+	// Pause/resume engine with showing loading indicator during pause
+	public static native void setPauseWithLoadingIndicator(boolean pause);
+
 	// Get main game activity
 	// Some android APIs requests Context or Activity for work.
 	// So, use Activity returning this method

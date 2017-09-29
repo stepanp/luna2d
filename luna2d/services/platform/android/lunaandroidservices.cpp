@@ -29,6 +29,7 @@
 #include "lunaandroidleaderboards.h"
 #include "lunaandroidnotifications.h"
 #include "lunaandroidanalytics.h"
+#include "lunaandroidutils.h"
 #include "lunaconfig.h"
 
 using namespace luna2d;
@@ -99,4 +100,22 @@ LUNA_JNI_FUNC_PACKAGE(jobjectArray, services_api, LunaServicesApi, getConfigStri
     }  
 
     return ret;
+}
+
+LUNA_JNI_FUNC_PACKAGE(void, services_api, LunaServicesApi, setPauseWithLoadingIndicator)(JNIEnv* env, jclass cls, bool pause)
+{
+	if(pause)
+	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(true);
+		LUNAEngine::Shared()->OnPause();
+		
+		// Protect game from resuming by operating system
+		LUNAEngine::Shared()->EnablePauseHandling(false);
+	}
+	else
+	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
+		LUNAEngine::Shared()->EnablePauseHandling(true);
+		LUNAEngine::Shared()->OnResume();
+	}
 }
