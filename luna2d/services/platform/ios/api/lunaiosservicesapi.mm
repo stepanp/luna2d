@@ -24,6 +24,7 @@
 #import "lunaiosservicesapi.h"
 #include "lunaconfig.h"
 #include "lunansstring.h"
+#include "lunaplatformutils.h"
 #import "lunaappdelegate.h"
 
 using namespace luna2d;
@@ -87,6 +88,25 @@ using namespace luna2d;
 {
 	LUNAAppDelegate* appDelegate = (LUNAAppDelegate*)[[UIApplication sharedApplication] delegate];
 	[appDelegate.customDelegates addObject:delegate];
+}
+
+// Pause/resume engine with showing loading indicator during pause
++(void) setPauseWithLoadingIndicator: (BOOL) pause
+{
+	if(pause)
+	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(true);
+		LUNAEngine::Shared()->OnPause();
+		
+		// Protect game from resuming by operating system
+		LUNAEngine::Shared()->EnablePauseHandling(false);
+	}
+	else
+	{
+		LUNAEngine::SharedPlatformUtils()->ShowLoadingIndicator(false);
+		LUNAEngine::Shared()->EnablePauseHandling(true);
+		LUNAEngine::Shared()->OnResume();
+	}
 }
 
 @end

@@ -47,4 +47,7 @@
 // Add delegate to handle events from UIApplication
 +(void) addCustomAppDelegate: (id<LUNAIosCustomAppDelegate>) delegate;
 
+// Pause/resume engine with showing loading indicator during pause
++(void) setPauseWithLoadingIndicator: (BOOL) pause;
+
 @end
