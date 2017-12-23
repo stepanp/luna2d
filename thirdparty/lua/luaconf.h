@@ -63,6 +63,10 @@
 
 #ifdef __APPLE__
 #define LUA_USE_MACOSX
+#include "TargetConditionals.h"
+#if defined(TARGET_IPHONE_SIMULATOR) || defined(TARGET_OS_IPHONE)
+#define LUA_USE_IOS
+#endif
 #endif
 
 #if defined(LUA_USE_MACOSX)
@@ -74,6 +78,9 @@
 #define LUA_USE_LONGLONG	/* assume support for long long */
 #endif
 
+#ifndef LUA_USE_IOS
+#define LUA_USE_EXECUTE
+#endif
 
 
 /*

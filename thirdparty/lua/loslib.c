@@ -76,7 +76,7 @@
 #endif
 
 
-#ifndef LUA_WIN_RT
+#ifdef LUA_USE_EXECUTE
 static int os_execute (lua_State *L) {
   const char *cmd = luaL_optstring(L, 1, NULL);
   int stat = system(cmd);
@@ -303,10 +303,10 @@ static const luaL_Reg syslib[] = {
   {"clock",     os_clock},
   {"date",      os_date},
   {"difftime",  os_difftime},
-#ifndef LUA_WIN_RT
-  {"execute",   os_execute},  
-  {"getenv",    os_getenv},
+#ifdef LUA_USE_EXECUTE
+  {"execute",   os_execute},
 #endif
+  {"getenv",    os_getenv},
   {"exit",      os_exit},
   {"remove",    os_remove},
   {"rename",    os_rename},
