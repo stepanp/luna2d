@@ -162,12 +162,15 @@ std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer()
 // Check is music playing
 bool LUNAAudio::IsMusicPlaying()
 {
+	if(!context) return false;
+
 	return musicPlayer->IsUsing();
 }
 
 // Play background music from given audio source
 void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
 {
+	if(!context) return;
 	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
 
 	musicPlayer->Stop();
@@ -178,12 +181,15 @@ void LUNAAudio::PlayMusic(const std::weak_ptr<LUNAAudioSource>& source)
 // Stop background music
 void LUNAAudio::StopMusic()
 {
+	if(!context) return;
+
 	musicPlayer->Stop();
 }
 
 // Play sound from given source
 void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume)
 {
+	if(!context) return;
 	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
 	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
 
@@ -200,6 +206,8 @@ void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float vo
 // Stop all currently playing sounds
 void LUNAAudio::StopAllSounds()
 {
+	if(!context) return;
+
 	for(auto& player : players) player->Stop();
 }
 
@@ -213,6 +221,7 @@ float LUNAAudio::GetMusicVolume()
 // "volume" should be in range [0.0f, 1.0f]
 void LUNAAudio::SetMusicVolume(float volume)
 {
+	if(!context) return;
 	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
 
 	musicVolume = volume;
@@ -229,6 +238,7 @@ float LUNAAudio::GetSoundVolume()
 // "volume" should be in range [0.0f, 1.0f]
 void LUNAAudio::SetSoundVolume(float volume)
 {
+	if(!context) return;
 	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
 
 	soundVolume = volume;
@@ -238,8 +248,9 @@ void LUNAAudio::SetSoundVolume(float volume)
 // Stop all players with given source id
 void LUNAAudio::StopPlayersWithSource(ALuint sourceId)
 {
-	if(musicPlayer->GetSourceId() == sourceId) musicPlayer->Stop();
+	if(!context) return;
 
+	if(musicPlayer->GetSourceId() == sourceId) musicPlayer->Stop();
 	for(auto& player : players)
 	{
 		if(player->GetSourceId() == sourceId) player->Stop();
@@ -255,6 +266,8 @@ bool LUNAAudio::IsMusicMuted()
 // Mute\unmute music
 void LUNAAudio::MuteMusic(bool mute)
 {
+	if(!context) return;
+
 	muteMusic = mute;
 	musicPlayer->SetVolume(mute ? 0.0f : musicVolume);
 }
@@ -268,6 +281,8 @@ bool LUNAAudio::IsSoundMuted()
 // Mute\unmute all sounds
 void LUNAAudio::MuteSound(bool mute)
 {
+	if(!context) return;
+
 	muteSound = mute;
 	for(auto& player : players) player->SetVolume(mute ? 0.0f : soundVolume);
 }
@@ -275,6 +290,8 @@ void LUNAAudio::MuteSound(bool mute)
 // Pause audio when engine is pausing
 void LUNAAudio::OnPause()
 {
+	if(!context) return;
+
 	musicPlayer->OnPause();
 	for(auto& player : players) player->OnPause();
 
@@ -286,6 +303,8 @@ void LUNAAudio::OnPause()
 // Resume audio when engine is resuming
 void LUNAAudio::OnResume()
 {
+	if(!context) return;
+
 #ifdef ALC_SOFT_pause_device
 	alcDeviceResumeSOFT(device);
 #endif
