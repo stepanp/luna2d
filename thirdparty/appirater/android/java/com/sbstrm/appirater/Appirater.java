@@ -1,8 +1,6 @@
 package com.sbstrm.appirater;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +17,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.support.v7.app.AlertDialog;
 
 /*
  * @source https://github.com/sbstrm/appirater-android
@@ -152,7 +150,6 @@ public class Appirater {
         }
     }
 
-	@SuppressLint("NewApi")
 	private static void showRateDialog(final Context mContext, final SharedPreferences.Editor editor) {
 		Resources resources = mContext.getResources();
     	String appName = appTitle;
@@ -202,45 +199,8 @@ public class Appirater {
 		builder.setCancelable(false);
 
 		final AlertDialog alertDialog = builder.create();
-		alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-			@Override
-			public void onShow(DialogInterface dialog) {
-				applyWorkaroundForButtonWidthsTooWide(mContext, alertDialog);
-			}
-		});
 		alertDialog.show();
     }
-
-	private static void resizeButton(Button button) {
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)button.getLayoutParams();
-		params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-		button.setLayoutParams(params);
-	}
-
-	private static void applyWorkaroundForButtonWidthsTooWide(Context mContext, AlertDialog alertDialog) {
-		Button buttonOk = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-		Button buttonLater = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-		Button buttonNo = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-
-		if (!(buttonOk.getParent() instanceof LinearLayout))
-			return;
-
-		LinearLayout linearLayout = (LinearLayout)buttonOk.getParent();
-		linearLayout.setOrientation(LinearLayout.VERTICAL);
-		linearLayout.setGravity(Gravity.RIGHT);
-
-		linearLayout.removeAllViews();
-		linearLayout.addView(buttonOk);
-		linearLayout.addView(buttonLater);
-		linearLayout.addView(buttonNo);
-
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-		{
-			resizeButton(buttonOk);
-			resizeButton(buttonLater);
-			resizeButton(buttonNo);
-		}
-	}
 
     private static void showLoveDialog(final Context mContext, final SharedPreferences.Editor editor) {
 		Resources resources = mContext.getResources();

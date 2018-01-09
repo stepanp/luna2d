@@ -67,6 +67,7 @@ public class LunaStore
 		Appirater.daysUntilPrompt = daysUntilPromt;
 		Appirater.launchesUntilPrompt = launchesUntilPromt;
 		Appirater.daysBeforeReminding = daysBeforeReminding;
+		Appirater.testMode = LunaServicesApi.getConfigBool("debug_rateApp");
 
 		LunaServicesApi.runInUiThread(new Runnable()
 		{
