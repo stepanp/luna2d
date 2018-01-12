@@ -26,15 +26,18 @@ package com.stepanp.luna2d;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import java.util.List;
 import java.util.ArrayList;
+
 import com.stepanp.luna2d.services.api.LunaActivityListener;
 
 public class LunaActivity extends Activity
 {
 	private LunaGlView glView;
 	private List<LunaActivityListener> listeners = new ArrayList<LunaActivityListener>();
+	private Handler postHandler = new Handler();
 
 	private static Activity sharedActivity = null;
 
@@ -58,6 +61,7 @@ public class LunaActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		enableFullscreen();
+		makeVisibilityListener();
 
 		sharedActivity = this;
 		LunaPrefs.init();
@@ -109,6 +113,8 @@ public class LunaActivity extends Activity
 		super.onDestroy();
 
 		for(LunaActivityListener listener : listeners) listener.onDestroy(this);
+
+		LunaNative.deinitialize();
 	}
 
 	@Override
@@ -142,9 +148,9 @@ public class LunaActivity extends Activity
 	{
 		super.onWindowFocusChanged(hasFocus);
 
-		if(hasFocus) enableFullscreen();
+		enableFullscreen();
 	}
-	
+
 	private void enableFullscreen()
 	{
 		getWindow().getDecorView().setSystemUiVisibility(
@@ -154,5 +160,24 @@ public class LunaActivity extends Activity
 			View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
 			View.SYSTEM_UI_FLAG_FULLSCREEN |
 			View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);	
+	}
+
+	private void makeVisibilityListener()
+	{
+		getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+		{
+			@Override
+			public void onSystemUiVisibilityChange(int visibility)
+			{
+				postHandler.post(new Runnable()
+				{
+					@Override
+					public void run ()
+					{
+						enableFullscreen();
+					}
+				});
+			}
+		});
 	}
 }

@@ -59,6 +59,11 @@ LUNA_JNI_FUNC(void, LunaNative, initialize)(JNIEnv* env, jclass cls, jint screen
 	LUNAEngine::Shared()->Run();
 }
 
+LUNA_JNI_FUNC(void, LunaNative, deinitialize)(JNIEnv* env, jclass cls)
+{
+	LUNAEngine::Shared()->Deinitialize();
+}
+
 LUNA_JNI_FUNC(void, LunaNative, reloadAssets)(JNIEnv* env, jclass cls)
 {
 	LUNAEngine::SharedGraphics()->GetRenderer()->SetDefaultViewport();

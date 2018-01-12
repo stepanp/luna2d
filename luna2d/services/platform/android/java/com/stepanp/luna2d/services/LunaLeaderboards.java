@@ -141,7 +141,7 @@ public class LunaLeaderboards
 		@Override
 		public void onStart(Activity activity)
 		{
-			if(apiClient != null && !notConnected) apiClient.connect();
+			if(!isSigned()) apiClient.connect();
 		}
 
 		@Override
