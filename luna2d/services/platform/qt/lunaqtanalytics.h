@@ -24,14 +24,34 @@
 #pragma once
 
 #include "lunaanalytics.h"
+#include <QObject>
+#include <QHash>
 
 namespace luna2d{
+
+class LUNAQtAnalyticsService : public QObject, public LUNAAnalyticsService
+{
+	Q_OBJECT
+
+signals:
+	void dataSent(const QString& event, const QHash<QString,QString>& data);
+
+public:
+	// Send data to analytics
+	virtual void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data);
+};
+
 
 class LUNAQtAnalytics : public LUNAAnalytics
 {
 public:
+	LUNAQtAnalytics();
+
+public:
 	// Load service instance by name
 	virtual std::shared_ptr<LUNAAnalyticsService> LoadService(const std::string& name);
+
+	std::shared_ptr<LUNAQtAnalyticsService> GetService();
 };
 
 }

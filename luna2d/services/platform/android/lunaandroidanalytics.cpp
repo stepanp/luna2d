@@ -52,11 +52,14 @@ LUNAAndroidAnalyticsService::LUNAAndroidAnalyticsService(const std::string& java
 	// Make new object of java wrapper class
 	jmethodID constructor = env->GetMethodID(javaClass, "<init>", "()V");
 	jobject localObjRef = env->NewObject(javaClass, constructor);
+
 	javaObject = reinterpret_cast<jobject>(env->NewGlobalRef(localObjRef));
 	env->DeleteLocalRef(localObjRef);
 
 	// Get java wrapper method ids
-	javaSend = env->GetMethodID(javaClass, "send", "(Ljava/lang/String;)V");
+	javaClearData = env->GetMethodID(javaClass, "clearData", "()V");
+	javaPutData = env->GetMethodID(javaClass, "putData", "(Ljava/lang/String;Ljava/lang/String;)V");
+	javaSendData = env->GetMethodID(javaClass, "sendData", "(Ljava/lang/String;)V");
 
 	isLoaded = true;
 }
@@ -68,9 +71,16 @@ bool LUNAAndroidAnalyticsService::IsLoaded()
 }
 
 // Send data to analytics
-void LUNAAndroidAnalyticsService::Send(const std::string& data)
+void LUNAAndroidAnalyticsService::Send(const std::string& event, const std::unordered_map<std::string,std::string>& data)
 {
-	jni::Env()->CallVoidMethod(javaObject, javaSend, jni::ToJString(data).j_str());
+	jni::Env()->CallVoidMethod(javaObject, javaClearData);
+
+	for(const auto& entry : data)
+	{
+		jni::Env()->CallVoidMethod(javaObject, javaPutData, jni::ToJString(entry.first).j_str(), jni::ToJString(entry.second).j_str());		
+	}
+
+	jni::Env()->CallVoidMethod(javaObject, javaSendData, jni::ToJString(event).j_str());
 }
 
 

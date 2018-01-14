@@ -25,8 +25,31 @@
 
 using namespace luna2d;
 
+// Send data to analytics
+void LUNAQtAnalyticsService::Send(const std::string& event, const std::unordered_map<std::string,std::string>& data)
+{
+	QHash<QString,QString> map;
+
+	for(const auto& entry : data)
+	{
+		map.insert(QString::fromStdString(entry.first), QString::fromStdString(entry.second));
+	}
+
+	emit dataSent(QString::fromStdString(event), map);
+}
+
+LUNAQtAnalytics::LUNAQtAnalytics()
+{
+	service = std::make_shared<LUNAQtAnalyticsService>();
+}
+
 // Load service instance by name
 std::shared_ptr<LUNAAnalyticsService> LUNAQtAnalytics::LoadService(const std::string& name)
 {
 	return nullptr;
+}
+
+std::shared_ptr<LUNAQtAnalyticsService> LUNAQtAnalytics::GetService()
+{
+	return std::static_pointer_cast<LUNAQtAnalyticsService>(service);
 }

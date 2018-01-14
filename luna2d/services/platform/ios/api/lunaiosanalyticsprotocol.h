@@ -24,6 +24,6 @@
 @protocol LUNAIosAnalyticsProtocol
 
 // Send data to analytics
--(void) send: (NSString*)data;
+-(void) send: (NSString*)event data: (NSMutableDictionary*)data;
 	
 @end

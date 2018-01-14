@@ -37,7 +37,7 @@ private:
 	
 public:
 	// Send data to analytics
-	virtual void Send(const std::string& data);
+	virtual void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data);
 };
 
 	

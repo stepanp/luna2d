@@ -32,7 +32,7 @@ public:
 
 public:
 	// Send data to analytics
-	virtual void Send(const std::string& data) = 0;
+	virtual void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data) = 0;
 };
 
 
@@ -41,7 +41,7 @@ class LUNAAnalytics
 public:
 	virtual ~LUNAAnalytics() {}
 
-private:
+protected:
 	std::shared_ptr<LUNAAnalyticsService> service;
 
 public:
@@ -52,7 +52,7 @@ public:
 	void LoadServices();
 
 	// Send data to analytics
-	void Send(const std::string& data);
+	void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data);
 };
 
 }

@@ -23,8 +23,33 @@
 
 package com.stepanp.luna2d.services.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class LunaAnalyticsService
 {
 	// Send data to analytics
-	public abstract void send(String data);
+	public abstract void send(String event, Map<String,String> data);
+
+	//-----------------------------------
+	// Helpers to easily pass map to Java
+	// Invokes only from native code
+	//-----------------------------------
+
+	private Map<String,String> dataCache = new HashMap<String,String>();
+
+	public void clearData()
+	{
+		dataCache.clear();
+	}
+
+	public void putData(String key, String value)
+	{
+		dataCache.put(key, value);
+	}
+
+	public void sendData(String event)
+	{
+		send(event, dataCache);
+	}
 }

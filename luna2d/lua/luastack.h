@@ -165,20 +165,20 @@ struct LuaStack<std::vector<T>>
 
 	static std::vector<T> Pop(lua_State* luaVm, int index = -1)
 	{
-		if(!lua_istable(luaVm, index)) return std::vector<T>(); // Return empty vector
+		if(!lua_istable(luaVm, index)) return {};
 
 		int count = lua_rawlen(luaVm, index);
-		std::vector<T> vector;
-		vector.reserve(count);
+		std::vector<T> ret;
+		ret.reserve(count);
 
 		for(int i = 0; i < count; i++)
 		{
 			lua_rawgeti(luaVm, index, i + 1/* Indexes in lua starts with 1 instead of 0 */);
-			vector.push_back(LuaStack<T>::Pop(luaVm, -1));
+			ret.push_back(LuaStack<T>::Pop(luaVm, -1));
 			lua_remove(luaVm, -1);
 		}
 
-		return std::move(vector);
+		return ret;
 	}
 };
 
@@ -195,6 +195,30 @@ struct LuaStack<std::unordered_map<std::string,T>>
 			LuaStack<T>::Push(luaVm, entry.second);
 			lua_rawset(luaVm, -3);
 		}
+	}
+
+	static std::unordered_map<std::string,T> Pop(lua_State* luaVm, int index = -1)
+	{
+		if(!lua_istable(luaVm, index)) return std::unordered_map<std::string,T>();
+
+		std::unordered_map<std::string,T> ret;
+
+		lua_pushvalue(luaVm, index);
+
+		lua_pushnil(luaVm);
+		while(lua_next(luaVm, -2) != 0)
+		{
+			if(lua_type(luaVm, -2) == LUA_TSTRING)
+			{
+				ret[LuaStack<std::string>::Pop(luaVm, -2)] = LuaStack<T>::Pop(luaVm, -1);
+			}
+
+			lua_pop(luaVm, 1);
+		}
+
+		lua_pop(luaVm, 1);
+
+		return ret;
 	}
 };
 

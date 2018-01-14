@@ -29,6 +29,7 @@
 #include "lunaqtutils.h"
 #include "lunaqtprefs.h"
 #include "lunaqtservices.h"
+#include "lunaqtanalytics.h"
 
 using namespace luna2d;
 
@@ -194,6 +195,9 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int heig
 
 	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(this), new LUNAQtPrefs(), new LUNAQtServices());
 	LUNAEngine::Shared()->Initialize(width, height);
+
+	auto analytics = std::static_pointer_cast<LUNAQtAnalytics>(LUNAEngine::SharedServices()->GetAnalytics());
+	connect(analytics->GetService().get(), &LUNAQtAnalyticsService::dataSent, this, &LUNAQtWidget::analyticsDataSent);
 
 	emit engineInitialized();
 }

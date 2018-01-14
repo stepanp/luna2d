@@ -34,9 +34,16 @@ LUNAIosAnalyticsService::LUNAIosAnalyticsService(id service) :
 }
 
 // Send data to analytics
-void LUNAIosAnalyticsService::Send(const std::string& data)
+void LUNAIosAnalyticsService::Send(const std::string& event, const std::unordered_map<std::string,std::string>& data)
 {
-	[service send:ToNsString(data)];
+	NSMutableDictionary* map = [[NSMutableDictionary alloc] init];
+	
+	for(const auto& entry : data)
+	{
+		map[ToNsString(entry.first)] = ToNsString(entry.second);
+	}
+
+	[service send:ToNsString(event) data:map];
 }
 
 // Load service instance by name

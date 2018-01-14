@@ -69,6 +69,9 @@ signals:
 	void logWarning(const QString& message);
 	void logError(const QString& message);
 
+	// Emits when game send analytics event
+	void analyticsDataSent(const QString& event, const QHash<QString,QString>& data);
+
 public:
 	bool IsEngineInitialized();
 	void InitializeEngine(const QString& gamePath, int width, int height);

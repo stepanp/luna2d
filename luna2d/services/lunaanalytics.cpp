@@ -38,9 +38,9 @@ void LUNAAnalytics::LoadServices()
 }
 
 // Send data to analytics
-void LUNAAnalytics::Send(const std::string& data)
+void LUNAAnalytics::Send(const std::string& event, const std::unordered_map<std::string,std::string>& data)
 {
 	if(!service) return;
 
-	service->Send(data);
+	service->Send(event, data);
 }
