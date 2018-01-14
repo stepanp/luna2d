@@ -53,6 +53,7 @@ public slots:
 	void OnLogInfo(const QString& message);
 	void OnLogWarning(const QString& message);
 	void OnLogError(const QString& message);
+	void OnAnalyticsData(const QString& event, const QHash<QString,QString>& data);
 
 public:
 	void Clear();

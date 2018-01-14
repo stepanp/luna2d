@@ -37,6 +37,7 @@ int Settings::bullitinCount = 0;
 bool Settings::openLogWhenError = true;
 bool Settings::clearLogOnStart = true;
 bool Settings::showFps = true;
+bool Settings::showAnalyticsEvents = false;
 QHash<QString,QString> Settings::pipelineProjects = QHash<QString,QString>();
 QHash<QString,QString> Settings::preferredLanguages = QHash<QString,QString>();
 QHash<QString,QVector<WatcherValue>> Settings::watcherValues = QHash<QString,QVector<WatcherValue>>();
@@ -54,6 +55,7 @@ void Settings::Load()
 	openLogWhenError = settings.value("openLogWhenError", openLogWhenError).toBool();
 	clearLogOnStart = settings.value("clearLogOnStart", clearLogOnStart).toBool();
 	showFps = settings.value("showFps", showFps).toBool();
+	showAnalyticsEvents = settings.value("showAnalyticsEvents", showAnalyticsEvents).toBool();
 	logRect = settings.value("logRect").toRect();
 	watcherRect = settings.value("watcherRect").toRect();
 
@@ -148,6 +150,7 @@ void Settings::Save()
 	settings.setValue("openLogWhenError", openLogWhenError);
 	settings.setValue("clearLogOnStart", clearLogOnStart);
 	settings.setValue("showFps", showFps);
+	settings.setValue("showAnalyticsEvents", showAnalyticsEvents);
 	settings.setValue("logRect", logRect);
 	settings.setValue("watcherRect", watcherRect);
 

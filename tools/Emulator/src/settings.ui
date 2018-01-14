@@ -42,20 +42,13 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="7" column="1">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="2">
-    <widget class="QCheckBox" name="openLogWhenError">
-     <property name="text">
-      <string>Open log window automatically when error occurs</string>
      </property>
     </widget>
    </item>
@@ -66,7 +59,21 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="1" column="0" colspan="2">
+    <widget class="QCheckBox" name="openLogWhenError">
+     <property name="text">
+      <string>Open log window automatically when error occurs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="scaleHdpiResolution">
+     <property name="text">
+      <string>Scale game resolution on HDPI displays</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -80,9 +87,9 @@
     </spacer>
    </item>
    <item row="3" column="0">
-    <widget class="QCheckBox" name="scaleHdpiResolution">
+    <widget class="QCheckBox" name="showAnalyticsEvents">
      <property name="text">
-      <string>Scale game resolution on HDPI displays</string>
+      <string>Print analytics events to log</string>
      </property>
     </widget>
    </item>

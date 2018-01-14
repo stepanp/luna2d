@@ -85,6 +85,13 @@ void LogDialog::OnLogError(const QString& message)
 	ShowLogMessage(LogType::LOG_ERROR, message);
 }
 
+void LogDialog::OnAnalyticsData(const QString& event, const QHash<QString,QString>& data)
+{
+	if(!Settings::showAnalyticsEvents) return;
+
+	ShowLogMessage(LogType::LOG_INFO, LogStorage::FormatAnalyticsData(event, data));
+}
+
 void LogDialog::Clear()
 {
 	ui->listLog->clear();

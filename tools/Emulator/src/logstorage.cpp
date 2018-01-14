@@ -23,6 +23,7 @@
 //-----------------------------------------------------------------------------
 
 #include "logstorage.h"
+#include "settings.h"
 
 void LogStorage::OnLogInfo(const QString& message)
 {
@@ -39,6 +40,13 @@ void LogStorage::OnLogError(const QString& message)
 	logMessages.push_back(LogMessage(LogType::LOG_ERROR, message));
 }
 
+void LogStorage::OnAnalyticsData(const QString& event, const QHash<QString,QString>& data)
+{
+	if(!Settings::showAnalyticsEvents) return;
+
+	OnLogInfo(FormatAnalyticsData(event, data));
+}
+
 void LogStorage::Clear()
 {
 	logMessages.clear();
@@ -47,5 +55,17 @@ void LogStorage::Clear()
 const QList<LogMessage>& LogStorage::GetLogMessages()
 {
 	return logMessages;
+}
+
+QString LogStorage::FormatAnalyticsData(const QString &event, const QHash<QString, QString> &data)
+{
+	QString ret = QString("Analytics event: \"%1\"").arg(event);
+
+	for(const QString& key : data.keys())
+	{
+		ret.append(QString("\n  [%1] = %2").arg(key).arg(data[key]));
+	}
+
+	return ret;
 }
 

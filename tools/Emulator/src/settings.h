@@ -55,6 +55,7 @@ public:
 	static bool openLogWhenError; // Open log window when occurs log message with error
 	static bool clearLogOnStart; // Clear log when game stated
 	static bool showFps; // Show FPS in window caption
+	static bool showAnalyticsEvents; // Show analytics events in log
 	static QHash<QString,QString> pipelineProjects; // Pipeline projects attached to game
 	static QHash<QString,QString> preferredLanguages; // Preferred languages attached to game
 	static QHash<QString,QVector<WatcherValue>> watcherValues; // Saved watcher values attached to game

@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logStorage, &LogStorage::OnLogWarning);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logStorage, &LogStorage::OnLogError);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, this, &MainWindow::OnLogError);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::analyticsDataSent, logStorage, &LogStorage::OnAnalyticsData);
 	connect(ui->actionOpen_game, &QAction::triggered, this, &MainWindow::OnActionOpen);
 	connect(ui->actionRestart_game, &QAction::triggered, this, &MainWindow::OnActionRestart);
 	connect(ui->actionClose_game, &QAction::triggered, this, &MainWindow::OnActionClose);
@@ -365,6 +366,7 @@ void MainWindow::OpenLogDialog()
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logDlg, &LogDialog::OnLogInfo);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logDlg, &LogDialog::OnLogWarning);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logDlg, &LogDialog::OnLogError);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::analyticsDataSent, logDlg, &LogDialog::OnAnalyticsData);
 
 	const auto& rect = Settings::logRect;
 	if(!rect.isNull())
@@ -565,6 +567,7 @@ void MainWindow::OnActionSettings()
 	uiDialog.openLastGame->setChecked(Settings::openLastGame);
 	uiDialog.openLogWhenError->setChecked(Settings::openLogWhenError);
 	uiDialog.showFps->setChecked(Settings::showFps);
+	uiDialog.showAnalyticsEvents->setChecked(Settings::showAnalyticsEvents);
 	uiDialog.scaleHdpiResolution->setChecked(Settings::scaleHdpiResolution);
 	uiDialog.scaleHdpiResolution->setEnabled(devicePixelRatio() > 1);
 
@@ -575,6 +578,7 @@ void MainWindow::OnActionSettings()
 		Settings::openLastGame = uiDialog.openLastGame->isChecked();
 		Settings::openLogWhenError = uiDialog.openLogWhenError->isChecked();
 		Settings::showFps = uiDialog.showFps->isChecked();
+		Settings::showAnalyticsEvents = uiDialog.showAnalyticsEvents->isChecked();
 		Settings::scaleHdpiResolution = uiDialog.scaleHdpiResolution->isChecked();
 		Settings::Save();
 
