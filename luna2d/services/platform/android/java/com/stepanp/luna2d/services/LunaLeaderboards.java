@@ -82,7 +82,13 @@ public class LunaLeaderboards
 	// Open leadearboards popup
 	public static void open()
 	{
-		if(!isSigned()) return;
+		if(apiClient == null) return;
+
+		if(!isSigned())
+		{
+			apiClient.connect();
+			return;
+		}
 
 		Activity activity = LunaServicesApi.getSharedActivity();
 		activity.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(apiClient), RC_UNUSED);
@@ -141,6 +147,7 @@ public class LunaLeaderboards
 		@Override
 		public void onStart(Activity activity)
 		{
+			if(apiClient == null || notConnected) return;
 			if(!isSigned()) apiClient.connect();
 		}
 
