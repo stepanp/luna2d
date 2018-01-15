@@ -177,6 +177,16 @@ public class LunaActivity extends Activity
 						enableFullscreen();
 					}
 				});
+
+				// Try to hide navigation bar again if it wasn't hidden immediately
+				postHandler.postDelayed(new Runnable()
+				{
+					@Override
+					public void run ()
+					{
+						enableFullscreen();
+					}
+				}, 1000);
 			}
 		});
 	}
