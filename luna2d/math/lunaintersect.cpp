@@ -45,6 +45,7 @@ bool luna2d::intersect::PointInPolygon(const glm::vec2& point, const std::vector
 {
 	bool ret = false;
 	int count = polygon.size();
+
 	for(int i = 0, j = count - 1; i < count; j = i++)
 	{
 		if((polygon[i].y >= point.y) != (polygon[j].y >= point.y) &&
@@ -193,7 +194,15 @@ bool luna2d::intersect::Circles(const glm::vec2& center1, float radius1, const g
 // Check intersection between circle and polygon
 bool luna2d::intersect::CirclePolygon(const glm::vec2& center, float radius, const std::vector<glm::vec2>& polygon)
 {
-	LUNA_LOGE("Function luna2d::intersect::CirclePolygon is not implemented");
+	if(polygon.size() < 2) return false;
+
+	for(size_t i = 1; i < polygon.size(); i++)
+	{
+		if(LineCircle(polygon[i - 1], polygon[i], center, radius)) return true;
+	}
+
+	if(PointInPolygon(center, polygon)) return true;
+
 	return false;
 }
 
