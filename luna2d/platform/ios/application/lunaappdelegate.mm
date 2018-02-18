@@ -37,6 +37,8 @@ using namespace luna2d;
 
 -(BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
+	[[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+	
 	self.customDelegates = [[NSMutableArray alloc] init];
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window.rootViewController = [[LUNAViewController alloc] initWithNibName:nil bundle:nil];
