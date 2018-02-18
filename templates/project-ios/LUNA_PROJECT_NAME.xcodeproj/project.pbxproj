@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD3132F32038FD97007D9D71 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD3132F22038FD97007D9D71 /* AVFoundation.framework */; };
 		FD424BB11D3450FB00D04922 /* luna2d.mm in Sources */ = {isa = PBXBuildFile; fileRef = FD424BB01D3450FB00D04922 /* luna2d.mm */; };
 		FD424BD11D34543D00D04922 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD01D34543D00D04922 /* UIKit.framework */; };
 		FD424BD31D34544500D04922 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD424BD21D34544500D04922 /* GLKit.framework */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FD3132F22038FD97007D9D71 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FD424B8F1D344FF400D04922 /* LUNA_PROJECT_NAME.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LUNA_PROJECT_NAME.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD424BB01D3450FB00D04922 /* luna2d.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = luna2d.mm; sourceTree = "<group>"; };
 		FD424BD01D34543D00D04922 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD3132F32038FD97007D9D71 /* AVFoundation.framework in Frameworks */,
 				FD70158A1F40CFC00016864C /* SystemConfiguration.framework in Frameworks */,
 				FD7015881F40CF970016864C /* StoreKit.framework in Frameworks */,
 				FDD1EAF41D3B01EE00F58C6C /* libluna2d.a in Frameworks */,
@@ -99,6 +102,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FD3132F12038FD97007D9D71 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FD3132F22038FD97007D9D71 /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FD424B861D344FF400D04922 = {
 			isa = PBXGroup;
 			children = (
@@ -120,6 +131,7 @@
 				FD7015891F40CFC00016864C /* SystemConfiguration.framework */,
 				FD7015871F40CF970016864C /* StoreKit.framework */,
 				FD424B901D344FF400D04922 /* Products */,
+				FD3132F12038FD97007D9D71 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
