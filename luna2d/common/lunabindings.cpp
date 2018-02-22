@@ -483,6 +483,7 @@ static void BindSizes(LuaScript* lua, LuaTable& tblLuna)
 	tblSizes.SetField("getContentHeight", LuaFunction(lua, sizes, &LUNASizes::GetContentHeight));
 	tblSizes.SetField("getScreenRect", LuaFunction(lua, sizes, &LUNASizes::GetScreenRect));
 	tblSizes.SetField("getContentRect", LuaFunction(lua, sizes, &LUNASizes::GetContentRect));
+	tblSizes.SetField("getUiRect", LuaFunction(lua, sizes, &LUNASizes::GetUiRect));
 }
 
 // Bind common classes and functions to lua
