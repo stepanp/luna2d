@@ -38,28 +38,22 @@ LUNASizes::LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const st
 	this->contentWidth = config->contentWidth;
 	this->contentHeight = config->contentHeight;
 	this->scaleMode = config->scaleMode;
+	this->orientation = config->orientation;
 	this->aspectRatio = physicalScreenWidth / (float)physicalScreenHeight;
 
-	ApplyScaleMode(scaleMode, config->orientation);
+	ApplyScaleMode(scaleMode);
 	SelectResolution(config);
 
 	textureScale = BASE_SIZE / (float)LUNASizes::GetHeightForResolution(resolutionSuffix);
 }
 
-void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientation)
+void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
 {
-	float marginsAspectRatio = 1.0f;
 	auto platformUtils = LUNAEngine::SharedPlatformUtils();
 	int verticalMargins = platformUtils->GetTopScreenMargin() + platformUtils->GetBottomScreenMargin();
-
-	if(orientation == LUNAOrientation::PORTRAIT)
-	{
-		marginsAspectRatio = physicalScreenWidth / (float)(physicalScreenHeight - verticalMargins);
-	}
-	else
-	{
-		marginsAspectRatio = (physicalScreenWidth - verticalMargins) / (float)physicalScreenHeight;
-	}
+	float contentAspectRatio = orientation == LUNAOrientation::PORTRAIT ?
+		physicalScreenWidth / (float)(physicalScreenHeight - verticalMargins) :
+		(physicalScreenWidth - verticalMargins) / (float)physicalScreenHeight;
 
 	if(scaleMode == LUNAScaleMode::STRETCH)
 	{
@@ -67,13 +61,13 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientat
 		{
 			screenWidth = contentWidth;
 			screenHeight = (int)(contentWidth / aspectRatio);
-			contentHeight = (int)(contentWidth / marginsAspectRatio);
+			contentHeight = (int)(contentWidth / contentAspectRatio);
 		}
 		else
 		{
 			screenHeight = contentHeight;
 			screenWidth = (int)(contentHeight * aspectRatio);
-			contentWidth = screenWidth;
+			contentWidth = (int)(contentHeight * contentAspectRatio);
 		}
 	}
 
@@ -81,13 +75,13 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientat
 	{
 		if(orientation == LUNAOrientation::PORTRAIT)
 		{
-			screenHeight = contentHeight * (marginsAspectRatio / aspectRatio);
-			screenWidth = (int)(contentHeight * marginsAspectRatio);
+			screenHeight = contentHeight * (contentAspectRatio / aspectRatio);
+			screenWidth = (int)(contentHeight * contentAspectRatio);
 		}
 		else
 		{
-			screenWidth = contentWidth;
-			screenHeight = (int)(contentWidth / aspectRatio);
+			screenWidth = contentWidth / (contentAspectRatio / aspectRatio);
+			screenHeight = (int)(contentWidth / contentAspectRatio);
 		}
 	}
 
@@ -95,13 +89,13 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientat
 	{
 		if(orientation == LUNAOrientation::PORTRAIT)
 		{
-			if(contentWidth / marginsAspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
-			else ApplyScaleMode(LUNAScaleMode::STRETCH, orientation);
+			if(contentWidth / contentAspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT);
+			else ApplyScaleMode(LUNAScaleMode::STRETCH);
 		}
 		else
 		{
-			if(contentHeight * aspectRatio < contentWidth) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
-			else ApplyScaleMode(LUNAScaleMode::STRETCH, orientation);
+			if(contentHeight * contentAspectRatio < contentWidth) ApplyScaleMode(LUNAScaleMode::FIT);
+			else ApplyScaleMode(LUNAScaleMode::STRETCH);
 		}
 	}
 }
@@ -194,6 +188,22 @@ LUNARect LUNASizes::GetScreenRect()
 
 	return LUNARect(x, y, screenWidth, screenHeight);
 }
+
+// Get UI rect (in points)
+LUNARect LUNASizes::GetUiRect()
+{
+	if(orientation == LUNAOrientation::PORTRAIT)
+	{
+		float x = -(screenWidth - contentWidth) / 2.0f;
+		return LUNARect(x, 0, screenWidth, contentHeight);
+	}
+	else
+	{
+		float y = -(screenHeight - contentHeight) / 2.0f;
+		return LUNARect(0, y, contentWidth, screenHeight);
+	}
+}
+
 // Get aspect ratio
 float LUNASizes::GetAspectRatio()
 {

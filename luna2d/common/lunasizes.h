@@ -44,9 +44,10 @@ private:
 	float aspectRatio = 0.0f;
 	std::string resolutionSuffix;
 	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH;
+	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
 
 private:
-	void ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientation);
+	void ApplyScaleMode(LUNAScaleMode scaleMode);
 
 	// Select nearest texture resolution to screen resolution
 	void SelectResolution(const std::shared_ptr<const LUNAConfig>& config);
@@ -81,6 +82,10 @@ public:
 
 	// Get screen rect (in points)
 	LUNARect GetScreenRect();
+
+	// Get UI rect (in points)
+	LUNARect GetUiRect();
+
 	// Get aspect ratio
 	float GetAspectRatio();
 
