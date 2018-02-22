@@ -29,6 +29,7 @@
 namespace luna2d{
 
 class LUNACamera;
+class LUNARect;
 
 class LUNASizes
 {
