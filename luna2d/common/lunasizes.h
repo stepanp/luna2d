@@ -43,10 +43,10 @@ private:
 	float textureScale = 0.0f;
 	float aspectRatio = 0.0f;
 	std::string resolutionSuffix;
-	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH_BY_WIDTH;
+	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH;
 
 private:
-	void ApplyScaleMode(LUNAScaleMode scaleMode);
+	void ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientation);
 
 	// Select nearest texture resolution to screen resolution
 	void SelectResolution(const std::shared_ptr<const LUNAConfig>& config);

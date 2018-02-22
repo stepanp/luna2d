@@ -39,43 +39,57 @@ LUNASizes::LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const st
 	this->scaleMode = config->scaleMode;
 	this->aspectRatio = physicalScreenWidth / (float)physicalScreenHeight;
 
-	ApplyScaleMode(scaleMode);
+	ApplyScaleMode(scaleMode, config->orientation);
 	SelectResolution(config);
 
 	textureScale = BASE_SIZE / (float)LUNASizes::GetHeightForResolution(resolutionSuffix);
 }
 
-void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode)
+void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientation)
 {
-	switch(scaleMode)
+	if(scaleMode == LUNAScaleMode::STRETCH)
 	{
-	case LUNAScaleMode::STRETCH_BY_WIDTH:
-		screenHeight = contentHeight;
-		screenWidth = (int)(contentHeight * aspectRatio);
-		contentWidth = screenWidth;
-		break;
-	case LUNAScaleMode::STRETCH_BY_HEIGHT:
-		screenWidth = contentWidth;
-		screenHeight = (int)(contentWidth / aspectRatio);
-		contentHeight = screenHeight;
-		break;
-	case LUNAScaleMode::FIT_TO_WIDTH:
-		screenWidth = contentWidth;
-		screenHeight = (int)(contentWidth / aspectRatio);
-		break;
-	case LUNAScaleMode::FIT_TO_HEIGHT:
-		screenHeight = contentHeight;
-		screenWidth = (int)(contentHeight * aspectRatio);
-		break;
-	case LUNAScaleMode::MIN_WIDTH:
-		if(contentHeight * aspectRatio < contentWidth) ApplyScaleMode(LUNAScaleMode::FIT_TO_WIDTH);
-		else ApplyScaleMode(LUNAScaleMode::STRETCH_BY_WIDTH);
-		break;
-	case LUNAScaleMode::MIN_HEIGHT:
-		if(contentWidth / aspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT_TO_HEIGHT);
-		else ApplyScaleMode(LUNAScaleMode::STRETCH_BY_HEIGHT);
-		break;
-	};
+		if(orientation == LUNAOrientation::PORTRAIT)
+		{
+			screenWidth = contentWidth;
+			screenHeight = (int)(contentWidth / aspectRatio);
+			contentHeight = screenHeight;
+		}
+		else
+		{
+			screenHeight = contentHeight;
+			screenWidth = (int)(contentHeight * aspectRatio);
+			contentWidth = screenWidth;
+		}
+	}
+
+	else if(scaleMode == LUNAScaleMode::FIT)
+	{
+		if(orientation == LUNAOrientation::PORTRAIT)
+		{
+			screenHeight = contentHeight;
+			screenWidth = (int)(contentHeight * aspectRatio);
+		}
+		else
+		{
+			screenWidth = contentWidth;
+			screenHeight = (int)(contentWidth / aspectRatio);
+		}
+	}
+
+	else if(scaleMode == LUNAScaleMode::ADAPTIVE)
+	{
+		if(orientation == LUNAOrientation::PORTRAIT)
+		{
+			if(contentWidth / aspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
+			else ApplyScaleMode(LUNAScaleMode::STRETCH, orientation);
+		}
+		else
+		{
+			if(contentHeight * aspectRatio < contentWidth) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
+			else ApplyScaleMode(LUNAScaleMode::STRETCH, orientation);
+		}
+	}
 }
 
 // Select nearest texture resolution to screen resolution

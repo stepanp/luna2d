@@ -136,11 +136,7 @@ bool LUNAConfig::Read()
 	ReadScreenOrientation(jsonConfig);
 
 	// Set default config values for portrait mode if it set
-	if(orientation == LUNAOrientation::PORTRAIT)
-	{
-		std::swap(contentWidth, contentHeight);
-		scaleMode = LUNAScaleMode::STRETCH_BY_HEIGHT;
-	}
+	if(orientation == LUNAOrientation::PORTRAIT) std::swap(contentWidth, contentHeight);
 
 	ReadResolutions(jsonConfig);
 	ReadScaleMode(jsonConfig);

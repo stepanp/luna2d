@@ -44,22 +44,16 @@ const LUNAStringEnum<LUNAOrientation> ORIENTATION =
 
 enum class LUNAScaleMode
 {
-	STRETCH_BY_WIDTH,
-	STRETCH_BY_HEIGHT,
-	FIT_TO_WIDTH,
-	FIT_TO_HEIGHT,
-	MIN_WIDTH,
-	MIN_HEIGHT,
+	STRETCH,
+	FIT,
+	ADAPTIVE,
 };
 
 const LUNAStringEnum<LUNAScaleMode> SCALE_MODE =
 {
-	"stretchByWidth",
-	"stretchByHeight",
-	"fitToWidth",
-	"fitToHeight",
-	"minWidth",
-	"minHeight",
+	"stretch",
+	"fit",
+	"adaptive",
 };
 
 class LUNAConfig
@@ -68,7 +62,7 @@ public:
 	std::string gameName;
 	LUNAOrientation orientation = LUNAOrientation::LANDSCAPE;
 	std::vector<std::string> resolutions = { DEFAULT_RESOLUTION };
-	LUNAScaleMode scaleMode = LUNAScaleMode::STRETCH_BY_WIDTH;
+	LUNAScaleMode scaleMode = LUNAScaleMode::ADAPTIVE;
 	int contentWidth = 480;
 	int contentHeight = 320;
 	bool debug_missedStrings = false;
