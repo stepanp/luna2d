@@ -30,8 +30,10 @@
 
 using namespace luna2d;
 
-LUNAQtUtils::LUNAQtUtils(QWidget* parent) :
-	parent(parent)
+LUNAQtUtils::LUNAQtUtils(QWidget* parent, int screenMarginTop, int screenMarginBottom) :
+	parent(parent),
+	screenMarginTop(screenMarginTop),
+	screenMarginBottom(screenMarginBottom)
 {
 }
 
@@ -96,4 +98,16 @@ void LUNAQtUtils::ConfirmDialog(const std::string& title, const std::string& mes
 void LUNAQtUtils::ShowLoadingIndicator(bool show)
 {
 	LUNA_LOGE("Method LUNAQtUtils::ShowLoadingIndicator is not implemented");
+}
+
+// Get top screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAQtUtils::GetTopScreenMargin()
+{
+	return screenMarginTop;
+}
+
+// Get bottom screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAQtUtils::GetBottomScreenMargin()
+{
+	return screenMarginBottom;
 }

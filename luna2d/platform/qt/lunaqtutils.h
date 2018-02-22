@@ -34,10 +34,12 @@ namespace luna2d{
 class LUNAQtUtils : public LUNAPlatformUtils
 {
 public:
-	LUNAQtUtils(QWidget* parent);
+	LUNAQtUtils(QWidget* parent, int screenMarginTop, int screenMarginBottom);
 
 private:
 	QWidget* parent;
+	int screenMarginTop = 0;
+	int screenMarginBottom = 0;
 
 public:
 	// Get system locale in "xx_XX" format
@@ -59,6 +61,12 @@ public:
 
 	// Show/hide loading indicator over game view
 	virtual void ShowLoadingIndicator(bool show);
+
+	// Get top screen margin for devices with custom screen shape (e.g. "iPhone X")
+	virtual int GetTopScreenMargin();
+
+	// Get bottom screen margin for devices with custom screen shape (e.g. "iPhone X")
+	virtual int GetBottomScreenMargin();
 };
 
 }

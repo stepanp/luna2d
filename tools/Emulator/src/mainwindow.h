@@ -71,6 +71,7 @@ private:
 	Resolution GetResolution(int resolutionIndex);
 	void SetResolution(int resolutionIndex);
 	void SetLanguage(QString localeCode);
+	void SetScreenMask(ScreenMargins margins);
 	void OpenLogDialog();
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
 	void UpdateLanguagesMenu(); // Update "Settings/Game languages" menu

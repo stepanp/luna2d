@@ -96,6 +96,27 @@ void LUNAQtWidget::paintGL()
 	{
 		emit gameLoopIteration();
 		LUNAEngine::Shared()->MainLoop();
+
+		// Render screen margin mask if specified
+		if(!topMaskImage.isNull() || !bottomMaskImage.isNull())
+		{
+			paintDevice->setSize(wndSize);
+
+			QPainter painter;
+			painter.begin(paintDevice);
+
+			if(!topMaskImage.isNull())
+			{
+				painter.drawImage(QPoint(0, 0), topMaskImage);
+			}
+
+			if(!bottomMaskImage.isNull())
+			{
+				painter.drawImage(QPoint(0, wndSize.height() - bottomMaskImage.height()), bottomMaskImage);
+			}
+
+			painter.end();
+		}
 	}
 
 	// Until engine isn't initialized, render placeholder image
@@ -104,7 +125,6 @@ void LUNAQtWidget::paintGL()
 		glClearColor(placeholderColor.redF(), placeholderColor.greenF(), placeholderColor.blueF(), 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-		// Render image on center of window if image is specifed
 		if(!placeholderImage.isNull())
 		{
 			paintDevice->setSize(wndSize);
@@ -184,7 +204,8 @@ bool LUNAQtWidget::IsEngineInitialized()
 	return LUNAEngine::Shared()->IsInitialized();
 }
 
-void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int height)
+void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int height,
+	int screenMarginTop, int screenMarginBottom)
 {
 	if(LUNAEngine::Shared()->IsInitialized()) return;
 
@@ -193,7 +214,9 @@ void LUNAQtWidget::InitializeEngine(const QString& gamePath, int width, int heig
 	connect(log, &LUNAQtLog::logWarning, this, &LUNAQtWidget::logWarning);
 	connect(log, &LUNAQtLog::logError, this, &LUNAQtWidget::logError);
 
-	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, new LUNAQtUtils(this), new LUNAQtPrefs(), new LUNAQtServices());
+	LUNAQtUtils* utils = new LUNAQtUtils(this, screenMarginTop, screenMarginBottom);
+
+	LUNAEngine::Shared()->Assemble(new LUNAQtFiles(gamePath), log, utils, new LUNAQtPrefs(), new LUNAQtServices());
 	LUNAEngine::Shared()->Initialize(width, height);
 
 	auto analytics = std::static_pointer_cast<LUNAQtAnalytics>(LUNAEngine::SharedServices()->GetAnalytics());
@@ -247,6 +270,12 @@ void LUNAQtWidget::SetPlaceholderColor(const QColor& color)
 void LUNAQtWidget::SetPlaceholderImage(const QImage &image)
 {
 	placeholderImage = image;
+}
+
+void LUNAQtWidget::SetScreenMaskImage(const QImage& top, const QImage& bottom)
+{
+	topMaskImage = top;
+	bottomMaskImage = bottom;
 }
 
 int LUNAQtWidget::GetFps()

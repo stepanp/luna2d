@@ -35,3 +35,15 @@ double LUNAPlatformUtils::GetSystemTime()
 	return sec.count();
 }
 
+// Get top screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAPlatformUtils::GetTopScreenMargin()
+{
+	return 0;
+}
+
+// Get bottom screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAPlatformUtils::GetBottomScreenMargin()
+{
+	return 0;
+}
+

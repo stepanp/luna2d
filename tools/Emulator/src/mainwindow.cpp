@@ -202,8 +202,11 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	// Initialize engine
 	auto resolution = GetResolution(Settings::curResolution);
+	auto screenMargins = resolution.screenMargins;
+
 	ui->centralWidget->DeinitializeEngine();
-	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height);
+	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height, screenMargins.top, screenMargins.bottom);
+	SetScreenMask(screenMargins);
 
 	if(!ui->centralWidget->IsEngineInitialized())
 	{
@@ -356,6 +359,28 @@ void MainWindow::SetLanguage(QString localeCode)
 	}
 
 	Settings::SetPreferredLanguage(curGameName, localeCode);
+}
+
+void MainWindow::SetScreenMask(ScreenMargins margins)
+{
+	QImage topMarginMask(":/images/" + margins.topImage);
+	QImage bottomMarginMask(":/images/" + margins.bottomImage);
+
+	QSize wndSize = size();
+	wndSize.setWidth(wndSize.width() * devicePixelRatio());
+	wndSize.setHeight(wndSize.height() * devicePixelRatio());
+
+	if(!topMarginMask.isNull())
+	{
+		topMarginMask = topMarginMask.scaled(wndSize.width(), 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+	}
+
+	if(!bottomMarginMask.isNull())
+	{
+		bottomMarginMask = bottomMarginMask.scaled(wndSize.width(), 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+	}
+
+	ui->centralWidget->SetScreenMaskImage(topMarginMask, bottomMarginMask);
 }
 
 void MainWindow::OpenLogDialog()

@@ -25,7 +25,7 @@
 
 #include "lunaengine.h"
 #include "lunaqtlog.h"
-#include <QOpenGlWidget>
+#include <QOpenGLWidget>
 #include <QOpenGLPaintDevice>
 
 namespace luna2d{
@@ -43,7 +43,7 @@ public:
 private:
 	QOpenGLPaintDevice* paintDevice = nullptr;
 	QColor placeholderColor = Qt::white;
-	QImage placeholderImage;
+	QImage placeholderImage, topMaskImage, bottomMaskImage;
 	bool mouseDown = false;
 	bool autoPause = true;
 
@@ -74,7 +74,8 @@ signals:
 
 public:
 	bool IsEngineInitialized();
-	void InitializeEngine(const QString& gamePath, int width, int height);
+	void InitializeEngine(const QString& gamePath, int width, int height,
+		int screenMarginTop = 0, int screenMarginBottom = 0);
 	void InitializeEngine(const QString& gamePath);
 	void RunGame();
 	void DeinitializeEngine();
@@ -84,6 +85,7 @@ public:
 	LUNAEngine* GetEngine();
 	void SetPlaceholderColor(const QColor& color);
 	void SetPlaceholderImage(const QImage& image);
+	void SetScreenMaskImage(const QImage& top, const QImage& bottom);
 	int GetFps();
 	QString GetGameName();
 };

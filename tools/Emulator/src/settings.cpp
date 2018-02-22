@@ -81,6 +81,8 @@ void Settings::Load()
 	resolutions.push_back(Resolution(1920, 1080, "FullHD", true));
 	resolutions.push_back(Resolution(2048, 1536, "Retina iPad", true));
 	resolutions.push_back(Resolution(2732, 2048, "iPad Pro", true));
+	resolutions.push_back(Resolution(2436, 1125, "iPhone X",
+		ScreenMargins(132, 102, "margin_top_iphonex", "margin_bottom_iphonex"), true));
 	bullitinCount = resolutions.size();
 
 	// Load user-defined resolutions
