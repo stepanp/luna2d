@@ -75,6 +75,11 @@ public:
 	// Get content height (in points)
 	int GetContentHeight();
 
+	// Get content area rect (in points)
+	LUNARect GetContentRect();
+
+	// Get screen rect (in points)
+	LUNARect GetScreenRect();
 	// Get aspect ratio
 	float GetAspectRatio();
 

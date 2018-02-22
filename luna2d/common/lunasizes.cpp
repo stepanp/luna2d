@@ -26,6 +26,7 @@
 #include "lunacamera.h"
 #include "lunamath.h"
 #include "lunaresolutions.h"
+#include "lunarect.h"
 
 using namespace luna2d;
 
@@ -151,6 +152,20 @@ int LUNASizes::GetContentHeight()
 	return contentHeight;
 }
 
+// Get content area rect (in points)
+LUNARect LUNASizes::GetContentRect()
+{
+	return LUNARect(0, 0, contentWidth, contentHeight);
+}
+
+// Get screen rect (in points)
+LUNARect LUNASizes::GetScreenRect()
+{
+	float x = -(screenWidth - contentWidth) / 2.0f;
+	float y = -(screenHeight - contentHeight) / 2.0f;
+
+	return LUNARect(x, y, screenWidth, screenHeight);
+}
 // Get aspect ratio
 float LUNASizes::GetAspectRatio()
 {
