@@ -132,7 +132,8 @@ int LUNAIosUtils::GetTopScreenMargin()
 		UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
 		float screenScale = [[UIScreen mainScreen] nativeScale];
 		
-		return mainWindow.safeAreaInsets.top * screenScale;
+		if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) return mainWindow.safeAreaInsets.left * screenScale;
+		else return mainWindow.safeAreaInsets.top * screenScale;
 	}
 	
 	return 0;
@@ -146,7 +147,8 @@ int LUNAIosUtils::GetBottomScreenMargin()
 		UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
 		float screenScale = [[UIScreen mainScreen] nativeScale];
 		
-		return mainWindow.safeAreaInsets.bottom * screenScale;
+		if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) return mainWindow.safeAreaInsets.right * screenScale;
+		else return mainWindow.safeAreaInsets.bottom * screenScale;
 	}
 	
 	return 0;
