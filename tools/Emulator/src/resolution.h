@@ -49,7 +49,7 @@ struct Resolution
 		width(width), height(height), name(name), bullitin(bullitin) {}
 
 	Resolution(int width, int height, const QString& name,
-		const ScreenMargins& portrait, const ScreenMargins& landscape, bool bullitin = false) :
+		const ScreenMargins& portraitMargins, const ScreenMargins& landscapeMargins, bool bullitin = false) :
 		width(width), height(height), name(name),
 		portraitMargins(portraitMargins), landscapeMargins(landscapeMargins), bullitin(bullitin) {}
 
