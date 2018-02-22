@@ -57,6 +57,12 @@ public:
 	
 	// Show/hide loading indicator over game view
 	virtual void ShowLoadingIndicator(bool show);
+	
+	// Get top screen margin for devices with custom screen shape (e.g. "iPhone X")
+	virtual int GetTopScreenMargin();
+	
+	// Get bottom screen margin for devices with custom screen shape (e.g. "iPhone X")
+	virtual int GetBottomScreenMargin();
 };
 
 }

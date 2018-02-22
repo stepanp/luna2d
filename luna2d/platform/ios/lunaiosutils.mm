@@ -123,3 +123,31 @@ void LUNAIosUtils::ShowLoadingIndicator(bool show)
 		loadingIndicator = nullptr;
 	}
 }
+
+// Get top screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAIosUtils::GetTopScreenMargin()
+{
+	if(@available(iOS 11.0, *))
+	{
+		UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+		float screenScale = [[UIScreen mainScreen] nativeScale];
+		
+		return mainWindow.safeAreaInsets.top * screenScale;
+	}
+	
+	return 0;
+}
+
+// Get bottom screen margin for devices with custom screen shape (e.g. "iPhone X")
+int LUNAIosUtils::GetBottomScreenMargin()
+{
+	if(@available(iOS 11.0, *))
+	{
+		UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+		float screenScale = [[UIScreen mainScreen] nativeScale];
+		
+		return mainWindow.safeAreaInsets.bottom * screenScale;
+	}
+	
+	return 0;
+}
