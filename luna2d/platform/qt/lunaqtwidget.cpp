@@ -86,37 +86,17 @@ void LUNAQtWidget::initializeGL()
 void LUNAQtWidget::paintGL()
 {
 	// Stretch rendered image to window size
-	QSize wndSize = size();
-	wndSize.setWidth(wndSize.width() * devicePixelRatio());
-	wndSize.setHeight(wndSize.height() * devicePixelRatio());
+	QSize widgetSize = GetWidgetSize();
 
-	glViewport(0, 0, wndSize.width(), wndSize.height());
+	glViewport(0, 0, widgetSize.width(), widgetSize.height());
 
 	if(LUNAEngine::Shared()->IsInitialized())
 	{
 		emit gameLoopIteration();
 		LUNAEngine::Shared()->MainLoop();
 
-		// Render screen margin mask if specified
-		if(!topMaskImage.isNull() || !bottomMaskImage.isNull())
-		{
-			paintDevice->setSize(wndSize);
-
-			QPainter painter;
-			painter.begin(paintDevice);
-
-			if(!topMaskImage.isNull())
-			{
-				painter.drawImage(QPoint(0, 0), topMaskImage);
-			}
-
-			if(!bottomMaskImage.isNull())
-			{
-				painter.drawImage(QPoint(0, wndSize.height() - bottomMaskImage.height()), bottomMaskImage);
-			}
-
-			painter.end();
-		}
+		paintDevice->setSize(widgetSize);
+		emit renderIteration(paintDevice);
 	}
 
 	// Until engine isn't initialized, render placeholder image
@@ -127,11 +107,11 @@ void LUNAQtWidget::paintGL()
 
 		if(!placeholderImage.isNull())
 		{
-			paintDevice->setSize(wndSize);
+			paintDevice->setSize(widgetSize);
 
 			QPainter painter;
-			QPoint pos((wndSize.width() - placeholderImage.width()) / 2,
-				(wndSize.height() - placeholderImage.height()) / 2);
+			QPoint pos((widgetSize.width() - placeholderImage.width()) / 2,
+				(widgetSize.height() - placeholderImage.height()) / 2);
 
 			painter.begin(paintDevice);
 			painter.drawImage(pos, placeholderImage);
@@ -272,12 +252,6 @@ void LUNAQtWidget::SetPlaceholderImage(const QImage &image)
 	placeholderImage = image;
 }
 
-void LUNAQtWidget::SetScreenMaskImage(const QImage& top, const QImage& bottom)
-{
-	topMaskImage = top;
-	bottomMaskImage = bottom;
-}
-
 int LUNAQtWidget::GetFps()
 {
 	if(!LUNAEngine::Shared()->IsInitialized()) return 0;
@@ -287,4 +261,15 @@ int LUNAQtWidget::GetFps()
 QString LUNAQtWidget::GetGameName()
 {
 	return QString::fromStdString(LUNAEngine::Shared()->GetGameName());
+}
+
+// Get widget size (in pixels)
+QSize LUNAQtWidget::GetWidgetSize()
+{
+	QSize ret = size();
+
+	ret.setWidth(ret.width() * devicePixelRatio());
+	ret.setHeight(ret.height() * devicePixelRatio());
+
+	return ret;
 }

@@ -1,7 +1,9 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="placeholder_image.png">images/placeholder_image.png</file>
-        <file alias="margin_top_iphonex.png">images/margin_top_iphonex.png</file>
-        <file alias="margin_bottom_iphonex.png">images/margin_bottom_iphonex.png</file>
+        <file alias="phonex_margin_top.png">images/phonex_margin_top.png</file>
+        <file alias="phonex_margin_bottom.png">images/phonex_margin_bottom.png</file>
+        <file alias="phonex_bottom_bar_portrait.png">images/phonex_bottom_bar_portrait.png</file>
+        <file alias="phonex_bottom_bar_landscape.png">images/phonex_bottom_bar_landscape.png</file>
     </qresource>
 </RCC>

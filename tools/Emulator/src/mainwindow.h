@@ -60,6 +60,8 @@ private:
 	QString curGameName; // Name of current opened game
 	QPixmap screenshotsPixmap; // Pixmap to taking screnshots
 	ScreenOrientation curScreenOrientation = ScreenOrientation::LANDSCAPE; // Current screen orientation
+	QImage topMask, bottomMask, bottomBarMask;
+	QPoint topMaskPos, bottomMaskPos, bottomBarMaskPos;
 
 private:
 	void SetupRecentGames(); // Setup recent games menu
@@ -71,16 +73,17 @@ private:
 	Resolution GetResolution(int resolutionIndex);
 	void SetResolution(int resolutionIndex);
 	void SetLanguage(QString localeCode);
-	void SetScreenMask(ScreenMargins margins);
+	void SetScreenMask(const Resolution& resolution);
 	void OpenLogDialog();
 	void UpdatePipelineMenu(); // Update "Tools/Pipeline" menu
 	void UpdateLanguagesMenu(); // Update "Settings/Game languages" menu
 	QString MakeScreenhotsFolder();
-	QString getPipelinePath();
+	QString GetPipelinePath();
 
 public slots:
 	void OnGlSurfaceInitialized();
 	void OnGameLoopIteration();
+	void OnRenderIteration(QOpenGLPaintDevice* paintDevice);
 	void OnActionOpen();
 	void OnActionRestart();
 	void OnActionClose();

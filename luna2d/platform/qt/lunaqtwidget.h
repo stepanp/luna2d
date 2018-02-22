@@ -43,7 +43,7 @@ public:
 private:
 	QOpenGLPaintDevice* paintDevice = nullptr;
 	QColor placeholderColor = Qt::white;
-	QImage placeholderImage, topMaskImage, bottomMaskImage;
+	QImage placeholderImage;
 	bool mouseDown = false;
 	bool autoPause = true;
 
@@ -63,6 +63,7 @@ signals:
 	void engineInitialized(); // Emits when engine was initialized
 	void glSurfaceInitialized(); // Emits after GL surface complete initialized
 	void gameLoopIteration(); // Emits every game loop iteration
+	void renderIteration(QOpenGLPaintDevice* paintDevice); // Emeits after every render iteration
 
 	// Emits when occurs any log message
 	void logInfo(const QString& message);
@@ -85,9 +86,9 @@ public:
 	LUNAEngine* GetEngine();
 	void SetPlaceholderColor(const QColor& color);
 	void SetPlaceholderImage(const QImage& image);
-	void SetScreenMaskImage(const QImage& top, const QImage& bottom);
 	int GetFps();
 	QString GetGameName();
+	QSize GetWidgetSize(); // Get widget size (in pixels)
 };
 
 }

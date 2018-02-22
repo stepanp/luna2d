@@ -34,6 +34,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <QDesktopServices>
+#include <QPainter>
 #include <json11.hpp>
 #include "lunastrings.h"
 #include "lunaprefs.h"
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::glSurfaceInitialized, this, &MainWindow::OnGlSurfaceInitialized);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::gameLoopIteration, this, &MainWindow::OnGameLoopIteration);
+	connect(ui->centralWidget, &luna2d::LUNAQtWidget::renderIteration, this, &MainWindow::OnRenderIteration);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logInfo, logStorage, &LogStorage::OnLogInfo);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logWarning, logStorage, &LogStorage::OnLogWarning);
 	connect(ui->centralWidget, &luna2d::LUNAQtWidget::logError, logStorage, &LogStorage::OnLogError);
@@ -206,7 +208,7 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height, screenMargins.top, screenMargins.bottom);
-	SetScreenMask(screenMargins);
+	SetScreenMask(resolution);
 
 	if(!ui->centralWidget->IsEngineInitialized())
 	{
@@ -331,6 +333,7 @@ void MainWindow::SetResolution(int resolutionIndex)
 	}
 
 	Settings::curResolution = resolutionIndex;
+	SetScreenMask(resolution);
 }
 
 void MainWindow::SetLanguage(QString localeCode)
@@ -361,26 +364,49 @@ void MainWindow::SetLanguage(QString localeCode)
 	Settings::SetPreferredLanguage(curGameName, localeCode);
 }
 
-void MainWindow::SetScreenMask(ScreenMargins margins)
+void MainWindow::SetScreenMask(const Resolution& resolution)
 {
-	QImage topMarginMask(":/images/" + margins.topImage);
-	QImage bottomMarginMask(":/images/" + margins.bottomImage);
-
-	QSize wndSize = size();
-	wndSize.setWidth(wndSize.width() * devicePixelRatio());
-	wndSize.setHeight(wndSize.height() * devicePixelRatio());
-
-	if(!topMarginMask.isNull())
+	if(resolution.name != "iPhone X")
 	{
-		topMarginMask = topMarginMask.scaled(wndSize.width(), 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+		topMask = {};
+		bottomMask = {};
+		bottomBarMask = {};
+		return;
 	}
 
-	if(!bottomMarginMask.isNull())
-	{
-		bottomMarginMask = bottomMarginMask.scaled(wndSize.width(), 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-	}
+	QSize widgetSize = ui->centralWidget->GetWidgetSize();
 
-	ui->centralWidget->SetScreenMaskImage(topMarginMask, bottomMarginMask);
+	topMask = QImage(":/images/phonex_margin_top");
+	bottomMask = QImage(":/images/phonex_margin_bottom");
+	bottomBarMask = QImage(QString(":/images/phonex_bottom_bar_%1").
+		arg(curScreenOrientation == ScreenOrientation::PORTRAIT ? "portrait" : "landscape"));
+
+	float scale = curScreenOrientation == ScreenOrientation::PORTRAIT ?
+		widgetSize.width() / (float)resolution.width :
+		widgetSize.height() / (float)resolution.height;
+
+	topMask = topMask.scaled(topMask.width() * scale, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+	bottomMask = bottomMask.scaled(bottomMask.width() * scale, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+	bottomBarMask = bottomBarMask.scaled(bottomBarMask.width() * scale, 1,
+		Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+	topMaskPos = QPoint(0, 0);
+	bottomBarMaskPos = QPoint((widgetSize.width() - bottomBarMask.width()) / 2.0f,
+		widgetSize.height() - bottomBarMask.height());
+
+	if(curScreenOrientation == ScreenOrientation::PORTRAIT)
+	{
+		bottomMaskPos = QPoint(0, widgetSize.height() - bottomMask.height());
+	}
+	else
+	{
+		QMatrix matrix;
+		matrix.rotate(-90);
+
+		topMask = topMask.transformed(matrix);
+		bottomMask = bottomMask.transformed(matrix);
+		bottomMaskPos = QPoint(widgetSize.width() - bottomMask.width(), 0);
+	}
 }
 
 void MainWindow::OpenLogDialog()
@@ -468,7 +494,7 @@ QString MainWindow::MakeScreenhotsFolder()
 	return path;
 }
 
-QString MainWindow::getPipelinePath()
+QString MainWindow::GetPipelinePath()
 {
 #ifdef Q_OS_MAC
 	return QApplication::applicationDirPath() + "/../../../../Pipeline/Pipeline.app/Contents/MacOS/Pipeline";
@@ -502,6 +528,20 @@ void MainWindow::OnGlSurfaceInitialized()
 void MainWindow::OnGameLoopIteration()
 {
 	if(Settings::showFps) setWindowTitle(WINDOW_TITLE_FPS.arg(curGameName).arg(ui->centralWidget->GetFps()));
+}
+
+void MainWindow::OnRenderIteration(QOpenGLPaintDevice* paintDevice)
+{
+	if(!paintDevice) return;
+
+	QPainter painter;
+	painter.begin(paintDevice);
+
+	if(!topMask.isNull()) painter.drawImage(topMaskPos, topMask);
+	if(!bottomMask.isNull()) painter.drawImage(bottomMaskPos, bottomMask);
+	if(!bottomBarMask.isNull()) painter.drawImage(bottomBarMaskPos, bottomBarMask);
+
+	painter.end();
 }
 
 void MainWindow::OnActionOpen()
@@ -646,7 +686,7 @@ void MainWindow::OnRunPipelineProject()
 	if(projectPath.isEmpty()) return;
 
 	QProcess pipeline;
-	pipeline.start(getPipelinePath(), { projectPath, "-u" });
+	pipeline.start(GetPipelinePath(), { projectPath, "-u" });
 	pipeline.waitForFinished();
 }
 
@@ -662,7 +702,7 @@ void MainWindow::OnOpenInPipeline()
 	if(projectPath.isEmpty()) return;
 
 	QProcess pipeline;
-	pipeline.startDetached(getPipelinePath(), { projectPath });
+	pipeline.startDetached(GetPipelinePath(), { projectPath });
 }
 
 void MainWindow::OnSetPipelineProject()

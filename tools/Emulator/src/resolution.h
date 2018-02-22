@@ -34,23 +34,21 @@ enum class ScreenOrientation
 
 struct ScreenMargins
 {
-	ScreenMargins(int top, int bottom, const QString& topImage, const QString& bottomImage) :
-		top(top), bottom(bottom), topImage(topImage), bottomImage(bottomImage) {}
+	ScreenMargins(int top, int bottom) :
+		top(top), bottom(bottom) {}
 
 	ScreenMargins() {}
 
 	int top = 0;
 	int bottom = 0;
-	QString topImage;
-	QString bottomImage;
 };
 
 struct Resolution
 {
-	Resolution(int width, int height, QString name, bool bullitin = false) :
+	Resolution(int width, int height, const QString& name, bool bullitin = false) :
 		width(width), height(height), name(name), bullitin(bullitin) {}
 
-	Resolution(int width, int height, QString name, ScreenMargins screenMargins, bool bullitin = false) :
+	Resolution(int width, int height, const QString& name, const ScreenMargins& screenMargins, bool bullitin = false) :
 		width(width), height(height), name(name), screenMargins(screenMargins), bullitin(bullitin) {}
 
 	Resolution() {}
