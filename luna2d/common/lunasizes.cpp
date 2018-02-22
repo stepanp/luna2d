@@ -27,6 +27,7 @@
 #include "lunamath.h"
 #include "lunaresolutions.h"
 #include "lunarect.h"
+#include "lunaplatformutils.h"
 
 using namespace luna2d;
 
@@ -47,13 +48,26 @@ LUNASizes::LUNASizes(int physicalScreenWidth, int physicalScreenHeight, const st
 
 void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientation)
 {
+	float marginsAspectRatio = 1.0f;
+	auto platformUtils = LUNAEngine::SharedPlatformUtils();
+	int verticalMargins = platformUtils->GetTopScreenMargin() + platformUtils->GetBottomScreenMargin();
+
+	if(orientation == LUNAOrientation::PORTRAIT)
+	{
+		marginsAspectRatio = physicalScreenWidth / (float)(physicalScreenHeight - verticalMargins);
+	}
+	else
+	{
+		marginsAspectRatio = (physicalScreenWidth - verticalMargins) / (float)physicalScreenHeight;
+	}
+
 	if(scaleMode == LUNAScaleMode::STRETCH)
 	{
 		if(orientation == LUNAOrientation::PORTRAIT)
 		{
 			screenWidth = contentWidth;
 			screenHeight = (int)(contentWidth / aspectRatio);
-			contentHeight = screenHeight;
+			contentHeight = (int)(contentWidth / marginsAspectRatio);
 		}
 		else
 		{
@@ -67,8 +81,8 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientat
 	{
 		if(orientation == LUNAOrientation::PORTRAIT)
 		{
-			screenHeight = contentHeight;
-			screenWidth = (int)(contentHeight * aspectRatio);
+			screenHeight = contentHeight * (marginsAspectRatio / aspectRatio);
+			screenWidth = (int)(contentHeight * marginsAspectRatio);
 		}
 		else
 		{
@@ -81,7 +95,7 @@ void LUNASizes::ApplyScaleMode(LUNAScaleMode scaleMode, LUNAOrientation orientat
 	{
 		if(orientation == LUNAOrientation::PORTRAIT)
 		{
-			if(contentWidth / aspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
+			if(contentWidth / marginsAspectRatio < contentHeight) ApplyScaleMode(LUNAScaleMode::FIT, orientation);
 			else ApplyScaleMode(LUNAScaleMode::STRETCH, orientation);
 		}
 		else
