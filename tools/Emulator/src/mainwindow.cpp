@@ -204,7 +204,8 @@ void MainWindow::OpenGame(const QString &gamePath)
 
 	// Initialize engine
 	auto resolution = GetResolution(Settings::curResolution);
-	auto screenMargins = resolution.screenMargins;
+	const auto& screenMargins = curScreenOrientation == ScreenOrientation::PORTRAIT ?
+		resolution.portraitMargins : resolution.landscapeMargins;
 
 	ui->centralWidget->DeinitializeEngine();
 	ui->centralWidget->InitializeEngine(gamePath, resolution.width, resolution.height, screenMargins.top, screenMargins.bottom);
