@@ -31,6 +31,7 @@
 #include "lunaprefs.h"
 #include "lunatimer.h"
 #include "lunaanimator.h"
+#include "lunapath.h"
 #include "math/lunamath.h"
 #include "math/lunavector2.h"
 #include "math/lunarect.h"
@@ -118,6 +119,31 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsAnimator.SetMethod("stop", &LUNAAnimator::Stop);
 	clsAnimator.SetMethod("update", &LUNAAnimator::Update);
 	tblUtils.SetField("Animator", clsAnimator);
+
+	// Register path
+	LuaClass<LUNAPath> clsPath(lua);
+	clsPath.SetConstructor<>();
+	clsPath.SetMethod("setClosure", &LUNAPath::SetClosure);
+	clsPath.SetMethod("removeClosure", &LUNAPath::RemoveClosure);
+	clsPath.SetMethod("getPointsCount", &LUNAPath::GetPointsCount);
+	clsPath.SetMethod("getPoints", &LUNAPath::GetPoints);
+	clsPath.SetMethod("getPoint", &LUNAPath::GetPoint);
+	clsPath.SetMethod("addPoint", &LUNAPath::AddPoint);
+	clsPath.SetMethod("insertPoint", &LUNAPath::InsertPoint);
+	clsPath.SetMethod("setPoint", &LUNAPath::SetPoint);
+	clsPath.SetMethod("removePoint", &LUNAPath::RemovePoint);
+	clsPath.SetMethod("removePointsRange", &LUNAPath::RemovePointsRange);
+	clsPath.SetMethod("addAnchor", &LUNAPath::AddAchnor);
+	clsPath.SetMethod("removeAnchor", &LUNAPath::RemoveAnchor);
+	clsPath.SetMethod("moveAnchorToBegin", &LUNAPath::MoveAnchorToBegin);
+	clsPath.SetMethod("moveAnchorToEnd", &LUNAPath::MoveAnchorToEnd);
+	clsPath.SetMethod("moveAnchorToPoint", &LUNAPath::MoveAnchorToPoint);
+	clsPath.SetMethod("moveAnchor", &LUNAPath::MoveAnchor);
+	clsPath.SetMethod("getAnchorPointIndex", &LUNAPath::GetAnchorPointIndex);
+	clsPath.SetMethod("getAnchorPointDistance", &LUNAPath::GetAnchorPointDistance);
+	clsPath.SetMethod("getLenght", &LUNAPath::GetLenght);
+	clsPath.SetMethod("getLenghtRange", &LUNAPath::GetLenghtRange);
+	tblUtils.SetField("Path", clsPath);
 }
 
 // Bind extension for standard lua "math" module
