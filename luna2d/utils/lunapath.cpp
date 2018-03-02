@@ -260,6 +260,11 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 	}
 }
 
+glm::vec2 LUNAPath::GetAnchorPos(int anchorId)
+{
+	return MoveAnchor(anchorId, 0);
+}
+
 bool LUNAPath::IsAnchorAtBegin(int anchorId)
 {
 	if(anchors.count(anchorId) == 0)

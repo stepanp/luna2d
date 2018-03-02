@@ -82,6 +82,8 @@ public:
 
 	glm::vec2 MoveAnchor(int anchorId, float dist);
 
+	glm::vec2 GetAnchorPos(int anchorId);
+
 	bool IsAnchorAtBegin(int anchorId);
 
 	bool IsAnchorAtEnd(int anchorId);
