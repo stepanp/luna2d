@@ -35,6 +35,7 @@ class LUNAPath
 	{
 		int pointIndex = 0;
 		float passedDist = 0;
+		bool ignoreClosures = false;
 	};
 
 private:
@@ -81,11 +82,19 @@ public:
 
 	glm::vec2 MoveAnchor(int anchorId, float dist);
 
+	bool IsAnchorAtBegin(int anchorId);
+
+	bool IsAnchorAtEnd(int anchorId);
+
 	// Get index of current point for anchor
 	int GetAnchorPointIndex(int anchorId);
 
 	// Get distance from curent point for anchor
 	float GetAnchorPointDistance(int anchorId);
+
+	bool IsAnchorIgnoreClosures(int anchorId);
+
+	void SetAnchorIgnoreClosures(int anchorId);
 
 	float GetLenght();
 

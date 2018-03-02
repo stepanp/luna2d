@@ -139,8 +139,12 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsPath.SetMethod("moveAnchorToEnd", &LUNAPath::MoveAnchorToEnd);
 	clsPath.SetMethod("moveAnchorToPoint", &LUNAPath::MoveAnchorToPoint);
 	clsPath.SetMethod("moveAnchor", &LUNAPath::MoveAnchor);
+	clsPath.SetMethod("isAnchorAtBegin", &LUNAPath::IsAnchorAtBegin);
+	clsPath.SetMethod("isAnchorAtEnd", &LUNAPath::IsAnchorAtEnd);
 	clsPath.SetMethod("getAnchorPointIndex", &LUNAPath::GetAnchorPointIndex);
 	clsPath.SetMethod("getAnchorPointDistance", &LUNAPath::GetAnchorPointDistance);
+	clsPath.SetMethod("isAnchorIgnoreClosures", &LUNAPath::IsAnchorIgnoreClosures);
+	clsPath.SetMethod("setAnchorIgnoreClosures", &LUNAPath::SetAnchorIgnoreClosures);
 	clsPath.SetMethod("getLenght", &LUNAPath::GetLenght);
 	clsPath.SetMethod("getLenghtRange", &LUNAPath::GetLenghtRange);
 	tblUtils.SetField("Path", clsPath);

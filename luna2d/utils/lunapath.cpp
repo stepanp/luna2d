@@ -31,8 +31,9 @@ glm::vec2 LUNAPath::MakePos(const LUNAPath::Anchor& anchor, const glm::vec2& dir
 	return points[anchor.pointIndex] + glm::normalize(dir) * anchor.passedDist;
 }
 
-void LUNAPath::TryApplyClosure(LUNAPath::Anchor &anchor)
+void LUNAPath::TryApplyClosure(LUNAPath::Anchor& anchor)
 {
+	if(anchor.ignoreClosures) return;
 	if(closures.count(anchor.pointIndex)) anchor.pointIndex = closures[anchor.pointIndex];
 }
 
@@ -213,9 +214,6 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 		int currentPoint = anchor.pointIndex;
 		int nextPoint = currentPoint + 1;
 
-		glm::vec2 dir = points[nextPoint] - points[currentPoint];
-		float len = glm::length(dir);
-
 		if(currentPoint < 0)
 		{
 			anchor.pointIndex = 0;
@@ -226,11 +224,16 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 
 		if(currentPoint > points.size() - 2)
 		{
+			glm::vec2 dir = points[points.size() - 1] - points[points.size() - 2];
+
 			anchor.pointIndex = points.size() - 2;
-			anchor.passedDist = len;
+			anchor.passedDist = glm::length(dir);
 
 			return MakePos(anchor, dir);
 		}
+
+		glm::vec2 dir = points[nextPoint] - points[currentPoint];
+		float len = glm::length(dir);
 
 		anchor.passedDist += extraDist;
 
@@ -246,7 +249,7 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 		{
 			extraDist = anchor.passedDist;
 			anchor.pointIndex--;
-			anchor.passedDist = len;
+			anchor.passedDist = glm::distance(points[anchor.pointIndex], points[anchor.pointIndex + 1]);
 
 			TryApplyClosure(anchor);
 		}
@@ -257,13 +260,39 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 	}
 }
 
+bool LUNAPath::IsAnchorAtBegin(int anchorId)
+{
+	if(anchors.count(anchorId) == 0)
+	{
+		LUNA_LOGE("Anchor with id \"%d\" not found", anchorId);
+		return false;
+	}
+
+	auto& anchor = anchors[anchorId];
+	return anchor.pointIndex == 0 && anchor.passedDist <= std::numeric_limits<float>::epsilon();
+}
+
+bool LUNAPath::IsAnchorAtEnd(int anchorId)
+{
+	if(anchors.count(anchorId) == 0)
+	{
+		LUNA_LOGE("Anchor with id \"%d\" not found", anchorId);
+		return false;
+	}
+
+	auto& anchor = anchors[anchorId];
+
+	return anchor.pointIndex == points.size() - 2 &&
+			anchor.passedDist >= glm::distance(points[anchor.pointIndex], points[anchor.pointIndex + 1]);
+}
+
 // Get index of current point for anchor
 int LUNAPath::GetAnchorPointIndex(int anchorId)
 {
 	if(anchors.count(anchorId) == 0)
 	{
 		LUNA_LOGE("Anchor with id \"%d\" not found", anchorId);
-		return -1;
+		return 0;
 	}
 
 	return anchors[anchorId].pointIndex + 1;
@@ -275,10 +304,28 @@ float LUNAPath::GetAnchorPointDistance(int anchorId)
 	if(anchors.count(anchorId) == 0)
 	{
 		LUNA_LOGE("Anchor with id \"%d\" not found", anchorId);
-		return -1;
+		return 0;
 	}
 
 	return anchors[anchorId].passedDist;
+}
+
+bool LUNAPath::IsAnchorIgnoreClosures(int anchorId)
+{
+	if(anchors.count(anchorId) == 0)
+	{
+		LUNA_LOGE("Anchor with id \"%d\" not found", anchorId);
+		return false;
+	}
+
+	return anchors[anchorId].ignoreClosures;
+}
+
+void LUNAPath::SetAnchorIgnoreClosures(int anchorId)
+{
+	if(anchors.count(anchorId) == 0) LUNA_RETURN_ERR("Anchor with id \"%d\" not found", anchorId);
+
+	anchors[anchorId].ignoreClosures = true;
 }
 
 float LUNAPath::GetLenght()
@@ -301,7 +348,7 @@ float LUNAPath::GetLenghtRange(int from, int to)
 	}
 
 	float ret = 0;
-	glm::vec2& prev = points[from - 1];
+	glm::vec2 prev = points[from - 1];
 
 	for(int i = from; i < to - 1; i++)
 	{
