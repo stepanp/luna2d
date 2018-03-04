@@ -102,6 +102,22 @@ LUNAColor LUNAColor::Hex(int hex, float a)
 	return LUNAColor(ByteToFloat(byteA), ByteToFloat(byteB), ByteToFloat(byteC), a);
 }
 
+// From hex string "#RRGGBB" or "RRGGBB", alpha is optional
+LUNAColor LUNAColor::HexString(const std::string hexStr, float a)
+{
+	if(hexStr.size() != 6 && hexStr.size() != 7) return {};
+
+	int first = 0;
+
+	if(hexStr.size() == 7)
+	{
+		if(hexStr[0] == '#') first = 1;
+		else return {};
+	}
+
+	return LUNAColor::Hex(std::strtol(hexStr.c_str() + first, nullptr, 16), a);
+}
+
 // From uint32_t
 LUNAColor LUNAColor::Uint32(uint32_t color)
 {

@@ -314,6 +314,39 @@ LUNAGraphics::LUNAGraphics() :
 	clsFrameBuffer.SetField("fullscreen", LuaFunction(lua, fnFrameBufferConstruct));
 	tblGraphics.SetField("FrameBuffer", clsFrameBuffer);
 
+	// Bind color
+	LuaTable tblColor(lua);
+
+	std::function<LUNAColor(const std::string&)> fnHex = [](const std::string& hexStr)
+	{
+		return LUNAColor::HexString(hexStr, 1.0f);
+	};
+
+	std::function<LUNAColor(float, float, float)> fnRgb = [](float r, float g, float b)
+	{
+		return LUNAColor::Rgb(r, g, b, 1.0f);
+	};
+
+	std::function<LUNAColor(float, float, float)> fnRgbFloat = [](float r, float g, float b)
+	{
+		return LUNAColor::RgbFloat(r, g, b, 1.0f);
+	};
+
+	tblColor.SetField("hex", LuaFunction(lua, fnHex));
+	tblColor.SetField("rgb", LuaFunction(lua, fnRgb));
+	tblColor.SetField("rgbFloat", LuaFunction(lua, fnRgbFloat));
+
+	std::function<LUNAColor(LuaNil, float, float, float)> fnColorConsruct = [](LuaNil, float r, float g, float b)
+	{
+		return LUNAColor::Rgb(r, g, b, 1.0f);
+	};
+
+	LuaTable metaColor(lua);
+	metaColor.SetField("__call", LuaFunction(lua, fnColorConsruct));
+	tblColor.SetMetatable(metaColor);
+
+	tblGraphics.SetField("Color", tblColor);
+
 	tblGraphics.MakeReadOnly();
 	tblLuna.SetField("graphics", tblGraphics);
 }
