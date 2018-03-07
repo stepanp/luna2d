@@ -15,6 +15,7 @@ for arch in ARCHS:
 		os.makedirs(BUILD_PATH)
 
 	subprocess.call(["cmake", "-G", "Ninja",
+		"-DCMAKE_MAKE_PROGRAM=ninja",
 		"-DCMAKE_TOOLCHAIN_FILE=" + ANDROID_TOOLCHAIN_PATH,
 		"-DANDROID_NATIVE_API_LEVEL=android-9",
 		"-DANDROID_ABI=" + arch,
