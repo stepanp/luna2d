@@ -30,7 +30,7 @@
 #include "lunamesh.h"
 #include "lunatext.h"
 #include "lunaparticlesystem.h"
-#include "lunacurverenderer.h"
+#include "lunacurve.h"
 #include "lunaframebuffer.h"
 #include "lunapngformat.h"
 #include "lunajpegformat.h"
@@ -190,20 +190,21 @@ LUNAGraphics::LUNAGraphics() :
 	tblGraphics.SetField("ParticleSystem", clsParticleSystem);
 
 	// Bind curve renderer
-	LuaClass<LUNACurveRenderer> clsCurveRenderer(lua);
-	clsCurveRenderer.SetConstructor<const LuaTable&>();
-	clsCurveRenderer.SetMethod("getKnotsCount", &LUNACurveRenderer::GetKnotsCount);
-	clsCurveRenderer.SetMethod("clearKnots", &LUNACurveRenderer::ClearKnots);
-	clsCurveRenderer.SetMethod("addKnot", &LUNACurveRenderer::AddKnot);
-	clsCurveRenderer.SetMethod("removeKnot", &LUNACurveRenderer::RemoveKnot);
-	clsCurveRenderer.SetMethod("setKnot", &LUNACurveRenderer::SetKnot);
-	clsCurveRenderer.SetMethod("setKnots", &LUNACurveRenderer::SetKnots);
-	clsCurveRenderer.SetMethod("getColor", &LUNACurveRenderer::GetColor);
-	clsCurveRenderer.SetMethod("setColor", &LUNACurveRenderer::SetColor);
-	clsCurveRenderer.SetMethod("getAlpha", &LUNACurveRenderer::GetAlpha);
-	clsCurveRenderer.SetMethod("setAlpha", &LUNACurveRenderer::SetAlpha);
-	clsCurveRenderer.SetMethod("render", &LUNACurveRenderer::Render);
-	tblGraphics.SetField("CurveRenderer", clsCurveRenderer);
+	LuaClass<LUNACurve> clsCurveRenderer(lua);
+	clsCurveRenderer.SetConstructor<const LUNACurveParams&>();
+	clsCurveRenderer.SetMethod("getKnotsCount", &LUNACurve::GetKnotsCount);
+	clsCurveRenderer.SetMethod("clearKnots", &LUNACurve::ClearKnots);
+	clsCurveRenderer.SetMethod("getKnots", &LUNACurve::GetKnots);
+	clsCurveRenderer.SetMethod("setKnots", &LUNACurve::SetKnots);
+	clsCurveRenderer.SetMethod("addKnot", &LUNACurve::AddKnot);
+	clsCurveRenderer.SetMethod("removeKnot", &LUNACurve::RemoveKnot);
+	clsCurveRenderer.SetMethod("setKnot", &LUNACurve::SetKnot);
+	clsCurveRenderer.SetMethod("getColor", &LUNACurve::GetColor);
+	clsCurveRenderer.SetMethod("setColor", &LUNACurve::SetColor);
+	clsCurveRenderer.SetMethod("getAlpha", &LUNACurve::GetAlpha);
+	clsCurveRenderer.SetMethod("setAlpha", &LUNACurve::SetAlpha);
+	clsCurveRenderer.SetMethod("render", &LUNACurve::Render);
+	tblGraphics.SetField("Curve", clsCurveRenderer);
 
 	// Bind texture
 	LuaClass<LUNATexture> clsTexture(lua);

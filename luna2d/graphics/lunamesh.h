@@ -33,6 +33,7 @@ class LUNAMesh
 	LUNA_USERDATA(LUNAMesh)
 
 public:
+	LUNAMesh();
 	LUNAMesh(const std::weak_ptr<LUNATexture>& texture);
 
 private:

@@ -28,47 +28,94 @@
 
 namespace luna2d{
 
-const float CURVE_SMOOTH_FACTOR = 0.5f;
+enum class LUNATextureMappingMode
+{
+	STRETCH,
+	REPEAT
+};
+
+const LUNAStringEnum<LUNATextureMappingMode> TEXTURE_MAPPING_MODE =
+{
+	"stretch",
+	"repeat"
+};
+
+class LUNATextureRegion;
+
+struct LUNACurveParams
+{
+	// Texture source for common curve segments
+	std::weak_ptr<LUNATextureRegion> textureRegion;
+
+	// Texture source for head curve segment
+	std::weak_ptr<LUNATextureRegion> textureRegionHead;
+
+	// Texture source for tail curve segment
+	std::weak_ptr<LUNATextureRegion> textureRegionTail;
+
+	// Mode of mapping texture to curve
+	LUNATextureMappingMode textureMappingMode = LUNATextureMappingMode::STRETCH;
+
+	// Rotate texture on 90 degree
+	bool vertical = false;
+
+	// Curve width
+	float width = 1.0f;
+
+	// Repeat texture each N segments (Only for REPEAT texture mapping mode)
+	int segmentsToRepeat = 1;
+};
+
 
 //-------------------------------------
 // Helper for rendering textured curves
 //-------------------------------------
-class LUNACurveRenderer
+class LUNACurve
 {
-	LUNA_USERDATA(LUNACurveRenderer)
+	LUNA_USERDATA(LUNACurve)
 
 public:
-	LUNACurveRenderer(const LuaTable& params);
+	LUNACurve(const LUNACurveParams& params);
 
 private:
+	LUNACurveParams params;
 	std::unique_ptr<LUNAMesh> mesh;
 	std::vector<glm::vec2> knots;
 	bool needBuild = false;
 
-	//--------------
-	// Curve params:
-	//--------------
-	std::weak_ptr<LUNATexture> texture; // Texture id
-	float u1,v1,u2,v2; // Texture coordinates for curve
-	bool verticalTexture; // Rotate texture on 90 degree
-	float width; // Curve width
+	std::function<glm::vec2(float,float, float)> getLt, getLb, getRt, getRb;
+
 	LUNAColor color = LUNAColor::WHITE;
+	float smoothFactor = 0.5f;
 
 private:
+	void SetupReadFunctions();
 	void Build(); // Build curve mesh by knots
 
 public:
+	void SetParams(const LUNACurveParams& params);
 	void ClearKnots();
 	int GetKnotsCount();
+	const std::vector<glm::vec2>& GetKnots();
+	void SetKnots(const std::vector<glm::vec2>& knots);
 	void AddKnot(float x, float y);
 	void RemoveKnot(int index);
 	void SetKnot(int index, float x, float y);
-	void SetKnots(const std::vector<glm::vec2>& knots);
 	LUNAColor GetColor();
 	void SetColor(float r, float g, float b);
 	float GetAlpha();
 	void SetAlpha(float alpha);
+	float GetSmoothFactor();
+	void SetSmoothFactor(float factor);
 	void Render();
+};
+
+
+template<>
+struct LuaStack<LUNACurveParams>
+{
+	static void Push(lua_State* luaVm, const LUNACurveParams& params);
+	static LUNACurveParams Pop(lua_State* luaVm, int index = -1);
 };
 
 }

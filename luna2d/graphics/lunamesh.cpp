@@ -28,6 +28,10 @@
 
 using namespace luna2d;
 
+LUNAMesh::LUNAMesh()
+{
+}
+
 LUNAMesh::LUNAMesh(const std::weak_ptr<LUNATexture>& texture)
 {
 	SetTexture(texture);
