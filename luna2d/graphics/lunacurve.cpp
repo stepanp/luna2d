@@ -35,59 +35,52 @@ LUNACurve::LUNACurve(const LUNACurveParams& params)
 	SetParams(params);
 }
 
-void LUNACurve::SetupReadFunctions()
+void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 {
-	auto region = params.textureRegion.lock();
-
-	float regionU1 = region->GetU1();
-	float regionV1 = region->GetV1();
-	float regionU2 = region->GetU2();
-	float regionV2 = region->GetV2();
-
-	if(params.textureMappingMode == LUNATextureMappingMode::STRETCH)
+	if(textureMappingMode == LUNATextureMappingMode::STRETCH)
 	{
 		if(params.vertical)
 		{
-			getLt = [=](float progressBegin, float, int)
+			getLt = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(regionU2, math::Lerp(regionV1, regionV2, progressBegin));
+				return glm::vec2(region.u2, math::Lerp(region.v1, region.v2, progressBegin));
 			};
 
-			getLb = [=](float progressBegin, float, int)
+			getLb = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(regionU1, math::Lerp(regionV1, regionV2, progressBegin));
+				return glm::vec2(region.u1, math::Lerp(region.v1, region.v2, progressBegin));
 			};
 
-			getRt = [=](float, float progressEnd, int)
+			getRt = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(regionU2, math::Lerp(regionV1, regionV2, progressEnd));
+				return glm::vec2(region.u2, math::Lerp(region.v1, region.v2, progressEnd));
 			};
 
-			getRb = [=](float, float progressEnd, int)
+			getRb = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(regionU1, math::Lerp(regionV1, regionV2, progressEnd));
+				return glm::vec2(region.u1, math::Lerp(region.v1, region.v2, progressEnd));
 			};
 		}
 		else
 		{
-			getLt = [=](float progressBegin, float, int)
+			getLt = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(regionU1, regionU2, progressBegin), regionV2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v2);
 			};
 
-			getLb = [=](float progressBegin, float, int)
+			getLb = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(regionU1, regionU2, progressBegin), regionV1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v1);
 			};
 
-			getRt = [=](float, float progressEnd, int)
+			getRt = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(regionU1, regionU2, progressEnd), regionV2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v2);
 			};
 
-			getRb = [=](float, float progressEnd, int)
+			getRb = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(regionU1, regionU2, progressEnd), regionV1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v1);
 			};
 		}
 	}
@@ -96,110 +89,110 @@ void LUNACurve::SetupReadFunctions()
 	{
 		if(params.vertical)
 		{
-			getLt = [=](float, float, int segmentIndex)
+			getLt = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 0.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * index;
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(regionU2, math::Lerp(regionV1, regionV2, t));
+				return glm::vec2(region.u2, math::Lerp(region.v1, region.v2, t));
 			};
 
-			getLb = [=](float, float, int segmentIndex)
+			getLb = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 0.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * index;
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(regionU1, math::Lerp(regionV1, regionV2, t));
+				return glm::vec2(region.u1, math::Lerp(region.v1, region.v2, t));
 			};
 
-			getRt = [=](float, float, int segmentIndex)
+			getRt = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 1.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * (index + 1);
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(regionU2, math::Lerp(regionV1, regionV2, t));
+				return glm::vec2(region.u2, math::Lerp(region.v1, region.v2, t));
 			};
 
-			getRb = [=](float, float, int segmentIndex)
+			getRb = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 1.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * (index + 1);
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(regionU1, math::Lerp(regionV1, regionV2, t));
+				return glm::vec2(region.u1, math::Lerp(region.v1, region.v2, t));
 			};
 		}
 		else
 		{
-			getLt = [=](float, float, int segmentIndex)
+			getLt = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 0.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * index;
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(math::Lerp(regionU1, regionU2, t), regionV2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
 			};
 
-			getLb = [=](float, float, int segmentIndex)
+			getLb = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 0.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * index;
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(math::Lerp(regionU1, regionU2, t), regionV1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
 			};
 
-			getRt = [=](float, float, int segmentIndex)
+			getRt = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 1.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * (index + 1);
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(math::Lerp(regionU1, regionU2, t), regionV2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
 			};
 
-			getRb = [=](float, float, int segmentIndex)
+			getRb = [](float, float, int segmentIndex, const RegionData& region)
 			{
 				float t = 1.0f;
 
-				if(params.segmentsToRepeat > 1)
+				if(region.segmentsToRepeat > 1)
 				{
-					int index = segmentIndex % params.segmentsToRepeat;
-					t = (1.0f / (float)params.segmentsToRepeat) * (index + 1);
+					int index = segmentIndex % region.segmentsToRepeat;
+					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(math::Lerp(regionU1, regionU2, t), regionV1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
 			};
 		}
 	}
@@ -247,17 +240,82 @@ void LUNACurve::Build()
 	lenghts.push_back(segmentLen);
 	lenSumm += segmentLen;
 
+	float headLen = 0;
+	float tailLen = 0;
+	float commonLen = 0;
+
+	for(int i = 0; i < params.headSegments; i++) headLen += lenghts[i];
+	for(int i = 0; i < params.tailSegments; i++) tailLen += lenghts[lenghts.size() - i - 1];
+	commonLen = lenSumm - headLen - tailLen;
+
 	//---------------------
 	// Build mesh by spline
 	//---------------------
 	float halfWidth = params.width / 2.0f;
 	glm::vec2 prevA, prevB;
-	float builtLen = 0;
+
+	auto headRegion = params.textureRegionHead.lock();
+	auto region = params.textureRegion.lock();
+	auto tailRegion = params.textureRegionTail.lock();
+
+	RegionData regionData;
+	SegmentMode segmentMode = SegmentMode::NONE;
+
+	float lenPointer = 0;
+	float totalLen = lenSumm;
+
+	size_t headSements = params.headSegments;
+	size_t tailSegments = params.tailSegments;
 
 	mesh->Clear();
 	for(size_t i = 1; i < points.size(); i++)
 	{
 		glm::vec2 a, b, c, d;
+
+		if(i < headSements && headRegion && segmentMode != SegmentMode::HEAD)
+		{
+			regionData.u1 = headRegion->GetU1();
+			regionData.v1 = headRegion->GetV1();
+			regionData.u2 = headRegion->GetU2();
+			regionData.v2 = headRegion->GetV2();
+			regionData.segmentsToRepeat = params.headSegments;
+
+			segmentMode = SegmentMode::HEAD;
+			SetupReadFunctions(LUNATextureMappingMode::STRETCH);
+
+			lenPointer = 0.0f;
+			totalLen = headLen;
+		}
+
+		else if(i > params.headSegments && segmentMode != SegmentMode::COMMON && segmentMode != SegmentMode::TAIL)
+		{
+			regionData.u1 = region->GetU1();
+			regionData.v1 = region->GetV1();
+			regionData.u2 = region->GetU2();
+			regionData.v2 = region->GetV2();
+			regionData.segmentsToRepeat = params.segmentsToRepeat;
+
+			segmentMode = SegmentMode::COMMON;
+			SetupReadFunctions(params.textureMappingMode);
+
+			lenPointer = 0.0f;
+			totalLen = commonLen;
+		}
+
+		else if(i > points.size() - tailSegments - 1 && tailRegion && segmentMode != SegmentMode::TAIL)
+		{
+			regionData.u1 = tailRegion->GetU1();
+			regionData.v1 = tailRegion->GetV1();
+			regionData.u2 = tailRegion->GetU2();
+			regionData.v2 = tailRegion->GetV2();
+			regionData.segmentsToRepeat = params.tailSegments;
+
+			segmentMode = SegmentMode::TAIL;
+			SetupReadFunctions(LUNATextureMappingMode::STRETCH);
+
+			lenPointer = 0.0f;
+			totalLen = tailLen;
+		}
 
 		// First segment
 		if(i == 1)
@@ -306,13 +364,13 @@ void LUNACurve::Build()
 		}
 
 		float segmentLen = lenghts[i - 1];
-		float progressBegin = builtLen / lenSumm;
-		float progressEnd = (builtLen + segmentLen) / lenSumm;
+		float progressBegin = lenPointer / totalLen;
+		float progressEnd = (lenPointer + segmentLen) / totalLen;
 
-		glm::vec2 lt = getLt(progressBegin, progressEnd, i - 1);
-		glm::vec2 lb = getLb(progressBegin, progressEnd, i - 1);
-		glm::vec2 rt = getRt(progressBegin, progressEnd, i - 1);
-		glm::vec2 rb = getRb(progressBegin, progressEnd, i - 1);
+		glm::vec2 lt = getLt(progressBegin, progressEnd, i - 1, regionData);
+		glm::vec2 lb = getLb(progressBegin, progressEnd, i - 1, regionData);
+		glm::vec2 rt = getRt(progressBegin, progressEnd, i - 1, regionData);
+		glm::vec2 rb = getRb(progressBegin, progressEnd, i - 1, regionData);
 
 		mesh->AddVertex(a.x, a.y, color.r, color.g, color.b, color.a, lt.x, lt.y);
 		mesh->AddVertex(b.x, b.y, color.r, color.g, color.b, color.a, lb.x, lb.y);
@@ -323,7 +381,7 @@ void LUNACurve::Build()
 
 		prevA = c;
 		prevB = d;
-		builtLen += segmentLen;
+		lenPointer += segmentLen;
 	}
 
 	needBuild = false;
@@ -337,8 +395,10 @@ void LUNACurve::SetParams(const LUNACurveParams& params)
 
 	this->params = params;
 	mesh->SetTexture(region->GetTexture());
-	SetupReadFunctions();
 	needBuild = true;
+
+	if(this->params.textureRegionHead.expired()) this->params.headSegments = 0;
+	if(this->params.textureRegionTail.expired()) this->params.tailSegments = 0;
 }
 
 void LUNACurve::ClearKnots()
@@ -447,6 +507,8 @@ void LuaStack<LUNACurveParams>::Push(lua_State* luaVm, const LUNACurveParams& pa
 	table.SetField("vertical", params.vertical);
 	table.SetField("width", params.width);
 	table.SetField("segmentsToRepeat", params.segmentsToRepeat);
+	table.SetField("headSegments", params.headSegments);
+	table.SetField("tailSegments", params.tailSegments);
 
 	LuaStack<LuaTable>::Push(luaVm, table);
 }
@@ -464,6 +526,8 @@ LUNACurveParams LuaStack<LUNACurveParams>::Pop(lua_State* luaVm, int index)
 	params.vertical = table.GetBool("vertical");
 	params.width = table.GetFloat("width");
 	params.segmentsToRepeat = table.GetInt("segmentsToRepeat");
+	params.headSegments = table.GetInt("headSegments");
+	params.tailSegments = table.GetInt("tailSegments");
 
 	std::string strMappingMode = table.GetString("textureMappingMode");
 	if(TEXTURE_MAPPING_MODE.HasKey(strMappingMode)) params.textureMappingMode = TEXTURE_MAPPING_MODE.FromString(strMappingMode);

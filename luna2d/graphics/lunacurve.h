@@ -64,6 +64,12 @@ struct LUNACurveParams
 
 	// Repeat texture each N segments (Only for REPEAT texture mapping mode)
 	int segmentsToRepeat = 1;
+
+	// Stretch head texture to N segments
+	int headSegments = 1;
+
+	// Stretch tail texture to N segments
+	int tailSegments = 1;
 };
 
 
@@ -74,6 +80,20 @@ class LUNACurve
 {
 	LUNA_USERDATA(LUNACurve)
 
+	struct RegionData
+	{
+		float u1, v1, u2, v2;
+		int segmentsToRepeat;
+	};
+
+	enum class SegmentMode
+	{
+		NONE,
+		HEAD,
+		COMMON,
+		TAIL
+	};
+
 public:
 	LUNACurve(const LUNACurveParams& params);
 
@@ -83,13 +103,13 @@ private:
 	std::vector<glm::vec2> knots;
 	bool needBuild = false;
 
-	std::function<glm::vec2(float,float, float)> getLt, getLb, getRt, getRb;
+	std::function<glm::vec2(float,float, float, const RegionData&)> getLt, getLb, getRt, getRb;
 
 	LUNAColor color = LUNAColor::WHITE;
 	float smoothFactor = 0.5f;
 
 private:
-	void SetupReadFunctions();
+	void SetupReadFunctions(LUNATextureMappingMode textureMappingMode);
 	void Build(); // Build curve mesh by knots
 
 public:
