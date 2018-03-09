@@ -240,12 +240,16 @@ void LUNACurve::Build()
 	lenghts.push_back(segmentLen);
 	lenSumm += segmentLen;
 
+
+	size_t headSegments = std::min((size_t)params.headSegments, points.size() - 1);
+	size_t tailSegments = std::min((size_t)params.tailSegments, points.size() - 1 - headSegments);
+
 	float headLen = 0;
 	float tailLen = 0;
 	float commonLen = 0;
 
-	for(int i = 0; i < params.headSegments; i++) headLen += lenghts[i];
-	for(int i = 0; i < params.tailSegments; i++) tailLen += lenghts[lenghts.size() - i - 1];
+	for(int i = 0; i < headSegments; i++) headLen += lenghts[i];
+	for(int i = 0; i < tailSegments; i++) tailLen += lenghts[lenghts.size() - i - 1];
 	commonLen = lenSumm - headLen - tailLen;
 
 	//---------------------
@@ -264,15 +268,12 @@ void LUNACurve::Build()
 	float lenPointer = 0;
 	float totalLen = lenSumm;
 
-	size_t headSements = params.headSegments;
-	size_t tailSegments = params.tailSegments;
-
 	mesh->Clear();
 	for(size_t i = 1; i < points.size(); i++)
 	{
 		glm::vec2 a, b, c, d;
 
-		if(i < headSements && headRegion && segmentMode != SegmentMode::HEAD)
+		if(i <= headSegments && headRegion && segmentMode != SegmentMode::HEAD)
 		{
 			regionData.u1 = headRegion->GetU1();
 			regionData.v1 = headRegion->GetV1();
@@ -285,6 +286,21 @@ void LUNACurve::Build()
 
 			lenPointer = 0.0f;
 			totalLen = headLen;
+		}
+
+		else if(i > points.size() - 1 - tailSegments && tailRegion && segmentMode != SegmentMode::TAIL)
+		{
+			regionData.u1 = tailRegion->GetU1();
+			regionData.v1 = tailRegion->GetV1();
+			regionData.u2 = tailRegion->GetU2();
+			regionData.v2 = tailRegion->GetV2();
+			regionData.segmentsToRepeat = params.tailSegments;
+
+			segmentMode = SegmentMode::TAIL;
+			SetupReadFunctions(LUNATextureMappingMode::STRETCH);
+
+			lenPointer = 0.0f;
+			totalLen = tailLen;
 		}
 
 		else if(i > params.headSegments && segmentMode != SegmentMode::COMMON && segmentMode != SegmentMode::TAIL)
@@ -300,21 +316,6 @@ void LUNACurve::Build()
 
 			lenPointer = 0.0f;
 			totalLen = commonLen;
-		}
-
-		else if(i > points.size() - tailSegments - 1 && tailRegion && segmentMode != SegmentMode::TAIL)
-		{
-			regionData.u1 = tailRegion->GetU1();
-			regionData.v1 = tailRegion->GetV1();
-			regionData.u2 = tailRegion->GetU2();
-			regionData.v2 = tailRegion->GetV2();
-			regionData.segmentsToRepeat = params.tailSegments;
-
-			segmentMode = SegmentMode::TAIL;
-			SetupReadFunctions(LUNATextureMappingMode::STRETCH);
-
-			lenPointer = 0.0f;
-			totalLen = tailLen;
 		}
 
 		// First segment
