@@ -65,22 +65,22 @@ void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 		{
 			getLt = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v1);
 			};
 
 			getLb = [](float progressBegin, float, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressBegin), region.v2);
 			};
 
 			getRt = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v1);
 			};
 
 			getRb = [](float, float progressEnd, int, const RegionData& region)
 			{
-				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, progressEnd), region.v2);
 			};
 		}
 	}
@@ -153,7 +153,7 @@ void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
 			};
 
 			getLb = [](float, float, int segmentIndex, const RegionData& region)
@@ -166,7 +166,7 @@ void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 					t = (1.0f / (float)region.segmentsToRepeat) * index;
 				}
 
-				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
 			};
 
 			getRt = [](float, float, int segmentIndex, const RegionData& region)
@@ -179,7 +179,7 @@ void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
 			};
 
 			getRb = [](float, float, int segmentIndex, const RegionData& region)
@@ -192,7 +192,7 @@ void LUNACurve::SetupReadFunctions(LUNATextureMappingMode textureMappingMode)
 					t = (1.0f / (float)region.segmentsToRepeat) * (index + 1);
 				}
 
-				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v1);
+				return glm::vec2(math::Lerp(region.u1, region.u2, t), region.v2);
 			};
 		}
 	}
@@ -255,7 +255,7 @@ void LUNACurve::Build()
 	//---------------------
 	// Build mesh by spline
 	//---------------------
-	float halfWidth = params.width / 2.0f;
+	float commonHalfWidth = params.width / 2.0f;
 	glm::vec2 prevA, prevB;
 
 	auto headRegion = params.textureRegionHead.lock();
@@ -265,7 +265,7 @@ void LUNACurve::Build()
 	RegionData regionData;
 	SegmentMode segmentMode = SegmentMode::NONE;
 
-	float lenPointer = 0;
+	float lenPointer = 0.0f, commonLenPointer = 0.0f;
 	float totalLen = lenSumm;
 
 	mesh->Clear();
@@ -318,19 +318,22 @@ void LUNACurve::Build()
 			totalLen = commonLen;
 		}
 
+		float halfWidthEnd = GetWidthForPercent(commonLenPointer + segmentLen, lenSumm) / 2.0f;
+
 		// First segment
 		if(i == 1)
 		{
+			float halfWidthBegin = GetWidthForPercent(commonLenPointer, lenSumm) / 2.0f;
+
 			glm::vec2 point1 = points[i - 1];
 			glm::vec2 point2 = points[i];
 			glm::vec2 perp = (point2 - point1);
 			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
-			perp *= halfWidth;
 
-			a = point1 + perp;
-			b = point1 - perp;
-			c = point2 + perp;
-			d = point2 - perp;
+			a = point1 + (perp * halfWidthBegin);
+			b = point1 - (perp * halfWidthBegin);
+			c = point2 + (perp * halfWidthEnd);
+			d = point2 - (perp * halfWidthEnd);
 		}
 
 		// Last segment
@@ -340,7 +343,7 @@ void LUNACurve::Build()
 			glm::vec2 point3 = points[i];
 			glm::vec2 perp = (point3 - point2);
 			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
-			perp *= halfWidth;
+			perp *= halfWidthEnd;
 
 			a = prevA;
 			b = prevB;
@@ -356,7 +359,7 @@ void LUNACurve::Build()
 			glm::vec2 point3 = points[i + 1];
 			glm::vec2 perp = (point3 - point1);
 			perp = glm::normalize(glm::vec2(-perp.y, perp.x));
-			perp *= halfWidth;
+			perp *= halfWidthEnd;
 
 			a = prevA;
 			b = prevB;
@@ -383,9 +386,62 @@ void LUNACurve::Build()
 		prevA = c;
 		prevB = d;
 		lenPointer += segmentLen;
+		commonLenPointer += segmentLen;
 	}
 
 	needBuild = false;
+}
+
+float LUNACurve::GetWidthForPercent(float lenPointer, float len)
+{
+	if(widthIntervals.empty()) return params.width;
+
+	float beginScale = 1.0f;
+	float endScale = 1.0f;
+	float percent = lenPointer / len;
+	float localPercent = 0.0f;
+	LUNAEasingFunc easing = luna2d::easing::Linear;
+
+	if(widthIntervals.size() == 1)
+	{
+		const auto& key = widthIntervals.front();
+		float keyLenPointer = len * key.percent;
+
+		if(key.percent >= percent)
+		{
+			endScale = key.scale;
+			localPercent = lenPointer / keyLenPointer;
+		}
+		else
+		{
+			beginScale = key.scale;
+			localPercent = (lenPointer - keyLenPointer) / (len - keyLenPointer);
+		}
+
+		easing = key.easing;
+	}
+	else
+	{
+		for(size_t i = 1; i < widthIntervals.size(); i++)
+		{
+			const auto& prevKey = widthIntervals[i - 1];
+			const auto& key = widthIntervals[i];
+
+			if(prevKey.percent <= percent && key.percent >= percent)
+			{
+				float prevKeyLenPointer = len * prevKey.percent;
+				float keyLenPointer = len * key.percent;
+
+				beginScale = prevKey.scale;
+				endScale = key.scale;
+				easing = key.easing;
+				localPercent = (lenPointer - prevKeyLenPointer) / (keyLenPointer - prevKeyLenPointer);
+				break;
+			}
+		}
+	}
+
+	return params.width * math::EaseLerp(beginScale, endScale, localPercent, easing);
 }
 
 void LUNACurve::SetParams(const LUNACurveParams& params)
@@ -400,6 +456,21 @@ void LUNACurve::SetParams(const LUNACurveParams& params)
 
 	if(this->params.textureRegionHead.expired()) this->params.headSegments = 0;
 	if(this->params.textureRegionTail.expired()) this->params.tailSegments = 0;
+}
+
+void LUNACurve::ClearCustomWidths()
+{
+	widthIntervals.clear();
+}
+
+void LUNACurve::SetCustomWidth(float percent, float scale, LUNAEasingFunc easing)
+{
+	widthIntervals.push_back(WidthKey{ percent, scale, easing });
+
+	std::sort(widthIntervals.begin(), widthIntervals.end(), [](WidthKey& w1, WidthKey& w2)
+	{
+		return w1.percent < w2.percent;
+	});
 }
 
 void LUNACurve::ClearKnots()
@@ -433,26 +504,26 @@ void LUNACurve::AddKnot(float x, float y)
 
 void LUNACurve::RemoveKnot(int index)
 {
-	if(index < 0 || index >= (int)knots.size())
+	if(index < 1 || index > (int)knots.size())
 	{
 		LUNA_LOGE("Knot index \"%d\" is out of range", index);
 		return;
 	}
 
-	knots.erase(knots.begin() + index);
+	knots.erase(knots.begin() + index - 1);
 	needBuild = true;
 }
 
 void LUNACurve::SetKnot(int index, float x, float y)
 {
-	if(index < 0 || index >= (int)knots.size())
+	if(index < 1 || index > (int)knots.size())
 	{
 		LUNA_LOGE("Knot index \"%d\" is out of range", index);
 		return;
 	}
 
-	knots[index].x = x;
-	knots[index].y = y;
+	knots[index - 1].x = x;
+	knots[index - 1].y = y;
 	needBuild = true;
 }
 

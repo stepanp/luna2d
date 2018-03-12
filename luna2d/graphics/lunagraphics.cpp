@@ -191,7 +191,24 @@ LUNAGraphics::LUNAGraphics() :
 
 	// Bind curve renderer
 	LuaClass<LUNACurve> clsCurveRenderer(lua);
+
+	std::function<void(const std::shared_ptr<LUNACurve>&, float, float, const std::string&)> fnSetCustomWidth =
+		[](const std::shared_ptr<LUNACurve>& thisCurve, float percent, float scale, const std::string& easingName)
+	{
+		LUNAEasingFunc easing = easing::Linear;
+
+		if(!easingName.empty())
+		{
+			if(EASINGS_MAP.count(easingName) == 1) easing = EASINGS_MAP.at(easingName);
+			else LUNA_LOGE("Easing with name \"%s\" not found. Using default \"linear\" easing", easingName.c_str());
+		}
+
+		thisCurve->SetCustomWidth(percent, scale, easing);
+	};
+
 	clsCurveRenderer.SetConstructor<const LUNACurveParams&>();
+	clsCurveRenderer.SetMethod("clearCustomWidths", &LUNACurve::ClearCustomWidths);
+	clsCurveRenderer.SetExtensionMethod("setCustomWidth", fnSetCustomWidth);
 	clsCurveRenderer.SetMethod("getKnotsCount", &LUNACurve::GetKnotsCount);
 	clsCurveRenderer.SetMethod("clearKnots", &LUNACurve::ClearKnots);
 	clsCurveRenderer.SetMethod("getKnots", &LUNACurve::GetKnots);

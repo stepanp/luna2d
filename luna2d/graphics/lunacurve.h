@@ -25,6 +25,7 @@
 
 #include "lunamesh.h"
 #include "lunavector2.h"
+#include "lunaeasing.h"
 
 namespace luna2d{
 
@@ -80,18 +81,25 @@ class LUNACurve
 {
 	LUNA_USERDATA(LUNACurve)
 
-	struct RegionData
-	{
-		float u1, v1, u2, v2;
-		int segmentsToRepeat;
-	};
-
 	enum class SegmentMode
 	{
 		NONE,
 		HEAD,
 		COMMON,
 		TAIL
+	};
+
+	struct RegionData
+	{
+		float u1, v1, u2, v2;
+		int segmentsToRepeat;
+	};
+
+	struct WidthKey
+	{
+		float percent;
+		float scale;
+		LUNAEasingFunc easing;
 	};
 
 public:
@@ -104,6 +112,7 @@ private:
 	bool needBuild = false;
 
 	std::function<glm::vec2(float,float, float, const RegionData&)> getLt, getLb, getRt, getRb;
+	std::vector<WidthKey> widthIntervals;
 
 	LUNAColor color = LUNAColor::WHITE;
 	float smoothFactor = 0.5f;
@@ -111,9 +120,12 @@ private:
 private:
 	void SetupReadFunctions(LUNATextureMappingMode textureMappingMode);
 	void Build(); // Build curve mesh by knots
+	float GetWidthForPercent(float lenPointer, float len);
 
 public:
 	void SetParams(const LUNACurveParams& params);
+	void ClearCustomWidths();
+	void SetCustomWidth(float percent, float scale, LUNAEasingFunc easing);
 	void ClearKnots();
 	int GetKnotsCount();
 	const std::vector<glm::vec2>& GetKnots();
