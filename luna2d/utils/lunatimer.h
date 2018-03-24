@@ -45,6 +45,7 @@ public:
 	void SetLoop(bool loop);
 	float GetTotalTime();
 	float GetRemainingTime();
+	float GetRemainingPercent();
 	void SetTime(float time);
 	LuaFunction GetCallback();
 	void SetCallback(const LuaFunction& onFinish);

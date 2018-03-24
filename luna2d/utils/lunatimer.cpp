@@ -52,6 +52,11 @@ float LUNATimer::GetRemainingTime()
 	return totalTime - time;
 }
 
+float LUNATimer::GetRemainingPercent()
+{
+	return GetRemainingTime() / GetTotalTime();
+}
+
 void LUNATimer::SetTime(float time)
 {
 	Stop();

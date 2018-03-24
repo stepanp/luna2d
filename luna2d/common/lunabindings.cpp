@@ -98,6 +98,7 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsTimer.SetMethod("setLoop", &LUNATimer::SetLoop);
 	clsTimer.SetMethod("getTotalTime", &LUNATimer::GetTotalTime);
 	clsTimer.SetMethod("getRemainingTime", &LUNATimer::GetRemainingTime);
+	clsTimer.SetMethod("getRemainingPercent", &LUNATimer::GetRemainingPercent);
 	clsTimer.SetMethod("setTime", &LUNATimer::SetTime);
 	clsTimer.SetMethod("getCallback", &LUNATimer::GetCallback);
 	clsTimer.SetMethod("setCallback", &LUNATimer::SetCallback);
