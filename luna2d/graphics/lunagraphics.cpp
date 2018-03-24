@@ -31,6 +31,7 @@
 #include "lunatext.h"
 #include "lunaparticlesystem.h"
 #include "lunacurve.h"
+#include "lunaradialmesh.h"
 #include "lunaframebuffer.h"
 #include "lunapngformat.h"
 #include "lunajpegformat.h"
@@ -222,6 +223,31 @@ LUNAGraphics::LUNAGraphics() :
 	clsCurveRenderer.SetMethod("setAlpha", &LUNACurve::SetAlpha);
 	clsCurveRenderer.SetMethod("render", &LUNACurve::Render);
 	tblGraphics.SetField("Curve", clsCurveRenderer);
+
+	// Bind radial mesh
+	LuaClass<LUNARadialMesh> clsRadialMesh(lua);
+	clsRadialMesh.SetConstructor<const std::weak_ptr<LUNATextureRegion>&>();
+	clsRadialMesh.SetMethod("getX", &LUNARadialMesh::GetX);
+	clsRadialMesh.SetMethod("getY", &LUNARadialMesh::GetY);
+	clsRadialMesh.SetMethod("setX", &LUNARadialMesh::SetX);
+	clsRadialMesh.SetMethod("setY", &LUNARadialMesh::SetY);
+	clsRadialMesh.SetMethod("getPos", &LUNARadialMesh::GetPos);
+	clsRadialMesh.SetMethod("setPos", &LUNARadialMesh::SetPos);
+	clsRadialMesh.SetMethod("getWidth", &LUNARadialMesh::GetWidth);
+	clsRadialMesh.SetMethod("getHeight", &LUNARadialMesh::GetHeight);
+	clsRadialMesh.SetMethod("setWidth", &LUNARadialMesh::SetWidth);
+	clsRadialMesh.SetMethod("setHeight", &LUNARadialMesh::SetHeight);
+	clsRadialMesh.SetMethod("setSize", &LUNARadialMesh::SetSize);
+	clsRadialMesh.SetMethod("getColor", &LUNARadialMesh::GetColor);
+	clsRadialMesh.SetMethod("setColor", &LUNARadialMesh::SetColor);
+	clsRadialMesh.SetMethod("getAlpha", &LUNARadialMesh::GetAlpha);
+	clsRadialMesh.SetMethod("setAlpha", &LUNARadialMesh::SetAlpha);
+	clsRadialMesh.SetMethod("getScale", &LUNARadialMesh::GetScale);
+	clsRadialMesh.SetMethod("setScale", &LUNARadialMesh::SetScale);
+	clsRadialMesh.SetMethod("getProgress", &LUNARadialMesh::GetProgress);
+	clsRadialMesh.SetMethod("setProgress", &LUNARadialMesh::SetProgress);
+	clsRadialMesh.SetMethod("render", &LUNARadialMesh::Render);
+	tblGraphics.SetField("RadialMesh", clsRadialMesh);
 
 	// Bind texture
 	LuaClass<LUNATexture> clsTexture(lua);
