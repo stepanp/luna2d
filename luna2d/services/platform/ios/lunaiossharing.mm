@@ -86,7 +86,7 @@ void LUNAIosDefaultSharing::Text(const std::string& text)
 // Image should be located in "LUNAFileLocation::CACHE"
 void LUNAIosDefaultSharing::Image(const std::string& imagePath, const std::string& text)
 {
-	NSArray* dataToShare = @[ToNsString(text), [UIImage imageNamed:ToNsString(imagePath)]];
+	NSArray* dataToShare = @[ToNsString(text), [NSURL fileURLWithPath:ToNsString(imagePath)]];
 	DoShare(dataToShare);
 }
 
