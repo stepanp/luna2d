@@ -28,11 +28,11 @@
 
 using namespace luna2d;
 
-LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight) :
+LUNAFrameBuffer::LUNAFrameBuffer(int viewportWidth, int viewportHeight, LUNAColorType colorType) :
 	viewportWidth(viewportWidth),
 	viewportHeight(viewportHeight),
 	texture(std::make_shared<LUNATexture>(math::NearestPowerOfTwo(viewportWidth), math::NearestPowerOfTwo(viewportHeight),
-		LUNAColorType::RGBA))
+		colorType))
 {
 	GLint prevId = 0;
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &prevId);

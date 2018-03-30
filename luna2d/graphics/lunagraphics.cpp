@@ -343,17 +343,17 @@ LUNAGraphics::LUNAGraphics() :
 
 	// Bind framebuffer
 	LuaClass<LUNAFrameBuffer> clsFrameBuffer(lua);
-	clsFrameBuffer.SetConstructor<int,int>();
+	clsFrameBuffer.SetConstructor<int,int,LUNAColorType>();
 	clsFrameBuffer.SetMethod("getViewportWidth", &LUNAFrameBuffer::GetViewportWidth);
 	clsFrameBuffer.SetMethod("getViewportHeight", &LUNAFrameBuffer::GetViewportHeight);
 	clsFrameBuffer.SetMethod("getTexture", &LUNAFrameBuffer::GetTexture);
 	clsFrameBuffer.SetMethod("getTextureRegion", &LUNAFrameBuffer::GetTextureRegion);
 	clsFrameBuffer.SetMethod("readPixels", &LUNAFrameBuffer::ReadPixels);
 
-	std::function<std::shared_ptr<LUNAFrameBuffer>()> fnFrameBufferConstruct = []() -> std::shared_ptr<LUNAFrameBuffer>
+	std::function<std::shared_ptr<LUNAFrameBuffer>(LUNAColorType)> fnFrameBufferConstruct = [](LUNAColorType colorType)
 	{
 		auto sizes = LUNAEngine::SharedSizes();
-		return std::make_shared<LUNAFrameBuffer>(sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight());
+		return std::make_shared<LUNAFrameBuffer>(sizes->GetPhysicalScreenWidth(), sizes->GetPhysicalScreenHeight(), colorType);
 	};
 	clsFrameBuffer.SetField("fullscreen", LuaFunction(lua, fnFrameBufferConstruct));
 	tblGraphics.SetField("FrameBuffer", clsFrameBuffer);

@@ -33,7 +33,7 @@ class LUNAFrameBuffer : public LUNAAsset
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFrameBuffer)
 
 public:
-	LUNAFrameBuffer(int viewPortWidth, int viewPortHeight);
+	LUNAFrameBuffer(int viewPortWidth, int viewPortHeight, LUNAColorType colorType);
 	~LUNAFrameBuffer();
 
 private:
