@@ -151,12 +151,12 @@ LUNAAudio::~LUNAAudio()
 	alcCloseDevice(device);
 }
 
-std::shared_ptr<LUNAAudioPlayer> LUNAAudio::FindFreePlayer()
+int LUNAAudio::FindFreePlayerIndex()
 {
 	auto it = std::find_if(players.begin(), players.end(),
 		[](const std::shared_ptr<LUNAAudioPlayer>& player) { return !player->IsUsing(); });
-	if(it == players.end()) return nullptr;
-	return *it;
+	if(it == players.end()) return -1;
+	return it - players.begin();
 }
 
 // Check is music playing
@@ -187,20 +187,56 @@ void LUNAAudio::StopMusic()
 }
 
 // Play sound from given source
-void LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume)
+int LUNAAudio::PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume)
 {
-	if(!context) return;
-	if(source.expired()) LUNA_RETURN_ERR("Attempt to play invalid audio source");
-	if(volume < 0.0f && volume > 1.0f) LUNA_RETURN_ERR("Volume should be in range [0.0f, 1.0f]");
+	if(!context) return -1;
+	if(source.expired())
+	{
+		LUNA_LOGE("Attempt to play invalid audio source");
+		return -1;
+	}
+	if(volume < 0.0f && volume > 1.0f)
+	{
+		LUNA_LOGE("Volume should be in range [0.0f, 1.0f]");
+		return -1;
+	}
 
-	auto player = FindFreePlayer();
-	if(!player) LUNA_RETURN_ERR("Cannot play audio source. All audio players are used");
+	int playerIndex = FindFreePlayerIndex();
+	if(playerIndex == -1)
+	{
+		LUNA_LOGE("Cannot play audio source. All audio players are used");
+		return -1;
+	}
 
+	auto player = players[playerIndex];
 	float playerVolume = muteSound ? 0.0f : (soundVolume * volume);
 
 	player->SetSource(source.lock()->GetId());
 	player->SetVolume(playerVolume);
 	player->Play();
+
+	return playerIndex;
+}
+
+// Play looped sound from given audio source
+int LUNAAudio::PlayLoop(const std::weak_ptr<LUNAAudioSource>& source, float volume)
+{
+	int playerIndex = PlaySound(source, volume);
+	if(playerIndex == -1) return -1;
+
+	players[playerIndex]->SetLoop(true);
+
+	return playerIndex;
+}
+
+// Stop sound by player index
+void LUNAAudio::StopSound(int playerIndex)
+{
+	if(playerIndex < 0 || playerIndex >= players.size()) LUNA_RETURN_ERR("Ivalid sound id");
+
+	auto player = players[playerIndex];
+	player->Stop();
+	player->SetLoop(false);
 }
 
 // Stop all currently playing sounds
@@ -208,7 +244,11 @@ void LUNAAudio::StopAllSounds()
 {
 	if(!context) return;
 
-	for(auto& player : players) player->Stop();
+	for(auto& player : players)
+	{
+		player->Stop();
+		player->SetLoop(false);
+	}
 }
 
 // Get master volume for music
@@ -253,7 +293,11 @@ void LUNAAudio::StopPlayersWithSource(ALuint sourceId)
 	if(musicPlayer->GetSourceId() == sourceId) musicPlayer->Stop();
 	for(auto& player : players)
 	{
-		if(player->GetSourceId() == sourceId) player->Stop();
+		if(player->GetSourceId() == sourceId)
+		{
+			player->Stop();
+			player->SetLoop(false);
+		}
 	}
 }
 

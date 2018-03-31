@@ -76,7 +76,7 @@ private:
 	bool muteSound = false;
 
 protected:
-	std::shared_ptr<LUNAAudioPlayer> FindFreePlayer();
+	int FindFreePlayerIndex();
 
 public:
 	// Check is music playing
@@ -89,7 +89,13 @@ public:
 	void StopMusic();
 
 	// Play sound from given audio source
-	void PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume = 1.0f);
+	int PlaySound(const std::weak_ptr<LUNAAudioSource>& source, float volume = 1.0f);
+
+	// Play looped sound from given audio source
+	int PlayLoop(const std::weak_ptr<LUNAAudioSource>& source, float volume = 1.0f);
+
+	// Stop sound by player index
+	void StopSound(int playerIndex);
 
 	// Stop all currently playing sounds
 	void StopAllSounds();
