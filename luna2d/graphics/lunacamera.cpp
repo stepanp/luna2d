@@ -23,6 +23,7 @@
 
 #include "lunacamera.h"
 #include "lunasizes.h"
+#include "lunagraphics.h"
 
 using namespace luna2d;
 
@@ -40,6 +41,13 @@ void LUNACamera::UpdateMatrix()
 	float halfHeight = (height * zoom) / 2.0f;
 
 	matrix = glm::ortho(pos.x - halfWidth, pos.x + halfWidth, pos.y - halfHeight, pos.y + halfHeight);
+}
+
+void LUNACamera::UpdateRender()
+{
+	// Make render call if camera has been changed during render
+	LUNARenderer* renderer = LUNAEngine::SharedGraphics()->GetRenderer();
+	if(renderer && renderer->IsInProgress()) renderer->Render();
 }
 
 float LUNACamera::GetX()
@@ -73,6 +81,8 @@ const glm::vec2& LUNACamera::GetPos()
 
 void LUNACamera::SetPos(float x, float y)
 {
+	UpdateRender();
+
 	pos.x = x;
 	pos.y = y;
 
@@ -86,6 +96,8 @@ float LUNACamera::GetZoom()
 
 void LUNACamera::SetZoom(float zoom)
 {
+	UpdateRender();
+
 	this->zoom = 1.0f / zoom;
 	UpdateMatrix();
 }

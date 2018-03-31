@@ -46,6 +46,7 @@ private:
 
 private:
 	void UpdateMatrix();
+	void UpdateRender();
 
 public:
 	float GetX();
