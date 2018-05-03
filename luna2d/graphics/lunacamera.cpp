@@ -62,16 +62,12 @@ float LUNACamera::GetY()
 
 void LUNACamera::SetX(float x)
 {
-	pos.x = x;
-
-	UpdateMatrix();
+	SetPos(x, pos.y);
 }
 
 void LUNACamera::SetY(float y)
 {
-	pos.y = y;
-
-	UpdateMatrix();
+	SetPos(pos.x, y);
 }
 
 const glm::vec2& LUNACamera::GetPos()
