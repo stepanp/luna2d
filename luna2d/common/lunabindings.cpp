@@ -126,6 +126,7 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsPath.SetConstructor<>();
 	clsPath.SetMethod("setClosure", &LUNAPath::SetClosure);
 	clsPath.SetMethod("removeClosure", &LUNAPath::RemoveClosure);
+	clsPath.SetMethod("clearClosures", &LUNAPath::ClearClosures);
 	clsPath.SetMethod("getPointsCount", &LUNAPath::GetPointsCount);
 	clsPath.SetMethod("getPoints", &LUNAPath::GetPoints);
 	clsPath.SetMethod("getPoint", &LUNAPath::GetPoint);
@@ -134,8 +135,10 @@ static void BindUtils(LuaScript* lua, LuaTable& tblLuna)
 	clsPath.SetMethod("setPoint", &LUNAPath::SetPoint);
 	clsPath.SetMethod("removePoint", &LUNAPath::RemovePoint);
 	clsPath.SetMethod("removePointsRange", &LUNAPath::RemovePointsRange);
+	clsPath.SetMethod("clearPoints", &LUNAPath::ClearPoints);
 	clsPath.SetMethod("addAnchor", &LUNAPath::AddAchnor);
 	clsPath.SetMethod("removeAnchor", &LUNAPath::RemoveAnchor);
+	clsPath.SetMethod("clearAnchors", &LUNAPath::ClearAnchors);
 	clsPath.SetMethod("moveAnchorToBegin", &LUNAPath::MoveAnchorToBegin);
 	clsPath.SetMethod("moveAnchorToEnd", &LUNAPath::MoveAnchorToEnd);
 	clsPath.SetMethod("moveAnchorToPoint", &LUNAPath::MoveAnchorToPoint);

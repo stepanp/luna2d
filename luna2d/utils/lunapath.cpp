@@ -47,6 +47,11 @@ void LUNAPath::RemoveClosure(int indexFrom)
 	closures.erase(indexFrom - 1);
 }
 
+void LUNAPath::ClearClosures()
+{
+	closures.clear();
+}
+
 int LUNAPath::GetPointsCount()
 {
 	return points.size();
@@ -102,6 +107,11 @@ void LUNAPath::RemovePointsRange(int from, int to)
 	points.erase(points.begin() + from - 1, points.begin() + to - 1);
 }
 
+void LUNAPath::ClearPoints()
+{
+	points.clear();
+}
+
 int LUNAPath::AddAchnor()
 {
 	int achorId = uniqueAnchorId;
@@ -117,6 +127,11 @@ void LUNAPath::RemoveAnchor(int anchorId)
 	if(anchors.count(anchorId) == 0) LUNA_RETURN_ERR("Anchor with id \"%d\" not found", anchorId);
 
 	anchors.erase(anchorId);
+}
+
+void LUNAPath::ClearAnchors()
+{
+	anchors.clear();
 }
 
 glm::vec2 LUNAPath::MoveAnchorToBegin(int anchorId)

@@ -54,6 +54,8 @@ public:
 
 	void RemoveClosure(int indexFrom);
 
+	void ClearClosures();
+
 	int GetPointsCount();
 
 	const std::vector<glm::vec2>& GetPoints();
@@ -70,9 +72,13 @@ public:
 
 	void RemovePointsRange(int from, int to);
 
+	void ClearPoints();
+
 	int AddAchnor();
 
 	void RemoveAnchor(int anchorId);
+
+	void ClearAnchors();
 
 	glm::vec2 MoveAnchorToBegin(int anchorId);
 
