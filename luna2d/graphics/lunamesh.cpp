@@ -53,6 +53,17 @@ void LUNAMesh::SetTexture(const std::weak_ptr<LUNATexture>& texture)
 	material.texture = texture;
 }
 
+void LUNAMesh::SetShader(const std::weak_ptr<LUNAShader>& shader)
+{
+	if(shader.expired())
+	{
+		LUNA_LOGE("Attemp to set invalid shader to mesh");
+		return;
+	}
+
+	material.shader = shader;
+}
+
 void LUNAMesh::AddVertex(float x, float y, float r, float g, float b, float alpha, float u, float v)
 {
 	// Position

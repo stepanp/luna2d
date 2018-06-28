@@ -458,6 +458,11 @@ void LUNACurve::SetParams(const LUNACurveParams& params)
 	if(this->params.textureRegionTail.expired()) this->params.tailSegments = 0;
 }
 
+void LUNACurve::SetShader(const std::weak_ptr<LUNAShader>& shader)
+{
+	mesh->SetShader(shader);
+}
+
 void LUNACurve::ClearCustomWidths()
 {
 	widthIntervals.clear();

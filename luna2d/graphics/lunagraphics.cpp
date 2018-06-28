@@ -208,6 +208,7 @@ LUNAGraphics::LUNAGraphics() :
 	};
 
 	clsCurveRenderer.SetConstructor<const LUNACurveParams&>();
+	clsCurveRenderer.SetMethod("setShader", &LUNACurve::SetShader);
 	clsCurveRenderer.SetMethod("clearCustomWidths", &LUNACurve::ClearCustomWidths);
 	clsCurveRenderer.SetExtensionMethod("setCustomWidth", fnSetCustomWidth);
 	clsCurveRenderer.SetMethod("getKnotsCount", &LUNACurve::GetKnotsCount);

@@ -124,6 +124,7 @@ private:
 
 public:
 	void SetParams(const LUNACurveParams& params);
+	void SetShader(const std::weak_ptr<LUNAShader>& shader);
 	void ClearCustomWidths();
 	void SetCustomWidth(float percent, float scale, LUNAEasingFunc easing);
 	void ClearKnots();
