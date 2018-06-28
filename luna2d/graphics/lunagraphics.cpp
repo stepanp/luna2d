@@ -269,6 +269,13 @@ LUNAGraphics::LUNAGraphics() :
 	clsTextureRegion.SetMethod("getV1", &LUNATextureRegion::GetV1);
 	clsTextureRegion.SetMethod("getU2", &LUNATextureRegion::GetU2);
 	clsTextureRegion.SetMethod("getV2", &LUNATextureRegion::GetV2);
+
+	std::function<std::shared_ptr<LUNATextureRegion>(const std::weak_ptr<LUNATexture>&,float,float,float,float)> fnFromUv =
+		[](const std::weak_ptr<LUNATexture>& texture, float u1, float v1, float u2, float v2)
+	{
+		return std::make_shared<LUNATextureRegion>(texture, u1, v1, u2, v2);
+	};
+	clsTextureRegion.SetField("fromUv", LuaFunction(lua, fnFromUv));
 	tblGraphics.SetField("TextureRegion", clsTextureRegion);
 
 	// Bind shader
