@@ -111,6 +111,16 @@ std::shared_ptr<LUNAImage> LUNAFrameBuffer::ReadPixels()
 	return pixmap;
 }
 
+void LUNAFrameBuffer::SetNearestFilter()
+{
+	texture->SetNearestFilter();
+}
+
+void LUNAFrameBuffer::SetLinearFilter()
+{
+	texture->SetLinearFilter();
+}
+
 void LUNAFrameBuffer::Bind()
 {
 	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &this->prevId);

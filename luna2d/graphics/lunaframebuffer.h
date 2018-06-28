@@ -49,6 +49,8 @@ public:
 	std::shared_ptr<LUNATexture> GetTexture();
 	std::shared_ptr<LUNATextureRegion> GetTextureRegion();
 	std::shared_ptr<LUNAImage> ReadPixels();
+	void SetNearestFilter();
+	void SetLinearFilter();
 	void Bind();
 	void Unbind();
 

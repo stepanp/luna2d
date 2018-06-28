@@ -357,6 +357,8 @@ LUNAGraphics::LUNAGraphics() :
 	clsFrameBuffer.SetMethod("getTexture", &LUNAFrameBuffer::GetTexture);
 	clsFrameBuffer.SetMethod("getTextureRegion", &LUNAFrameBuffer::GetTextureRegion);
 	clsFrameBuffer.SetMethod("readPixels", &LUNAFrameBuffer::ReadPixels);
+	clsFrameBuffer.SetMethod("setNearestFilter", &LUNAFrameBuffer::SetNearestFilter);
+	clsFrameBuffer.SetMethod("setLinearFilter", &LUNAFrameBuffer::SetLinearFilter);
 
 	std::function<std::shared_ptr<LUNAFrameBuffer>(LUNAColorType)> fnFrameBufferConstruct = [](LUNAColorType colorType)
 	{

@@ -63,6 +63,9 @@ public:
 	GLuint GetId() const;
 	bool IsValid() const; // Check for texture is valid. Can be invalid after loss GL context
 
+	void SetNearestFilter();
+	void SetLinearFilter();
+
 	void Bind() const;
 	void Unbind() const;
 
