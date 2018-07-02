@@ -376,6 +376,9 @@ void LUNACurve::Build()
 		glm::vec2 rt = getRt(progressBegin, progressEnd, i - 1, regionData);
 		glm::vec2 rb = getRb(progressBegin, progressEnd, i - 1, regionData);
 
+		auto it = customColors.find(i - 1);
+		const LUNAColor& color = it != customColors.end() ? it->second : this->color;
+
 		mesh->AddVertex(a.x, a.y, color.r, color.g, color.b, color.a, lt.x, lt.y);
 		mesh->AddVertex(b.x, b.y, color.r, color.g, color.b, color.a, lb.x, lb.y);
 		mesh->AddVertex(c.x, c.y, color.r, color.g, color.b, color.a, rt.x, rt.y);
@@ -476,6 +479,22 @@ void LUNACurve::SetCustomWidth(float percent, float scale, LUNAEasingFunc easing
 	{
 		return w1.percent < w2.percent;
 	});
+}
+
+void LUNACurve::ClearCustomColors()
+{
+	customColors.clear();
+}
+
+void LUNACurve::SetCustomColor(int segmentIndex, float r, float g, float b)
+{
+	customColors[segmentIndex - 1] = LUNAColor::Rgb(r / 255.0f, g / 255.0f, g / 255.0f);
+}
+
+void LUNACurve::SetCustomAlpha(int segmentIndex, float alpha)
+{
+	if(customColors.count(segmentIndex - 1) == 1) customColors[segmentIndex - 1].a = alpha;
+	else customColors[segmentIndex - 1] = LUNAColor::RgbFloat(1.0f, 1.0f, 1.0f, alpha);
 }
 
 void LUNACurve::ClearKnots()

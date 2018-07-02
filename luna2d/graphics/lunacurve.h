@@ -113,6 +113,7 @@ private:
 
 	std::function<glm::vec2(float,float, float, const RegionData&)> getLt, getLb, getRt, getRb;
 	std::vector<WidthKey> widthIntervals;
+	std::unordered_map<int, LUNAColor> customColors;
 
 	LUNAColor color = LUNAColor::WHITE;
 	float smoothFactor = 0.5f;
@@ -127,6 +128,9 @@ public:
 	void SetShader(const std::weak_ptr<LUNAShader>& shader);
 	void ClearCustomWidths();
 	void SetCustomWidth(float percent, float scale, LUNAEasingFunc easing);
+	void ClearCustomColors();
+	void SetCustomColor(int segmentIndex, float r, float g, float b);
+	void SetCustomAlpha(int segmentIndex, float alpha);
 	void ClearKnots();
 	int GetKnotsCount();
 	const std::vector<glm::vec2>& GetKnots();
