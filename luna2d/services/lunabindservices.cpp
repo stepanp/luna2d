@@ -114,6 +114,8 @@ static void BindAnalytics(const std::shared_ptr<LUNAAnalytics>& analytics, LuaSc
 	tblLuna.SetField("analytics", tblAnalytics);
 
 	tblAnalytics.SetField("send", LuaFunction(lua, analytics.get(), &LUNAAnalytics::Send));
+	tblAnalytics.SetField("startEvent", LuaFunction(lua, analytics.get(), &LUNAAnalytics::StartEvent));
+	tblAnalytics.SetField("endEvent", LuaFunction(lua, analytics.get(), &LUNAAnalytics::EndEvent));
 }
 
 void luna2d::BindServices()

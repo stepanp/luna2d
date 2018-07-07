@@ -46,6 +46,23 @@ void LUNAIosAnalyticsService::Send(const std::string& event, const std::unordere
 	[service send:ToNsString(event) data:map];
 }
 
+void LUNAIosAnalyticsService::StartEvent(const std::string& event)
+{
+	[service startEvent:ToNsString(event)];
+}
+
+void LUNAIosAnalyticsService::EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data)
+{
+	NSMutableDictionary* map = [[NSMutableDictionary alloc] init];
+	
+	for(const auto& entry : data)
+	{
+		map[ToNsString(entry.first)] = ToNsString(entry.second);
+	}
+	
+	[service endEvent:ToNsString(event) data:map];
+}
+
 // Load service instance by name
 std::shared_ptr<LUNAAnalyticsService> LUNAIosAnalytics::LoadService(const std::string& name)
 {

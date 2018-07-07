@@ -44,3 +44,17 @@ void LUNAAnalytics::Send(const std::string& event, const std::unordered_map<std:
 
 	service->Send(event, data);
 }
+
+void LUNAAnalytics::StartEvent(const std::string& event)
+{
+	if(!service) return;
+
+	service->StartEvent(event);
+}
+
+void LUNAAnalytics::EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data)
+{
+	if(!service) return;
+
+	service->EndEvent(event, data);
+}

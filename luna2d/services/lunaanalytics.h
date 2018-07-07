@@ -33,6 +33,10 @@ public:
 public:
 	// Send data to analytics
 	virtual void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data) = 0;
+
+	virtual void StartEvent(const std::string& event) = 0;
+
+	virtual void EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data) = 0;
 };
 
 
@@ -53,6 +57,10 @@ public:
 
 	// Send data to analytics
 	void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data);
+
+	void StartEvent(const std::string& event);
+
+	void EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data);
 };
 
 }

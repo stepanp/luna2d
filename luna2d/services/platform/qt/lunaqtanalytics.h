@@ -39,6 +39,10 @@ signals:
 public:
 	// Send data to analytics
 	virtual void Send(const std::string& event, const std::unordered_map<std::string,std::string>& data);
+
+	virtual void StartEvent(const std::string& event);
+
+	virtual void EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data);
 };
 
 

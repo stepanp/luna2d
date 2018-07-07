@@ -38,6 +38,17 @@ void LUNAQtAnalyticsService::Send(const std::string& event, const std::unordered
 	emit dataSent(QString::fromStdString(event), map);
 }
 
+void LUNAQtAnalyticsService::StartEvent(const std::string& event)
+{
+
+}
+
+void LUNAQtAnalyticsService::EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data)
+{
+
+}
+
+
 LUNAQtAnalytics::LUNAQtAnalytics()
 {
 	service = std::make_shared<LUNAQtAnalyticsService>();

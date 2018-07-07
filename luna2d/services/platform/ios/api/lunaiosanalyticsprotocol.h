@@ -25,5 +25,9 @@
 
 // Send data to analytics
 -(void) send: (NSString*)event data: (NSMutableDictionary*)data;
+
+-(void) startEvent: (NSString*)event;
+
+-(void) endEvent: (NSString*)event data: (NSMutableDictionary*)data;
 	
 @end
