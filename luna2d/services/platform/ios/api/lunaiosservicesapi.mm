@@ -109,4 +109,11 @@ using namespace luna2d;
 	}
 }
 
+// Get launch options
++(NSDictionary*) getLaunchOptions
+{
+	LUNAAppDelegate* appDelegate = (LUNAAppDelegate*)[[UIApplication sharedApplication] delegate];
+	return appDelegate.launchOptions;	
+}
+
 @end

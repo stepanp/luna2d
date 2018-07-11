@@ -45,6 +45,7 @@ using namespace luna2d;
 	[self.window makeKeyAndVisible];
 	
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+	self.launchOptions = launchOptions;
 	
 	return YES;
 }
