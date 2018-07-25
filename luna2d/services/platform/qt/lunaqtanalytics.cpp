@@ -40,12 +40,19 @@ void LUNAQtAnalyticsService::Send(const std::string& event, const std::unordered
 
 void LUNAQtAnalyticsService::StartEvent(const std::string& event)
 {
-
+	emit dataSent(QString::fromStdString("start " + event), {});
 }
 
 void LUNAQtAnalyticsService::EndEvent(const std::string& event, const std::unordered_map<std::string,std::string>& data)
 {
+	QHash<QString,QString> map;
 
+	for(const auto& entry : data)
+	{
+		map.insert(QString::fromStdString(entry.first), QString::fromStdString(entry.second));
+	}
+
+	emit dataSent(QString::fromStdString("end " + event), map);
 }
 
 
