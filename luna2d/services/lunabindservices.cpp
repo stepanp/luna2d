@@ -85,6 +85,7 @@ static void BindStore(const std::shared_ptr<LUNAStore>& store, LuaScript* lua, L
 	tblStore.SetField("getUrl", LuaFunction(lua, store.get(), &LUNAStore::GetUrl));
 	tblStore.SetField("openPage", LuaFunction(lua, store.get(), &LUNAStore::OpenPage));
 	tblStore.SetField("requestRateApp", LuaFunction(lua, store.get(), &LUNAStore::RequestRateApp));
+	tblStore.SetField("showRateApp", LuaFunction(lua, store.get(), &LUNAStore::ShowRateApp));
 }
 
 // Bind "luna.leaderboards" module

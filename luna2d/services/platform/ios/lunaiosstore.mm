@@ -26,6 +26,7 @@
 #include "lunalog.h"
 #import "lunaiosservicesapi.h"
 #import <Appirater.h>
+#import <StoreKit/StoreKit.h>
 
 using namespace luna2d;
 
@@ -69,4 +70,15 @@ void LUNAIosStore::RequestRateApp()
 	[Appirater appLaunched:YES];
 }
 
-
+// Show rate app dialog
+void LUNAIosStore::ShowRateApp()
+{
+	if(@available(iOS 10.3, *))
+	{
+		[SKStoreReviewController requestReview];
+	}
+	else
+	{
+		[Appirater forceShowPrompt:FALSE];
+	}
+}

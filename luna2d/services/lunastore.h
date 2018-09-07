@@ -39,6 +39,9 @@ public:
 
 	// Request rate app dialog
 	virtual void RequestRateApp() = 0;
+
+	// Show rate app dialog
+	virtual void ShowRateApp() = 0;
 };
 
 }

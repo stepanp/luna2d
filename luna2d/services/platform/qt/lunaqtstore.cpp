@@ -42,3 +42,9 @@ void LUNAQtStore::RequestRateApp()
 {
 
 }
+
+// Show rate app dialog
+void LUNAQtStore::ShowRateApp()
+{
+
+}

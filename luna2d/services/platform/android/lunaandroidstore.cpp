@@ -57,3 +57,9 @@ void LUNAAndroidStore::RequestRateApp()
 {
 	jni::Env()->CallStaticVoidMethod(javaStore, javaRequestRateApp);
 }
+
+// Show rate app dialog
+void LUNAAndroidStore::ShowRateApp()
+{
+	
+}
