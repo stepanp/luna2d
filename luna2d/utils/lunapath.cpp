@@ -31,10 +31,17 @@ glm::vec2 LUNAPath::MakePos(const LUNAPath::Anchor& anchor, const glm::vec2& dir
 	return points[anchor.pointIndex] + glm::normalize(dir) * anchor.passedDist;
 }
 
-void LUNAPath::TryApplyClosure(LUNAPath::Anchor& anchor)
+bool LUNAPath::TryApplyClosure(LUNAPath::Anchor& anchor)
 {
-	if(anchor.ignoreClosures) return;
-	if(closures.count(anchor.pointIndex)) anchor.pointIndex = closures[anchor.pointIndex];
+	if(anchor.ignoreClosures) return false;
+
+	if(closures.count(anchor.pointIndex))
+	{
+		anchor.pointIndex = closures[anchor.pointIndex];
+		return true;
+	}
+
+	return false;
 }
 
 void LUNAPath::SetClosure(int indexFrom, int indexTo)
@@ -266,7 +273,11 @@ glm::vec2 LUNAPath::MoveAnchor(int anchorId, float dist)
 			anchor.pointIndex--;
 			anchor.passedDist = glm::distance(points[anchor.pointIndex], points[anchor.pointIndex + 1]);
 
-			TryApplyClosure(anchor);
+			if(TryApplyClosure(anchor))
+			{
+				anchor.pointIndex--;
+				anchor.passedDist = 0;
+			}
 		}
 		else
 		{

@@ -47,7 +47,7 @@ private:
 private:
 	glm::vec2 MakePos(const Anchor& anchor, const glm::vec2& dir);
 
-	void TryApplyClosure(Anchor& anchor);
+	bool TryApplyClosure(Anchor& anchor);
 
 public:
 	void SetClosure(int indexFrom, int indexTo);
