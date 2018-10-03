@@ -32,6 +32,19 @@ LUNAText::LUNAText(const std::weak_ptr<LUNAFont>& font)
 	SetFont(font);
 }
 
+void LUNAText::Build()
+{
+	auto sharedFont = font.lock();
+	sprites.erase(sprites.begin(), sprites.end());
+	sprites.clear();
+	for(char32_t c : this->text)
+	{
+		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
+		sprite->SetShader(LUNAEngine::SharedGraphics()->GetRenderer()->GetFontShader());
+		sprites.push_back(sprite);
+	}
+}
+
 float LUNAText::GetX()
 {
 	return x;
@@ -112,7 +125,7 @@ float LUNAText::GetAlpha()
 	return color.a;
 }
 
-void LUNAText::SetFont(const std::weak_ptr<LUNAFont> font)
+void LUNAText::SetFont(const std::weak_ptr<LUNAFont>& font)
 {
 	if(font.expired())
 	{
@@ -162,15 +175,7 @@ void LUNAText::SetText(const std::string& text)
 	// Convert given string from UTF-8 to UTF-32
 	this->text = utf::ToUtf32(text);
 
-	auto sharedFont = font.lock();
-	sprites.erase(sprites.begin(), sprites.end());
-	sprites.clear();
-	for(char32_t c : this->text)
-	{
-		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
-		sprite->SetShader(LUNAEngine::SharedGraphics()->GetRenderer()->GetFontShader());
-		sprites.push_back(sprite);
-	}
+	Build();
 }
 
 void LUNAText::Render()

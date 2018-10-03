@@ -45,6 +45,9 @@ private:
 	float scaleY = 1;
 	LUNAColor color = LUNAColor::WHITE;
 
+private:
+	void Build();
+
 public:
 	float GetX();
 	float GetY();
@@ -61,7 +64,7 @@ public:
 	LUNAColor GetColor();
 	void SetAlpha(float alpha);
 	float GetAlpha();
-	void SetFont(const std::weak_ptr<LUNAFont> font);
+	void SetFont(const std::weak_ptr<LUNAFont>& font);
 	float GetWidth();
 	float GetHeight();
 	std::string GetText(); // Get text value in UTF-8 encoding
