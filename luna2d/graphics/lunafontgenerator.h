@@ -33,11 +33,12 @@
 #include FT_TYPES_H
 #include FT_OUTLINE_H
 #include FT_RENDER_H
+#include FT_STROKER_H
 #undef generic
 
 namespace luna2d{
 
-const int CHAR_PADDING = 3; // Size of padding between chars(in pixels)
+const int CHAR_PADDING = 1; // Size of padding between chars(in pixels)
 
 //----------------------------------------------
 // Util for generate bitmap fonts using FreeType
@@ -59,6 +60,7 @@ public:
 	bool enableCommon = true;
 	bool enableNumbers = true;
 	std::u32string customSymbols;
+	float outlineSize = 0;
 
 private:
 	// Conversions between pixels and internal FreeType units

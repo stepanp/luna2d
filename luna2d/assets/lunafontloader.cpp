@@ -77,6 +77,8 @@ bool LUNAFontLoader::Load(const std::string& filename)
 				generator.customSymbols = utf::ToUtf32(jsonChars["custom"].string_value());
 			}
 
+			generator.outlineSize = sizeParams["outline"].number_value();
+
 			fonts[entry.first] = generator.GenerateFont(sizeParams["size"].int_value());
 		}
 	}

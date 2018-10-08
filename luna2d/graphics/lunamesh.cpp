@@ -81,6 +81,23 @@ void LUNAMesh::AddVertex(float x, float y, float r, float g, float b, float alph
 	vertexes.push_back(v);
 }
 
+void LUNAMesh::AddQuad(float x, float y, float width, float height, float u1, float v1, float u2, float v2,
+	const LUNAColor& color, float alpha)
+{
+	// Make quad from two triangles like:
+	// 2-3 5
+	// |/ /|
+	// 1 4-6
+
+	AddVertex(x, y, color.r, color.g, color.b, alpha, u1, v2); // 1
+	AddVertex(x, y + height, color.r, color.g, color.b, alpha, u1, v1); // 2
+	AddVertex(x + width, y + height, color.r, color.g, color.b, alpha, u2, v1); // 3
+
+	AddVertex(x, y, color.r, color.g, color.b, alpha, u1, v2); // 4
+	AddVertex(x + width, y + height, color.r, color.g, color.b, alpha, u2, v1); // 5
+	AddVertex(x + width, y, color.r, color.g, color.b, alpha, u2, v2); // 6
+}
+
 void LUNAMesh::Render()
 {
 	if(material.texture.expired())

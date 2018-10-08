@@ -25,6 +25,7 @@
 
 #include "lunafont.h"
 #include "lunasprite.h"
+#include "lunamesh.h".h"
 
 namespace luna2d{
 
@@ -37,13 +38,16 @@ public:
 
 private:
 	std::weak_ptr<LUNAFont> font;
-	std::vector<std::shared_ptr<LUNASprite>> sprites;
 	std::u32string text; // Text in UTF-32 encoding
+	LUNAMesh mesh;
 	float x = 0;
 	float y = 0;
 	float scaleX = 1;
 	float scaleY = 1;
+	float width = 0;
+	float height = 0;
 	LUNAColor color = LUNAColor::WHITE;
+	bool dirty = false;
 
 private:
 	void Build();
@@ -65,6 +69,7 @@ public:
 	void SetAlpha(float alpha);
 	float GetAlpha();
 	void SetFont(const std::weak_ptr<LUNAFont>& font);
+	void SetShader(const std::weak_ptr<LUNAShader>& shader);
 	float GetWidth();
 	float GetHeight();
 	std::string GetText(); // Get text value in UTF-8 encoding

@@ -150,6 +150,7 @@ LUNAGraphics::LUNAGraphics() :
 	LuaClass<LUNAText> clsText(lua);
 	clsText.SetConstructor<const std::weak_ptr<LUNAFont>&>();
 	clsText.SetMethod("setFont", &LUNAText::SetFont);
+	clsText.SetMethod("setShader", &LUNAText::SetShader);
 	clsText.SetMethod("getX", &LUNAText::GetX);
 	clsText.SetMethod("getY", &LUNAText::GetY);
 	clsText.SetMethod("setX", &LUNAText::SetX);
@@ -289,6 +290,7 @@ LUNAGraphics::LUNAGraphics() :
 	// Bind font
 	LuaClass<LUNAFont> clsFont(lua);
 	clsFont.SetMethod("getSize", &LUNAFont::GetSize);
+	clsFont.SetMethod("getOutlineSize", &LUNAFont::GetOutlineSize);
 	clsFont.SetMethod("getStringWidth", &LUNAFont::GetStringWidth);
 	clsFont.SetMethod("getStringHeight", &LUNAFont::GetStringHeight);
 

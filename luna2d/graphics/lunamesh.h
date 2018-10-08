@@ -45,6 +45,8 @@ public:
 	void SetTexture(const std::weak_ptr<LUNATexture>& texture);
 	void SetShader(const std::weak_ptr<LUNAShader>& shader);
 	void AddVertex(float x, float y, float r, float g, float b, float alpha, float u, float v);
+	void AddQuad(float x, float y, float width, float height, float u1, float v1, float u2, float v2,
+		const LUNAColor& color, float alpha);
 	void Render();
 };
 

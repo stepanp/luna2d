@@ -35,13 +35,28 @@ const std::u32string NUMBER_CHARS = LUNA_UTF32("1234567890");
 
 struct CharRegion
 {
-	CharRegion(char32_t c, int x, int y, int width, int height) : c(c), x(x), y(y), width(width), height(height) {}
+	CharRegion(char32_t c, int regionX, int regionY, int regionWidth, int regionHeight,
+		float charWidth, float charHeight, float charOffsetX, float charOffsetY): c(c),
+		regionX(regionX), regionY(regionY), regionWidth(regionWidth), regionHeight(regionHeight),
+		charWidth(charWidth), charHeight(charHeight), charOffsetX(charOffsetX), charOffsetY(charOffsetY) {}
 
 	char32_t c = '\0';
-	int x = 0;
-	int y = 0;
-	int width = 0;
-	int height = 0;
+	int regionX;
+	int regionY;
+	int regionWidth;
+	int regionHeight;
+	float charWidth;
+	float charHeight;
+	float charOffsetX;
+	float charOffsetY;
+
+	LUNAGlyph ToGlyph(const std::shared_ptr<LUNATexture>& texture)
+	{
+		float textureScale = LUNAEngine::SharedSizes()->GetTextureScale();
+
+		return LUNAGlyph(std::make_shared<LUNATextureRegion>(texture, regionX, regionY, regionWidth, regionHeight),
+			charWidth * textureScale, charHeight * textureScale, charOffsetX * textureScale, charOffsetY * textureScale);
+	}
 };
 
 LUNAFontGenerator::~LUNAFontGenerator()
@@ -69,6 +84,7 @@ void LUNAFontGenerator::ResetCharSets()
 	enableCommon = true;
 	enableNumbers = true;
 	customSymbols.clear();
+	outlineSize = 0;
 }
 
 bool LUNAFontGenerator::Load(const std::string& filename, LUNAFileLocation location)
@@ -106,6 +122,8 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	if(enableCommon) chars += COMMON_CHARS;
 	if(enableNumbers) chars += NUMBER_CHARS;
 	if(!customSymbols.empty()) chars += customSymbols;
+	int outlineSizePixels = std::floor(outlineSize / LUNAEngine::SharedSizes()->GetTextureScale());
+	bool enableOutline = outlineSizePixels > 0;
 
 	// Get global char metrics
 	int maxW = UnitsToPixels(face->size->metrics.max_advance); // Max char width
@@ -124,6 +142,7 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 
 	// Draw placeholder for unknown char
 	image.FillRectangle(0, 0, maxW - 1, maxH, LUNAColor::WHITE);
+	CharRegion unknownChar('\0', 0, 0, maxW, maxH, maxW, maxH, 0.0f, 0.0f);
 
 	std::vector<CharRegion> charRegions;
 	int penX = maxW;
@@ -132,10 +151,27 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 	// Draw chars on image
 	for(char32_t c : chars)
 	{
-		FT_Error error = FT_Load_Char(face, c, FT_LOAD_RENDER);
+		FT_Error error = FT_Load_Char(face, c, enableOutline ? FT_LOAD_DEFAULT : FT_LOAD_RENDER);
 		if(error) continue;
 
-		FT_Bitmap bmp = face->glyph->bitmap;
+		FT_Stroker stroker;
+		FT_Glyph glyph;
+		FT_Bitmap bmp;
+
+		if(enableOutline)
+		{
+			FT_Stroker_New(library, &stroker);
+			FT_Stroker_Set(stroker, PixelsToUnits(outlineSizePixels), FT_STROKER_LINECAP_ROUND, FT_STROKER_LINEJOIN_ROUND, 0);
+			FT_Get_Glyph(face->glyph, &glyph);
+			FT_Glyph_StrokeBorder(&glyph, stroker, false, true);
+			FT_Glyph_To_Bitmap(&glyph, FT_RENDER_MODE_NORMAL, nullptr, true);
+			bmp = reinterpret_cast<FT_BitmapGlyph>(glyph)->bitmap;
+		}
+		else
+		{
+			bmp = face->glyph->bitmap;
+		}
+
 		if(bmp.pixel_mode != FT_PIXEL_MODE_GRAY)
 		{
 			LUNA_LOGE("Supported only FT_PIXEL_MODE_GRAY");
@@ -149,24 +185,31 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 			penX = 0;
 		}
 
-		int bmpWidth = bmp.width;
-		int bmpHeight = bmp.rows;
-
-		// Skip all empty chars except space
-		if((bmpWidth == 0 || bmpHeight == 0) && c != ' ') continue;
-
-		int charW = UnitsToPixels(face->glyph->advance.x);
-		int charH = std::min(bmpHeight, maxH);
-		int charDescender = charH - face->glyph->bitmap_top;
-		int charX = penX + (face->glyph->bitmap_left > 0 ? face->glyph->bitmap_left : 0);
-		int charY = penY + maxH - charH - baseline + charDescender;
+		int regionX = penX;
+		int regionY = penY;
+		int regionWidth = bmp.width;
+		int regionHeight = bmp.rows;
 
 		// Draw char bimtap to image
-		image.DrawRawBuffer(charX, charY, bmp.buffer, bmpWidth, bmpHeight, LUNAColorType::ALPHA);
+		image.DrawRawBuffer(regionX, regionY, bmp.buffer, regionWidth, regionHeight, LUNAColorType::ALPHA);
 
-		charRegions.push_back(CharRegion(c, penX, penY, charW, maxH));
+		// SEE: https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html
 
-		penX += charW + CHAR_PADDING;
+		int charWidth = UnitsToPixels(face->glyph->advance.x);
+		int charHeight = maxH;
+		int charOffsetX = UnitsToPixels(face->glyph->metrics.horiBearingX) - outlineSizePixels;
+		int charOffsetY = baseline + UnitsToPixels(face->glyph->metrics.horiBearingY - face->glyph->metrics.height) - outlineSizePixels;
+
+		charRegions.push_back(CharRegion(c, regionX, regionY, regionWidth, regionHeight,
+			charWidth, charHeight, charOffsetX, charOffsetY));
+
+		penX += regionWidth + CHAR_PADDING;
+
+		if(enableOutline)
+		{
+			FT_Stroker_Done(stroker);
+			FT_Done_Glyph(glyph);
+		}
 	}
 
 	if(image.IsEmpty()) return nullptr;
@@ -184,11 +227,11 @@ std::shared_ptr<LUNAFont> LUNAFontGenerator::GenerateFont(int size)
 #endif
 
 	// Create font
-	auto font = std::make_shared<LUNAFont>(texture, size);
+	auto font = std::make_shared<LUNAFont>(texture, size, outlineSize);
 
 	// Set texture regions for chars
-	for(auto region : charRegions) font->SetCharRegion(region.c, region.x, region.y, region.width, region.height);
-	font->SetUnknownCharRegion(0, 0, maxW, maxH);
+	for(auto region : charRegions) font->SetGlyph(region.c, region.ToGlyph(texture));
+	font->SetUnknownCharGlyph(unknownChar.ToGlyph(texture));
 
 	return font;
 }

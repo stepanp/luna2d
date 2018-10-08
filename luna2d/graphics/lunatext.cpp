@@ -30,19 +30,40 @@ using namespace luna2d;
 LUNAText::LUNAText(const std::weak_ptr<LUNAFont>& font)
 {
 	SetFont(font);
+	mesh.SetShader(LUNAEngine::SharedGraphics()->GetRenderer()->GetFontShader());
 }
 
 void LUNAText::Build()
 {
+	mesh.Clear();
+
 	auto sharedFont = font.lock();
-	sprites.erase(sprites.begin(), sprites.end());
-	sprites.clear();
+	if(!sharedFont) LUNA_RETURN_ERR("Attemp to render invalid text object");
+
+	float pointerX = 0;
+	height = 0;
+
 	for(char32_t c : this->text)
 	{
-		auto sprite = std::make_shared<LUNASprite>(sharedFont->GetRegionForChar(c));
-		sprite->SetShader(LUNAEngine::SharedGraphics()->GetRenderer()->GetFontShader());
-		sprites.push_back(sprite);
+		const auto& glyph = sharedFont->GetGlyphForChar(c);
+		const auto& region = glyph.region;
+
+		mesh.AddQuad(x + pointerX + glyph.offsetX * scaleX, y + glyph.offsetY * scaleY,
+			region->GetWidthPoints() * scaleX,
+			region->GetHeightPoints() * scaleY,
+			region->GetU1(),
+			region->GetV1(),
+			region->GetU2(),
+			region->GetV2(),
+			color, color.a);
+
+		pointerX += glyph.width * scaleX;
+		height = std::max(height, glyph.height * scaleY);
 	}
+
+	width = pointerX;
+
+	dirty = false;
 }
 
 float LUNAText::GetX()
@@ -57,12 +78,12 @@ float LUNAText::GetY()
 
 void LUNAText::SetX(float x)
 {
-	this->x = x;
+	SetPos(x, this->y);
 }
 
 void LUNAText::SetY(float y)
 {
-	this->y = y;
+	SetPos(this->x, y);
 }
 
 glm::vec2 LUNAText::GetPos()
@@ -74,6 +95,7 @@ void LUNAText::SetPos(float x, float y)
 {
 	this->x = x;
 	this->y = y;
+	dirty = true;
 }
 
 float LUNAText::GetScaleX()
@@ -89,11 +111,13 @@ float LUNAText::GetScaleY()
 void LUNAText::SetScaleX(float scaleX)
 {
 	this->scaleX = scaleX;
+	dirty = true;
 }
 
 void LUNAText::SetScaleY(float scaleY)
 {
 	this->scaleY = scaleY;
+	dirty = true;
 }
 
 void LUNAText::SetScale(float scale)
@@ -102,12 +126,12 @@ void LUNAText::SetScale(float scale)
 	SetScaleY(scale);
 }
 
-
 void LUNAText::SetColor(float r, float g, float b)
 {
 	color.r = r / 255.0f;
 	color.g = g / 255.0f;
 	color.b = b / 255.0f;
+	dirty = true;
 }
 
 LUNAColor LUNAText::GetColor()
@@ -118,6 +142,7 @@ LUNAColor LUNAText::GetColor()
 void LUNAText::SetAlpha(float alpha)
 {
 	color.a = alpha;
+	dirty = true;
 }
 
 float LUNAText::GetAlpha()
@@ -134,26 +159,23 @@ void LUNAText::SetFont(const std::weak_ptr<LUNAFont>& font)
 	}
 
 	this->font = font;
+	mesh.SetTexture(font.lock()->GetTexture());
+	dirty = true;
+}
+
+void LUNAText::SetShader(const std::weak_ptr<LUNAShader>& shader)
+{
+	mesh.SetShader(shader);
 }
 
 float LUNAText::GetWidth()
 {
-	if(sprites.empty()) return 0.0f;
-
-	float width = 0;
-	for(auto& spr : sprites) width += spr->GetWidth();
-
 	return width;
 }
 
 float LUNAText::GetHeight()
 {
-	if(sprites.empty()) return 0.0f;
-
-	float maxHeight = 0.0f;
-	for(auto& spr : sprites) maxHeight = std::max(maxHeight, spr->GetHeight());
-
-	return maxHeight;
+	return height;
 }
 
 // Get text value in UTF-8 encoding
@@ -186,16 +208,9 @@ void LUNAText::Render()
 		return;
 	}
 
-	int offset = 0;
-	for(auto& spr : sprites)
-	{
-		spr->SetPos(x + offset, y);
-		spr->SetScaleX(scaleX);
-		spr->SetScaleY(scaleY);
-		spr->SetColor(color.GetR(), color.GetG(), color.GetB());
-		spr->SetAlpha(color.a);
-		spr->Render();
+	if(text.empty()) return;
 
-		offset += std::roundf(spr->GetWidth() * spr->GetScaleX());
-	}
+	if(dirty) Build();
+
+	mesh.Render();
 }

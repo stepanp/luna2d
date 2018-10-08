@@ -27,28 +27,44 @@
 
 namespace luna2d{
 
+struct LUNAGlyph
+{
+	LUNAGlyph(const std::shared_ptr<LUNATextureRegion>& region, float width, float height, float offsetX, float offsetY) :
+		region(region), width(width), height(height), offsetX(offsetX), offsetY(offsetY) {}
+
+	LUNAGlyph() {}
+
+	std::shared_ptr<LUNATextureRegion> region;
+	float width = 0.0f;
+	float height = 0.0f;
+	float offsetX = 0.0f;
+	float offsetY = 0.0f;
+};
+
+
 class LUNAFont : public LUNAAsset
 {
 	LUNA_USERDATA_DERIVED(LUNAAsset, LUNAFont)
 
 public:
-	LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size);
+	LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size, int outlineSize);
 
 private:
 	std::shared_ptr<LUNATexture> texture;
-	std::unordered_map<char32_t, std::shared_ptr<LUNATextureRegion>> chars;
-	std::shared_ptr<LUNATextureRegion> unknownChar;
+	std::unordered_map<char32_t, LUNAGlyph> glyphs;
+	LUNAGlyph unknownChar;
 	int size;
-
-private:
-	const std::shared_ptr<LUNATextureRegion>& GetCharRegion(char32_t c);
+	int outlineSize;
 
 public:
-	void SetCharRegion(char32_t c, int x, int y, int width, int height); // Set texture region for given char
-	void SetUnknownCharRegion(int x, int y, int width, int height); // Set texture region for unknown char
+	std::weak_ptr<LUNATexture> GetTexture();
 
-	std::weak_ptr<LUNATextureRegion> GetRegionForChar(char32_t c);
+	void SetGlyph(char32_t c, const LUNAGlyph& glyph); // Set texture region for given char
+	void SetUnknownCharGlyph(const LUNAGlyph& glyph); // Set texture region for unknown char
+
+	const LUNAGlyph& GetGlyphForChar(char32_t c);
 	int GetSize();
+	int GetOutlineSize();
 
 	float GetStringWidth(const std::string& string); // Get width of one-line string typed with this font
 	float GetStringHeight(const std::string& string); // Get height of one-line string typed with this font

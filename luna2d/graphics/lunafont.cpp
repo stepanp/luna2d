@@ -26,33 +26,34 @@
 
 using namespace luna2d;
 
-LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size) :
+LUNAFont::LUNAFont(const std::shared_ptr<LUNATexture>& texture, int size, int outlineSize = 0) :
 	texture(texture),
-	size(size)
+	size(size),
+	outlineSize(outlineSize)
 {
 }
 
-const std::shared_ptr<LUNATextureRegion>& LUNAFont::GetCharRegion(char32_t c)
+std::weak_ptr<LUNATexture> LUNAFont::GetTexture()
 {
-	if(chars.count(c) == 0) return unknownChar; // If char not found return unknown char region
-	return chars[c];
+	return texture;
 }
 
  // Set texture region for given char
-void LUNAFont::SetCharRegion(char32_t c, int x, int y, int width, int height)
+void LUNAFont::SetGlyph(char32_t c, const LUNAGlyph& glyph)
 {
-	chars[c] = std::make_shared<LUNATextureRegion>(texture, x, y, width, height);
+	glyphs[c] = glyph;
 }
 
  // Set texture region for unknown char
-void LUNAFont::SetUnknownCharRegion(int x, int y, int width, int height)
+void LUNAFont::SetUnknownCharGlyph(const LUNAGlyph& glyph)
 {
-	unknownChar = std::make_shared<LUNATextureRegion>(texture, x, y, width, height);
+	unknownChar = glyph;
 }
 
-std::weak_ptr<LUNATextureRegion> LUNAFont::GetRegionForChar(char32_t c)
+const LUNAGlyph& LUNAFont::GetGlyphForChar(char32_t c)
 {
-	return GetCharRegion(c);
+	if(glyphs.count(c) == 0) return unknownChar; // If char not found return unknown char glyph
+	return glyphs[c];
 }
 
 int LUNAFont::GetSize()
@@ -60,12 +61,17 @@ int LUNAFont::GetSize()
 	return size;
 }
 
+int LUNAFont::GetOutlineSize()
+{
+	return outlineSize;
+}
+
 // Get width of one-line string typed with this font
 float LUNAFont::GetStringWidth(const std::string& string)
 {
 	float width = 0.0f;
 
-	for(auto c : utf::ToUtf32(string)) width += GetCharRegion(c)->GetWidthPoints();
+	for(auto c : utf::ToUtf32(string)) width += GetGlyphForChar(c).width;
 
 	return width;
 }
@@ -75,7 +81,7 @@ float LUNAFont::GetStringHeight(const std::string& string)
 {
 	float maxHeight = 0.0f;
 
-	for(auto c : utf::ToUtf32(string)) maxHeight = std::max(maxHeight, GetCharRegion(c)->GetHeight());
+	for(auto c : utf::ToUtf32(string)) maxHeight = std::max(maxHeight, GetGlyphForChar(c).height);
 
 	return maxHeight;
 }
