@@ -42,6 +42,7 @@ void LUNAText::Build()
 
 	float pointerX = 0;
 	height = 0;
+	width = 0;
 
 	for(char32_t c : this->text)
 	{
@@ -58,10 +59,9 @@ void LUNAText::Build()
 			color, color.a);
 
 		pointerX += glyph.width * scaleX;
-		height = std::max(height, glyph.height * scaleY);
+		width += glyph.width;
+		height = std::max(height, glyph.height);
 	}
-
-	width = pointerX;
 
 	dirty = false;
 }
